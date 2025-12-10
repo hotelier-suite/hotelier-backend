@@ -256,28 +256,25 @@ npm run start:debug
 
 The API will be available at `http://localhost:3000`
 
-### Using Docker
+### Using Docker (Standalone)
 
 ```bash
 # Build the image
 docker build -t hotelier-backend .
 
-# Run the container
-docker run -p 3000:3000 --env-file .env hotelier-backend
+# Run the container with local .env
+docker run -p 3001:3001 --env-file .env hotelier-backend
 ```
 
-### Using Docker Compose
+### Using Hotelier Infra (Docker Compose)
 
-```bash
-# Start all services (backend + database)
-docker-compose up -d
+For running the **full Hotelier platform** (database, backend, frontend, and
+future microservices) with Docker, use the dedicated infra repository:
 
-# View logs
-docker-compose logs -f
+- [`hotelier-infra`](https://github.com/hotelier-suite/hotelier-infra)
 
-# Stop services
-docker-compose down
-```
+That repository contains the canonical Docker Compose configuration and the
+step-by-step onboarding guide for spinning up the complete stack.
 
 ---
 
