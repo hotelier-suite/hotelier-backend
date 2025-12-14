@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -7,9 +8,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 import { LoyaltyLevel } from '../enums/loyalty-level.enum';
-import { UserRoleDto } from './user-role.dto';
+import { UserRoleAssignmentDto } from './user-role-assignment.dto';
 
 export class UserResponseDto {
   @ApiProperty({
@@ -123,12 +125,16 @@ export class UserResponseDto {
   lastLogin?: Date;
 
   @ApiProperty({
-    description: 'User roles',
-    type: () => UserRoleDto,
+    description: 'User role assignments (join table)',
+    required: false,
+    type: () => UserRoleAssignmentDto,
     isArray: true,
   })
+  @IsOptional()
   @IsArray()
-  roles!: UserRoleDto[];
+  @ValidateNested({ each: true })
+  @Type(() => UserRoleAssignmentDto)
+  userRoles?: UserRoleAssignmentDto[];
 
   @ApiProperty({
     description: 'User permissions',

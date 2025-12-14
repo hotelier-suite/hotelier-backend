@@ -6,8 +6,6 @@ import { SeedersModule } from './seeders/seeders.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
-import { TokensModule } from './tokens/tokens.module';
-import { AccessControlModule } from './access-control/access-control.module';
 
 @Module({
   imports: [
@@ -21,8 +19,6 @@ import { AccessControlModule } from './access-control/access-control.module';
     UsersModule,
     RolesModule,
     PermissionsModule,
-    TokensModule,
-    AccessControlModule,
   ],
 })
 export class AuthServiceModule {}

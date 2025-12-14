@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
 import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
 import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
 import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
@@ -24,6 +24,37 @@ export class UsersService {
     private readonly userRoleRepository: Repository<UserRole>,
     private readonly accessControlService: AccessControlService,
   ) {}
+
+  private readonly userReadSelect: FindOptionsSelect<User> = {
+    id: true,
+    email: true,
+    name: true,
+    phone: true,
+    loyaltyPoints: true,
+    loyaltyLevel: true,
+    preferences: true,
+    registrationDate: true,
+    lastVisit: true,
+    createdAt: true,
+    updatedAt: true,
+    firstVisit: true,
+    isActive: true,
+    lastLogin: true,
+    userRoles: {
+      id: true,
+      role: {
+        id: true,
+        name: true,
+        description: true,
+      },
+    },
+  };
+
+  private readonly userReadRelations: FindOptionsRelations<User> = {
+    userRoles: {
+      role: true,
+    },
+  };
 
   async getDefaultRole(roleId?: number): Promise<number> {
     if (roleId) {
@@ -63,52 +94,26 @@ export class UsersService {
     await this.userRepository.update(userId, { lastLogin: new Date() });
   }
 
-  private toUserResponse(user: User): UserResponseDto {
-    const dto: UserResponseDto = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      loyaltyPoints: user.loyaltyPoints,
-      loyaltyLevel: user.loyaltyLevel,
-      preferences: user.preferences,
-      registrationDate: user.registrationDate,
-      lastVisit: user.lastVisit,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      firstVisit: user.firstVisit,
-      isActive: user.isActive,
-      lastLogin: user.lastLogin,
-      roles: user.userRoles.map((ur) => ({
-        id: ur.role.id,
-        name: ur.role.name,
-        description: ur.role.description,
-      })),
-    };
-
-    return dto;
-  }
-
-  async findAllUsers(): Promise<UserResponseDto[]> {
-    const users = await this.userRepository.find({
-      relations: { userRoles: { role: true } },
+  findAllUsers(): Promise<UserResponseDto[]> {
+    return this.userRepository.find({
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
       order: { createdAt: 'DESC' },
     });
-
-    return users.map((user) => this.toUserResponse(user));
   }
 
   async findUserById(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    return this.toUserResponse(user);
+    return user;
   }
 
   async createUser(data: Partial<User>): Promise<UserResponseDto> {
@@ -116,7 +121,8 @@ export class UsersService {
 
     const loaded = await this.userRepository.findOne({
       where: { id: user.id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!loaded) {
@@ -125,7 +131,7 @@ export class UsersService {
       );
     }
 
-    return this.toUserResponse(loaded);
+    return loaded;
   }
 
   async updateUser(id: number, data: Partial<User>): Promise<UserResponseDto> {
@@ -142,20 +148,22 @@ export class UsersService {
 
     const updated = await this.userRepository.findOne({
       where: { id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!updated) {
       throw new InternalServerErrorException(`User with id ${id} not found`);
     }
 
-    return this.toUserResponse(updated);
+    return updated;
   }
 
   async deleteUser(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!user) {
@@ -163,7 +171,7 @@ export class UsersService {
     }
 
     await this.userRepository.remove(user);
-    return this.toUserResponse(user);
+    return user;
   }
 
   async activateUser(id: number): Promise<UserResponseDto> {
@@ -180,14 +188,15 @@ export class UsersService {
 
     const updated = await this.userRepository.findOne({
       where: { id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!updated) {
       throw new InternalServerErrorException(`User with id ${id} not found`);
     }
 
-    return this.toUserResponse(updated);
+    return updated;
   }
 
   async deactivateUser(id: number): Promise<UserResponseDto> {
@@ -204,14 +213,15 @@ export class UsersService {
 
     const updated = await this.userRepository.findOne({
       where: { id },
-      relations: { userRoles: { role: true } },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
     });
 
     if (!updated) {
       throw new InternalServerErrorException(`User with id ${id} not found`);
     }
 
-    return this.toUserResponse(updated);
+    return updated;
   }
 
   async assignRolesToUser(userId: number, roleIds: number[]): Promise<void> {
