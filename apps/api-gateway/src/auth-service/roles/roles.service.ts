@@ -10,11 +10,12 @@ import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role
 import { RolePermissionsPayloadDto } from '@app/contracts/auth-service/roles/dto/role-permissions-payload.dto';
 import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
 import { Observable } from 'rxjs';
+import { AUTH_SERVICE_CLIENT } from '../constants';
 
 @Injectable()
 export class RolesService {
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientProxy,
+    @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
   createRole(data: CreateRoleDto): Observable<RoleResponseDto> {

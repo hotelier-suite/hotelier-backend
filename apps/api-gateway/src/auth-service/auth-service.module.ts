@@ -3,13 +3,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
+import { AUTH_SERVICE_CLIENT } from './constants';
 
 @Global()
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'AUTH_SERVICE',
+        name: AUTH_SERVICE_CLIENT,
         transport: Transport.RMQ,
         options: {
           urls: [

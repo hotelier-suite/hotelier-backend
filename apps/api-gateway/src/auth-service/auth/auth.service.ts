@@ -8,11 +8,12 @@ import { LoginDto } from '@app/contracts/auth-service/auth/dto/login.dto';
 import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
 import { LogoutResponseDto } from '@app/contracts/auth-service/auth/dto/logout-response.dto';
 import { ProfileResponseDto } from '@app/contracts/auth-service/auth/dto/profile-response.dto';
+import { AUTH_SERVICE_CLIENT } from '../constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientProxy,
+    @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
   register(data: RegisterDto): Observable<AuthResponseDto> {

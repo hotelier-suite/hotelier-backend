@@ -8,11 +8,12 @@ import { UserRolesPayloadDto } from '@app/contracts/auth-service/users/dto/user-
 import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
 import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
 import { Observable } from 'rxjs';
+import { AUTH_SERVICE_CLIENT } from '../constants';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientProxy,
+    @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
   findAll(): Observable<UserResponseDto[]> {
