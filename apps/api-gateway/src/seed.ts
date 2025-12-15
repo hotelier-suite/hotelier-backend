@@ -16,16 +16,11 @@ import { SeedersService as ShiftsSeedersService } from './shifts/seeders/seeders
 import { SeedersService as AttendanceSeedersService } from './attendance/seeders/seeders.service';
 import { SeedersService as EmployeeRequestsSeedersService } from './employee-requests/seeders/seeders.service';
 import { SeedersService as MaintenanceSeedersService } from './maintenance/seeders/seeders.service';
-import { SeedersService as ConfigurationSeedersService } from './configuration/seeders/seeders.service';
 
 async function runSeeds() {
   const app = await NestFactory.createApplicationContext(AppModule);
 
   try {
-    // Order matters: configuration first, then dependent modules
-    const configurationSeeder = app.get(ConfigurationSeedersService);
-    await configurationSeeder.seed();
-
     // Core Business Entities
 
     // Venues first (many other entities depend on venues)

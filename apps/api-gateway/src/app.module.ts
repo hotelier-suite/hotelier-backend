@@ -19,7 +19,6 @@ import { BillingModule } from './billing/billing.module';
 import { ParkingModule } from './parking/parking.module';
 import { HousekeepingModule } from './housekeeping/housekeeping.module';
 import { ReportsModule } from './reports/reports.module';
-import { ConfigurationModule } from './configuration/configuration.module';
 import { ShiftsModule } from './shifts/shifts.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { EmployeeRequestsModule } from './employee-requests/employee-requests.module';
@@ -30,6 +29,7 @@ import { GuestsModule } from './guests/guests.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
 import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http-exception.interceptor';
+import { ConfigServiceModule } from './config-service/config-service.module';
 
 @Module({
   imports: [
@@ -53,7 +53,6 @@ import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http
     ParkingModule,
     HousekeepingModule,
     ReportsModule,
-    ConfigurationModule,
     ShiftsModule,
     AttendanceModule,
     EmployeeRequestsModule,
@@ -62,6 +61,7 @@ import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http
     NotificationsModule,
     GuestsModule,
     AuditModule,
+    ConfigServiceModule,
   ],
   controllers: [AppController],
   providers: [

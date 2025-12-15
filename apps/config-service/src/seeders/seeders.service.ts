@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Configuration } from '../entities/configuration.entity';
-import { ConfigCategory } from '../enums/config-category.enum';
+import { Configuration } from '../configuration/entities/configuration.entity';
+import { ConfigCategory } from '../configuration/enums/config-category.enum';
 
 @Injectable()
 export class SeedersService {
@@ -22,6 +22,7 @@ export class SeedersService {
     const existing = await this.configRepository.findOne({
       where: { category, key },
     });
+
     if (!existing) {
       await this.configRepository.save({
         category,

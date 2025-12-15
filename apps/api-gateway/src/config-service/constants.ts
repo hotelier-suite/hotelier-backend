@@ -1,0 +1,1 @@
+export const CONFIG_SERVICE_CLIENT = Symbol('CONFIG_SERVICE_CLIENT');

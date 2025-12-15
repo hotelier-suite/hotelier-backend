@@ -1,10 +1,11 @@
 import { Controller, Get, Put, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { AuditLog } from '../../audit/decorators/audit-log.decorator';
+import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
+import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import { Observable } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
-import { UpdateHotelConfigDto } from './dto/update-hotel-config.dto';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
-import { HotelConfigDto } from './dto/hotel-config.dto';
 
 @ApiTags('configuration')
 @Controller('configuration')
@@ -22,7 +23,7 @@ export class ConfigurationController {
     description: 'Hotel configuration retrieved successfully',
     type: HotelConfigDto,
   })
-  getHotelConfig(): Promise<HotelConfigDto> {
+  getHotelConfig(): Observable<HotelConfigDto> {
     return this.configurationService.getHotelConfig();
   }
 
@@ -44,9 +45,9 @@ export class ConfigurationController {
     status: 400,
     description: 'Invalid input data',
   })
-  async updateHotelConfig(
+  updateHotelConfig(
     @Body() updateData: UpdateHotelConfigDto,
-  ): Promise<HotelConfigDto> {
+  ): Observable<HotelConfigDto> {
     return this.configurationService.updateHotelConfig(updateData);
   }
 }

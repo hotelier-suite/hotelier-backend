@@ -132,6 +132,7 @@ export class AuthController {
   }
 
   @Post('me')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Get User Profile',
     description:

@@ -13,7 +13,6 @@ import { SeedersModule } from './seeders/seeders.module';
 import { AuthModule } from '../auth-service/auth/auth.module';
 import { HousekeepingModule } from '../housekeeping/housekeeping.module';
 import { NotificationsModule } from '../notifications/notifications.module';
-import { ConfigurationModule } from '../configuration/configuration.module';
 
 @Module({
   imports: [
@@ -29,7 +28,6 @@ import { ConfigurationModule } from '../configuration/configuration.module';
     AuthModule,
     HousekeepingModule,
     NotificationsModule,
-    ConfigurationModule,
   ],
   controllers: [ReservationsController],
   providers: [ReservationsService],
