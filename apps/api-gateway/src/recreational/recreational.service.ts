@@ -8,8 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, And, Not } from 'typeorm';
 import { RecreationalFacility } from './entities/recreational-facility.entity';
 import { RecreationalBooking } from './entities/recreational-booking.entity';
-import { NotificationsService } from '../notifications/notifications.service';
-import { NotificationType } from '../notifications/entities/notification.entity';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
 
 import { CreateRecreationalFacilityDto } from './dto/create-recreational-facility.dto';
 import { UpdateRecreationalFacilityDto } from './dto/update-recreational-facility.dto';
@@ -42,13 +42,22 @@ export class RecreationalService {
     const saved = await this.facilityRepository.save(facility);
 
     // Notify administrators about new facility
-    await this.notificationsService.create({
-      type: NotificationType.INFO,
-      title: 'New Recreational Facility Added',
-      message: `New ${data.type.toLowerCase()} facility "${data.name}" has been added to the system.`,
-      refId: saved.id,
-      refType: 'recreational_facility',
-    });
+    this.notificationsService
+      .create({
+        type: NotificationType.INFO,
+        title: 'New Recreational Facility Added',
+        message: `New ${data.type.toLowerCase()} facility "${data.name}" has been added to the system.`,
+        refId: saved.id,
+        refType: 'recreational_facility',
+      })
+      .subscribe({
+        error: (error) => {
+          console.error(
+            'Error creating recreational facility notification:',
+            error,
+          );
+        },
+      });
 
     return saved;
   }
@@ -176,13 +185,22 @@ export class RecreationalService {
     const saved = await this.bookingRepository.save(booking);
 
     // Send confirmation notification
-    await this.notificationsService.create({
-      type: NotificationType.INFO,
-      title: 'Recreational Booking Created',
-      message: `New booking for ${facility.name} on ${bookingDate.toISOString().split('T')[0]} from ${data.startTime} to ${data.endTime}`,
-      refId: saved.id,
-      refType: 'recreational_booking',
-    });
+    this.notificationsService
+      .create({
+        type: NotificationType.INFO,
+        title: 'Recreational Booking Created',
+        message: `New booking for ${facility.name} on ${bookingDate.toISOString().split('T')[0]} from ${data.startTime} to ${data.endTime}`,
+        refId: saved.id,
+        refType: 'recreational_booking',
+      })
+      .subscribe({
+        error: (error) => {
+          console.error(
+            'Error creating recreational booking notification:',
+            error,
+          );
+        },
+      });
 
     return this.getBookingById(saved.id);
   }
@@ -295,13 +313,22 @@ export class RecreationalService {
     const updated = await this.bookingRepository.save(booking);
 
     // Notify about cancellation
-    await this.notificationsService.create({
-      type: NotificationType.INFO,
-      title: 'Recreational Booking Cancelled',
-      message: `Booking for ${updated.facility.name} on ${updated.bookingDate.toDateString()} has been cancelled`,
-      refId: updated.id,
-      refType: 'recreational_booking',
-    });
+    this.notificationsService
+      .create({
+        type: NotificationType.INFO,
+        title: 'Recreational Booking Cancelled',
+        message: `Booking for ${updated.facility.name} on ${updated.bookingDate.toDateString()} has been cancelled`,
+        refId: updated.id,
+        refType: 'recreational_booking',
+      })
+      .subscribe({
+        error: (error) => {
+          console.error(
+            'Error creating recreational booking cancellation notification:',
+            error,
+          );
+        },
+      });
 
     return updated;
   }

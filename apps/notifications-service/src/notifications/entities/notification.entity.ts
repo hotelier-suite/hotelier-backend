@@ -6,12 +6,7 @@ import {
   Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
-export enum NotificationType {
-  INFO = 'INFO',
-  WARNING = 'WARNING',
-  ALERT = 'ALERT',
-}
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
 
 @Entity('notifications')
 export class Notification {

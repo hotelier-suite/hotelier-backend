@@ -9,8 +9,8 @@ import { Shift } from './entities/shift.entity';
 import { CreateShiftDto } from './dto/create-shift.dto';
 import { UpdateShiftDto } from './dto/update-shift.dto';
 import { ShiftStatus } from './enums/shift-status.enum';
-import { NotificationsService } from '../notifications/notifications.service';
-import { NotificationType } from '../notifications/entities/notification.entity';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
 
 @Injectable()
 export class ShiftsService {
@@ -87,17 +87,19 @@ export class ShiftsService {
     const shift = await this.shiftRepository.save(data);
 
     // Send notification for new shift assignment
-    try {
-      await this.notificationsService.create({
+    this.notificationsService
+      .create({
         title: 'New Shift Assigned',
         message: `A shift has been assigned for ${shift.date.toLocaleDateString()} from ${shift.startTime} to ${shift.endTime}`,
         type: NotificationType.INFO,
         refId: shift.employeeId,
         refType: 'employee',
+      })
+      .subscribe({
+        error: (error) => {
+          console.error('Error sending shift notification:', error);
+        },
       });
-    } catch (error) {
-      console.error('Error sending shift notification:', error);
-    }
 
     return shift;
   }

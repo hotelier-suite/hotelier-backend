@@ -5,7 +5,7 @@ import { ShiftsService } from './shifts.service';
 import { Shift } from './entities/shift.entity';
 import { Employee } from '../employees/entities/employee.entity';
 import { SeedersModule } from './seeders/seeders.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsModule } from '../notifications-service/notifications/notifications.module';
 
 @Module({
   imports: [

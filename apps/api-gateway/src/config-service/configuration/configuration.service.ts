@@ -13,9 +13,9 @@ export class ConfigurationService {
   ) {}
 
   getHotelConfig(): Observable<HotelConfigDto> {
-    return this.configClient.send<HotelConfigDto, null>(
+    return this.configClient.send<HotelConfigDto, Record<string, never>>(
       CONFIGURATION_PATTERNS.GET_HOTEL_CONFIG,
-      null,
+      {},
     );
   }
 

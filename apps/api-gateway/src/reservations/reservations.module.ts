@@ -12,7 +12,7 @@ import { RoomServiceOrder } from '../restaurant/entities/room-service-order.enti
 import { SeedersModule } from './seeders/seeders.module';
 import { AuthModule } from '../auth-service/auth/auth.module';
 import { HousekeepingModule } from '../housekeeping/housekeeping.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsModule } from '../notifications-service/notifications/notifications.module';
 
 @Module({
   imports: [

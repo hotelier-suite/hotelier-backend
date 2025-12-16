@@ -6,6 +6,8 @@ import {
   ParseIntPipe,
   Query,
   Sse,
+  MessageEvent,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -13,16 +15,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { NotificationsService } from './notifications.service';
-import { Notification } from './entities/notification.entity';
+import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
+import { CurrentUserId } from '../../common/decorators/current-user-id.decorator';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit/decorators/audit-log.decorator';
+import { AuditResource } from '../../audit/enums/audit-resource.enum';
 
 @ApiTags('notifications')
 @ApiBearerAuth()
 @Controller('notifications')
+@UseGuards(AuthGuard('jwt'))
 @AuditLog({ resource: AuditResource.NOTIFICATION })
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
@@ -36,41 +40,37 @@ export class NotificationsController {
   @ApiResponse({
     status: 200,
     description: 'Notifications retrieved successfully',
-    type: [Notification],
+    type: [NotificationDto],
   })
-  async list(
-    @Query('userId') userId?: number,
+  list(
+    @CurrentUserId() userId: number,
     @Query('includeRead') includeRead?: string,
-  ): Promise<Notification[]> {
+  ): Observable<NotificationDto[]> {
     const include = String(includeRead).toLowerCase() === 'true';
-    return this.notificationsService.listForUser(
-      userId ? Number(userId) : undefined,
-      include,
-    );
+    return this.notificationsService.listForUser(userId, include);
   }
 
   @Patch(':id/read')
   @ApiOperation({ summary: 'Mark notification read' })
   @ApiResponse({ status: 204, description: 'Notification marked as read' })
-  async markRead(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.notificationsService.markRead(id);
+  markRead(
+    @CurrentUserId() userId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<void> {
+    return this.notificationsService.markRead(id, userId);
   }
 
   @Patch('read-all')
   @ApiOperation({ summary: 'Mark all notifications read' })
   @ApiResponse({ status: 204, description: 'All notifications marked as read' })
-  async markAllRead(@Query('userId') userId?: number): Promise<void> {
-    await this.notificationsService.markAllRead(
-      userId ? Number(userId) : undefined,
-    );
+  markAllRead(@CurrentUserId() userId: number): Observable<void> {
+    return this.notificationsService.markAllRead(userId);
   }
 
   @Sse('stream')
   @ApiOperation({ summary: 'Notifications stream (SSE)' })
   @ApiResponse({ status: 200, description: 'Server-Sent Events stream' })
-  stream(): Observable<any> {
-    return this.notificationsService
-      .stream()
-      .pipe(map((n: Notification) => ({ data: n })));
+  stream(@CurrentUserId() userId: number): Observable<MessageEvent> {
+    return this.notificationsService.streamForUser(userId);
   }
 }

@@ -9,7 +9,7 @@ import { MaintenanceRequest } from './entities/maintenance-request.entity';
 import { Room } from '../rooms/entities/room.entity';
 import { AuthModule } from '../auth-service/auth/auth.module';
 import { SeedersModule } from './seeders/seeders.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsModule } from '../notifications-service/notifications/notifications.module';
 
 @Module({
   imports: [

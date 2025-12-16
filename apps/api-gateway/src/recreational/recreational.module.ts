@@ -5,7 +5,7 @@ import { RecreationalController } from './recreational.controller';
 import { RecreationalFacility } from './entities/recreational-facility.entity';
 import { RecreationalBooking } from './entities/recreational-booking.entity';
 import { AuthModule } from '../auth-service/auth/auth.module';
-import { NotificationsModule } from '../notifications/notifications.module';
+import { NotificationsModule } from '../notifications-service/notifications/notifications.module';
 import { SeedersModule } from './seeders/seeders.module';
 
 @Module({

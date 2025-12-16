@@ -16,7 +16,7 @@ import {
 import { Reservation } from './entities/reservation.entity';
 import { Room } from '../rooms/entities/room.entity';
 import { HousekeepingService } from '../housekeeping/housekeeping.service';
-import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
 
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
@@ -193,18 +193,18 @@ export class ReservationsService {
       status: ReservationStatus.PENDING,
     });
     // Notify system of new reservation
-    try {
-      await this.notificationsService.createSystemAlert(
+    this.notificationsService
+      .createSystemAlert(
         'New reservation',
         `Reservation #${created.id} created for room ${room.number} (${nights} night${nights !== 1 ? 's' : ''})`,
         created.id,
         'RESERVATION',
-      );
-    } catch (e) {
-      // Non-fatal: continue even if notification fails
-
-      console.warn('Notification failed for reservation creation:', e);
-    }
+      )
+      .subscribe({
+        error: (e) => {
+          console.warn('Notification failed for reservation creation:', e);
+        },
+      });
 
     return created;
   }
@@ -368,12 +368,18 @@ export class ReservationsService {
     }
 
     // Notify system about checkout and cleaning queued
-    await this.notificationsService.createSystemAlert(
-      'Checkout completed',
-      `Reservation #${reservation.id} - Room ${reservation.room?.number ?? reservation.roomId} sent to cleaning`,
-      reservation.id,
-      'RESERVATION',
-    );
+    this.notificationsService
+      .createSystemAlert(
+        'Checkout completed',
+        `Reservation #${reservation.id} - Room ${reservation.room?.number ?? reservation.roomId} sent to cleaning`,
+        reservation.id,
+        'RESERVATION',
+      )
+      .subscribe({
+        error: (error) => {
+          console.warn('Notification failed for reservation checkout:', error);
+        },
+      });
 
     // Generate invoice if not exists
     let invoiceId: number | undefined;

@@ -11,8 +11,8 @@ import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 
 import { SupplierResponseDto } from './dto/supplier-response.dto';
-import { NotificationsService } from '../notifications/notifications.service';
-import { NotificationType } from '../notifications/entities/notification.entity';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
 import { InventoryStatus } from './enums/inventory-status.enum';
 import { InventoryCategory } from './enums/inventory-category.enum';
 import { MovementType } from './enums/movement-type.enum';
@@ -59,17 +59,23 @@ export class InventoryService {
           ? 'Inventory out of stock'
           : 'Low inventory';
       const message = `Inventory item '${saved.name}' has ${status === InventoryStatus.OUT_OF_STOCK ? 'no stock' : 'low stock'} (current: ${saved.currentStock}, minimum: ${saved.minimumStock}).`;
-      await this.notificationsService.create({
-        type:
-          status === InventoryStatus.OUT_OF_STOCK
-            ? NotificationType.ALERT
-            : NotificationType.WARNING,
-        title,
-        message,
-        refId: saved.id,
-        refType: 'inventory',
-        userId: null,
-      });
+      this.notificationsService
+        .create({
+          type:
+            status === InventoryStatus.OUT_OF_STOCK
+              ? NotificationType.ALERT
+              : NotificationType.WARNING,
+          title,
+          message,
+          refId: saved.id,
+          refType: 'inventory',
+          userId: null,
+        })
+        .subscribe({
+          error: (error) => {
+            console.error('Error creating inventory notification:', error);
+          },
+        });
     }
 
     return saved;
@@ -114,28 +120,40 @@ export class InventoryService {
           ? 'Inventory out of stock'
           : 'Low inventory';
       const message = `Inventory item '${updated.name}' has ${status === InventoryStatus.OUT_OF_STOCK ? 'no stock' : 'low stock'} (current: ${currentStock}, minimum: ${minimumStock}).`;
-      await this.notificationsService.create({
-        type:
-          status === InventoryStatus.OUT_OF_STOCK
-            ? NotificationType.ALERT
-            : NotificationType.WARNING,
-        title,
-        message,
-        refId: updated.id,
-        refType: 'inventory',
-      });
+      this.notificationsService
+        .create({
+          type:
+            status === InventoryStatus.OUT_OF_STOCK
+              ? NotificationType.ALERT
+              : NotificationType.WARNING,
+          title,
+          message,
+          refId: updated.id,
+          refType: 'inventory',
+        })
+        .subscribe({
+          error: (error) => {
+            console.error('Error creating inventory notification:', error);
+          },
+        });
     } else if (
       existingItem.status !== InventoryStatus.AVAILABLE &&
       status === InventoryStatus.AVAILABLE
     ) {
       // Recovery notification
-      await this.notificationsService.create({
-        type: NotificationType.INFO,
-        title: 'Inventory recovered',
-        message: `Inventory item '${updated.name}' has recovered sufficient stock (current: ${currentStock}).`,
-        refId: updated.id,
-        refType: 'inventory',
-      });
+      this.notificationsService
+        .create({
+          type: NotificationType.INFO,
+          title: 'Inventory recovered',
+          message: `Inventory item '${updated.name}' has recovered sufficient stock (current: ${currentStock}).`,
+          refId: updated.id,
+          refType: 'inventory',
+        })
+        .subscribe({
+          error: (error) => {
+            console.error('Error creating inventory notification:', error);
+          },
+        });
     }
 
     return updated;
@@ -188,7 +206,7 @@ export class InventoryService {
     await this.inventoryRepository.save(item);
 
     // Check for low stock alerts after movement
-    await this.checkLowStockAlert(item);
+    this.checkLowStockAlert(item);
 
     // Create movement record
     const movement = this.movementRepository.create({
@@ -209,31 +227,33 @@ export class InventoryService {
       .getMany();
   }
 
-  private async checkLowStockAlert(item: Inventory): Promise<void> {
+  private checkLowStockAlert(item: Inventory): void {
     if (item.currentStock <= item.minimumStock) {
       const message =
         item.currentStock === 0
           ? `OUT OF STOCK: ${item.name} has no inventory`
           : `LOW STOCK: ${item.name} - ${item.currentStock} units remaining (minimum: ${item.minimumStock})`;
 
-      try {
-        await this.notificationsService.create({
+      this.notificationsService
+        .create({
           title: item.currentStock === 0 ? 'Product Out of Stock' : 'Low Stock',
           message,
           type: NotificationType.WARNING,
           refId: item.id,
           refType: 'inventory',
+        })
+        .subscribe({
+          error: (error) => {
+            console.error('Error creating inventory alert:', error);
+          },
         });
-      } catch (error) {
-        console.error('Error creating inventory alert:', error);
-      }
     }
   }
 
   async checkAllLowStockItems(): Promise<void> {
     const lowStockItems = await this.getInventoryAlerts();
     for (const item of lowStockItems) {
-      await this.checkLowStockAlert(item);
+      this.checkLowStockAlert(item);
     }
   }
 

@@ -23,7 +23,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { EmployeeRequestsModule } from './employee-requests/employee-requests.module';
 import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
-import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
 import { GuestsModule } from './guests/guests.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
@@ -57,7 +57,7 @@ import { ParkingServiceModule } from './parking-service/parking-service.module';
     EmployeeRequestsModule,
     ReportsAnalyticsModule,
     MaintenanceModule,
-    NotificationsModule,
+    NotificationsServiceModule,
     GuestsModule,
     AuditModule,
     ConfigServiceModule,

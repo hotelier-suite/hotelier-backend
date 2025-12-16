@@ -1,4 +1,4 @@
-import { Controller, Get, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -9,8 +9,7 @@ import { DashboardService } from './dashboard.service';
 import { DashboardStatsDto } from './dto/dashboard-stats.dto';
 import { RecentActivityDto } from './dto/recent-activity.dto';
 import { RevenueDataDto } from './dto/revenue-data.dto';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
-import type { JwtUser } from '@app/contracts/auth-service/tokens/interfaces/jwt-user.interface';
+import { CurrentUserId } from '../common/decorators/current-user-id.decorator';
 import { AuditLog } from '../audit/decorators/audit-log.decorator';
 import { AuditResource } from '../audit/enums/audit-resource.enum';
 import { Observable } from 'rxjs';
@@ -34,12 +33,9 @@ export class DashboardController {
     type: DashboardStatsDto,
   })
   getDashboardStats(
-    @CurrentUser() user: JwtUser,
+    @CurrentUserId() userId: number,
   ): Observable<DashboardStatsDto> {
-    if (!user || !user.id) {
-      throw new UnauthorizedException('User not found in request');
-    }
-    return this.dashboardService.getDashboardStats(user.id);
+    return this.dashboardService.getDashboardStats(userId);
   }
 
   @Get('activity')
@@ -54,12 +50,9 @@ export class DashboardController {
     type: [RecentActivityDto],
   })
   getRecentActivities(
-    @CurrentUser() user: JwtUser,
+    @CurrentUserId() userId: number,
   ): Observable<RecentActivityDto[]> {
-    if (!user || !user.id) {
-      throw new UnauthorizedException('User not found in request');
-    }
-    return this.dashboardService.getRecentActivities(user.id);
+    return this.dashboardService.getRecentActivities(userId);
   }
 
   @Get('revenue')
@@ -73,10 +66,9 @@ export class DashboardController {
     description: 'Revenue data retrieved successfully',
     type: [RevenueDataDto],
   })
-  getRevenueData(@CurrentUser() user: JwtUser): Observable<RevenueDataDto[]> {
-    if (!user || !user.id) {
-      throw new UnauthorizedException('User not found in request');
-    }
-    return this.dashboardService.getRevenueData(user.id);
+  getRevenueData(
+    @CurrentUserId() userId: number,
+  ): Observable<RevenueDataDto[]> {
+    return this.dashboardService.getRevenueData(userId);
   }
 }

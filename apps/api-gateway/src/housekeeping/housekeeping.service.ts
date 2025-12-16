@@ -18,7 +18,7 @@ import { MaintenanceStatus } from './enums/maintenance-status.enum';
 import { TaskPriority } from './enums/task-priority.enum';
 import { CleaningStatus } from './enums/cleaning-status.enum';
 import { Room } from '../rooms/entities/room.entity';
-import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
 
 @Injectable()
 export class HousekeepingService {
@@ -279,12 +279,21 @@ export class HousekeepingService {
         where: { id: updated.roomId },
       });
       const roomLabel = room?.number ?? String(updated.roomId);
-      await this.notificationsService.createSystemAlert(
-        'Cleaning completed',
-        `Room ${roomLabel} ready and available`,
-        updated.roomId,
-        'ROOM',
-      );
+      this.notificationsService
+        .createSystemAlert(
+          'Cleaning completed',
+          `Room ${roomLabel} ready and available`,
+          updated.roomId,
+          'ROOM',
+        )
+        .subscribe({
+          error: (error) => {
+            console.error(
+              'Error creating cleaning completed notification:',
+              error,
+            );
+          },
+        });
     }
 
     return updated;
@@ -535,12 +544,21 @@ export class HousekeepingService {
     });
 
     // Create notification
-    await this.notificationsService.createSystemAlert(
-      'New incident reported',
-      `${data.type} reported in room ${room.number}: ${data.description}`,
-      room.id,
-      'MAINTENANCE',
-    );
+    this.notificationsService
+      .createSystemAlert(
+        'New incident reported',
+        `${data.type} reported in room ${room.number}: ${data.description}`,
+        room.id,
+        'MAINTENANCE',
+      )
+      .subscribe({
+        error: (error) => {
+          console.error(
+            'Error creating incident reported notification:',
+            error,
+          );
+        },
+      });
 
     return maintenanceReport;
   }
