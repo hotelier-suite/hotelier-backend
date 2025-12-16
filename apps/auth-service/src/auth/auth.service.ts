@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ForbiddenException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -64,7 +60,10 @@ export class AuthService {
       user.id,
     );
     if (!userWithRoles) {
-      throw new InternalServerErrorException('Failed to create user');
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Failed to create user',
+      });
     }
 
     const tokens = await this.tokensService.getTokens(user.id, user.email);
@@ -162,7 +161,7 @@ export class AuthService {
       await this.accessControlService.getUserWithRefreshToken(userId);
 
     if (!user || !user.refreshToken) {
-      throw new ForbiddenException('Access Denied');
+      throw new RpcException({ statusCode: 403, message: 'Access Denied' });
     }
 
     const refreshTokenMatches = await bcrypt.compare(
@@ -171,7 +170,7 @@ export class AuthService {
     );
 
     if (!refreshTokenMatches) {
-      throw new ForbiddenException('Access Denied');
+      throw new RpcException({ statusCode: 403, message: 'Access Denied' });
     }
 
     const tokens = await this.tokensService.getTokens(user.id, user.email);

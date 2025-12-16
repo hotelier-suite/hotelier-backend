@@ -45,6 +45,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
+    },
+    "parking-service": {
+      "type": "application",
+      "root": "apps/parking-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/parking-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/parking-service/tsconfig.app.json"
+      }
     }
   }
 }

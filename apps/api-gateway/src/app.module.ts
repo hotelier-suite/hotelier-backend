@@ -16,7 +16,6 @@ import { RecreationalModule } from './recreational/recreational.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { BillingModule } from './billing/billing.module';
-import { ParkingModule } from './parking/parking.module';
 import { HousekeepingModule } from './housekeeping/housekeeping.module';
 import { ReportsModule } from './reports/reports.module';
 import { ShiftsModule } from './shifts/shifts.module';
@@ -30,6 +29,7 @@ import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
 import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http-exception.interceptor';
 import { ConfigServiceModule } from './config-service/config-service.module';
+import { ParkingServiceModule } from './parking-service/parking-service.module';
 
 @Module({
   imports: [
@@ -50,7 +50,6 @@ import { ConfigServiceModule } from './config-service/config-service.module';
     RestaurantModule,
     InventoryModule,
     BillingModule,
-    ParkingModule,
     HousekeepingModule,
     ReportsModule,
     ShiftsModule,
@@ -62,6 +61,7 @@ import { ConfigServiceModule } from './config-service/config-service.module';
     GuestsModule,
     AuditModule,
     ConfigServiceModule,
+    ParkingServiceModule,
   ],
   controllers: [AppController],
   providers: [

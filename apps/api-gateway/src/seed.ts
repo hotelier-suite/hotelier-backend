@@ -8,7 +8,6 @@ import { SeedersService as EmployeesSeedersService } from './employees/seeders/s
 import { SeedersService as VenuesSeedersService } from './venues/seeders/seeders.service';
 import { SeedersService as RoomsSeedersService } from './rooms/seeders/seeders.service';
 import { SeedersService as InventorySeedersService } from './inventory/seeders/seeders.service';
-import { SeedersService as ParkingSeedersService } from './parking/seeders/seeders.service';
 import { SeedersService as HousekeepingSeedersService } from './housekeeping/seeders/seeders.service';
 import { SeedersService as BillingSeedersService } from './billing/seeders/seeders.service';
 import { SeedersService as GuestRequestsSeedersService } from './guest-requests/seeders/seeders.service';
@@ -72,10 +71,6 @@ async function runSeeds() {
     // Inventory
     const inventorySeeder = app.get(InventorySeedersService);
     await inventorySeeder.seed();
-
-    // Parking
-    const parkingSeeder = app.get(ParkingSeedersService);
-    await parkingSeeder.seed();
 
     // Housekeeping
     const housekeepingSeeder = app.get(HousekeepingSeedersService);

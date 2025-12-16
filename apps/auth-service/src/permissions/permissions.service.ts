@@ -1,4 +1,5 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
@@ -25,9 +26,10 @@ export class PermissionsService {
     } catch (e: unknown) {
       const err = e as { code?: unknown };
       if (typeof err.code === 'string' && err.code === '23505') {
-        throw new InternalServerErrorException(
-          `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        );
+        throw new RpcException({
+          statusCode: 409,
+          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
+        });
       }
       throw e;
     }
@@ -66,7 +68,10 @@ export class PermissionsService {
     });
 
     if (!permission) {
-      throw new InternalServerErrorException('Permission not found');
+      throw new RpcException({
+        statusCode: 404,
+        message: 'Permission not found',
+      });
     }
 
     try {
@@ -76,18 +81,20 @@ export class PermissionsService {
       });
 
       if (!updated) {
-        throw new InternalServerErrorException(
-          `Permission with id ${id} not found`,
-        );
+        throw new RpcException({
+          statusCode: 404,
+          message: `Permission with id ${id} not found`,
+        });
       }
 
       return updated;
     } catch (e: unknown) {
       const err = e as { code?: unknown };
       if (typeof err.code === 'string' && err.code === '23505') {
-        throw new InternalServerErrorException(
-          `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        );
+        throw new RpcException({
+          statusCode: 409,
+          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
+        });
       }
       throw e;
     }
@@ -99,7 +106,10 @@ export class PermissionsService {
     });
 
     if (!permission) {
-      throw new InternalServerErrorException('Permission not found');
+      throw new RpcException({
+        statusCode: 404,
+        message: 'Permission not found',
+      });
     }
 
     const roleCount = await this.rolePermissionRepository.count({
@@ -107,9 +117,10 @@ export class PermissionsService {
     });
 
     if (roleCount > 0) {
-      throw new InternalServerErrorException(
-        'Cannot delete permission that is assigned to roles',
-      );
+      throw new RpcException({
+        statusCode: 409,
+        message: 'Cannot delete permission that is assigned to roles',
+      });
     }
 
     await this.permissionRepository.remove(permission);

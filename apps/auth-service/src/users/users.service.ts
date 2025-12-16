@@ -1,8 +1,5 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
 import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
@@ -66,9 +63,10 @@ export class UsersService {
     });
 
     if (!defaultRole) {
-      throw new InternalServerErrorException(
-        'Default client role not found. Please run database seeds.',
-      );
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Default client role not found. Please run database seeds.',
+      });
     }
 
     return defaultRole.id;
@@ -110,7 +108,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
     }
 
     return user;
@@ -126,9 +127,10 @@ export class UsersService {
     });
 
     if (!loaded) {
-      throw new InternalServerErrorException(
-        `Failed to load user with id ${user.id} after creation`,
-      );
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load user with id ${user.id} after creation`,
+      });
     }
 
     return loaded;
@@ -141,7 +143,10 @@ export class UsersService {
     });
 
     if (!existing) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
     }
 
     await this.userRepository.update(id, data);
@@ -153,7 +158,10 @@ export class UsersService {
     });
 
     if (!updated) {
-      throw new InternalServerErrorException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 500,
+        message: `User with id ${id} not found`,
+      });
     }
 
     return updated;
@@ -167,7 +175,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
     }
 
     await this.userRepository.remove(user);
@@ -181,7 +192,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
     }
 
     await this.userRepository.update(id, { isActive: true });
@@ -193,7 +207,10 @@ export class UsersService {
     });
 
     if (!updated) {
-      throw new InternalServerErrorException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 500,
+        message: `User with id ${id} not found`,
+      });
     }
 
     return updated;
@@ -206,7 +223,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
     }
 
     await this.userRepository.update(id, { isActive: false });
@@ -218,7 +238,10 @@ export class UsersService {
     });
 
     if (!updated) {
-      throw new InternalServerErrorException(`User with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 500,
+        message: `User with id ${id} not found`,
+      });
     }
 
     return updated;
@@ -234,7 +257,10 @@ export class UsersService {
       );
 
       if (validRoleIds.length === 0) {
-        throw new InternalServerErrorException('No valid role IDs provided');
+        throw new RpcException({
+          statusCode: 500,
+          message: 'No valid role IDs provided',
+        });
       }
 
       const existingRoles = await this.roleRepository
@@ -247,9 +273,10 @@ export class UsersService {
         const missingRoleIds = validRoleIds.filter(
           (id) => !foundRoleIds.includes(id),
         );
-        throw new InternalServerErrorException(
-          `Roles with IDs ${missingRoleIds.join(', ')} do not exist`,
-        );
+        throw new RpcException({
+          statusCode: 500,
+          message: `Roles with IDs ${missingRoleIds.join(', ')} do not exist`,
+        });
       }
 
       const userRoles = validRoleIds.map((roleId) => ({ userId, roleId }));

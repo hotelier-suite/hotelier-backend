@@ -18,10 +18,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
 import { PermissionIdsDto } from '@app/contracts/auth-service/roles/dto/permission-ids.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
 import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
 import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
 import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
@@ -50,10 +47,8 @@ export class RolesController {
     description: 'Role created successfully',
     type: RoleResponseDto,
   })
-  createRole(
-    @Body() createRoleDto: CreateRoleDto,
-  ): Observable<RoleResponseDto> {
-    return this.rolesService.createRole(createRoleDto);
+  create(@Body() createRoleDto: CreateRoleDto): Observable<RoleResponseDto> {
+    return this.rolesService.create(createRoleDto);
   }
 
   @Get()
@@ -66,45 +61,8 @@ export class RolesController {
     description: 'Roles retrieved successfully',
     type: [RoleResponseDto],
   })
-  getAllRoles(): Observable<RoleResponseDto[]> {
-    return this.rolesService.findAllRoles();
-  }
-
-  // System Permissions Management - Must come before :id route
-  @Get('permissions')
-  @ApiOperation({
-    summary: 'Get All Permissions',
-    description: 'Retrieve all system permissions.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permissions retrieved successfully',
-    type: [PermissionResponseDto],
-  })
-  getAllPermissions(): Observable<PermissionResponseDto[]> {
-    return this.rolesService.findAllPermissions();
-  }
-
-  @Get('permissions/by-resource')
-  @ApiOperation({
-    summary: 'Get Permissions by Resource',
-    description: 'Retrieve permissions grouped by resource type.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permissions by resource retrieved successfully',
-    schema: {
-      type: 'object',
-      additionalProperties: {
-        type: 'array',
-        items: { $ref: '#/components/schemas/PermissionResponseDto' },
-      },
-    },
-  })
-  getPermissionsByResource(): Observable<
-    Record<string, PermissionResponseDto[]>
-  > {
-    return this.rolesService.getPermissionsByResource();
+  findAll(): Observable<RoleResponseDto[]> {
+    return this.rolesService.findAll();
   }
 
   @Get('name/:name')
@@ -127,8 +85,8 @@ export class RolesController {
     status: 404,
     description: 'Role not found',
   })
-  getRoleByName(@Param('name') name: string): Observable<RoleResponseDto> {
-    return this.rolesService.findRoleByName(name);
+  findByName(@Param('name') name: string): Observable<RoleResponseDto> {
+    return this.rolesService.findByName(name);
   }
 
   @Get(':id')
@@ -151,10 +109,8 @@ export class RolesController {
     status: 404,
     description: 'Role not found',
   })
-  getRoleById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<RoleResponseDto> {
-    return this.rolesService.findRoleById(id);
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<RoleResponseDto> {
+    return this.rolesService.findOne(id);
   }
 
   @Put(':id')
@@ -181,11 +137,11 @@ export class RolesController {
     status: 404,
     description: 'Role not found',
   })
-  updateRole(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRoleDto: UpdateRoleDto,
   ): Observable<RoleResponseDto> {
-    return this.rolesService.updateRole(id, updateRoleDto);
+    return this.rolesService.update(id, updateRoleDto);
   }
 
   @Delete(':id')
@@ -208,10 +164,8 @@ export class RolesController {
     status: 404,
     description: 'Role not found',
   })
-  deleteRole(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<RoleResponseDto> {
-    return this.rolesService.deleteRole(id);
+  remove(@Param('id', ParseIntPipe) id: number): Observable<RoleResponseDto> {
+    return this.rolesService.remove(id);
   }
 
   // Permission Assignment to Roles
@@ -242,10 +196,7 @@ export class RolesController {
     @Param('id', ParseIntPipe) roleId: number,
     @Body() body: PermissionIdsDto,
   ): Observable<void> {
-    return this.rolesService.assignPermissionsToRole(
-      roleId,
-      body.permissionIds,
-    );
+    return this.rolesService.assignPermissions(roleId, body.permissionIds);
   }
 
   @Delete(':roleId/permissions/:permissionId')
@@ -278,83 +229,6 @@ export class RolesController {
     @Param('roleId', ParseIntPipe) roleId: number,
     @Param('permissionId', ParseIntPipe) permissionId: number,
   ): Observable<void> {
-    return this.rolesService.removePermissionsFromRole(roleId, [permissionId]);
-  }
-
-  @Post('/permissions')
-  @ApiOperation({
-    summary: 'Create Permission',
-    description: 'Create a new system permission.',
-  })
-  @ApiBody({
-    description: 'Permission creation data',
-    type: CreatePermissionDto,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Permission created successfully',
-    type: PermissionResponseDto,
-  })
-  createPermission(
-    @Body() createPermissionDto: CreatePermissionDto,
-  ): Observable<PermissionResponseDto> {
-    return this.rolesService.createPermission(createPermissionDto);
-  }
-
-  @Put('/permissions/:id')
-  @ApiOperation({
-    summary: 'Update Permission',
-    description: 'Update an existing system permission.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Permission ID',
-    type: 'number',
-    example: 1,
-  })
-  @ApiBody({
-    description: 'Permission update data',
-    type: UpdatePermissionDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permission updated successfully',
-    type: PermissionResponseDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Permission not found',
-  })
-  updatePermission(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updatePermissionDto: UpdatePermissionDto,
-  ): Observable<PermissionResponseDto> {
-    return this.rolesService.updatePermission(id, updatePermissionDto);
-  }
-
-  @Delete('/permissions/:id')
-  @ApiOperation({
-    summary: 'Delete Permission',
-    description: 'Delete a system permission.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Permission ID',
-    type: 'number',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permission deleted successfully',
-    type: PermissionResponseDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Permission not found',
-  })
-  deletePermission(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<PermissionResponseDto> {
-    return this.rolesService.deletePermission(id);
+    return this.rolesService.removePermissions(roleId, [permissionId]);
   }
 }

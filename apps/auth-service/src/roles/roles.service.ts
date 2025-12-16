@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,18 +30,20 @@ export class RolesService {
       });
 
       if (!loaded) {
-        throw new InternalServerErrorException(
-          `Failed to load role with id ${role.id} after creation`,
-        );
+        throw new RpcException({
+          statusCode: 500,
+          message: `Failed to load role with id ${role.id} after creation`,
+        });
       }
 
       return loaded;
     } catch (e: unknown) {
       const err = e as { code?: unknown };
       if (typeof err.code === 'string' && err.code === '23505') {
-        throw new InternalServerErrorException(
-          `Role with name '${data.name}' already exists`,
-        );
+        throw new RpcException({
+          statusCode: 409,
+          message: `Role with name '${data.name}' already exists`,
+        });
       }
       throw e;
     }
@@ -107,9 +109,10 @@ export class RolesService {
     } catch (e: unknown) {
       const err = e as { code?: unknown };
       if (typeof err.code === 'string' && err.code === '23505') {
-        throw new InternalServerErrorException(
-          `Role with name '${data.name}' already exists`,
-        );
+        throw new RpcException({
+          statusCode: 409,
+          message: `Role with name '${data.name}' already exists`,
+        });
       }
       throw e;
     }
@@ -126,7 +129,10 @@ export class RolesService {
     }
 
     if (role.isSystem) {
-      throw new InternalServerErrorException('Cannot delete system role');
+      throw new RpcException({
+        statusCode: 409,
+        message: 'Cannot delete system role',
+      });
     }
 
     const userCount = await this.userRoleRepository.count({
@@ -134,9 +140,10 @@ export class RolesService {
     });
 
     if (userCount > 0) {
-      throw new InternalServerErrorException(
-        'Cannot delete role that is assigned to users',
-      );
+      throw new RpcException({
+        statusCode: 409,
+        message: 'Cannot delete role that is assigned to users',
+      });
     }
 
     await this.roleRepository.remove(role);
@@ -150,7 +157,7 @@ export class RolesService {
     const role = await this.roleRepository.findOne({ where: { id: roleId } });
 
     if (!role) {
-      throw new InternalServerErrorException('Role not found');
+      throw new RpcException({ statusCode: 404, message: 'Role not found' });
     }
 
     await this.rolePermissionRepository.delete({ roleId });
