@@ -248,40 +248,61 @@ export class UsersService {
   }
 
   async assignRolesToUser(userId: number, roleIds: number[]): Promise<void> {
-    await this.userRoleRepository.delete({ userId });
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: { id: true },
+    });
 
-    if (roleIds.length > 0) {
-      const validRoleIds = roleIds.filter(
-        (roleId) =>
-          roleId != null && !isNaN(roleId) && Number.isInteger(roleId),
-      );
+    if (!user) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${userId} not found`,
+      });
+    }
 
-      if (validRoleIds.length === 0) {
-        throw new RpcException({
-          statusCode: 500,
-          message: 'No valid role IDs provided',
-        });
-      }
+    const incomingRoleIds = Array.isArray(roleIds) ? roleIds : [];
 
+    const validRoleIds = incomingRoleIds.filter(
+      (roleId) => roleId != null && Number.isInteger(roleId) && roleId > 0,
+    );
+
+    const uniqueRoleIds = Array.from(new Set(validRoleIds));
+
+    if (incomingRoleIds.length > 0 && uniqueRoleIds.length === 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'No valid role IDs provided',
+      });
+    }
+
+    if (uniqueRoleIds.length > 0) {
       const existingRoles = await this.roleRepository
         .createQueryBuilder('role')
-        .where('role.id IN (:...roleIds)', { roleIds: validRoleIds })
+        .where('role.id IN (:...roleIds)', { roleIds: uniqueRoleIds })
         .getMany();
 
-      if (existingRoles.length !== validRoleIds.length) {
+      if (existingRoles.length !== uniqueRoleIds.length) {
         const foundRoleIds = existingRoles.map((r) => r.id);
-        const missingRoleIds = validRoleIds.filter(
+        const missingRoleIds = uniqueRoleIds.filter(
           (id) => !foundRoleIds.includes(id),
         );
+
         throw new RpcException({
-          statusCode: 500,
+          statusCode: 400,
           message: `Roles with IDs ${missingRoleIds.join(', ')} do not exist`,
         });
       }
-
-      const userRoles = validRoleIds.map((roleId) => ({ userId, roleId }));
-      await this.userRoleRepository.save(userRoles);
     }
+
+    await this.userRoleRepository.manager.transaction(async (manager) => {
+      const userRoleRepository = manager.getRepository(UserRole);
+      await userRoleRepository.delete({ userId });
+
+      if (uniqueRoleIds.length > 0) {
+        const userRoles = uniqueRoleIds.map((roleId) => ({ userId, roleId }));
+        await userRoleRepository.save(userRoles);
+      }
+    });
   }
 
   async removeRolesFromUser(userId: number, roleIds: number[]): Promise<void> {

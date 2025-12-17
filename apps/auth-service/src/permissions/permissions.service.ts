@@ -31,7 +31,15 @@ export class PermissionsService {
           message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
         });
       }
-      throw e;
+
+      if (e instanceof RpcException) {
+        throw e;
+      }
+
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Internal server error',
+      });
     }
   }
 
@@ -96,7 +104,15 @@ export class PermissionsService {
           message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
         });
       }
-      throw e;
+
+      if (e instanceof RpcException) {
+        throw e;
+      }
+
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Internal server error',
+      });
     }
   }
 

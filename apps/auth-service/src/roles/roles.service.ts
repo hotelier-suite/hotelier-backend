@@ -45,7 +45,15 @@ export class RolesService {
           message: `Role with name '${data.name}' already exists`,
         });
       }
-      throw e;
+
+      if (e instanceof RpcException) {
+        throw e;
+      }
+
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Internal server error',
+      });
     }
   }
 
@@ -114,7 +122,15 @@ export class RolesService {
           message: `Role with name '${data.name}' already exists`,
         });
       }
-      throw e;
+
+      if (e instanceof RpcException) {
+        throw e;
+      }
+
+      throw new RpcException({
+        statusCode: 500,
+        message: 'Internal server error',
+      });
     }
   }
 
