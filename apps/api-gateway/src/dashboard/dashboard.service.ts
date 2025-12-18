@@ -14,12 +14,12 @@ import { Room } from '../rooms/entities/room.entity';
 import { Reservation } from '../reservations/entities/reservation.entity';
 import { Employee } from '../employees/entities/employee.entity';
 import { Invoice } from '../billing/entities/invoice.entity';
-import { GuestRequest } from '../guest-requests/entities/guest-request.entity';
 import { CleaningAssignment } from '../housekeeping/entities/cleaning-assignment.entity';
 import { StaffStatus } from '../employees/enums/staff-status.enum';
-import { RequestStatus } from '../guest-requests/enums/request-status.enum';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import { GuestRequestsService } from '../guest-requests-service/guest-requests/guest-requests.service';
+import { forkJoin, from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class DashboardService {
@@ -34,10 +34,9 @@ export class DashboardService {
     private readonly employeeRepository: Repository<Employee>,
     @InjectRepository(Invoice)
     private readonly invoiceRepository: Repository<Invoice>,
-    @InjectRepository(GuestRequest)
-    private readonly guestRequestRepository: Repository<GuestRequest>,
     @InjectRepository(CleaningAssignment)
     private readonly cleaningAssignmentRepository: Repository<CleaningAssignment>,
+    private readonly guestRequestsService: GuestRequestsService,
     private readonly authService: AuthService,
   ) {}
 
@@ -81,36 +80,26 @@ export class DashboardService {
 
   getDashboardStats(userId: number): Observable<DashboardStatsDto> {
     return this.authService.validateUser(userId).pipe(
-      switchMap(async (user) => {
-        if (!user) throw new NotFoundException('User not found');
-
-        // Core metrics
-        const [totalRooms, availableRooms, activeStaff, pendingRequests] =
-          await Promise.all([
-            this.roomRepository.count(),
-            this.roomRepository.count({ where: { isAvailable: true } }),
-            this.employeeRepository.count({
-              where: { status: StaffStatus.ACTIVE },
-            }),
-            this.guestRequestRepository.count({
-              where: { status: RequestStatus.PENDING },
-            }),
-          ]);
-        const occupiedRooms = Math.max(0, totalRooms - availableRooms);
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
 
         // Revenue (last 30 days)
         const endDate = new Date();
         const startDate = new Date();
         startDate.setDate(endDate.getDate() - 30);
-        const revenueRaw = await this.invoiceRepository
-          .createQueryBuilder('invoice')
-          .select('SUM(invoice.total)', 'total')
-          .where('invoice.createdAt BETWEEN :start AND :end', {
-            start: startDate,
-            end: endDate,
-          })
-          .getRawOne<{ total: string }>();
-        const totalRevenue = parseFloat(revenueRaw?.total || '0') || 0;
+
+        const totalRevenue$ = from(
+          this.invoiceRepository
+            .createQueryBuilder('invoice')
+            .select('SUM(invoice.total)', 'total')
+            .where('invoice.createdAt BETWEEN :start AND :end', {
+              start: startDate,
+              end: endDate,
+            })
+            .getRawOne<{ total: string }>(),
+        ).pipe(map((revenueRaw) => parseFloat(revenueRaw?.total || '0') || 0));
 
         // Today check-ins / check-outs
         const today = new Date();
@@ -118,25 +107,53 @@ export class DashboardService {
         dayStart.setHours(0, 0, 0, 0);
         const dayEnd = new Date(today);
         dayEnd.setHours(23, 59, 59, 999);
-        const [todayCheckIns, todayCheckOuts] = await Promise.all([
-          this.reservationRepository.count({
-            where: { checkInDate: Between(dayStart, dayEnd) },
-          }),
-          this.reservationRepository.count({
-            where: { checkOutDate: Between(dayStart, dayEnd) },
-          }),
-        ]);
 
-        return {
-          totalRooms,
-          occupiedRooms,
-          availableRooms,
-          totalRevenue,
-          todayCheckIns,
-          todayCheckOuts,
-          pendingRequests,
-          activeStaff,
-        };
+        return forkJoin({
+          totalRooms: from(this.roomRepository.count()),
+          availableRooms: from(
+            this.roomRepository.count({ where: { isAvailable: true } }),
+          ),
+          activeStaff: from(
+            this.employeeRepository.count({
+              where: { status: StaffStatus.ACTIVE },
+            }),
+          ),
+          pendingRequests: this.guestRequestsService.countByStatus(
+            RequestStatus.PENDING,
+          ),
+          totalRevenue: totalRevenue$,
+          todayCheckIns: from(
+            this.reservationRepository.count({
+              where: { checkInDate: Between(dayStart, dayEnd) },
+            }),
+          ),
+          todayCheckOuts: from(
+            this.reservationRepository.count({
+              where: { checkOutDate: Between(dayStart, dayEnd) },
+            }),
+          ),
+        }).pipe(
+          map(
+            ({
+              totalRooms,
+              availableRooms,
+              activeStaff,
+              pendingRequests,
+              totalRevenue,
+              todayCheckIns,
+              todayCheckOuts,
+            }) => ({
+              totalRooms,
+              occupiedRooms: Math.max(0, totalRooms - availableRooms),
+              availableRooms,
+              totalRevenue,
+              todayCheckIns,
+              todayCheckOuts,
+              pendingRequests,
+              activeStaff,
+            }),
+          ),
+        );
       }),
     );
   }
@@ -238,68 +255,78 @@ export class DashboardService {
 
   getRecentActivities(userId: number): Observable<RecentActivityDto[]> {
     return this.authService.validateUser(userId).pipe(
-      switchMap(async (user) => {
-        if (!user) throw new NotFoundException('User not found');
+      switchMap((user) => {
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
 
-        const [
-          recentReservations,
-          recentInvoices,
-          recentAssignments,
-          recentRequests,
-        ] = await Promise.all([
-          this.reservationRepository.find({
-            order: { createdAt: 'DESC' },
-            take: 5,
-          }),
-          this.invoiceRepository.find({
-            order: { createdAt: 'DESC' },
-            take: 5,
-          }),
-          this.cleaningAssignmentRepository.find({
-            order: { completedAt: 'DESC' },
-            take: 5,
-          }),
-          this.guestRequestRepository.find({
-            order: { createdAt: 'DESC' },
-            take: 5,
-          }),
-        ]);
+        return forkJoin({
+          recentReservations: from(
+            this.reservationRepository.find({
+              order: { createdAt: 'DESC' },
+              take: 5,
+            }),
+          ),
+          recentInvoices: from(
+            this.invoiceRepository.find({
+              order: { createdAt: 'DESC' },
+              take: 5,
+            }),
+          ),
+          recentAssignments: from(
+            this.cleaningAssignmentRepository.find({
+              order: { completedAt: 'DESC' },
+              take: 5,
+            }),
+          ),
+          recentRequests: this.guestRequestsService.findRecent(5),
+        }).pipe(
+          map(
+            ({
+              recentReservations,
+              recentInvoices,
+              recentAssignments,
+              recentRequests,
+            }) => {
+              const activities: RecentActivityDto[] = [];
 
-        const activities: RecentActivityDto[] = [];
-        recentReservations.forEach((r) =>
-          activities.push({
-            type: 'booking',
-            description: `Reservation for room ${r.roomId} - ${r.guestName}`,
-            timestamp: r.createdAt,
-          }),
-        );
-        recentInvoices.forEach((inv) =>
-          activities.push({
-            type: 'payment',
-            description: `Invoice #${inv.number} created`,
-            timestamp: inv.createdAt,
-          }),
-        );
-        recentAssignments.forEach((a) =>
-          activities.push({
-            type: 'maintenance',
-            description: `Cleaning assignment ${a.id} ${
-              a.completedAt ? 'completed' : 'in progress'
-            }`,
-            timestamp: a.completedAt || a.assignedDate,
-          }),
-        );
-        recentRequests.forEach((gr) =>
-          activities.push({
-            type: 'request',
-            description: `Guest request ${gr.type} in room ${gr.room}`,
-            timestamp: gr.createdAt,
-          }),
-        );
+              recentReservations.forEach((r) =>
+                activities.push({
+                  type: 'booking',
+                  description: `Reservation for room ${r.roomId} - ${r.guestName}`,
+                  timestamp: r.createdAt,
+                }),
+              );
+              recentInvoices.forEach((inv) =>
+                activities.push({
+                  type: 'payment',
+                  description: `Invoice #${inv.number} created`,
+                  timestamp: inv.createdAt,
+                }),
+              );
+              recentAssignments.forEach((a) =>
+                activities.push({
+                  type: 'maintenance',
+                  description: `Cleaning assignment ${a.id} ${
+                    a.completedAt ? 'completed' : 'in progress'
+                  }`,
+                  timestamp: a.completedAt || a.assignedDate,
+                }),
+              );
+              recentRequests.forEach((gr) =>
+                activities.push({
+                  type: 'request',
+                  description: `Guest request ${gr.type} in room ${gr.room}`,
+                  timestamp: new Date(gr.createdAt),
+                }),
+              );
 
-        return activities
-          .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-          .slice(0, 12);
+              return activities
+                .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+                .slice(0, 12);
+            },
+          ),
+        );
       }),
     );
   }

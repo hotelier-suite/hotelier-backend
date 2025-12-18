@@ -10,7 +10,6 @@ import { SeedersService as RoomsSeedersService } from './rooms/seeders/seeders.s
 import { SeedersService as InventorySeedersService } from './inventory/seeders/seeders.service';
 import { SeedersService as HousekeepingSeedersService } from './housekeeping/seeders/seeders.service';
 import { SeedersService as BillingSeedersService } from './billing/seeders/seeders.service';
-import { SeedersService as GuestRequestsSeedersService } from './guest-requests/seeders/seeders.service';
 import { SeedersService as ShiftsSeedersService } from './shifts/seeders/seeders.service';
 import { SeedersService as AttendanceSeedersService } from './attendance/seeders/seeders.service';
 import { SeedersService as EmployeeRequestsSeedersService } from './employee-requests/seeders/seeders.service';
@@ -85,12 +84,6 @@ async function runSeeds() {
     // Billing
     const billingSeeder = app.get(BillingSeedersService);
     await billingSeeder.seed();
-
-    // Support
-
-    // Guest Requests
-    const guestRequestsSeeder = app.get(GuestRequestsSeedersService);
-    await guestRequestsSeeder.seed();
   } catch (error) {
     console.error('❌ Error during seeding:', error);
     process.exit(1);

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GuestRequest } from '../../entities/guest-request.entity';
-import { RequestType } from '../../enums/request-type.enum';
-import { RequestStatus } from '../../enums/request-status.enum';
-import { RequestPriority } from '../../enums/request-priority.enum';
+import { GuestRequest } from '../entities/guest-request.entity';
+import { RequestType } from '@app/contracts/guest-requests-service/guest-requests/enums/request-type.enum';
+import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
 
 @Injectable()
 export class GuestRequestsSeeder {

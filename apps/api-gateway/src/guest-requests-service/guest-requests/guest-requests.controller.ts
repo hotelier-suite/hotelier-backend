@@ -17,14 +17,15 @@ import {
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
 import { GuestRequestsService } from './guest-requests.service';
-import { CreateGuestRequestDto } from './dto/create-guest-request.dto';
-import { UpdateGuestRequestDto } from './dto/update-guest-request.dto';
-import { GuestRequest } from './entities/guest-request.entity';
-import { RequestStatus } from './enums/request-status.enum';
-import { RequestPriority } from './enums/request-priority.enum';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
+import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
+import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
+import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
+import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import { AuditLog } from '../../audit/decorators/audit-log.decorator';
+import { AuditResource } from '../../audit/enums/audit-resource.enum';
 
 @ApiTags('guest-requests')
 @Controller('guest-requests')
@@ -44,7 +45,7 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 201,
     description: 'Guest request created successfully',
-    type: GuestRequest,
+    type: GuestRequestDto,
   })
   @ApiResponse({
     status: 400,
@@ -52,7 +53,7 @@ export class GuestRequestsController {
   })
   create(
     @Body() createGuestRequestDto: CreateGuestRequestDto,
-  ): Promise<GuestRequest> {
+  ): Observable<GuestRequestDto> {
     return this.guestRequestsService.create(createGuestRequestDto);
   }
 
@@ -70,9 +71,11 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Guest requests retrieved successfully',
-    type: [GuestRequest],
+    type: [GuestRequestDto],
   })
-  findAll(@Query('status') status?: RequestStatus): Promise<GuestRequest[]> {
+  findAll(
+    @Query('status') status?: RequestStatus,
+  ): Observable<GuestRequestDto[]> {
     if (status) {
       return this.guestRequestsService.findByStatus(status);
     }
@@ -87,9 +90,9 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Pending requests retrieved successfully',
-    type: [GuestRequest],
+    type: [GuestRequestDto],
   })
-  getPendingRequests(): Promise<GuestRequest[]> {
+  getPendingRequests(): Observable<GuestRequestDto[]> {
     return this.guestRequestsService.getPendingRequests();
   }
 
@@ -107,11 +110,11 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Requests by priority retrieved successfully',
-    type: [GuestRequest],
+    type: [GuestRequestDto],
   })
   getRequestsByPriority(
     @Param('priority') priority: RequestPriority,
-  ): Promise<GuestRequest[]> {
+  ): Observable<GuestRequestDto[]> {
     return this.guestRequestsService.getRequestsByPriority(priority);
   }
 
@@ -128,13 +131,13 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Guest request retrieved successfully',
-    type: GuestRequest,
+    type: GuestRequestDto,
   })
   @ApiResponse({
     status: 404,
     description: 'Guest request not found',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<GuestRequest | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<GuestRequestDto> {
     return this.guestRequestsService.findOne(id);
   }
 
@@ -155,7 +158,7 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Guest request updated successfully',
-    type: GuestRequest,
+    type: GuestRequestDto,
   })
   @ApiResponse({
     status: 400,
@@ -168,7 +171,7 @@ export class GuestRequestsController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGuestRequestDto: UpdateGuestRequestDto,
-  ): Promise<GuestRequest> {
+  ): Observable<GuestRequestDto> {
     return this.guestRequestsService.update(id, updateGuestRequestDto);
   }
 
@@ -185,13 +188,13 @@ export class GuestRequestsController {
   @ApiResponse({
     status: 200,
     description: 'Guest request deleted successfully',
-    type: GuestRequest,
+    type: GuestRequestDto,
   })
   @ApiResponse({
     status: 404,
     description: 'Guest request not found',
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<GuestRequest> {
-    return this.guestRequestsService.delete(id);
+  remove(@Param('id', ParseIntPipe) id: number): Observable<GuestRequestDto> {
+    return this.guestRequestsService.remove(id);
   }
 }

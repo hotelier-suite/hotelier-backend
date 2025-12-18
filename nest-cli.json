@@ -63,6 +63,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications-service/tsconfig.app.json"
       }
+    },
+    "guest-requests-service": {
+      "type": "application",
+      "root": "apps/guest-requests-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/guest-requests-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/guest-requests-service/tsconfig.app.json"
+      }
     }
   }
 }
