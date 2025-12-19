@@ -1,0 +1,61 @@
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+
+export class PermissionResponseDto {
+  @ApiProperty({
+    description: 'Permission unique identifier',
+    example: 1,
+  })
+  @IsNumber()
+  id!: number;
+
+  @ApiProperty({
+    description: 'Resource that this permission applies to',
+    example: 'users',
+  })
+  @IsString()
+  resource!: string;
+
+  @ApiProperty({
+    description: 'Action that can be performed on the resource',
+    example: 'create',
+  })
+  @IsString()
+  action!: string;
+
+  @ApiProperty({
+    description: 'Human-readable description of the permission',
+    example: 'Create users',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty({
+    description: 'Whether the permission is currently active',
+    example: true,
+  })
+  @IsBoolean()
+  active!: boolean;
+
+  @ApiProperty({
+    description: 'Permission creation timestamp',
+    example: '2024-01-01T00:00:00.000Z',
+  })
+  @IsDate()
+  createdAt!: Date;
+
+  @ApiProperty({
+    description: 'Permission last update timestamp',
+    example: '2024-01-15T10:30:00.000Z',
+  })
+  @IsDate()
+  updatedAt!: Date;
+}
