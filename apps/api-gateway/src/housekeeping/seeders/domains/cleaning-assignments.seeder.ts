@@ -1,28 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { lastValueFrom } from 'rxjs';
 import { CleaningAssignment } from '../../entities/cleaning-assignment.entity';
-import { Staff } from '../../../employees/entities/staff.entity';
 import { Room } from '../../../rooms/entities/room.entity';
 import { CleaningStatus } from '../../enums/cleaning-status.enum';
-import { Department } from '../../../employees/enums/department.enum';
+import { EmployeesService } from '../../../staff-service/employees/employees.service';
 
 @Injectable()
 export class CleaningAssignmentsSeeder {
   constructor(
     @InjectRepository(CleaningAssignment)
     private assignmentRepository: Repository<CleaningAssignment>,
-    @InjectRepository(Staff)
-    private staffRepository: Repository<Staff>,
     @InjectRepository(Room)
     private roomRepository: Repository<Room>,
+    private readonly employeesService: EmployeesService,
   ) {}
 
   async seed() {
-    const housekeepingStaff = await this.staffRepository.find({
-      where: { department: Department.HOUSEKEEPING },
-      take: 3,
-    });
+    let housekeepingStaff: Array<{ id: number }> = [];
+    try {
+      housekeepingStaff = await lastValueFrom(
+        this.employeesService.getHousekeepingEmployees(),
+      );
+    } catch {
+      console.log('Skipping cleaning assignment seeds - unable to fetch staff');
+      return;
+    }
     const rooms = await this.roomRepository.find({ take: 6 });
 
     if (housekeepingStaff.length === 0 || rooms.length === 0) {

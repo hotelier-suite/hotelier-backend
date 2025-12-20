@@ -10,7 +10,6 @@ import { CleaningAssignment } from '../entities/cleaning-assignment.entity';
 import { MaintenanceRequest } from '../entities/maintenance-request.entity';
 import { MaintenanceReport } from '../entities/maintenance-report.entity';
 import { Room } from '../../rooms/entities/room.entity';
-import { Staff } from '../../employees/entities/staff.entity';
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { Staff } from '../../employees/entities/staff.entity';
       MaintenanceRequest,
       MaintenanceReport,
       Room,
-      Staff,
     ]),
   ],
   providers: [

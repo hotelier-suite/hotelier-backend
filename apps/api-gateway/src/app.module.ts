@@ -8,18 +8,15 @@ import { DatabaseModule } from './database/database.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { EmployeesModule } from './employees/employees.module';
 import { VenuesModule } from './venues/venues.module';
 import { EventsModule } from './events/events.module';
 import { RecreationalModule } from './recreational/recreational.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
-import { InventoryModule } from './inventory/inventory.module';
+import { InventoryServiceModule } from './inventory-service/inventory-service.module';
+import { StaffServiceModule } from './staff-service/staff-service.module';
 import { BillingModule } from './billing/billing.module';
 import { HousekeepingModule } from './housekeeping/housekeeping.module';
 import { ReportsModule } from './reports/reports.module';
-import { ShiftsModule } from './shifts/shifts.module';
-import { AttendanceModule } from './attendance/attendance.module';
-import { EmployeeRequestsModule } from './employee-requests/employee-requests.module';
 import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
@@ -42,18 +39,15 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     ReservationsModule,
     RoomsModule,
     DashboardModule,
-    EmployeesModule,
     VenuesModule,
     EventsModule,
     RecreationalModule,
     RestaurantModule,
-    InventoryModule,
+    InventoryServiceModule,
+    StaffServiceModule,
     BillingModule,
     HousekeepingModule,
     ReportsModule,
-    ShiftsModule,
-    AttendanceModule,
-    EmployeeRequestsModule,
     ReportsAnalyticsModule,
     MaintenanceModule,
     NotificationsServiceModule,

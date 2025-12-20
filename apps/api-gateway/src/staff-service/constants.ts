@@ -1,0 +1,1 @@
+export const STAFF_SERVICE_CLIENT = Symbol('STAFF_SERVICE_CLIENT');

@@ -4,15 +4,10 @@ import { SeedersService as ReservationsSeedersService } from './reservations/see
 import { SeedersService as RestaurantSeedersService } from './restaurant/seeders/seeders.service';
 import { SeedersService as EventsSeedersService } from './events/seeders/seeders.service';
 import { SeedersService as RecreationalSeedersService } from './recreational/seeders/seeders.service';
-import { SeedersService as EmployeesSeedersService } from './employees/seeders/seeders.service';
 import { SeedersService as VenuesSeedersService } from './venues/seeders/seeders.service';
 import { SeedersService as RoomsSeedersService } from './rooms/seeders/seeders.service';
-import { SeedersService as InventorySeedersService } from './inventory/seeders/seeders.service';
 import { SeedersService as HousekeepingSeedersService } from './housekeeping/seeders/seeders.service';
 import { SeedersService as BillingSeedersService } from './billing/seeders/seeders.service';
-import { SeedersService as ShiftsSeedersService } from './shifts/seeders/seeders.service';
-import { SeedersService as AttendanceSeedersService } from './attendance/seeders/seeders.service';
-import { SeedersService as EmployeeRequestsSeedersService } from './employee-requests/seeders/seeders.service';
 import { SeedersService as MaintenanceSeedersService } from './maintenance/seeders/seeders.service';
 
 async function runSeeds() {
@@ -30,20 +25,12 @@ async function runSeeds() {
     await roomsSeeder.seed();
 
     // Employees are needed for many operations
-    const employeesSeeder = app.get(EmployeesSeedersService);
-    await employeesSeeder.seed();
 
     // Shifts depend on employees
-    const shiftsSeeder = app.get(ShiftsSeedersService);
-    await shiftsSeeder.seed();
 
     // Attendance depends on employees
-    const attendanceSeeder = app.get(AttendanceSeedersService);
-    await attendanceSeeder.seed();
 
     // Employee requests depend on employees
-    const employeeRequestsSeeder = app.get(EmployeeRequestsSeedersService);
-    await employeeRequestsSeeder.seed();
 
     // Customer & Reservations
 
@@ -66,10 +53,6 @@ async function runSeeds() {
     await recreationalSeeder.seed();
 
     // Operations
-
-    // Inventory
-    const inventorySeeder = app.get(InventorySeedersService);
-    await inventorySeeder.seed();
 
     // Housekeeping
     const housekeepingSeeder = app.get(HousekeepingSeedersService);

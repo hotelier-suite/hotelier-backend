@@ -6,7 +6,6 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
 import { AuthModule } from '../auth-service/auth/auth.module';
 import { Room } from '../rooms/entities/room.entity';
 import { Reservation } from '../reservations/entities/reservation.entity';
-import { Employee } from '../employees/entities/employee.entity';
 import { Invoice } from '../billing/entities/invoice.entity';
 import { CleaningAssignment } from '../housekeeping/entities/cleaning-assignment.entity';
 import { GuestRequestsModule } from '../guest-requests-service/guest-requests/guest-requests.module';
@@ -17,7 +16,6 @@ import { GuestRequestsModule } from '../guest-requests-service/guest-requests/gu
       DashboardWidget,
       Room,
       Reservation,
-      Employee,
       Invoice,
       CleaningAssignment,
     ]),

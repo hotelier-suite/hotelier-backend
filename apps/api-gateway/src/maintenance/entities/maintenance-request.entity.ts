@@ -4,8 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -22,7 +20,7 @@ import { Type } from 'class-transformer';
 import { MaintenanceStatus } from '../enums/maintenance-status.enum';
 import { MaintenancePriority } from '../enums/maintenance-priority.enum';
 import { MaintenanceType } from '../enums/maintenance-type.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
 
 @Entity('general_maintenance_requests')
 export class GeneralMaintenanceRequest {
@@ -186,12 +184,10 @@ export class GeneralMaintenanceRequest {
 
   @ApiProperty({
     description: 'Assigned technician details',
-    type: () => Employee,
+    type: () => EmployeeDto,
     required: false,
   })
-  @ManyToOne(() => Employee, { nullable: true })
-  @JoinColumn({ name: 'assignedTechnicianId' })
-  assignedTechnician?: Employee;
+  assignedTechnician?: EmployeeDto;
 
   @ApiProperty({
     description: 'ID of the employee who requested maintenance',
@@ -206,12 +202,10 @@ export class GeneralMaintenanceRequest {
 
   @ApiProperty({
     description: 'Employee who requested maintenance',
-    type: () => Employee,
+    type: () => EmployeeDto,
     required: false,
   })
-  @ManyToOne(() => Employee, { nullable: true })
-  @JoinColumn({ name: 'requestedById' })
-  requestedBy?: Employee;
+  requestedBy?: EmployeeDto;
 
   @ApiProperty({
     description: 'Date when maintenance was started',

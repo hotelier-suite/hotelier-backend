@@ -12,14 +12,13 @@ import { TopPerformingRoomDto } from './dto/top-performing-room.dto';
 import { AuthService } from '../auth-service/auth/auth.service';
 import { Room } from '../rooms/entities/room.entity';
 import { Reservation } from '../reservations/entities/reservation.entity';
-import { Employee } from '../employees/entities/employee.entity';
 import { Invoice } from '../billing/entities/invoice.entity';
 import { CleaningAssignment } from '../housekeeping/entities/cleaning-assignment.entity';
-import { StaffStatus } from '../employees/enums/staff-status.enum';
 import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
 import { GuestRequestsService } from '../guest-requests-service/guest-requests/guest-requests.service';
 import { forkJoin, from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { EmployeesService } from '../staff-service/employees/employees.service';
 
 @Injectable()
 export class DashboardService {
@@ -30,12 +29,11 @@ export class DashboardService {
     private readonly roomRepository: Repository<Room>,
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
-    @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
     @InjectRepository(Invoice)
     private readonly invoiceRepository: Repository<Invoice>,
     @InjectRepository(CleaningAssignment)
     private readonly cleaningAssignmentRepository: Repository<CleaningAssignment>,
+    private readonly employeesService: EmployeesService,
     private readonly guestRequestsService: GuestRequestsService,
     private readonly authService: AuthService,
   ) {}
@@ -113,11 +111,13 @@ export class DashboardService {
           availableRooms: from(
             this.roomRepository.count({ where: { isAvailable: true } }),
           ),
-          activeStaff: from(
-            this.employeeRepository.count({
-              where: { status: StaffStatus.ACTIVE },
-            }),
-          ),
+          activeStaff: this.employeesService
+            .getDepartmentStats()
+            .pipe(
+              map((stats) =>
+                stats.reduce((sum, s) => sum + (s.activeCount ?? 0), 0),
+              ),
+            ),
           pendingRequests: this.guestRequestsService.countByStatus(
             RequestStatus.PENDING,
           ),

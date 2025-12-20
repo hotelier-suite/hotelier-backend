@@ -1,0 +1,209 @@
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { InventoryItem } from './entities/inventory-item.entity';
+import { InventoryItemDto } from '@app/contracts/inventory-service/items/dto/inventory-item.dto';
+import { CreateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/create-inventory-item.dto';
+import { UpdateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/update-inventory-item.dto';
+import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
+import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+
+@Injectable()
+export class ItemsService {
+  constructor(
+    @InjectRepository(InventoryItem)
+    private readonly inventoryRepository: Repository<InventoryItem>,
+    private readonly notificationsService: NotificationsService,
+  ) {}
+
+  findAll(): Promise<InventoryItemDto[]> {
+    return this.inventoryRepository.find({
+      order: { name: 'ASC' },
+    });
+  }
+
+  findByCategory(category: InventoryCategory): Promise<InventoryItemDto[]> {
+    return this.inventoryRepository.find({
+      where: { category },
+      order: { name: 'ASC' },
+    });
+  }
+
+  findByStatus(status: InventoryStatus): Promise<InventoryItemDto[]> {
+    return this.inventoryRepository.find({
+      where: { status },
+      order: { name: 'ASC' },
+    });
+  }
+
+  findLowStock(): Promise<InventoryItemDto[]> {
+    return this.inventoryRepository.find({
+      where: {
+        status: In([InventoryStatus.LOW_STOCK, InventoryStatus.OUT_OF_STOCK]),
+      },
+      order: {
+        updatedAt: 'DESC',
+      },
+    });
+  }
+
+  async create(data: CreateInventoryItemDto): Promise<InventoryItemDto> {
+    const status = this.calculateItemStatus(
+      data.currentStock,
+      data.minimumStock,
+    );
+
+    const created = await this.inventoryRepository.save({
+      ...data,
+      status,
+    });
+
+    const loaded = await this.inventoryRepository.findOne({
+      where: { id: created.id },
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load inventory item with id ${created.id} after creation`,
+      });
+    }
+
+    this.notifyStockChange(null, loaded.status, loaded);
+
+    return loaded;
+  }
+
+  async update(
+    id: number,
+    data: UpdateInventoryItemDto,
+  ): Promise<InventoryItemDto> {
+    const existing = await this.inventoryRepository.findOne({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Inventory item with id ${id} not found`,
+      });
+    }
+
+    const currentStock = data.currentStock ?? existing.currentStock;
+    const minimumStock = data.minimumStock ?? existing.minimumStock;
+    const status = this.calculateItemStatus(currentStock, minimumStock);
+
+    await this.inventoryRepository.update(id, {
+      ...data,
+      status,
+    });
+
+    const updated = await this.inventoryRepository.findOne({
+      where: { id },
+    });
+
+    if (!updated) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Inventory item with id ${id} not found`,
+      });
+    }
+
+    this.notifyStockChange(existing.status, updated.status, updated);
+
+    return updated;
+  }
+
+  async remove(id: number): Promise<InventoryItemDto> {
+    const item = await this.inventoryRepository.findOne({
+      where: { id },
+    });
+
+    if (!item) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Inventory item with id ${id} not found`,
+      });
+    }
+
+    await this.inventoryRepository.remove(item);
+    return item;
+  }
+
+  private calculateItemStatus(
+    currentStock: number,
+    minimumStock: number,
+  ): InventoryStatus {
+    if (currentStock === 0) {
+      return InventoryStatus.OUT_OF_STOCK;
+    }
+
+    if (currentStock <= minimumStock) {
+      return InventoryStatus.LOW_STOCK;
+    }
+
+    return InventoryStatus.AVAILABLE;
+  }
+
+  private notifyStockChange(
+    previousStatus: InventoryStatus | null,
+    nextStatus: InventoryStatus,
+    item: InventoryItem,
+  ): void {
+    if (
+      nextStatus === InventoryStatus.LOW_STOCK ||
+      nextStatus === InventoryStatus.OUT_OF_STOCK
+    ) {
+      const title =
+        nextStatus === InventoryStatus.OUT_OF_STOCK
+          ? 'Inventory out of stock'
+          : 'Low inventory';
+
+      const message = `Inventory item '${item.name}' has ${nextStatus === InventoryStatus.OUT_OF_STOCK ? 'no stock' : 'low stock'} (current: ${item.currentStock}, minimum: ${item.minimumStock}).`;
+
+      this.notificationsService
+        .create({
+          type:
+            nextStatus === InventoryStatus.OUT_OF_STOCK
+              ? NotificationType.ALERT
+              : NotificationType.WARNING,
+          title,
+          message,
+          refId: item.id,
+          refType: 'inventory',
+          userId: null,
+        })
+        .subscribe({
+          error: () => {
+            return;
+          },
+        });
+
+      return;
+    }
+
+    if (
+      previousStatus != null &&
+      previousStatus !== InventoryStatus.AVAILABLE &&
+      nextStatus === InventoryStatus.AVAILABLE
+    ) {
+      this.notificationsService
+        .create({
+          type: NotificationType.INFO,
+          title: 'Inventory recovered',
+          message: `Inventory item '${item.name}' has recovered sufficient stock (current: ${item.currentStock}).`,
+          refId: item.id,
+          refType: 'inventory',
+          userId: null,
+        })
+        .subscribe({
+          error: () => {
+            return;
+          },
+        });
+    }
+  }
+}

@@ -1,18 +1,72 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
+import { lastValueFrom } from 'rxjs';
+import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
 import { CreateMaintenanceRequestDto } from './dto/create-maintenance-request.dto';
 import { UpdateMaintenanceRequestDto } from './dto/update-maintenance-request.dto';
 import { GeneralMaintenanceRequest } from './entities/maintenance-request.entity';
 import { MaintenanceStatus } from './enums/maintenance-status.enum';
 import { MaintenancePriority } from './enums/maintenance-priority.enum';
+import { EmployeesService } from '../staff-service/employees/employees.service';
 
 @Injectable()
 export class MaintenanceService {
   constructor(
     @InjectRepository(GeneralMaintenanceRequest)
     private maintenanceRequestRepository: Repository<GeneralMaintenanceRequest>,
+    private readonly employeesService: EmployeesService,
   ) {}
+
+  private async hydrateStaffDetails(
+    requests: GeneralMaintenanceRequest[],
+  ): Promise<void> {
+    const staffIds: number[] = [];
+
+    for (const request of requests) {
+      if (request.assignedTechnicianId) {
+        staffIds.push(request.assignedTechnicianId);
+      }
+
+      if (request.requestedById) {
+        staffIds.push(request.requestedById);
+      }
+    }
+
+    const uniqueIds = Array.from(new Set(staffIds));
+    if (uniqueIds.length === 0) {
+      return;
+    }
+
+    const entries = await Promise.all(
+      uniqueIds.map(async (id) => {
+        try {
+          const employee = await lastValueFrom(
+            this.employeesService.findOne(id),
+          );
+          return [id, employee] as const;
+        } catch {
+          return [id, undefined] as const;
+        }
+      }),
+    );
+
+    const staffById = new Map<number, EmployeeDto>();
+    for (const [id, employee] of entries) {
+      if (employee) {
+        staffById.set(id, employee);
+      }
+    }
+
+    for (const request of requests) {
+      request.assignedTechnician = request.assignedTechnicianId
+        ? staffById.get(request.assignedTechnicianId)
+        : undefined;
+      request.requestedBy = request.requestedById
+        ? staffById.get(request.requestedById)
+        : undefined;
+    }
+  }
 
   async create(
     createMaintenanceRequestDto: CreateMaintenanceRequestDto,
@@ -20,22 +74,26 @@ export class MaintenanceService {
     const maintenanceRequest = this.maintenanceRequestRepository.create(
       createMaintenanceRequestDto,
     );
-    return await this.maintenanceRequestRepository.save(maintenanceRequest);
+    const saved =
+      await this.maintenanceRequestRepository.save(maintenanceRequest);
+    await this.hydrateStaffDetails([saved]);
+    return saved;
   }
 
   async findAll(): Promise<GeneralMaintenanceRequest[]> {
-    return await this.maintenanceRequestRepository.find({
-      relations: ['assignedTechnician', 'requestedBy'],
+    const requests = await this.maintenanceRequestRepository.find({
       order: {
         createdAt: 'DESC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findOne(id: number): Promise<GeneralMaintenanceRequest> {
     const maintenanceRequest = await this.maintenanceRequestRepository.findOne({
       where: { id },
-      relations: ['assignedTechnician', 'requestedBy'],
     });
 
     if (!maintenanceRequest) {
@@ -44,6 +102,7 @@ export class MaintenanceService {
       );
     }
 
+    await this.hydrateStaffDetails([maintenanceRequest]);
     return maintenanceRequest;
   }
 
@@ -69,7 +128,10 @@ export class MaintenanceService {
     }
 
     Object.assign(maintenanceRequest, updateMaintenanceRequestDto);
-    return await this.maintenanceRequestRepository.save(maintenanceRequest);
+    const saved =
+      await this.maintenanceRequestRepository.save(maintenanceRequest);
+    await this.hydrateStaffDetails([saved]);
+    return saved;
   }
 
   async remove(id: number): Promise<GeneralMaintenanceRequest> {
@@ -81,72 +143,82 @@ export class MaintenanceService {
   async findByStatus(
     status: MaintenanceStatus,
   ): Promise<GeneralMaintenanceRequest[]> {
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: { status },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         priority: 'ASC',
         scheduledDate: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findByPriority(
     priority: MaintenancePriority,
   ): Promise<GeneralMaintenanceRequest[]> {
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: { priority },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         scheduledDate: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findByTechnician(
     technicianId: number,
   ): Promise<GeneralMaintenanceRequest[]> {
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: { assignedTechnicianId: technicianId },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         priority: 'ASC',
         scheduledDate: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findScheduledForDateRange(
     startDate: Date,
     endDate: Date,
   ): Promise<GeneralMaintenanceRequest[]> {
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: {
         scheduledDate: Between(startDate, endDate),
       },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         scheduledDate: 'ASC',
         scheduledStartTime: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findOverdueRequests(): Promise<GeneralMaintenanceRequest[]> {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: {
         scheduledDate: Between(new Date('1900-01-01'), today),
         status: MaintenanceStatus.SCHEDULED,
       },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         priority: 'ASC',
         scheduledDate: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async findUpcomingRequests(
@@ -156,17 +228,19 @@ export class MaintenanceService {
     const futureDate = new Date();
     futureDate.setDate(today.getDate() + days);
 
-    return await this.maintenanceRequestRepository.find({
+    const requests = await this.maintenanceRequestRepository.find({
       where: {
         scheduledDate: Between(today, futureDate),
         status: MaintenanceStatus.SCHEDULED,
       },
-      relations: ['assignedTechnician', 'requestedBy'],
       order: {
         scheduledDate: 'ASC',
         priority: 'ASC',
       },
     });
+
+    await this.hydrateStaffDetails(requests);
+    return requests;
   }
 
   async getMaintenanceStats(): Promise<{
@@ -220,7 +294,10 @@ export class MaintenanceService {
   ): Promise<GeneralMaintenanceRequest> {
     const maintenanceRequest = await this.findOne(id);
     maintenanceRequest.assignedTechnicianId = technicianId;
-    return await this.maintenanceRequestRepository.save(maintenanceRequest);
+    const saved =
+      await this.maintenanceRequestRepository.save(maintenanceRequest);
+    await this.hydrateStaffDetails([saved]);
+    return saved;
   }
 
   async updateStatus(
