@@ -1,0 +1,490 @@
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, LessThan, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
+import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
+import { CreateReservationDto } from '@app/contracts/booking-service/reservations/dto/create-reservation.dto';
+import { UpdateReservationDto } from '@app/contracts/booking-service/reservations/dto/update-reservation.dto';
+import { GetAvailabilityDto } from '@app/contracts/booking-service/reservations/dto/get-availability.dto';
+import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/reservations/dto/checkout-reservation-response.dto';
+import { ReservationStatus } from '@app/contracts/booking-service/reservations/enums/reservation-status.enum';
+import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
+import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
+import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import { Reservation } from './entities/reservation.entity';
+import { Room } from '../rooms/entities/room.entity';
+import { Guest } from '../guests/entities/guest.entity';
+import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+
+@Injectable()
+export class ReservationsService {
+  constructor(
+    @InjectRepository(Reservation)
+    private readonly reservationsRepository: Repository<Reservation>,
+    @InjectRepository(Room)
+    private readonly roomsRepository: Repository<Room>,
+    @InjectRepository(Guest)
+    private readonly guestsRepository: Repository<Guest>,
+    private readonly notificationsService: NotificationsService,
+  ) {}
+
+  findAll(): Promise<ReservationDto[]> {
+    return this.reservationsRepository.find({
+      relations: { guest: true, room: true },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async findMine(userId: number): Promise<ReservationDto[]> {
+    if (typeof userId !== 'number') {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid userId',
+      });
+    }
+
+    return this.reservationsRepository.find({
+      where: { userId },
+      relations: { guest: true, room: true },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  findCurrent(): Promise<ReservationDto[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return this.reservationsRepository.find({
+      where: {
+        status: ReservationStatus.CHECKED_IN,
+        checkOutDate: MoreThanOrEqual(today),
+      },
+      relations: { guest: true, room: true },
+      order: { checkOutDate: 'ASC' },
+    });
+  }
+
+  async findOne(id: number): Promise<ReservationDto> {
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id },
+      relations: { guest: true, room: true },
+    });
+
+    if (!reservation) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Reservation with id ${id} not found`,
+      });
+    }
+
+    return reservation;
+  }
+
+  async getAvailability(query: GetAvailabilityDto): Promise<RoomDto[]> {
+    const start = this.toDate(query.startDate);
+    const end = this.toDate(query.endDate);
+
+    if (start >= end) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid date range',
+      });
+    }
+
+    const blockingStatuses: ReservationStatus[] = [
+      ReservationStatus.PENDING,
+      ReservationStatus.CONFIRMED,
+      ReservationStatus.CHECKED_IN,
+    ];
+
+    const qb = this.roomsRepository.createQueryBuilder('room');
+    qb.leftJoin(
+      Reservation,
+      'res',
+      'res.roomId = room.id AND res.checkInDate < :end AND res.checkOutDate > :start AND res.status IN (:...statuses)',
+      { start, end, statuses: blockingStatuses },
+    );
+    qb.where('res.id IS NULL');
+
+    if (query.type) {
+      qb.andWhere('room.type = :type', { type: query.type });
+    }
+
+    if (typeof query.guests === 'number') {
+      qb.andWhere('room.capacity >= :minGuests', { minGuests: query.guests });
+    }
+
+    qb.orderBy('room.number', 'ASC');
+
+    return qb.getMany();
+  }
+
+  async create(data: CreateReservationDto): Promise<ReservationDto> {
+    const checkInDate = this.toDate(data.checkInDate);
+    const checkOutDate = this.toDate(data.checkOutDate);
+
+    const nights = this.calculateNights(checkInDate, checkOutDate);
+
+    if (nights <= 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid date range',
+      });
+    }
+
+    const room = await this.roomsRepository.findOne({
+      where: { id: data.roomId },
+    });
+
+    if (!room) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Room with id ${data.roomId} not found`,
+      });
+    }
+
+    if (typeof data.guests === 'number' && data.guests > room.capacity) {
+      throw new RpcException({
+        statusCode: 400,
+        message: `Selected room capacity (${room.capacity}) is less than requested guests (${data.guests})`,
+      });
+    }
+
+    if (data.guestId) {
+      const guest = await this.guestsRepository.findOne({
+        where: { id: data.guestId },
+      });
+
+      if (!guest) {
+        throw new RpcException({
+          statusCode: 404,
+          message: `Guest with id ${data.guestId} not found`,
+        });
+      }
+    }
+
+    const blockingStatuses: ReservationStatus[] = [
+      ReservationStatus.PENDING,
+      ReservationStatus.CONFIRMED,
+      ReservationStatus.CHECKED_IN,
+    ];
+
+    const overlapCount = await this.reservationsRepository.count({
+      where: {
+        roomId: data.roomId,
+        status: In(blockingStatuses),
+        checkInDate: LessThan(checkOutDate),
+        checkOutDate: MoreThan(checkInDate),
+      },
+    });
+
+    if (overlapCount > 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Room is not available for the selected date range',
+      });
+    }
+
+    let baseTotal = Number(room.price) * nights;
+
+    if (data.discountPercent && Number(data.discountPercent) > 0) {
+      baseTotal = baseTotal - baseTotal * (Number(data.discountPercent) / 100);
+    }
+
+    if (data.discountAmount && Number(data.discountAmount) > 0) {
+      baseTotal = baseTotal - Number(data.discountAmount);
+    }
+
+    if (baseTotal < 0) {
+      baseTotal = 0;
+    }
+
+    const created = await this.reservationsRepository.save({
+      ...data,
+      checkInDate,
+      checkOutDate,
+      nights,
+      totalAmount: baseTotal,
+      status: ReservationStatus.PENDING,
+      channel: data.channel ?? BookingChannel.DIRECT,
+    });
+
+    const loaded = await this.reservationsRepository.findOne({
+      where: { id: created.id },
+      relations: { guest: true, room: true },
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load reservation with id ${created.id} after creation`,
+      });
+    }
+
+    this.notificationsService
+      .create({
+        title: 'New reservation',
+        message: `Reservation #${loaded.id} created for room ${room.number} (${nights} night${nights !== 1 ? 's' : ''})`,
+        type: NotificationType.INFO,
+        refId: loaded.id,
+        refType: 'reservation',
+        userId: null,
+      })
+      .subscribe({
+        error: () => {
+          return;
+        },
+      });
+
+    return loaded;
+  }
+
+  async update(
+    id: number,
+    data: UpdateReservationDto,
+  ): Promise<ReservationDto> {
+    const existing = await this.reservationsRepository.findOne({
+      where: { id },
+      relations: { guest: true, room: true },
+    });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Reservation with id ${id} not found`,
+      });
+    }
+
+    const checkInDate = data.checkInDate
+      ? this.toDate(data.checkInDate)
+      : existing.checkInDate;
+
+    const checkOutDate = data.checkOutDate
+      ? this.toDate(data.checkOutDate)
+      : existing.checkOutDate;
+
+    const nights =
+      data.checkInDate || data.checkOutDate
+        ? this.calculateNights(checkInDate, checkOutDate)
+        : existing.nights;
+
+    if (nights <= 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid date range',
+      });
+    }
+
+    const roomId = data.roomId ?? existing.roomId;
+    const room = await this.roomsRepository.findOne({
+      where: { id: roomId },
+    });
+
+    if (!room) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Room with id ${roomId} not found`,
+      });
+    }
+
+    const guests =
+      typeof data.guests === 'number' ? data.guests : existing.guests;
+
+    if (typeof guests === 'number' && guests > room.capacity) {
+      throw new RpcException({
+        statusCode: 400,
+        message: `Selected room capacity (${room.capacity}) is less than requested guests (${guests})`,
+      });
+    }
+
+    if (typeof data.guestId !== 'undefined' && data.guestId) {
+      const guest = await this.guestsRepository.findOne({
+        where: { id: data.guestId },
+      });
+
+      if (!guest) {
+        throw new RpcException({
+          statusCode: 404,
+          message: `Guest with id ${data.guestId} not found`,
+        });
+      }
+    }
+
+    if (data.roomId || data.checkInDate || data.checkOutDate) {
+      const blockingStatuses: ReservationStatus[] = [
+        ReservationStatus.PENDING,
+        ReservationStatus.CONFIRMED,
+        ReservationStatus.CHECKED_IN,
+      ];
+
+      const conflict = await this.reservationsRepository
+        .createQueryBuilder('res')
+        .where('res.roomId = :roomId', { roomId })
+        .andWhere('res.id != :id', { id })
+        .andWhere('res.status IN (:...statuses)', {
+          statuses: blockingStatuses,
+        })
+        .andWhere(
+          'res.checkInDate < :endDate AND res.checkOutDate > :startDate',
+          {
+            startDate: checkInDate,
+            endDate: checkOutDate,
+          },
+        )
+        .getCount();
+
+      if (conflict > 0) {
+        throw new RpcException({
+          statusCode: 400,
+          message: 'Room is not available for the selected date range',
+        });
+      }
+    }
+
+    const nextDiscountPercent =
+      typeof data.discountPercent !== 'undefined'
+        ? data.discountPercent
+        : existing.discountPercent;
+
+    const nextDiscountAmount =
+      typeof data.discountAmount !== 'undefined'
+        ? data.discountAmount
+        : existing.discountAmount;
+
+    const shouldRecalculateTotal =
+      data.roomId ||
+      data.checkInDate ||
+      data.checkOutDate ||
+      typeof data.discountPercent !== 'undefined' ||
+      typeof data.discountAmount !== 'undefined';
+
+    let totalAmount = existing.totalAmount;
+
+    if (shouldRecalculateTotal) {
+      let newTotal = Number(room.price) * nights;
+
+      const discountPercent = Number(nextDiscountPercent ?? 0);
+      const discountAmount = Number(nextDiscountAmount ?? 0);
+
+      if (discountPercent > 0) {
+        newTotal = newTotal - newTotal * (discountPercent / 100);
+      }
+
+      if (discountAmount > 0) {
+        newTotal = newTotal - discountAmount;
+      }
+
+      if (newTotal < 0) {
+        newTotal = 0;
+      }
+
+      totalAmount = newTotal;
+    }
+
+    if (typeof data.status !== 'undefined') {
+      if (
+        data.status === ReservationStatus.CONFIRMED ||
+        data.status === ReservationStatus.CHECKED_IN
+      ) {
+        await this.roomsRepository.update(roomId, {
+          isAvailable: false,
+        });
+      }
+
+      if (data.status === ReservationStatus.CANCELLED) {
+        await this.roomsRepository.update(roomId, {
+          isAvailable: true,
+        });
+      }
+    }
+
+    await this.reservationsRepository.update(id, {
+      ...data,
+      checkInDate,
+      checkOutDate,
+      nights,
+      roomId,
+      guests,
+      totalAmount,
+      discountPercent: nextDiscountPercent,
+      discountAmount: nextDiscountAmount,
+    });
+
+    return this.findOne(id);
+  }
+
+  async checkout(id: number): Promise<CheckoutReservationResponseDto> {
+    const reservation = await this.findOne(id);
+
+    if (reservation.status === ReservationStatus.CHECKED_OUT) {
+      return { reservation };
+    }
+
+    await this.reservationsRepository.update(id, {
+      status: ReservationStatus.CHECKED_OUT,
+    });
+
+    if (reservation.roomId) {
+      await this.roomsRepository.update(reservation.roomId, {
+        isAvailable: false,
+      });
+    }
+
+    this.notificationsService
+      .create({
+        title: 'Checkout completed',
+        message: `Reservation #${reservation.id} checked out`,
+        type: NotificationType.INFO,
+        refId: reservation.id,
+        refType: 'reservation',
+        userId: null,
+      })
+      .subscribe({
+        error: () => {
+          return;
+        },
+      });
+
+    return {
+      reservation: await this.findOne(id),
+      assignmentId: null,
+      invoiceId: null,
+    };
+  }
+
+  async remove(id: number): Promise<ReservationDto> {
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id },
+      relations: { guest: true, room: true },
+    });
+
+    if (!reservation) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Reservation with id ${id} not found`,
+      });
+    }
+
+    await this.reservationsRepository.remove(reservation);
+    return reservation;
+  }
+
+  private toDate(value: string): Date {
+    const parsed = new Date(value);
+
+    if (Number.isNaN(parsed.getTime())) {
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid date range',
+      });
+    }
+
+    return parsed;
+  }
+
+  private calculateNights(checkInDate: Date, checkOutDate: Date): number {
+    return Math.ceil(
+      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+  }
+}

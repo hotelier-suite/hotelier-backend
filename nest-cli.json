@@ -73,6 +73,15 @@
         "tsConfigPath": "apps/guest-requests-service/tsconfig.app.json"
       }
     },
+    "booking-service": {
+      "type": "application",
+      "root": "apps/booking-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/booking-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/booking-service/tsconfig.app.json"
+      }
+    },
     "inventory-service": {
       "type": "application",
       "root": "apps/inventory-service",

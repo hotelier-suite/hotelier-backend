@@ -5,8 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthServiceModule } from './auth-service/auth-service.module';
 import { DatabaseModule } from './database/database.module';
-import { ReservationsModule } from './reservations/reservations.module';
-import { RoomsModule } from './rooms/rooms.module';
+import { BookingServiceModule } from './booking-service/booking-service.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { VenuesModule } from './venues/venues.module';
 import { EventsModule } from './events/events.module';
@@ -20,7 +19,6 @@ import { ReportsModule } from './reports/reports.module';
 import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
-import { GuestsModule } from './guests/guests.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
 import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http-exception.interceptor';
@@ -36,8 +34,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     }),
     AuthServiceModule,
     DatabaseModule,
-    ReservationsModule,
-    RoomsModule,
+    BookingServiceModule,
     DashboardModule,
     VenuesModule,
     EventsModule,
@@ -51,7 +48,6 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     ReportsAnalyticsModule,
     MaintenanceModule,
     NotificationsServiceModule,
-    GuestsModule,
     AuditModule,
     ConfigServiceModule,
     ParkingServiceModule,
