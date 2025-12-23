@@ -1,0 +1,9 @@
+export enum HousekeepingMaintenanceType {
+  ELECTRICAL = 'ELECTRICAL',
+  PLUMBING = 'PLUMBING',
+  HVAC = 'HVAC',
+  FURNITURE = 'FURNITURE',
+  APPLIANCES = 'APPLIANCES',
+  STRUCTURAL = 'STRUCTURAL',
+  COSMETIC = 'COSMETIC',
+}

@@ -99,6 +99,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/staff-service/tsconfig.app.json"
       }
+    },
+    "operations-service": {
+      "type": "application",
+      "root": "apps/operations-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/operations-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/operations-service/tsconfig.app.json"
+      }
     }
   }
 }

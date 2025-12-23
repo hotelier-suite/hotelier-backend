@@ -14,10 +14,9 @@ import { RestaurantModule } from './restaurant/restaurant.module';
 import { InventoryServiceModule } from './inventory-service/inventory-service.module';
 import { StaffServiceModule } from './staff-service/staff-service.module';
 import { BillingModule } from './billing/billing.module';
-import { HousekeepingModule } from './housekeeping/housekeeping.module';
+import { OperationsServiceModule } from './operations-service/operations-service.module';
 import { ReportsModule } from './reports/reports.module';
 import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
-import { MaintenanceModule } from './maintenance/maintenance.module';
 import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
@@ -43,10 +42,9 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     InventoryServiceModule,
     StaffServiceModule,
     BillingModule,
-    HousekeepingModule,
+    OperationsServiceModule,
     ReportsModule,
     ReportsAnalyticsModule,
-    MaintenanceModule,
     NotificationsServiceModule,
     AuditModule,
     ConfigServiceModule,
