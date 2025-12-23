@@ -108,6 +108,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/operations-service/tsconfig.app.json"
       }
+    },
+    "events-service": {
+      "type": "application",
+      "root": "apps/events-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/events-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/events-service/tsconfig.app.json"
+      }
     }
   }
 }

@@ -7,8 +7,7 @@ import { AuthServiceModule } from './auth-service/auth-service.module';
 import { DatabaseModule } from './database/database.module';
 import { BookingServiceModule } from './booking-service/booking-service.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { VenuesModule } from './venues/venues.module';
-import { EventsModule } from './events/events.module';
+import { EventsServiceModule } from './events-service/events-service.module';
 import { RecreationalModule } from './recreational/recreational.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { InventoryServiceModule } from './inventory-service/inventory-service.module';
@@ -35,8 +34,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     DatabaseModule,
     BookingServiceModule,
     DashboardModule,
-    VenuesModule,
-    EventsModule,
+    EventsServiceModule,
     RecreationalModule,
     RestaurantModule,
     InventoryServiceModule,
