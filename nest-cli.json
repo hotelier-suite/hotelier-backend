@@ -144,6 +144,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/billing-service/tsconfig.app.json"
       }
+    },
+    "reports-service": {
+      "type": "application",
+      "root": "apps/reports-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/reports-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reports-service/tsconfig.app.json"
+      }
     }
   }
 }

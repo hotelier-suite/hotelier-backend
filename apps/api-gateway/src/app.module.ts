@@ -14,8 +14,7 @@ import { InventoryServiceModule } from './inventory-service/inventory-service.mo
 import { StaffServiceModule } from './staff-service/staff-service.module';
 import { BillingServiceModule } from './billing-service/billing-service.module';
 import { OperationsServiceModule } from './operations-service/operations-service.module';
-import { ReportsModule } from './reports/reports.module';
-import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
+import { ReportsServiceModule } from './reports-service/reports-service.module';
 import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
@@ -41,8 +40,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     StaffServiceModule,
     BillingServiceModule,
     OperationsServiceModule,
-    ReportsModule,
-    ReportsAnalyticsModule,
+    ReportsServiceModule,
     NotificationsServiceModule,
     AuditModule,
     ConfigServiceModule,
