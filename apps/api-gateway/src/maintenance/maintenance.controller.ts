@@ -23,8 +23,8 @@ import { UpdateMaintenanceRequestDto } from './dto/update-maintenance-request.dt
 import { GeneralMaintenanceRequest } from './entities/maintenance-request.entity';
 import { MaintenanceStatus } from './enums/maintenance-status.enum';
 import { MaintenancePriority } from './enums/maintenance-priority.enum';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('maintenance')
 @Controller('maintenance')

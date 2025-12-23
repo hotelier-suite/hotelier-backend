@@ -21,9 +21,8 @@ import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from '@app/contracts/booking-service/rooms/dto/create-room.dto';
 import { UpdateRoomDto } from '@app/contracts/booking-service/rooms/dto/update-room.dto';
 import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('rooms')
 @Controller('rooms')

@@ -20,8 +20,8 @@ import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
 import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
 import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('roles')
 @Controller('roles')

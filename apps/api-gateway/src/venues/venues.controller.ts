@@ -18,8 +18,8 @@ import {
 import { VenuesService } from './venues.service';
 import { CreateVenueDto } from './dto/create-venue.dto';
 import { UpdateVenueDto } from './dto/update-venue.dto';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 import { Venue } from './entities/venue.entity';
 
 @ApiTags('venues')

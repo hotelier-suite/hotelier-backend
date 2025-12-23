@@ -23,8 +23,8 @@ import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role
 import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
 import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('roles')
 @Controller('roles')

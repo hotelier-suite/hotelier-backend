@@ -29,9 +29,8 @@ import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/r
 import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
 import { RoomType } from '@app/contracts/booking-service/rooms/enums/room-type.enum';
 import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('reservations')
 @Controller('reservations')

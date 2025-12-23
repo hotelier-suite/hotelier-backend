@@ -20,8 +20,8 @@ import { NotificationsService } from './notifications.service';
 import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
 import { CurrentUserId } from '../../common/decorators/current-user-id.decorator';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('notifications')
 @ApiBearerAuth()

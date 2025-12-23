@@ -37,8 +37,8 @@ import { MaintenanceStatus } from './enums/maintenance-status.enum';
 import { CleaningStatus } from './enums/cleaning-status.enum';
 import { TaskPriority } from './enums/task-priority.enum';
 import { Room } from '../rooms/entities/room.entity';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('Housekeeping')
 @Controller('housekeeping')

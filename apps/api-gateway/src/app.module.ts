@@ -16,8 +16,8 @@ import { BillingServiceModule } from './billing-service/billing-service.module';
 import { OperationsServiceModule } from './operations-service/operations-service.module';
 import { ReportsServiceModule } from './reports-service/reports-service.module';
 import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
-import { AuditModule } from './audit/audit.module';
-import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
+import { AuditServiceModule } from './audit-service/audit-service.module';
+import { AuditLogInterceptor } from './audit-service/audit/interceptors/audit-log.interceptor';
 import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http-exception.interceptor';
 import { ConfigServiceModule } from './config-service/config-service.module';
 import { ParkingServiceModule } from './parking-service/parking-service.module';
@@ -42,7 +42,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     OperationsServiceModule,
     ReportsServiceModule,
     NotificationsServiceModule,
-    AuditModule,
+    AuditServiceModule,
     ConfigServiceModule,
     ParkingServiceModule,
     GuestRequestsServiceModule,

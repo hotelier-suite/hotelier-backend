@@ -7,8 +7,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 import { MovementsService } from './movements.service';
 import { InventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/inventory-movement.dto';
 import { CreateInventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/create-inventory-movement.dto';

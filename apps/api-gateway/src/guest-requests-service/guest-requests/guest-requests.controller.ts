@@ -24,8 +24,8 @@ import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-req
 import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
 import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
 import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('guest-requests')
 @Controller('guest-requests')

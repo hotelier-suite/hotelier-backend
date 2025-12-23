@@ -26,8 +26,8 @@ import { UpdateBeverageStockDto } from './dto/update-beverage-stock.dto';
 import { RoomServiceOrder } from './entities/room-service-order.entity';
 import { MenuItem } from './entities/menu-item.entity';
 import { BeverageInventory } from './entities/beverage-inventory.entity';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('restaurant')
 @Controller('restaurant')

@@ -10,8 +10,8 @@ import { DashboardStatsDto } from './dto/dashboard-stats.dto';
 import { RecentActivityDto } from './dto/recent-activity.dto';
 import { RevenueDataDto } from './dto/revenue-data.dto';
 import { CurrentUserId } from '../common/decorators/current-user-id.decorator';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 import { Observable } from 'rxjs';
 
 @ApiTags('dashboard')

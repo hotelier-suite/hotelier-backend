@@ -1,0 +1,1 @@
+export const AUDIT_SERVICE_CLIENT = Symbol('AUDIT_SERVICE_CLIENT');

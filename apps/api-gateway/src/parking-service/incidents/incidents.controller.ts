@@ -18,8 +18,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 import { IncidentsService } from './incidents.service';
 import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
 import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';

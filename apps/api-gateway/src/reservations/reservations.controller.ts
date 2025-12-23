@@ -22,9 +22,8 @@ import {
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../audit/enums/audit-action.enum';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 import { Reservation } from './entities/reservation.entity';
 import { CheckoutReservationResponseDto } from './dto/checkout-reservation-response.dto';
 import type { Request } from 'express';

@@ -26,8 +26,8 @@ import { CreateRecreationalBookingDto } from './dto/create-recreational-booking.
 import { UpdateRecreationalBookingDto } from './dto/update-recreational-booking.dto';
 import { FacilityAvailabilityDto } from './dto/facility-availability.dto';
 import { BookingStatisticsDto } from './dto/booking-statistics.dto';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 import { RecreationalFacility } from './entities/recreational-facility.entity';
 import { RecreationalBooking } from './entities/recreational-booking.entity';

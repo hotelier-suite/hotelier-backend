@@ -23,8 +23,8 @@ import { CreateEventBookingDto } from './dto/create-event-booking.dto';
 import { UpdateEventBookingDto } from './dto/update-event-booking.dto';
 import { Event } from './entities/event.entity';
 import { EventBooking } from './entities/event-booking.entity';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('events')
 @Controller('events')

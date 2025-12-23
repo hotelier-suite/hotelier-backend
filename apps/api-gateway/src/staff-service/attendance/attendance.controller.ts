@@ -15,9 +15,8 @@ import { AttendanceDto } from '@app/contracts/staff-service/attendance/dto/atten
 import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
 import { UpdateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/update-attendance.dto';
 import { CreateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/create-attendance.dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('attendance')
 @Controller('attendance')

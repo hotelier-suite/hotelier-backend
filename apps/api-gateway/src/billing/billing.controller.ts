@@ -28,9 +28,8 @@ import { PaymentStatisticsResponseDto } from './dto/payment-statistics-response.
 import { Invoice } from './entities/invoice.entity';
 import { Payment } from './entities/payment.entity';
 import { InvoiceStatus } from './enums/invoice-status.enum';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../audit/enums/audit-action.enum';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('billing')
 @Controller('billing')

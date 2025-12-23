@@ -10,8 +10,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ReportsAnalyticsService } from './reports-analytics.service';
-import { AuditLog } from '../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../audit/enums/audit-resource.enum';
+import { AuditLog } from '../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 import {
   ApiTags,
   ApiOperation,

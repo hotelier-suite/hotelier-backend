@@ -31,9 +31,8 @@ import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-resp
 import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { JwtUser } from '@app/contracts/auth-service/tokens/interfaces/jwt-user.interface';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 import { Observable } from 'rxjs';
 
 @ApiTags('users')

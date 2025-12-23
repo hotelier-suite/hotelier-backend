@@ -23,9 +23,8 @@ import { DepartmentStatsDto } from '@app/contracts/staff-service/employees/dto/d
 import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
 import { UpdateEmployeeDto } from '@app/contracts/staff-service/employees/dto/update-employee.dto';
 import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 import { EmployeesService } from './employees.service';
 
 @ApiTags('employees')

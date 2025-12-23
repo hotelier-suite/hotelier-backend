@@ -22,8 +22,8 @@ import { CreateEmployeeRequestDto } from '@app/contracts/staff-service/employee-
 import { UpdateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/update-employee-request.dto';
 import { RequestType } from '@app/contracts/staff-service/employee-requests/enums/request-type.enum';
 import { RequestStatus } from '@app/contracts/staff-service/employee-requests/enums/request-status.enum';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('permissions')
 @Controller('permissions')

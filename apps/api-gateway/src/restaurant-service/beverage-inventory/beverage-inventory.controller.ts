@@ -22,8 +22,8 @@ import {
   CreateBeverageItemDto,
   UpdateBeverageStockDto,
 } from '@app/contracts/restaurant-service/beverage-inventory/dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
+import { AuditResource } from '@app/contracts/audit-service/enums';
 
 @ApiTags('restaurant')
 @Controller('restaurant/beverage-inventory')
