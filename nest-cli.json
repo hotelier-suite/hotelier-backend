@@ -126,6 +126,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/restaurant-service/tsconfig.app.json"
       }
+    },
+    "recreational-service": {
+      "type": "application",
+      "root": "apps/recreational-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/recreational-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/recreational-service/tsconfig.app.json"
+      }
     }
   }
 }

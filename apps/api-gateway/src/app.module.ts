@@ -8,7 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { BookingServiceModule } from './booking-service/booking-service.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { EventsServiceModule } from './events-service/events-service.module';
-import { RecreationalModule } from './recreational/recreational.module';
+import { RecreationalServiceModule } from './recreational-service/recreational-service.module';
 import { RestaurantServiceModule } from './restaurant-service/restaurant-service.module';
 import { InventoryServiceModule } from './inventory-service/inventory-service.module';
 import { StaffServiceModule } from './staff-service/staff-service.module';
@@ -35,7 +35,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     BookingServiceModule,
     DashboardModule,
     EventsServiceModule,
-    RecreationalModule,
+    RecreationalServiceModule,
     RestaurantServiceModule,
     InventoryServiceModule,
     StaffServiceModule,
