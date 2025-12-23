@@ -12,7 +12,7 @@ import { RecreationalServiceModule } from './recreational-service/recreational-s
 import { RestaurantServiceModule } from './restaurant-service/restaurant-service.module';
 import { InventoryServiceModule } from './inventory-service/inventory-service.module';
 import { StaffServiceModule } from './staff-service/staff-service.module';
-import { BillingModule } from './billing/billing.module';
+import { BillingServiceModule } from './billing-service/billing-service.module';
 import { OperationsServiceModule } from './operations-service/operations-service.module';
 import { ReportsModule } from './reports/reports.module';
 import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
@@ -39,7 +39,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
     RestaurantServiceModule,
     InventoryServiceModule,
     StaffServiceModule,
-    BillingModule,
+    BillingServiceModule,
     OperationsServiceModule,
     ReportsModule,
     ReportsAnalyticsModule,
