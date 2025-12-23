@@ -117,6 +117,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/events-service/tsconfig.app.json"
       }
+    },
+    "restaurant-service": {
+      "type": "application",
+      "root": "apps/restaurant-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/restaurant-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/restaurant-service/tsconfig.app.json"
+      }
     }
   }
 }
