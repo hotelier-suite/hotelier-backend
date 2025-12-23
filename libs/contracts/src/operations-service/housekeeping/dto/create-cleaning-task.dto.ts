@@ -15,25 +15,42 @@ export class CreateCleaningTaskDto {
   @Length(1, 10)
   roomNumber: string;
 
-  @ApiProperty({ description: 'Name of the employee assigned to this task', example: 'Mary Johnson', required: false })
+  @ApiProperty({
+    description: 'Name of the employee assigned to this task',
+    example: 'Mary Johnson',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   assignedEmployee?: string;
 
-  @ApiProperty({ description: 'Additional notes about the cleaning task', example: 'Deep cleaning required', required: false })
+  @ApiProperty({
+    description: 'Additional notes about the cleaning task',
+    example: 'Deep cleaning required',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 500)
   notes?: string;
 
-  @ApiProperty({ description: 'Estimated time to complete the task (in minutes)', example: 45, required: false })
+  @ApiProperty({
+    description: 'Estimated time to complete the task (in minutes)',
+    example: 45,
+    required: false,
+  })
   @IsOptional()
   @IsNumber()
   @Min(1)
   estimatedTime?: number;
 
-  @ApiProperty({ description: 'Priority level of the cleaning task', enum: TaskPriority, example: TaskPriority.NORMAL, required: false })
+  @ApiProperty({
+    description: 'Priority level of the cleaning task',
+    enum: TaskPriority,
+    example: TaskPriority.NORMAL,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;

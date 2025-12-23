@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsArray, ValidateNested, Min, IsString } from 'class-validator';
+import {
+  IsNumber,
+  IsArray,
+  ValidateNested,
+  Min,
+  IsString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DailyRevenueDto {

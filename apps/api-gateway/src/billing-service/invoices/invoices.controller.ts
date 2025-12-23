@@ -54,7 +54,9 @@ export class InvoicesController {
     description: 'Invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  getInvoices(@Query('status') status?: InvoiceStatus): Observable<InvoiceDto[]> {
+  getInvoices(
+    @Query('status') status?: InvoiceStatus,
+  ): Observable<InvoiceDto[]> {
     if (status) {
       return this.invoicesService.findByStatus(status);
     }
@@ -122,7 +124,9 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  getInvoiceById(@Param('id', ParseIntPipe) id: number): Observable<InvoiceDto> {
+  getInvoiceById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<InvoiceDto> {
     return this.invoicesService.findOne(id);
   }
 
@@ -320,7 +324,8 @@ export class InvoicesController {
           doc.text('DETAILS', { align: 'left' });
           doc.moveDown(0.5);
           invoice.invoiceItems?.forEach((item) => {
-            const itemTotal = Number(item.quantity || 0) * Number(item.price || 0);
+            const itemTotal =
+              Number(item.quantity || 0) * Number(item.price || 0);
             doc.text(
               `${item.description} x ${item.quantity} = ${itemTotal.toFixed(2)}`,
             );

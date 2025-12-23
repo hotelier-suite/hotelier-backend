@@ -28,7 +28,9 @@ export class VenuesController {
   }
 
   @MessagePattern(VENUES_PATTERNS.UPDATE)
-  update(@Payload() payload: { id: number; data: UpdateVenueDto }): Promise<VenueDto> {
+  update(
+    @Payload() payload: { id: number; data: UpdateVenueDto },
+  ): Promise<VenueDto> {
     return this.venuesService.update(payload.id, payload.data);
   }
 

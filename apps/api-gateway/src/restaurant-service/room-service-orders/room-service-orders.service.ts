@@ -17,10 +17,10 @@ export class RoomServiceOrdersService {
   ) {}
 
   findAll(): Observable<RoomServiceOrderDto[]> {
-    return this.restaurantClient.send<RoomServiceOrderDto[], Record<string, never>>(
-      ROOM_SERVICE_ORDERS_PATTERNS.FIND_ALL,
-      {},
-    );
+    return this.restaurantClient.send<
+      RoomServiceOrderDto[],
+      Record<string, never>
+    >(ROOM_SERVICE_ORDERS_PATTERNS.FIND_ALL, {});
   }
 
   findOne(id: number): Observable<RoomServiceOrderDto> {
@@ -31,17 +31,20 @@ export class RoomServiceOrdersService {
   }
 
   create(data: CreateRoomServiceOrderDto): Observable<RoomServiceOrderDto> {
-    return this.restaurantClient.send<RoomServiceOrderDto, CreateRoomServiceOrderDto>(
-      ROOM_SERVICE_ORDERS_PATTERNS.CREATE,
-      data,
-    );
+    return this.restaurantClient.send<
+      RoomServiceOrderDto,
+      CreateRoomServiceOrderDto
+    >(ROOM_SERVICE_ORDERS_PATTERNS.CREATE, data);
   }
 
-  update(id: number, data: UpdateRoomServiceOrderDto): Observable<RoomServiceOrderDto> {
-    return this.restaurantClient.send<RoomServiceOrderDto, { id: number; data: UpdateRoomServiceOrderDto }>(
-      ROOM_SERVICE_ORDERS_PATTERNS.UPDATE,
-      { id, data },
-    );
+  update(
+    id: number,
+    data: UpdateRoomServiceOrderDto,
+  ): Observable<RoomServiceOrderDto> {
+    return this.restaurantClient.send<
+      RoomServiceOrderDto,
+      { id: number; data: UpdateRoomServiceOrderDto }
+    >(ROOM_SERVICE_ORDERS_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<RoomServiceOrderDto> {

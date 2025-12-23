@@ -38,17 +38,14 @@ export class VenuesService {
   }
 
   update(id: number, data: UpdateVenueDto): Observable<VenueDto> {
-    return this.eventsClient.send<VenueDto, { id: number; data: UpdateVenueDto }>(
-      VENUES_PATTERNS.UPDATE,
-      { id, data },
-    );
+    return this.eventsClient.send<
+      VenueDto,
+      { id: number; data: UpdateVenueDto }
+    >(VENUES_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<VenueDto> {
-    return this.eventsClient.send<VenueDto, number>(
-      VENUES_PATTERNS.DELETE,
-      id,
-    );
+    return this.eventsClient.send<VenueDto, number>(VENUES_PATTERNS.DELETE, id);
   }
 
   getAvailableVenues(): Observable<VenueDto[]> {

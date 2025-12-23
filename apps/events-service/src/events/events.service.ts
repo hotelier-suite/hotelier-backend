@@ -117,7 +117,10 @@ export class EventsService {
     return this.toBookingDto(booking);
   }
 
-  async updateBooking(id: number, data: UpdateEventBookingDto): Promise<EventBookingDto> {
+  async updateBooking(
+    id: number,
+    data: UpdateEventBookingDto,
+  ): Promise<EventBookingDto> {
     const existing = await this.eventBookingRepository.findOne({
       where: { id },
       relations: { venue: true },

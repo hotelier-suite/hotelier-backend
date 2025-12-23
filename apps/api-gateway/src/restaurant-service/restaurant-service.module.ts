@@ -27,6 +27,11 @@ import { BeverageInventoryModule } from './beverage-inventory/beverage-inventory
     RoomServiceOrdersModule,
     BeverageInventoryModule,
   ],
-  exports: [ClientsModule, MenuItemsModule, RoomServiceOrdersModule, BeverageInventoryModule],
+  exports: [
+    ClientsModule,
+    MenuItemsModule,
+    RoomServiceOrdersModule,
+    BeverageInventoryModule,
+  ],
 })
 export class RestaurantServiceModule {}

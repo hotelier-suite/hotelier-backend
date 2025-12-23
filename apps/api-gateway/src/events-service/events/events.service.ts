@@ -42,17 +42,14 @@ export class EventsService {
   }
 
   updateEvent(id: number, data: UpdateEventDto): Observable<EventDto> {
-    return this.eventsClient.send<EventDto, { id: number; data: UpdateEventDto }>(
-      EVENTS_PATTERNS.UPDATE,
-      { id, data },
-    );
+    return this.eventsClient.send<
+      EventDto,
+      { id: number; data: UpdateEventDto }
+    >(EVENTS_PATTERNS.UPDATE, { id, data });
   }
 
   deleteEvent(id: number): Observable<EventDto> {
-    return this.eventsClient.send<EventDto, number>(
-      EVENTS_PATTERNS.DELETE,
-      id,
-    );
+    return this.eventsClient.send<EventDto, number>(EVENTS_PATTERNS.DELETE, id);
   }
 
   // Event Booking methods
@@ -77,11 +74,14 @@ export class EventsService {
     );
   }
 
-  updateBooking(id: number, data: UpdateEventBookingDto): Observable<EventBookingDto> {
-    return this.eventsClient.send<EventBookingDto, { id: number; data: UpdateEventBookingDto }>(
-      EVENTS_PATTERNS.UPDATE_BOOKING,
-      { id, data },
-    );
+  updateBooking(
+    id: number,
+    data: UpdateEventBookingDto,
+  ): Observable<EventBookingDto> {
+    return this.eventsClient.send<
+      EventBookingDto,
+      { id: number; data: UpdateEventBookingDto }
+    >(EVENTS_PATTERNS.UPDATE_BOOKING, { id, data });
   }
 
   deleteBooking(id: number): Observable<EventBookingDto> {

@@ -39,7 +39,10 @@ export class AnalyticsService {
     );
   }
 
-  update(id: number, data: UpdateAnalyticsDataDto): Observable<AnalyticsDataDto> {
+  update(
+    id: number,
+    data: UpdateAnalyticsDataDto,
+  ): Observable<AnalyticsDataDto> {
     return this.reportsClient.send<
       AnalyticsDataDto,
       { id: number; data: UpdateAnalyticsDataDto }

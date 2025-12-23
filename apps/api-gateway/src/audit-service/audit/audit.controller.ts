@@ -43,7 +43,9 @@ export class AuditController {
     description: 'Audit log created successfully',
     type: AuditLogDto,
   })
-  create(@Body() createAuditLogDto: CreateAuditLogDto): Observable<AuditLogDto> {
+  create(
+    @Body() createAuditLogDto: CreateAuditLogDto,
+  ): Observable<AuditLogDto> {
     return this.auditService.create(createAuditLogDto);
   }
 
@@ -185,7 +187,10 @@ export class AuditController {
     @Param('resource') resource: string,
     @Param('resourceId') resourceId: string,
   ): Observable<AuditLogDto[]> {
-    return this.auditService.findByResource(resource as AuditResource, resourceId);
+    return this.auditService.findByResource(
+      resource as AuditResource,
+      resourceId,
+    );
   }
 
   @Get('user/:userId')

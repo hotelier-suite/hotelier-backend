@@ -61,7 +61,8 @@ export class FacilitiesController {
   @Get()
   @ApiOperation({
     summary: 'Get All Recreational Facilities',
-    description: 'Retrieve all recreational facilities with their current status',
+    description:
+      'Retrieve all recreational facilities with their current status',
   })
   @ApiResponse({
     status: 200,
@@ -96,7 +97,8 @@ export class FacilitiesController {
   @Get(':id')
   @ApiOperation({
     summary: 'Get Recreational Facility',
-    description: 'Get detailed information about a specific recreational facility',
+    description:
+      'Get detailed information about a specific recreational facility',
   })
   @ApiResponse({
     status: 200,
@@ -112,7 +114,9 @@ export class FacilitiesController {
     description: 'Facility ID',
     type: Number,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<RecreationalFacilityDto> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalFacilityDto> {
     return this.facilitiesService.findOne(id);
   }
 
@@ -166,7 +170,9 @@ export class FacilitiesController {
     description: 'Facility ID',
     type: Number,
   })
-  delete(@Param('id', ParseIntPipe) id: number): Observable<RecreationalFacilityDto> {
+  delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalFacilityDto> {
     return this.facilitiesService.delete(id);
   }
 

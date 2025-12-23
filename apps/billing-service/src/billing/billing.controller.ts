@@ -54,7 +54,9 @@ export class BillingController {
   }
 
   @MessagePattern(INVOICES_PATTERNS.FIND_BY_STATUS)
-  findInvoicesByStatus(@Payload() status: InvoiceStatus): Promise<InvoiceDto[]> {
+  findInvoicesByStatus(
+    @Payload() status: InvoiceStatus,
+  ): Promise<InvoiceDto[]> {
     return this.billingService.findInvoicesByStatus(status);
   }
 
@@ -131,6 +133,9 @@ export class BillingController {
   generateMonthlyReport(
     @Payload() payload: { year: number; month: number },
   ): Promise<MonthlyReportResponseDto> {
-    return this.billingService.generateMonthlyReport(payload.year, payload.month);
+    return this.billingService.generateMonthlyReport(
+      payload.year,
+      payload.month,
+    );
   }
 }

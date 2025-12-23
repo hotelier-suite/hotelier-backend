@@ -159,7 +159,8 @@ export class BillingService {
     // Update invoice status and payment method
     await this.invoiceRepository.update(id, {
       status: InvoiceStatus.PAID,
-      paymentMethod: paymentMethod ?? invoice.paymentMethod ?? PaymentMethod.CASH,
+      paymentMethod:
+        paymentMethod ?? invoice.paymentMethod ?? PaymentMethod.CASH,
     });
 
     return this.findOneInvoice(id);

@@ -5,10 +5,7 @@ import {
   CreateDateColumn,
   Index,
 } from 'typeorm';
-import {
-  AuditAction,
-  AuditResource,
-} from '@app/contracts/audit-service/enums';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
 
 @Entity('audit_logs')
 @Index(['action', 'resource', 'createdAt'])

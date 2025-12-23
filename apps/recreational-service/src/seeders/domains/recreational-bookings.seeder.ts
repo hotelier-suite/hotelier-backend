@@ -34,16 +34,66 @@ export class RecreationalBookingsSeeder {
 
     // Sample guest data
     const guests = [
-      { name: 'Sarah Johnson', email: 'sarah.johnson@gmail.com', phone: '+1-555-234-5678', room: '301' },
-      { name: 'Michael Williams', email: 'michael.williams@hotmail.com', phone: '+1-555-345-6789', room: '205' },
-      { name: 'Emily Davis', email: 'emily.davis@yahoo.com', phone: '+1-555-456-7890', room: '412' },
-      { name: 'James Miller', email: 'james.miller@outlook.com', phone: '+1-555-567-8901', room: '308' },
-      { name: 'Jessica Brown', email: 'jessica.brown@gmail.com', phone: '+1-555-678-9012', room: '506' },
-      { name: 'David Wilson', email: 'david.wilson@aol.com', phone: '+1-555-789-0123', room: '203' },
-      { name: 'Ashley Taylor', email: 'ashley.taylor@gmail.com', phone: '+1-555-890-1234', room: '711' },
-      { name: 'Christopher Anderson', email: 'chris.anderson@outlook.com', phone: '+1-555-901-2345', room: '115' },
-      { name: 'Amanda Thomas', email: 'amanda.thomas@hotmail.com', phone: '+1-555-012-3456', room: '609' },
-      { name: 'Matthew Jackson', email: 'matt.jackson@gmail.com', phone: '+1-555-123-4567', room: '404' },
+      {
+        name: 'Sarah Johnson',
+        email: 'sarah.johnson@gmail.com',
+        phone: '+1-555-234-5678',
+        room: '301',
+      },
+      {
+        name: 'Michael Williams',
+        email: 'michael.williams@hotmail.com',
+        phone: '+1-555-345-6789',
+        room: '205',
+      },
+      {
+        name: 'Emily Davis',
+        email: 'emily.davis@yahoo.com',
+        phone: '+1-555-456-7890',
+        room: '412',
+      },
+      {
+        name: 'James Miller',
+        email: 'james.miller@outlook.com',
+        phone: '+1-555-567-8901',
+        room: '308',
+      },
+      {
+        name: 'Jessica Brown',
+        email: 'jessica.brown@gmail.com',
+        phone: '+1-555-678-9012',
+        room: '506',
+      },
+      {
+        name: 'David Wilson',
+        email: 'david.wilson@aol.com',
+        phone: '+1-555-789-0123',
+        room: '203',
+      },
+      {
+        name: 'Ashley Taylor',
+        email: 'ashley.taylor@gmail.com',
+        phone: '+1-555-890-1234',
+        room: '711',
+      },
+      {
+        name: 'Christopher Anderson',
+        email: 'chris.anderson@outlook.com',
+        phone: '+1-555-901-2345',
+        room: '115',
+      },
+      {
+        name: 'Amanda Thomas',
+        email: 'amanda.thomas@hotmail.com',
+        phone: '+1-555-012-3456',
+        room: '609',
+      },
+      {
+        name: 'Matthew Jackson',
+        email: 'matt.jackson@gmail.com',
+        phone: '+1-555-123-4567',
+        room: '404',
+      },
     ];
 
     // Time slots for bookings
@@ -56,7 +106,11 @@ export class RecreationalBookingsSeeder {
       { start: '18:00', end: '20:00', duration: 2 },
     ];
 
-    const priorities = [BookingPriority.NORMAL, BookingPriority.HIGH, BookingPriority.VIP];
+    const priorities = [
+      BookingPriority.NORMAL,
+      BookingPriority.HIGH,
+      BookingPriority.VIP,
+    ];
 
     const specialRequests = [
       'Please provide towels for 3 guests',
@@ -77,10 +131,13 @@ export class RecreationalBookingsSeeder {
       const bookingsPerDay = Math.floor(Math.random() * 3) + 2;
 
       for (let i = 0; i < bookingsPerDay; i++) {
-        const facility = facilities[Math.floor(Math.random() * facilities.length)];
+        const facility =
+          facilities[Math.floor(Math.random() * facilities.length)];
         const guest = guests[Math.floor(Math.random() * guests.length)];
-        const timeSlot = timeSlots[Math.floor(Math.random() * timeSlots.length)];
-        const participants = Math.floor(Math.random() * Math.min(facility.capacity, 6)) + 1;
+        const timeSlot =
+          timeSlots[Math.floor(Math.random() * timeSlots.length)];
+        const participants =
+          Math.floor(Math.random() * Math.min(facility.capacity, 6)) + 1;
 
         // Determine status based on date
         let status: RecreationalBookingStatus;
@@ -88,23 +145,32 @@ export class RecreationalBookingsSeeder {
         let actualCheckOut: Date | undefined;
 
         if (dayOffset < -2) {
-          status = Math.random() > 0.1
-            ? RecreationalBookingStatus.COMPLETED
-            : RecreationalBookingStatus.CANCELLED;
+          status =
+            Math.random() > 0.1
+              ? RecreationalBookingStatus.COMPLETED
+              : RecreationalBookingStatus.CANCELLED;
           if (status === RecreationalBookingStatus.COMPLETED) {
             actualCheckIn = new Date(bookingDate);
-            actualCheckIn.setHours(parseInt(timeSlot.start.split(':')[0]), parseInt(timeSlot.start.split(':')[1]));
+            actualCheckIn.setHours(
+              parseInt(timeSlot.start.split(':')[0]),
+              parseInt(timeSlot.start.split(':')[1]),
+            );
             actualCheckOut = new Date(bookingDate);
-            actualCheckOut.setHours(parseInt(timeSlot.end.split(':')[0]), parseInt(timeSlot.end.split(':')[1]));
+            actualCheckOut.setHours(
+              parseInt(timeSlot.end.split(':')[0]),
+              parseInt(timeSlot.end.split(':')[1]),
+            );
           }
         } else if (dayOffset === 0) {
-          status = Math.random() > 0.5
-            ? RecreationalBookingStatus.CONFIRMED
-            : RecreationalBookingStatus.CHECKED_IN;
+          status =
+            Math.random() > 0.5
+              ? RecreationalBookingStatus.CONFIRMED
+              : RecreationalBookingStatus.CHECKED_IN;
         } else {
-          status = Math.random() > 0.3
-            ? RecreationalBookingStatus.CONFIRMED
-            : RecreationalBookingStatus.PENDING;
+          status =
+            Math.random() > 0.3
+              ? RecreationalBookingStatus.CONFIRMED
+              : RecreationalBookingStatus.PENDING;
         }
 
         const booking = {
@@ -120,8 +186,14 @@ export class RecreationalBookingsSeeder {
           totalCost: 0,
           status,
           priority: priorities[Math.floor(Math.random() * priorities.length)],
-          specialRequests: specialRequests[Math.floor(Math.random() * specialRequests.length)] || undefined,
-          staffNotes: status === RecreationalBookingStatus.CANCELLED ? 'Guest requested cancellation' : undefined,
+          specialRequests:
+            specialRequests[
+              Math.floor(Math.random() * specialRequests.length)
+            ] || undefined,
+          staffNotes:
+            status === RecreationalBookingStatus.CANCELLED
+              ? 'Guest requested cancellation'
+              : undefined,
           actualCheckIn,
           actualCheckOut,
           facilityId: facility.id,

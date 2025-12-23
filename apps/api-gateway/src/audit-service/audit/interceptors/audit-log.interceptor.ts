@@ -10,7 +10,10 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { AuditService } from '../audit.service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
-import { AUDIT_LOG_KEY, AuditLogOptions } from '../decorators/audit-log.decorator';
+import {
+  AUDIT_LOG_KEY,
+  AuditLogOptions,
+} from '../decorators/audit-log.decorator';
 
 interface RequestUser {
   sub?: number;
@@ -159,7 +162,9 @@ export class AuditLogInterceptor implements NestInterceptor {
       'session',
     ];
 
-    const sanitized: Record<string, unknown> = { ...(data as Record<string, unknown>) };
+    const sanitized: Record<string, unknown> = {
+      ...(data as Record<string, unknown>),
+    };
 
     for (const field of sensitiveFields) {
       if (field in sanitized) {

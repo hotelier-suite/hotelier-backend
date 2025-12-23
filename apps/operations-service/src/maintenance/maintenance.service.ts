@@ -38,7 +38,9 @@ export class MaintenanceService {
     return request;
   }
 
-  async create(data: CreateGeneralMaintenanceRequestDto): Promise<GeneralMaintenanceRequestDto> {
+  async create(
+    data: CreateGeneralMaintenanceRequestDto,
+  ): Promise<GeneralMaintenanceRequestDto> {
     const request = this.maintenanceRequestRepository.create({
       ...data,
       status: MaintenanceStatus.SCHEDULED,
@@ -46,7 +48,10 @@ export class MaintenanceService {
     return this.maintenanceRequestRepository.save(request);
   }
 
-  async update(id: number, data: UpdateGeneralMaintenanceRequestDto): Promise<GeneralMaintenanceRequestDto> {
+  async update(
+    id: number,
+    data: UpdateGeneralMaintenanceRequestDto,
+  ): Promise<GeneralMaintenanceRequestDto> {
     const existing = await this.findOne(id);
 
     // Auto-set timestamps based on status changes
@@ -64,7 +69,9 @@ export class MaintenanceService {
 
   async remove(id: number): Promise<GeneralMaintenanceRequestDto> {
     const request = await this.findOne(id);
-    await this.maintenanceRequestRepository.remove(request as GeneralMaintenanceRequest);
+    await this.maintenanceRequestRepository.remove(
+      request as GeneralMaintenanceRequest,
+    );
     return request;
   }
 }

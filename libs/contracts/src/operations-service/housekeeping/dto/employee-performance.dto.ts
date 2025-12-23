@@ -10,7 +10,10 @@ export class EmployeePerformanceDto {
   @IsNumber()
   completedAssignments: number;
 
-  @ApiProperty({ description: 'Average quality score for this employee', example: 9.2 })
+  @ApiProperty({
+    description: 'Average quality score for this employee',
+    example: 9.2,
+  })
   @IsNumber()
   averageQualityScore: number;
 }

@@ -18,10 +18,10 @@ export class BookingsService {
   ) {}
 
   findAll(): Observable<RecreationalBookingDto[]> {
-    return this.recreationalClient.send<RecreationalBookingDto[], Record<string, never>>(
-      RECREATIONAL_BOOKINGS_PATTERNS.FIND_ALL,
-      {},
-    );
+    return this.recreationalClient.send<
+      RecreationalBookingDto[],
+      Record<string, never>
+    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_ALL, {});
   }
 
   findOne(id: number): Observable<RecreationalBookingDto> {
@@ -31,18 +31,23 @@ export class BookingsService {
     );
   }
 
-  create(data: CreateRecreationalBookingDto): Observable<RecreationalBookingDto> {
-    return this.recreationalClient.send<RecreationalBookingDto, CreateRecreationalBookingDto>(
-      RECREATIONAL_BOOKINGS_PATTERNS.CREATE,
-      data,
-    );
+  create(
+    data: CreateRecreationalBookingDto,
+  ): Observable<RecreationalBookingDto> {
+    return this.recreationalClient.send<
+      RecreationalBookingDto,
+      CreateRecreationalBookingDto
+    >(RECREATIONAL_BOOKINGS_PATTERNS.CREATE, data);
   }
 
-  update(id: number, data: UpdateRecreationalBookingDto): Observable<RecreationalBookingDto> {
-    return this.recreationalClient.send<RecreationalBookingDto, { id: number; data: UpdateRecreationalBookingDto }>(
-      RECREATIONAL_BOOKINGS_PATTERNS.UPDATE,
-      { id, data },
-    );
+  update(
+    id: number,
+    data: UpdateRecreationalBookingDto,
+  ): Observable<RecreationalBookingDto> {
+    return this.recreationalClient.send<
+      RecreationalBookingDto,
+      { id: number; data: UpdateRecreationalBookingDto }
+    >(RECREATIONAL_BOOKINGS_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<RecreationalBookingDto> {
@@ -53,10 +58,10 @@ export class BookingsService {
   }
 
   cancel(id: number, reason?: string): Observable<RecreationalBookingDto> {
-    return this.recreationalClient.send<RecreationalBookingDto, { id: number; reason?: string }>(
-      RECREATIONAL_BOOKINGS_PATTERNS.CANCEL,
-      { id, reason },
-    );
+    return this.recreationalClient.send<
+      RecreationalBookingDto,
+      { id: number; reason?: string }
+    >(RECREATIONAL_BOOKINGS_PATTERNS.CANCEL, { id, reason });
   }
 
   checkIn(id: number): Observable<RecreationalBookingDto> {
@@ -88,13 +93,20 @@ export class BookingsService {
     return this.recreationalClient.send<
       RecreationalBookingDto[],
       { facilityId: number; startDate?: string; endDate?: string }
-    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY, { facilityId, startDate, endDate });
+    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY, {
+      facilityId,
+      startDate,
+      endDate,
+    });
   }
 
-  getStatistics(startDate: string, endDate: string): Observable<BookingStatisticsDto> {
-    return this.recreationalClient.send<BookingStatisticsDto, { startDate: string; endDate: string }>(
-      RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS,
-      { startDate, endDate },
-    );
+  getStatistics(
+    startDate: string,
+    endDate: string,
+  ): Observable<BookingStatisticsDto> {
+    return this.recreationalClient.send<
+      BookingStatisticsDto,
+      { startDate: string; endDate: string }
+    >(RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS, { startDate, endDate });
   }
 }

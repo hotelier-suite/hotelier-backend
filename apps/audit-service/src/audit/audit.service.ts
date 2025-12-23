@@ -137,7 +137,10 @@ export class AuditService {
     return this.toAuditLogDto(auditLog);
   }
 
-  async findByUser(userId: number, limit: number = 100): Promise<AuditLogDto[]> {
+  async findByUser(
+    userId: number,
+    limit: number = 100,
+  ): Promise<AuditLogDto[]> {
     const logs = await this.auditLogRepository.find({
       where: { userId },
       order: { createdAt: 'DESC' },

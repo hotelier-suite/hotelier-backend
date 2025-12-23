@@ -30,7 +30,9 @@ import { AuditResource } from '@app/contracts/audit-service/enums';
 @AuditLog({ resource: AuditResource.RESTAURANT })
 @ApiBearerAuth()
 export class RoomServiceOrdersController {
-  constructor(private readonly roomServiceOrdersService: RoomServiceOrdersService) {}
+  constructor(
+    private readonly roomServiceOrdersService: RoomServiceOrdersService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -67,7 +69,9 @@ export class RoomServiceOrdersController {
     status: 404,
     description: 'Room service order not found',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<RoomServiceOrderDto> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RoomServiceOrderDto> {
     return this.roomServiceOrdersService.findOne(id);
   }
 
@@ -90,7 +94,9 @@ export class RoomServiceOrdersController {
     status: 400,
     description: 'Invalid request data',
   })
-  create(@Body() data: CreateRoomServiceOrderDto): Observable<RoomServiceOrderDto> {
+  create(
+    @Body() data: CreateRoomServiceOrderDto,
+  ): Observable<RoomServiceOrderDto> {
     return this.roomServiceOrdersService.create(data);
   }
 

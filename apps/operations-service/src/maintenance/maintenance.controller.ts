@@ -23,12 +23,20 @@ export class MaintenanceController {
   }
 
   @MessagePattern(MAINTENANCE_PATTERNS.CREATE_REQUEST)
-  create(@Payload() data: CreateGeneralMaintenanceRequestDto): Promise<GeneralMaintenanceRequestDto> {
+  create(
+    @Payload() data: CreateGeneralMaintenanceRequestDto,
+  ): Promise<GeneralMaintenanceRequestDto> {
     return this.maintenanceService.create(data);
   }
 
   @MessagePattern(MAINTENANCE_PATTERNS.UPDATE_REQUEST)
-  update(@Payload() payload: { id: number; data: UpdateGeneralMaintenanceRequestDto }): Promise<GeneralMaintenanceRequestDto> {
+  update(
+    @Payload()
+    payload: {
+      id: number;
+      data: UpdateGeneralMaintenanceRequestDto;
+    },
+  ): Promise<GeneralMaintenanceRequestDto> {
     return this.maintenanceService.update(payload.id, payload.data);
   }
 

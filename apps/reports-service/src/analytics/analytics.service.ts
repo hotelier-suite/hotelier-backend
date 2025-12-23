@@ -23,7 +23,9 @@ export class AnalyticsService {
 
   async create(data: CreateAnalyticsDataDto): Promise<AnalyticsDataDto> {
     const analyticsData = this.analyticsRepository.create(data);
-    return this.analyticsRepository.save(analyticsData) as Promise<AnalyticsDataDto>;
+    return this.analyticsRepository.save(
+      analyticsData,
+    ) as Promise<AnalyticsDataDto>;
   }
 
   async findAll(): Promise<AnalyticsDataDto[]> {
@@ -44,10 +46,15 @@ export class AnalyticsService {
     return analyticsData as AnalyticsDataDto;
   }
 
-  async update(id: number, data: UpdateAnalyticsDataDto): Promise<AnalyticsDataDto> {
+  async update(
+    id: number,
+    data: UpdateAnalyticsDataDto,
+  ): Promise<AnalyticsDataDto> {
     const existingData = await this.findOne(id);
     const updatedData = { ...existingData, ...data };
-    return this.analyticsRepository.save(updatedData as AnalyticsData) as Promise<AnalyticsDataDto>;
+    return this.analyticsRepository.save(
+      updatedData as AnalyticsData,
+    ) as Promise<AnalyticsDataDto>;
   }
 
   async remove(id: number): Promise<AnalyticsDataDto> {

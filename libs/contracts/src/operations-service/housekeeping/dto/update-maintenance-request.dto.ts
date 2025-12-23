@@ -1,23 +1,43 @@
 import { PartialType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEnum, IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateHousekeepingMaintenanceRequestDto } from './create-maintenance-request.dto';
 import { HousekeepingMaintenanceStatus } from '../enums/maintenance-status.enum';
 
-export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(CreateHousekeepingMaintenanceRequestDto) {
-  @ApiProperty({ description: 'Current status of the maintenance request', enum: HousekeepingMaintenanceStatus, required: false })
+export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(
+  CreateHousekeepingMaintenanceRequestDto,
+) {
+  @ApiProperty({
+    description: 'Current status of the maintenance request',
+    enum: HousekeepingMaintenanceStatus,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(HousekeepingMaintenanceStatus)
   status?: HousekeepingMaintenanceStatus;
 
-  @ApiProperty({ description: 'Name of the person assigned to handle the request', required: false })
+  @ApiProperty({
+    description: 'Name of the person assigned to handle the request',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   assignedTo?: string;
 
-  @ApiProperty({ description: 'Date when the maintenance request was resolved', required: false })
+  @ApiProperty({
+    description: 'Date when the maintenance request was resolved',
+    required: false,
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
@@ -29,7 +49,10 @@ export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(CreateH
   @Min(0)
   cost?: number;
 
-  @ApiProperty({ description: 'Additional notes about the maintenance request', required: false })
+  @ApiProperty({
+    description: 'Additional notes about the maintenance request',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 1000)

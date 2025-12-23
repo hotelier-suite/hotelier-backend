@@ -20,12 +20,19 @@ export class EventBookingDto {
   @Min(1)
   id: number;
 
-  @ApiProperty({ description: 'Event booking title', example: 'Smith Family Reunion' })
+  @ApiProperty({
+    description: 'Event booking title',
+    example: 'Smith Family Reunion',
+  })
   @IsString()
   @Length(1, 200)
   title: string;
 
-  @ApiProperty({ description: 'Event booking description', example: 'Annual family gathering with lunch, activities, and celebration.', required: false })
+  @ApiProperty({
+    description: 'Event booking description',
+    example: 'Annual family gathering with lunch, activities, and celebration.',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 1000)
@@ -51,12 +58,21 @@ export class EventBookingDto {
   @Min(1)
   attendees: number;
 
-  @ApiProperty({ description: 'Total cost of the event', example: 2400.0, minimum: 0 })
+  @ApiProperty({
+    description: 'Total cost of the event',
+    example: 2400.0,
+    minimum: 0,
+  })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   totalCost: number;
 
-  @ApiProperty({ description: 'Event booking status', enum: EventStatus, example: EventStatus.PLANNED, required: false })
+  @ApiProperty({
+    description: 'Event booking status',
+    enum: EventStatus,
+    example: EventStatus.PLANNED,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(EventStatus)
   status?: EventStatus;
@@ -66,43 +82,73 @@ export class EventBookingDto {
   @Length(1, 100)
   clientName: string;
 
-  @ApiProperty({ description: 'Client email address', example: 'carlos.martinez@email.com' })
+  @ApiProperty({
+    description: 'Client email address',
+    example: 'carlos.martinez@email.com',
+  })
   @IsEmail()
   clientEmail: string;
 
-  @ApiProperty({ description: 'Client phone number', example: '+1234567890', required: false })
+  @ApiProperty({
+    description: 'Client phone number',
+    example: '+1234567890',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(1, 20)
   clientPhone?: string;
 
-  @ApiProperty({ description: 'Additional notes for the event', example: 'Family has dietary restrictions - vegetarian options required', required: false })
+  @ApiProperty({
+    description: 'Additional notes for the event',
+    example: 'Family has dietary restrictions - vegetarian options required',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 1000)
   notes?: string;
 
-  @ApiProperty({ description: 'Venue ID for the event', example: 1, minimum: 1 })
+  @ApiProperty({
+    description: 'Venue ID for the event',
+    example: 1,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   venueId: number;
 
-  @ApiProperty({ description: 'Venue details', type: () => VenueDto, required: false })
+  @ApiProperty({
+    description: 'Venue details',
+    type: () => VenueDto,
+    required: false,
+  })
   @IsOptional()
   venue?: VenueDto;
 
-  @ApiProperty({ description: 'Guest ID associated with the event (optional)', example: 1, minimum: 1, required: false })
+  @ApiProperty({
+    description: 'Guest ID associated with the event (optional)',
+    example: 1,
+    minimum: 1,
+    required: false,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   guestId?: number;
 
-  @ApiProperty({ description: 'Event booking creation timestamp', example: '2024-01-15T10:30:00.000Z' })
+  @ApiProperty({
+    description: 'Event booking creation timestamp',
+    example: '2024-01-15T10:30:00.000Z',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ description: 'Event booking last update timestamp', example: '2024-01-15T14:20:00.000Z' })
+  @ApiProperty({
+    description: 'Event booking last update timestamp',
+    example: '2024-01-15T14:20:00.000Z',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

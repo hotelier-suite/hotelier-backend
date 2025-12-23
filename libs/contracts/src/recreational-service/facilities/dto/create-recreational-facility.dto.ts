@@ -155,7 +155,8 @@ export class CreateRecreationalFacilityDto {
   advanceBookingHours?: number;
 
   @ApiProperty({
-    description: 'Days of the week when facility is available (0=Sunday, 6=Saturday)',
+    description:
+      'Days of the week when facility is available (0=Sunday, 6=Saturday)',
     example: [1, 2, 3, 4, 5, 6, 0],
     required: false,
   })

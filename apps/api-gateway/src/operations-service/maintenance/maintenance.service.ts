@@ -17,10 +17,10 @@ export class MaintenanceService {
   ) {}
 
   findAll(): Observable<GeneralMaintenanceRequestDto[]> {
-    return this.operationsClient.send<GeneralMaintenanceRequestDto[], Record<string, never>>(
-      MAINTENANCE_PATTERNS.FIND_ALL_REQUESTS,
-      {},
-    );
+    return this.operationsClient.send<
+      GeneralMaintenanceRequestDto[],
+      Record<string, never>
+    >(MAINTENANCE_PATTERNS.FIND_ALL_REQUESTS, {});
   }
 
   findOne(id: number): Observable<GeneralMaintenanceRequestDto> {
@@ -30,18 +30,23 @@ export class MaintenanceService {
     );
   }
 
-  create(data: CreateGeneralMaintenanceRequestDto): Observable<GeneralMaintenanceRequestDto> {
-    return this.operationsClient.send<GeneralMaintenanceRequestDto, CreateGeneralMaintenanceRequestDto>(
-      MAINTENANCE_PATTERNS.CREATE_REQUEST,
-      data,
-    );
+  create(
+    data: CreateGeneralMaintenanceRequestDto,
+  ): Observable<GeneralMaintenanceRequestDto> {
+    return this.operationsClient.send<
+      GeneralMaintenanceRequestDto,
+      CreateGeneralMaintenanceRequestDto
+    >(MAINTENANCE_PATTERNS.CREATE_REQUEST, data);
   }
 
-  update(id: number, data: UpdateGeneralMaintenanceRequestDto): Observable<GeneralMaintenanceRequestDto> {
-    return this.operationsClient.send<GeneralMaintenanceRequestDto, { id: number; data: UpdateGeneralMaintenanceRequestDto }>(
-      MAINTENANCE_PATTERNS.UPDATE_REQUEST,
-      { id, data },
-    );
+  update(
+    id: number,
+    data: UpdateGeneralMaintenanceRequestDto,
+  ): Observable<GeneralMaintenanceRequestDto> {
+    return this.operationsClient.send<
+      GeneralMaintenanceRequestDto,
+      { id: number; data: UpdateGeneralMaintenanceRequestDto }
+    >(MAINTENANCE_PATTERNS.UPDATE_REQUEST, { id, data });
   }
 
   remove(id: number): Observable<GeneralMaintenanceRequestDto> {

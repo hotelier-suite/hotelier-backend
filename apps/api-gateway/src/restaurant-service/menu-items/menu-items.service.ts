@@ -38,10 +38,10 @@ export class MenuItemsService {
   }
 
   update(id: number, data: UpdateMenuItemDto): Observable<MenuItemDto> {
-    return this.restaurantClient.send<MenuItemDto, { id: number; data: UpdateMenuItemDto }>(
-      MENU_ITEMS_PATTERNS.UPDATE,
-      { id, data },
-    );
+    return this.restaurantClient.send<
+      MenuItemDto,
+      { id: number; data: UpdateMenuItemDto }
+    >(MENU_ITEMS_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<MenuItemDto> {

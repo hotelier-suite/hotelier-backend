@@ -99,7 +99,11 @@ export class AuditLogsSeeder {
         resource: AuditResource.CONFIGURATION,
         resourceId: '1',
         description: 'System configuration updated',
-        details: { setting: 'check_in_time', oldValue: '14:00', newValue: '15:00' },
+        details: {
+          setting: 'check_in_time',
+          oldValue: '14:00',
+          newValue: '15:00',
+        },
       },
     ];
 

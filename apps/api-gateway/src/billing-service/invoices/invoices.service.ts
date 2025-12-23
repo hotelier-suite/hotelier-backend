@@ -40,10 +40,10 @@ export class InvoicesService {
   }
 
   update(id: number, data: UpdateInvoiceDto): Observable<InvoiceDto> {
-    return this.billingClient.send<InvoiceDto, { id: number; data: UpdateInvoiceDto }>(
-      INVOICES_PATTERNS.UPDATE,
-      { id, data },
-    );
+    return this.billingClient.send<
+      InvoiceDto,
+      { id: number; data: UpdateInvoiceDto }
+    >(INVOICES_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<InvoiceDto> {
@@ -60,11 +60,14 @@ export class InvoicesService {
     );
   }
 
-  findByDateRange(startDate: string, endDate: string): Observable<InvoiceDto[]> {
-    return this.billingClient.send<InvoiceDto[], { startDate: string; endDate: string }>(
-      INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
-      { startDate, endDate },
-    );
+  findByDateRange(
+    startDate: string,
+    endDate: string,
+  ): Observable<InvoiceDto[]> {
+    return this.billingClient.send<
+      InvoiceDto[],
+      { startDate: string; endDate: string }
+    >(INVOICES_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 
   findOverdue(): Observable<InvoiceDto[]> {
@@ -81,11 +84,14 @@ export class InvoicesService {
     );
   }
 
-  markAsPaid(id: number, paymentMethod?: PaymentMethod): Observable<InvoiceDto> {
-    return this.billingClient.send<InvoiceDto, { id: number; paymentMethod?: PaymentMethod }>(
-      INVOICES_PATTERNS.MARK_AS_PAID,
-      { id, paymentMethod },
-    );
+  markAsPaid(
+    id: number,
+    paymentMethod?: PaymentMethod,
+  ): Observable<InvoiceDto> {
+    return this.billingClient.send<
+      InvoiceDto,
+      { id: number; paymentMethod?: PaymentMethod }
+    >(INVOICES_PATTERNS.MARK_AS_PAID, { id, paymentMethod });
   }
 
   download(id: number): Observable<InvoiceDto> {

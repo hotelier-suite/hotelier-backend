@@ -61,7 +61,10 @@ export class RestaurantService {
     return this.toMenuItemDto(item);
   }
 
-  async updateMenuItem(id: number, data: UpdateMenuItemDto): Promise<MenuItemDto> {
+  async updateMenuItem(
+    id: number,
+    data: UpdateMenuItemDto,
+  ): Promise<MenuItemDto> {
     const existing = await this.menuItemRepository.findOne({ where: { id } });
     if (!existing) {
       throw new NotFoundException(`Menu item with id ${id} not found`);
@@ -90,14 +93,18 @@ export class RestaurantService {
   }
 
   async findOneOrder(id: number): Promise<RoomServiceOrderDto> {
-    const order = await this.roomServiceOrderRepository.findOne({ where: { id } });
+    const order = await this.roomServiceOrderRepository.findOne({
+      where: { id },
+    });
     if (!order) {
       throw new NotFoundException(`Room service order with id ${id} not found`);
     }
     return this.toRoomServiceOrderDto(order);
   }
 
-  async createOrder(data: CreateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
+  async createOrder(
+    data: CreateRoomServiceOrderDto,
+  ): Promise<RoomServiceOrderDto> {
     const count = await this.roomServiceOrderRepository.count();
     const orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
 
@@ -113,8 +120,13 @@ export class RestaurantService {
     return this.toRoomServiceOrderDto(order);
   }
 
-  async updateOrder(id: number, data: UpdateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
-    const existing = await this.roomServiceOrderRepository.findOne({ where: { id } });
+  async updateOrder(
+    id: number,
+    data: UpdateRoomServiceOrderDto,
+  ): Promise<RoomServiceOrderDto> {
+    const existing = await this.roomServiceOrderRepository.findOne({
+      where: { id },
+    });
     if (!existing) {
       throw new NotFoundException(`Room service order with id ${id} not found`);
     }
@@ -124,7 +136,9 @@ export class RestaurantService {
   }
 
   async deleteOrder(id: number): Promise<RoomServiceOrderDto> {
-    const order = await this.roomServiceOrderRepository.findOne({ where: { id } });
+    const order = await this.roomServiceOrderRepository.findOne({
+      where: { id },
+    });
     if (!order) {
       throw new NotFoundException(`Room service order with id ${id} not found`);
     }
@@ -142,14 +156,18 @@ export class RestaurantService {
   }
 
   async findOneBeverage(id: number): Promise<BeverageInventoryDto> {
-    const beverage = await this.beverageInventoryRepository.findOne({ where: { id } });
+    const beverage = await this.beverageInventoryRepository.findOne({
+      where: { id },
+    });
     if (!beverage) {
       throw new NotFoundException(`Beverage item with id ${id} not found`);
     }
     return this.toBeverageInventoryDto(beverage);
   }
 
-  async createBeverage(data: CreateBeverageItemDto): Promise<BeverageInventoryDto> {
+  async createBeverage(
+    data: CreateBeverageItemDto,
+  ): Promise<BeverageInventoryDto> {
     const count = await this.beverageInventoryRepository.count();
     const itemCode = `BEV${String(count + 1).padStart(3, '0')}`;
 
@@ -166,8 +184,13 @@ export class RestaurantService {
     return this.toBeverageInventoryDto(beverage);
   }
 
-  async updateBeverage(id: number, data: UpdateBeverageItemDto): Promise<BeverageInventoryDto> {
-    const existing = await this.beverageInventoryRepository.findOne({ where: { id } });
+  async updateBeverage(
+    id: number,
+    data: UpdateBeverageItemDto,
+  ): Promise<BeverageInventoryDto> {
+    const existing = await this.beverageInventoryRepository.findOne({
+      where: { id },
+    });
     if (!existing) {
       throw new NotFoundException(`Beverage item with id ${id} not found`);
     }
@@ -176,14 +199,21 @@ export class RestaurantService {
     const stock = data.stock ?? existing.stock;
     const minimumStock = data.minimumStock ?? existing.minimumStock;
     const status =
-      stock <= minimumStock ? BeverageStatus.LOW_STOCK : BeverageStatus.AVAILABLE;
+      stock <= minimumStock
+        ? BeverageStatus.LOW_STOCK
+        : BeverageStatus.AVAILABLE;
 
     await this.beverageInventoryRepository.update(id, { ...data, status });
     return this.findOneBeverage(id);
   }
 
-  async updateBeverageStock(id: number, stock: number): Promise<BeverageInventoryDto> {
-    const existing = await this.beverageInventoryRepository.findOne({ where: { id } });
+  async updateBeverageStock(
+    id: number,
+    stock: number,
+  ): Promise<BeverageInventoryDto> {
+    const existing = await this.beverageInventoryRepository.findOne({
+      where: { id },
+    });
     if (!existing) {
       throw new NotFoundException(`Beverage item with id ${id} not found`);
     }
@@ -198,7 +228,9 @@ export class RestaurantService {
   }
 
   async deleteBeverage(id: number): Promise<BeverageInventoryDto> {
-    const beverage = await this.beverageInventoryRepository.findOne({ where: { id } });
+    const beverage = await this.beverageInventoryRepository.findOne({
+      where: { id },
+    });
     if (!beverage) {
       throw new NotFoundException(`Beverage item with id ${id} not found`);
     }
@@ -215,7 +247,9 @@ export class RestaurantService {
     return beverages.map((beverage) => this.toBeverageInventoryDto(beverage));
   }
 
-  async findBeveragesByCategory(category: string): Promise<BeverageInventoryDto[]> {
+  async findBeveragesByCategory(
+    category: string,
+  ): Promise<BeverageInventoryDto[]> {
     const beverages = await this.beverageInventoryRepository.find({
       where: { category },
       order: { name: 'ASC' },
@@ -260,7 +294,9 @@ export class RestaurantService {
     };
   }
 
-  private toBeverageInventoryDto(beverage: BeverageInventory): BeverageInventoryDto {
+  private toBeverageInventoryDto(
+    beverage: BeverageInventory,
+  ): BeverageInventoryDto {
     return {
       id: beverage.id,
       itemCode: beverage.itemCode,

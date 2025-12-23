@@ -48,7 +48,12 @@ export class InvoicesSeeder {
         reservationId: 1,
         userId: 1,
         items: [
-          { description: 'Deluxe Room (3 nights)', quantity: 3, price: 75.0, total: 225.0 },
+          {
+            description: 'Deluxe Room (3 nights)',
+            quantity: 3,
+            price: 75.0,
+            total: 225.0,
+          },
         ],
       },
       {
@@ -65,7 +70,12 @@ export class InvoicesSeeder {
         reservationId: 2,
         userId: 1,
         items: [
-          { description: 'Standard Room (2 nights)', quantity: 2, price: 75.0, total: 150.0 },
+          {
+            description: 'Standard Room (2 nights)',
+            quantity: 2,
+            price: 75.0,
+            total: 150.0,
+          },
         ],
       },
       {
@@ -82,8 +92,18 @@ export class InvoicesSeeder {
         reservationId: 3,
         userId: 2,
         items: [
-          { description: 'Family Suite (4 nights)', quantity: 4, price: 150.0, total: 600.0 },
-          { description: 'Restaurant Services', quantity: 1, price: 100.0, total: 100.0 },
+          {
+            description: 'Family Suite (4 nights)',
+            quantity: 4,
+            price: 150.0,
+            total: 600.0,
+          },
+          {
+            description: 'Restaurant Services',
+            quantity: 1,
+            price: 100.0,
+            total: 100.0,
+          },
         ],
       },
       {
@@ -99,7 +119,12 @@ export class InvoicesSeeder {
         reservationId: 4,
         userId: 1,
         items: [
-          { description: 'Standard Room (2 nights)', quantity: 2, price: 75.0, total: 150.0 },
+          {
+            description: 'Standard Room (2 nights)',
+            quantity: 2,
+            price: 75.0,
+            total: 150.0,
+          },
         ],
       },
       {
@@ -115,8 +140,18 @@ export class InvoicesSeeder {
         reservationId: 5,
         userId: 2,
         items: [
-          { description: 'Premium Suite (3 nights)', quantity: 3, price: 150.0, total: 450.0 },
-          { description: 'Restaurant Services', quantity: 1, price: 50.0, total: 50.0 },
+          {
+            description: 'Premium Suite (3 nights)',
+            quantity: 3,
+            price: 150.0,
+            total: 450.0,
+          },
+          {
+            description: 'Restaurant Services',
+            quantity: 1,
+            price: 50.0,
+            total: 50.0,
+          },
         ],
       },
       {
@@ -132,7 +167,12 @@ export class InvoicesSeeder {
         reservationId: 6,
         userId: 1,
         items: [
-          { description: 'Deluxe Room (5 nights)', quantity: 5, price: 75.0, total: 375.0 },
+          {
+            description: 'Deluxe Room (5 nights)',
+            quantity: 5,
+            price: 75.0,
+            total: 375.0,
+          },
         ],
       },
     ];

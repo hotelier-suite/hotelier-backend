@@ -164,7 +164,9 @@ export class ReportsService {
     return [];
   }
 
-  async getMonthlyRevenueComparison(year: number): Promise<MonthlyRevenueDto[]> {
+  async getMonthlyRevenueComparison(
+    year: number,
+  ): Promise<MonthlyRevenueDto[]> {
     // This would typically gather data from billing-service
     // For now, return empty array
     return [];

@@ -7,11 +7,17 @@ export class CleaningPerformanceDto {
   @IsNumber()
   averageQualityScore: number;
 
-  @ApiProperty({ description: 'Completion rate as a percentage', example: 92.5 })
+  @ApiProperty({
+    description: 'Completion rate as a percentage',
+    example: 92.5,
+  })
   @IsNumber()
   completionRate: number;
 
-  @ApiProperty({ description: 'Performance data for individual employees', type: [EmployeePerformanceDto] })
+  @ApiProperty({
+    description: 'Performance data for individual employees',
+    type: [EmployeePerformanceDto],
+  })
   @IsArray()
   employeePerformance: EmployeePerformanceDto[];
 }

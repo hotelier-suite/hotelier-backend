@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, MoreThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { DashboardWidget } from './entities/dashboard-widget.entity';
 import { CreateDashboardWidgetDto } from './dto/create-dashboard-widget.dto';
 import { UpdateDashboardWidgetDto } from './dto/update-dashboard-widget.dto';
@@ -10,29 +10,33 @@ import { RevenueDataDto } from './dto/revenue-data.dto';
 import { OccupancyDataDto } from './dto/occupancy-data.dto';
 import { TopPerformingRoomDto } from './dto/top-performing-room.dto';
 import { AuthService } from '../auth-service/auth/auth.service';
-import { Room } from '../rooms/entities/room.entity';
-import { Reservation } from '../reservations/entities/reservation.entity';
-import { Invoice } from '../billing/entities/invoice.entity';
-import { CleaningAssignment } from '../housekeeping/entities/cleaning-assignment.entity';
+import { RoomsService } from '../booking-service/rooms/rooms.service';
+import { ReservationsService } from '../booking-service/reservations/reservations.service';
+import { InvoicesService } from '../billing-service/invoices/invoices.service';
+import { StatisticsService } from '../billing-service/statistics/statistics.service';
+import { HousekeepingService } from '../operations-service/housekeeping/housekeeping.service';
 import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
 import { GuestRequestsService } from '../guest-requests-service/guest-requests/guest-requests.service';
-import { forkJoin, from, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { EmployeesService } from '../staff-service/employees/employees.service';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
+import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
+import { InvoiceDto } from '@app/contracts/billing-service/invoices/dto';
+import { CleaningAssignmentDto } from '@app/contracts/operations-service/housekeeping/dto';
+import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
+import { DepartmentStatsDto } from '@app/contracts/staff-service/employees/dto/department-stats.dto';
 
 @Injectable()
 export class DashboardService {
   constructor(
     @InjectRepository(DashboardWidget)
     private readonly widgetRepository: Repository<DashboardWidget>,
-    @InjectRepository(Room)
-    private readonly roomRepository: Repository<Room>,
-    @InjectRepository(Reservation)
-    private readonly reservationRepository: Repository<Reservation>,
-    @InjectRepository(Invoice)
-    private readonly invoiceRepository: Repository<Invoice>,
-    @InjectRepository(CleaningAssignment)
-    private readonly cleaningAssignmentRepository: Repository<CleaningAssignment>,
+    private readonly roomsService: RoomsService,
+    private readonly reservationsService: ReservationsService,
+    private readonly invoicesService: InvoicesService,
+    private readonly statisticsService: StatisticsService,
+    private readonly housekeepingService: HousekeepingService,
     private readonly employeesService: EmployeesService,
     private readonly guestRequestsService: GuestRequestsService,
     private readonly authService: AuthService,
@@ -83,23 +87,12 @@ export class DashboardService {
           throw new NotFoundException('User not found');
         }
 
-        // Revenue (last 30 days)
+        // Get date range for last 30 days
         const endDate = new Date();
         const startDate = new Date();
         startDate.setDate(endDate.getDate() - 30);
 
-        const totalRevenue$ = from(
-          this.invoiceRepository
-            .createQueryBuilder('invoice')
-            .select('SUM(invoice.total)', 'total')
-            .where('invoice.createdAt BETWEEN :start AND :end', {
-              start: startDate,
-              end: endDate,
-            })
-            .getRawOne<{ total: string }>(),
-        ).pipe(map((revenueRaw) => parseFloat(revenueRaw?.total || '0') || 0));
-
-        // Today check-ins / check-outs
+        // Today's date range
         const today = new Date();
         const dayStart = new Date(today);
         dayStart.setHours(0, 0, 0, 0);
@@ -107,150 +100,183 @@ export class DashboardService {
         dayEnd.setHours(23, 59, 59, 999);
 
         return forkJoin({
-          totalRooms: from(this.roomRepository.count()),
-          availableRooms: from(
-            this.roomRepository.count({ where: { isAvailable: true } }),
-          ),
-          activeStaff: this.employeesService
-            .getDepartmentStats()
-            .pipe(
-              map((stats) =>
-                stats.reduce((sum, s) => sum + (s.activeCount ?? 0), 0),
-              ),
+          rooms: this.roomsService
+            .findAll()
+            .pipe(catchError(() => of([] as RoomDto[]))),
+          reservations: this.reservationsService
+            .findAll()
+            .pipe(catchError(() => of([] as ReservationDto[]))),
+          financialSummary: this.statisticsService
+            .getFinancialSummary(startDate.toISOString(), endDate.toISOString())
+            .pipe(catchError(() => of({ totalRevenue: 0 }))),
+          activeStaff: this.employeesService.getDepartmentStats().pipe(
+            map((stats: DepartmentStatsDto[]) =>
+              stats.reduce((sum, s) => sum + (s.activeCount ?? 0), 0),
             ),
-          pendingRequests: this.guestRequestsService.countByStatus(
-            RequestStatus.PENDING,
+            catchError(() => of(0)),
           ),
-          totalRevenue: totalRevenue$,
-          todayCheckIns: from(
-            this.reservationRepository.count({
-              where: { checkInDate: Between(dayStart, dayEnd) },
-            }),
-          ),
-          todayCheckOuts: from(
-            this.reservationRepository.count({
-              where: { checkOutDate: Between(dayStart, dayEnd) },
-            }),
-          ),
+          pendingRequests: this.guestRequestsService
+            .countByStatus(RequestStatus.PENDING)
+            .pipe(catchError(() => of(0))),
         }).pipe(
           map(
             ({
-              totalRooms,
-              availableRooms,
+              rooms,
+              reservations,
+              financialSummary,
               activeStaff,
               pendingRequests,
-              totalRevenue,
-              todayCheckIns,
-              todayCheckOuts,
-            }) => ({
-              totalRooms,
-              occupiedRooms: Math.max(0, totalRooms - availableRooms),
-              availableRooms,
-              totalRevenue,
-              todayCheckIns,
-              todayCheckOuts,
-              pendingRequests,
-              activeStaff,
-            }),
+            }) => {
+              const totalRooms = rooms.length;
+              const availableRooms = rooms.filter((r) => r.isAvailable).length;
+
+              // Count today's check-ins and check-outs
+              const todayCheckIns = reservations.filter((r) => {
+                const checkIn = new Date(r.checkInDate);
+                return checkIn >= dayStart && checkIn <= dayEnd;
+              }).length;
+
+              const todayCheckOuts = reservations.filter((r) => {
+                const checkOut = new Date(r.checkOutDate);
+                return checkOut >= dayStart && checkOut <= dayEnd;
+              }).length;
+
+              return {
+                totalRooms,
+                occupiedRooms: Math.max(0, totalRooms - availableRooms),
+                availableRooms,
+                totalRevenue: financialSummary.totalRevenue || 0,
+                todayCheckIns,
+                todayCheckOuts,
+                pendingRequests,
+                activeStaff,
+              };
+            },
           ),
         );
       }),
     );
   }
 
-  async getOccupancyData(): Promise<OccupancyDataDto[]> {
-    const totalRooms = await this.roomRepository.count();
-    if (totalRooms === 0) {
-      const today = new Date();
-      return Array.from({ length: 7 }).map((_, idx) => {
-        const d = new Date(today);
-        d.setDate(today.getDate() - (6 - idx));
-        return { date: d.toISOString().split('T')[0], occupancy: 0 };
-      });
-    }
+  getOccupancyData(): Observable<OccupancyDataDto[]> {
+    return forkJoin({
+      rooms: this.roomsService
+        .findAll()
+        .pipe(catchError(() => of([] as RoomDto[]))),
+      reservations: this.reservationsService
+        .findAll()
+        .pipe(catchError(() => of([] as ReservationDto[]))),
+    }).pipe(
+      map(({ rooms, reservations }) => {
+        const totalRooms = rooms.length;
+        if (totalRooms === 0) {
+          const today = new Date();
+          return Array.from({ length: 7 }).map((_, idx) => {
+            const d = new Date(today);
+            d.setDate(today.getDate() - (6 - idx));
+            return { date: d.toISOString().split('T')[0], occupancy: 0 };
+          });
+        }
 
-    const today = new Date();
-    const start = new Date(today);
-    start.setDate(today.getDate() - 6);
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - 6);
 
-    const results: OccupancyDataDto[] = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      const dayStart = new Date(d);
-      dayStart.setHours(0, 0, 0, 0);
-      const dayEnd = new Date(d);
-      dayEnd.setHours(23, 59, 59, 999);
+        const results: OccupancyDataDto[] = [];
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(start);
+          d.setDate(start.getDate() + i);
+          const dayStart = new Date(d);
+          dayStart.setHours(0, 0, 0, 0);
+          const dayEnd = new Date(d);
+          dayEnd.setHours(23, 59, 59, 999);
 
-      // Count reservations overlapping this day: checkIn <= dayEnd AND checkOut > dayStart
-      const overlapping = await this.reservationRepository
-        .createQueryBuilder('r')
-        .where('r.checkInDate <= :dayEnd', { dayEnd })
-        .andWhere('r.checkOutDate > :dayStart', { dayStart })
-        .getCount();
+          // Count reservations overlapping this day: checkIn <= dayEnd AND checkOut > dayStart
+          const overlapping = reservations.filter((r) => {
+            const checkIn = new Date(r.checkInDate);
+            const checkOut = new Date(r.checkOutDate);
+            return checkIn <= dayEnd && checkOut > dayStart;
+          }).length;
 
-      const occupancy = Math.max(
-        0,
-        Math.min(100, Math.round((overlapping / totalRooms) * 100)),
-      );
-      results.push({ date: d.toISOString().split('T')[0], occupancy });
-    }
-    return results;
+          const occupancy = Math.max(
+            0,
+            Math.min(100, Math.round((overlapping / totalRooms) * 100)),
+          );
+          results.push({ date: d.toISOString().split('T')[0], occupancy });
+        }
+        return results;
+      }),
+    );
   }
 
   getRevenueData(userId: number): Observable<RevenueDataDto[]> {
     return this.authService.validateUser(userId).pipe(
-      switchMap(async (user) => {
+      switchMap((user) => {
         if (!user) throw new NotFoundException('User not found');
 
         const today = new Date();
         const start = new Date(today);
         start.setDate(start.getDate() - 6);
-        const invoices = await this.invoiceRepository.find({
-          where: { createdAt: MoreThanOrEqual(start) },
-        });
-        const byDate: Record<string, number> = {};
-        for (const inv of invoices) {
-          const key = inv.createdAt.toISOString().split('T')[0];
-          byDate[key] = (byDate[key] || 0) + Number(inv.total);
-        }
-        return Array.from({ length: 7 }).map((_, i) => {
-          const d = new Date(start);
-          d.setDate(start.getDate() + i);
-          const key = d.toISOString().split('T')[0];
-          return { date: key, revenue: byDate[key] || 0 };
-        });
+
+        return this.invoicesService
+          .findByDateRange(start.toISOString(), today.toISOString())
+          .pipe(
+            catchError(() => of([] as InvoiceDto[])),
+            map((invoices) => {
+              const byDate: Record<string, number> = {};
+              for (const inv of invoices) {
+                const key = new Date(inv.createdAt).toISOString().split('T')[0];
+                byDate[key] = (byDate[key] || 0) + Number(inv.total);
+              }
+              return Array.from({ length: 7 }).map((_, i) => {
+                const d = new Date(start);
+                d.setDate(start.getDate() + i);
+                const key = d.toISOString().split('T')[0];
+                return { date: key, revenue: byDate[key] || 0 };
+              });
+            }),
+          );
       }),
     );
   }
 
-  async getTopPerformingRooms(): Promise<TopPerformingRoomDto[]> {
+  getTopPerformingRooms(): Observable<TopPerformingRoomDto[]> {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 30);
-    const reservations = await this.reservationRepository.find({
-      where: { createdAt: Between(startDate, endDate) },
-      relations: { room: true },
-    });
-    const byRoom: Record<string, { revenue: number; nights: number }> = {};
-    for (const r of reservations) {
-      const roomNum = r.room?.number ?? String(r.roomId);
-      if (!byRoom[roomNum]) byRoom[roomNum] = { revenue: 0, nights: 0 };
-      byRoom[roomNum].revenue += Number(r.totalAmount || 0);
-      byRoom[roomNum].nights += Number(r.nights || 0);
-    }
-    const items = Object.entries(byRoom)
-      .map(([room, v]) => ({
-        room,
-        revenue: Math.round(v.revenue * 100) / 100,
-        occupancy: Math.max(
-          0,
-          Math.min(100, Math.round((v.nights / 30) * 100)),
-        ),
-      }))
-      .sort((a, b) => b.revenue - a.revenue)
-      .slice(0, 5);
-    return items;
+
+    return this.reservationsService.findAll().pipe(
+      catchError(() => of([] as ReservationDto[])),
+      map((reservations) => {
+        // Filter reservations from last 30 days
+        const recentReservations = reservations.filter((r) => {
+          const createdAt = new Date(r.createdAt);
+          return createdAt >= startDate && createdAt <= endDate;
+        });
+
+        const byRoom: Record<string, { revenue: number; nights: number }> = {};
+        for (const r of recentReservations) {
+          const roomNum = r.room?.number ?? String(r.roomId);
+          if (!byRoom[roomNum]) byRoom[roomNum] = { revenue: 0, nights: 0 };
+          byRoom[roomNum].revenue += Number(r.totalAmount || 0);
+          byRoom[roomNum].nights += Number(r.nights || 0);
+        }
+
+        const items = Object.entries(byRoom)
+          .map(([room, v]) => ({
+            room,
+            revenue: Math.round(v.revenue * 100) / 100,
+            occupancy: Math.max(
+              0,
+              Math.min(100, Math.round((v.nights / 30) * 100)),
+            ),
+          }))
+          .sort((a, b) => b.revenue - a.revenue)
+          .slice(0, 5);
+
+        return items;
+      }),
+    );
   }
 
   getRecentActivities(userId: number): Observable<RecentActivityDto[]> {
@@ -261,25 +287,49 @@ export class DashboardService {
         }
 
         return forkJoin({
-          recentReservations: from(
-            this.reservationRepository.find({
-              order: { createdAt: 'DESC' },
-              take: 5,
-            }),
+          recentReservations: this.reservationsService.findAll().pipe(
+            map((reservations) =>
+              reservations
+                .sort(
+                  (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime(),
+                )
+                .slice(0, 5),
+            ),
+            catchError(() => of([] as ReservationDto[])),
           ),
-          recentInvoices: from(
-            this.invoiceRepository.find({
-              order: { createdAt: 'DESC' },
-              take: 5,
-            }),
+          recentInvoices: this.invoicesService.findAll().pipe(
+            map((invoices) =>
+              invoices
+                .sort(
+                  (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime(),
+                )
+                .slice(0, 5),
+            ),
+            catchError(() => of([] as InvoiceDto[])),
           ),
-          recentAssignments: from(
-            this.cleaningAssignmentRepository.find({
-              order: { completedAt: 'DESC' },
-              take: 5,
-            }),
+          recentAssignments: this.housekeepingService.findAllAssignments().pipe(
+            map((assignments) =>
+              assignments
+                .sort((a, b) => {
+                  const aTime = a.completedAt
+                    ? new Date(a.completedAt).getTime()
+                    : 0;
+                  const bTime = b.completedAt
+                    ? new Date(b.completedAt).getTime()
+                    : 0;
+                  return bTime - aTime;
+                })
+                .slice(0, 5),
+            ),
+            catchError(() => of([] as CleaningAssignmentDto[])),
           ),
-          recentRequests: this.guestRequestsService.findRecent(5),
+          recentRequests: this.guestRequestsService
+            .findRecent(5)
+            .pipe(catchError(() => of([] as GuestRequestDto[]))),
         }).pipe(
           map(
             ({
@@ -294,14 +344,14 @@ export class DashboardService {
                 activities.push({
                   type: 'booking',
                   description: `Reservation for room ${r.roomId} - ${r.guestName}`,
-                  timestamp: r.createdAt,
+                  timestamp: new Date(r.createdAt),
                 }),
               );
               recentInvoices.forEach((inv) =>
                 activities.push({
                   type: 'payment',
                   description: `Invoice #${inv.number} created`,
-                  timestamp: inv.createdAt,
+                  timestamp: new Date(inv.createdAt),
                 }),
               );
               recentAssignments.forEach((a) =>
@@ -310,7 +360,9 @@ export class DashboardService {
                   description: `Cleaning assignment ${a.id} ${
                     a.completedAt ? 'completed' : 'in progress'
                   }`,
-                  timestamp: a.completedAt || a.assignedDate,
+                  timestamp: a.completedAt
+                    ? new Date(a.completedAt)
+                    : new Date(a.assignedDate),
                 }),
               );
               recentRequests.forEach((gr) =>

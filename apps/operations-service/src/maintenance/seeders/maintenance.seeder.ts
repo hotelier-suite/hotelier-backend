@@ -20,7 +20,8 @@ export class MaintenanceSeeder {
     const requests = [
       {
         title: 'Fix air conditioning in room 205',
-        description: 'The air conditioning unit is not working properly and making noise.',
+        description:
+          'The air conditioning unit is not working properly and making noise.',
         type: MaintenanceType.CORRECTIVE,
         priority: MaintenancePriority.HIGH,
         location: 'Room 205',

@@ -40,7 +40,9 @@ export class HousekeepingController {
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.UPDATE_TASK)
-  updateTask(@Payload() payload: { id: number; data: UpdateCleaningTaskDto }): Promise<CleaningTaskDto> {
+  updateTask(
+    @Payload() payload: { id: number; data: UpdateCleaningTaskDto },
+  ): Promise<CleaningTaskDto> {
     return this.housekeepingService.updateTask(payload.id, payload.data);
   }
 
@@ -61,12 +63,16 @@ export class HousekeepingController {
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.CREATE_ASSIGNMENT)
-  createAssignment(@Payload() data: CreateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
+  createAssignment(
+    @Payload() data: CreateCleaningAssignmentDto,
+  ): Promise<CleaningAssignmentDto> {
     return this.housekeepingService.createAssignment(data);
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.UPDATE_ASSIGNMENT)
-  updateAssignment(@Payload() payload: { id: number; data: UpdateCleaningAssignmentDto }): Promise<CleaningAssignmentDto> {
+  updateAssignment(
+    @Payload() payload: { id: number; data: UpdateCleaningAssignmentDto },
+  ): Promise<CleaningAssignmentDto> {
     return this.housekeepingService.updateAssignment(payload.id, payload.data);
   }
 
@@ -82,22 +88,33 @@ export class HousekeepingController {
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.FIND_ONE_MAINTENANCE_REPORT)
-  findOneMaintenanceReport(@Payload() id: number): Promise<MaintenanceReportDto> {
+  findOneMaintenanceReport(
+    @Payload() id: number,
+  ): Promise<MaintenanceReportDto> {
     return this.housekeepingService.findOneMaintenanceReport(id);
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.CREATE_MAINTENANCE_REPORT)
-  createMaintenanceReport(@Payload() data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
+  createMaintenanceReport(
+    @Payload() data: CreateMaintenanceReportDto,
+  ): Promise<MaintenanceReportDto> {
     return this.housekeepingService.createMaintenanceReport(data);
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.UPDATE_MAINTENANCE_REPORT)
-  updateMaintenanceReport(@Payload() payload: { id: number; data: UpdateMaintenanceReportDto }): Promise<MaintenanceReportDto> {
-    return this.housekeepingService.updateMaintenanceReport(payload.id, payload.data);
+  updateMaintenanceReport(
+    @Payload() payload: { id: number; data: UpdateMaintenanceReportDto },
+  ): Promise<MaintenanceReportDto> {
+    return this.housekeepingService.updateMaintenanceReport(
+      payload.id,
+      payload.data,
+    );
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.DELETE_MAINTENANCE_REPORT)
-  deleteMaintenanceReport(@Payload() id: number): Promise<MaintenanceReportDto> {
+  deleteMaintenanceReport(
+    @Payload() id: number,
+  ): Promise<MaintenanceReportDto> {
     return this.housekeepingService.deleteMaintenanceReport(id);
   }
 
@@ -108,22 +125,37 @@ export class HousekeepingController {
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.FIND_ONE_MAINTENANCE_REQUEST)
-  findOneMaintenanceRequest(@Payload() id: number): Promise<HousekeepingMaintenanceRequestDto> {
+  findOneMaintenanceRequest(
+    @Payload() id: number,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     return this.housekeepingService.findOneMaintenanceRequest(id);
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.CREATE_MAINTENANCE_REQUEST)
-  createMaintenanceRequest(@Payload() data: CreateHousekeepingMaintenanceRequestDto): Promise<HousekeepingMaintenanceRequestDto> {
+  createMaintenanceRequest(
+    @Payload() data: CreateHousekeepingMaintenanceRequestDto,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     return this.housekeepingService.createMaintenanceRequest(data);
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.UPDATE_MAINTENANCE_REQUEST)
-  updateMaintenanceRequest(@Payload() payload: { id: number; data: UpdateHousekeepingMaintenanceRequestDto }): Promise<HousekeepingMaintenanceRequestDto> {
-    return this.housekeepingService.updateMaintenanceRequest(payload.id, payload.data);
+  updateMaintenanceRequest(
+    @Payload()
+    payload: {
+      id: number;
+      data: UpdateHousekeepingMaintenanceRequestDto;
+    },
+  ): Promise<HousekeepingMaintenanceRequestDto> {
+    return this.housekeepingService.updateMaintenanceRequest(
+      payload.id,
+      payload.data,
+    );
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.DELETE_MAINTENANCE_REQUEST)
-  deleteMaintenanceRequest(@Payload() id: number): Promise<HousekeepingMaintenanceRequestDto> {
+  deleteMaintenanceRequest(
+    @Payload() id: number,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     return this.housekeepingService.deleteMaintenanceRequest(id);
   }
 
@@ -134,7 +166,9 @@ export class HousekeepingController {
   }
 
   @MessagePattern(HOUSEKEEPING_PATTERNS.GET_CLEANING_PERFORMANCE)
-  getCleaningPerformance(@Payload() employeeId?: number): Promise<CleaningPerformanceDto> {
+  getCleaningPerformance(
+    @Payload() employeeId?: number,
+  ): Promise<CleaningPerformanceDto> {
     return this.housekeepingService.getCleaningPerformance(employeeId);
   }
 }

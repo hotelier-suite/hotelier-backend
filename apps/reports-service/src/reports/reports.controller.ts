@@ -74,7 +74,11 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.GENERATE_OCCUPANCY)
   generateOccupancyReport(
     @Payload()
-    payload: { startDate: string; endDate: string; generatedBy: string },
+    payload: {
+      startDate: string;
+      endDate: string;
+      generatedBy: string;
+    },
   ): Promise<ReportDto> {
     return this.reportsService.generateOccupancyReport(
       new Date(payload.startDate),
@@ -86,7 +90,11 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.GENERATE_REVENUE)
   generateRevenueReport(
     @Payload()
-    payload: { startDate: string; endDate: string; generatedBy: string },
+    payload: {
+      startDate: string;
+      endDate: string;
+      generatedBy: string;
+    },
   ): Promise<ReportDto> {
     return this.reportsService.generateRevenueReport(
       new Date(payload.startDate),
@@ -98,7 +106,11 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.GENERATE_GUEST_SATISFACTION)
   generateGuestSatisfactionReport(
     @Payload()
-    payload: { startDate: string; endDate: string; generatedBy: string },
+    payload: {
+      startDate: string;
+      endDate: string;
+      generatedBy: string;
+    },
   ): Promise<ReportDto> {
     return this.reportsService.generateGuestSatisfactionReport(
       new Date(payload.startDate),

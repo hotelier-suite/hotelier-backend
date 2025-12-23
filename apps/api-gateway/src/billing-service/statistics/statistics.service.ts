@@ -27,10 +27,10 @@ export class StatisticsService {
   }
 
   getPaymentStatistics(): Observable<PaymentStatisticsResponseDto> {
-    return this.billingClient.send<PaymentStatisticsResponseDto, Record<string, never>>(
-      STATISTICS_PATTERNS.PAYMENTS,
-      {},
-    );
+    return this.billingClient.send<
+      PaymentStatisticsResponseDto,
+      Record<string, never>
+    >(STATISTICS_PATTERNS.PAYMENTS, {});
   }
 
   generateMonthlyReport(

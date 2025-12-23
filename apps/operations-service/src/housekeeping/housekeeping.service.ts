@@ -6,12 +6,35 @@ import { CleaningTask } from './entities/cleaning-task.entity';
 import { CleaningAssignment } from './entities/cleaning-assignment.entity';
 import { MaintenanceReport } from './entities/maintenance-report.entity';
 import { MaintenanceRequest } from './entities/maintenance-request.entity';
-import { CleaningTaskDto, CreateCleaningTaskDto, UpdateCleaningTaskDto } from '@app/contracts/operations-service/housekeeping/dto';
-import { CleaningAssignmentDto, CreateCleaningAssignmentDto, UpdateCleaningAssignmentDto } from '@app/contracts/operations-service/housekeeping/dto';
-import { MaintenanceReportDto, CreateMaintenanceReportDto, UpdateMaintenanceReportDto } from '@app/contracts/operations-service/housekeeping/dto';
-import { HousekeepingMaintenanceRequestDto, CreateHousekeepingMaintenanceRequestDto, UpdateHousekeepingMaintenanceRequestDto } from '@app/contracts/operations-service/housekeeping/dto';
-import { HousekeepingStatisticsDto, CleaningPerformanceDto } from '@app/contracts/operations-service/housekeeping/dto';
-import { CleaningStatus, HousekeepingMaintenanceStatus, TaskPriority } from '@app/contracts/operations-service/housekeeping/enums';
+import {
+  CleaningTaskDto,
+  CreateCleaningTaskDto,
+  UpdateCleaningTaskDto,
+} from '@app/contracts/operations-service/housekeeping/dto';
+import {
+  CleaningAssignmentDto,
+  CreateCleaningAssignmentDto,
+  UpdateCleaningAssignmentDto,
+} from '@app/contracts/operations-service/housekeeping/dto';
+import {
+  MaintenanceReportDto,
+  CreateMaintenanceReportDto,
+  UpdateMaintenanceReportDto,
+} from '@app/contracts/operations-service/housekeeping/dto';
+import {
+  HousekeepingMaintenanceRequestDto,
+  CreateHousekeepingMaintenanceRequestDto,
+  UpdateHousekeepingMaintenanceRequestDto,
+} from '@app/contracts/operations-service/housekeeping/dto';
+import {
+  HousekeepingStatisticsDto,
+  CleaningPerformanceDto,
+} from '@app/contracts/operations-service/housekeeping/dto';
+import {
+  CleaningStatus,
+  HousekeepingMaintenanceStatus,
+  TaskPriority,
+} from '@app/contracts/operations-service/housekeeping/enums';
 
 @Injectable()
 export class HousekeepingService {
@@ -34,7 +57,10 @@ export class HousekeepingService {
   async findOneTask(id: number): Promise<CleaningTaskDto> {
     const task = await this.cleaningTaskRepository.findOne({ where: { id } });
     if (!task) {
-      throw new RpcException({ statusCode: 404, message: `Cleaning task with id ${id} not found` });
+      throw new RpcException({
+        statusCode: 404,
+        message: `Cleaning task with id ${id} not found`,
+      });
     }
     return task;
   }
@@ -48,7 +74,10 @@ export class HousekeepingService {
     return this.cleaningTaskRepository.save(task);
   }
 
-  async updateTask(id: number, data: UpdateCleaningTaskDto): Promise<CleaningTaskDto> {
+  async updateTask(
+    id: number,
+    data: UpdateCleaningTaskDto,
+  ): Promise<CleaningTaskDto> {
     await this.findOneTask(id);
     await this.cleaningTaskRepository.update(id, data);
     return this.findOneTask(id);
@@ -62,18 +91,27 @@ export class HousekeepingService {
 
   // Cleaning Assignments
   async findAllAssignments(): Promise<CleaningAssignmentDto[]> {
-    return this.cleaningAssignmentRepository.find({ order: { assignedDate: 'DESC' } });
+    return this.cleaningAssignmentRepository.find({
+      order: { assignedDate: 'DESC' },
+    });
   }
 
   async findOneAssignment(id: number): Promise<CleaningAssignmentDto> {
-    const assignment = await this.cleaningAssignmentRepository.findOne({ where: { id } });
+    const assignment = await this.cleaningAssignmentRepository.findOne({
+      where: { id },
+    });
     if (!assignment) {
-      throw new RpcException({ statusCode: 404, message: `Cleaning assignment with id ${id} not found` });
+      throw new RpcException({
+        statusCode: 404,
+        message: `Cleaning assignment with id ${id} not found`,
+      });
     }
     return assignment;
   }
 
-  async createAssignment(data: CreateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
+  async createAssignment(
+    data: CreateCleaningAssignmentDto,
+  ): Promise<CleaningAssignmentDto> {
     const assignment = this.cleaningAssignmentRepository.create({
       ...data,
       status: CleaningStatus.PENDING,
@@ -81,7 +119,10 @@ export class HousekeepingService {
     return this.cleaningAssignmentRepository.save(assignment);
   }
 
-  async updateAssignment(id: number, data: UpdateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
+  async updateAssignment(
+    id: number,
+    data: UpdateCleaningAssignmentDto,
+  ): Promise<CleaningAssignmentDto> {
     await this.findOneAssignment(id);
     await this.cleaningAssignmentRepository.update(id, data);
     return this.findOneAssignment(id);
@@ -89,25 +130,35 @@ export class HousekeepingService {
 
   async deleteAssignment(id: number): Promise<CleaningAssignmentDto> {
     const assignment = await this.findOneAssignment(id);
-    await this.cleaningAssignmentRepository.remove(assignment as CleaningAssignment);
+    await this.cleaningAssignmentRepository.remove(
+      assignment as CleaningAssignment,
+    );
     return assignment;
   }
 
-
   // Maintenance Reports
   async findAllMaintenanceReports(): Promise<MaintenanceReportDto[]> {
-    return this.maintenanceReportRepository.find({ order: { createdAt: 'DESC' } });
+    return this.maintenanceReportRepository.find({
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findOneMaintenanceReport(id: number): Promise<MaintenanceReportDto> {
-    const report = await this.maintenanceReportRepository.findOne({ where: { id } });
+    const report = await this.maintenanceReportRepository.findOne({
+      where: { id },
+    });
     if (!report) {
-      throw new RpcException({ statusCode: 404, message: `Maintenance report with id ${id} not found` });
+      throw new RpcException({
+        statusCode: 404,
+        message: `Maintenance report with id ${id} not found`,
+      });
     }
     return report;
   }
 
-  async createMaintenanceReport(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
+  async createMaintenanceReport(
+    data: CreateMaintenanceReportDto,
+  ): Promise<MaintenanceReportDto> {
     const report = this.maintenanceReportRepository.create({
       ...data,
       reportNumber: `MR-${Date.now()}`,
@@ -117,7 +168,10 @@ export class HousekeepingService {
     return this.maintenanceReportRepository.save(report);
   }
 
-  async updateMaintenanceReport(id: number, data: UpdateMaintenanceReportDto): Promise<MaintenanceReportDto> {
+  async updateMaintenanceReport(
+    id: number,
+    data: UpdateMaintenanceReportDto,
+  ): Promise<MaintenanceReportDto> {
     await this.findOneMaintenanceReport(id);
     await this.maintenanceReportRepository.update(id, data);
     return this.findOneMaintenanceReport(id);
@@ -130,19 +184,32 @@ export class HousekeepingService {
   }
 
   // Maintenance Requests
-  async findAllMaintenanceRequests(): Promise<HousekeepingMaintenanceRequestDto[]> {
-    return this.maintenanceRequestRepository.find({ order: { createdAt: 'DESC' } });
+  async findAllMaintenanceRequests(): Promise<
+    HousekeepingMaintenanceRequestDto[]
+  > {
+    return this.maintenanceRequestRepository.find({
+      order: { createdAt: 'DESC' },
+    });
   }
 
-  async findOneMaintenanceRequest(id: number): Promise<HousekeepingMaintenanceRequestDto> {
-    const request = await this.maintenanceRequestRepository.findOne({ where: { id } });
+  async findOneMaintenanceRequest(
+    id: number,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
+    const request = await this.maintenanceRequestRepository.findOne({
+      where: { id },
+    });
     if (!request) {
-      throw new RpcException({ statusCode: 404, message: `Maintenance request with id ${id} not found` });
+      throw new RpcException({
+        statusCode: 404,
+        message: `Maintenance request with id ${id} not found`,
+      });
     }
     return request;
   }
 
-  async createMaintenanceRequest(data: CreateHousekeepingMaintenanceRequestDto): Promise<HousekeepingMaintenanceRequestDto> {
+  async createMaintenanceRequest(
+    data: CreateHousekeepingMaintenanceRequestDto,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     const request = this.maintenanceRequestRepository.create({
       ...data,
       status: HousekeepingMaintenanceStatus.PENDING,
@@ -152,15 +219,22 @@ export class HousekeepingService {
     return this.maintenanceRequestRepository.save(request);
   }
 
-  async updateMaintenanceRequest(id: number, data: UpdateHousekeepingMaintenanceRequestDto): Promise<HousekeepingMaintenanceRequestDto> {
+  async updateMaintenanceRequest(
+    id: number,
+    data: UpdateHousekeepingMaintenanceRequestDto,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     await this.findOneMaintenanceRequest(id);
     await this.maintenanceRequestRepository.update(id, data);
     return this.findOneMaintenanceRequest(id);
   }
 
-  async deleteMaintenanceRequest(id: number): Promise<HousekeepingMaintenanceRequestDto> {
+  async deleteMaintenanceRequest(
+    id: number,
+  ): Promise<HousekeepingMaintenanceRequestDto> {
     const request = await this.findOneMaintenanceRequest(id);
-    await this.maintenanceRequestRepository.remove(request as MaintenanceRequest);
+    await this.maintenanceRequestRepository.remove(
+      request as MaintenanceRequest,
+    );
     return request;
   }
 
@@ -181,14 +255,32 @@ export class HousekeepingService {
       todaysMaintenance,
       todaysCleaning,
     ] = await Promise.all([
-      this.maintenanceReportRepository.count({ where: { status: HousekeepingMaintenanceStatus.PENDING } }),
-      this.maintenanceReportRepository.count({ where: { status: HousekeepingMaintenanceStatus.IN_PROGRESS } }),
-      this.maintenanceReportRepository.count({ where: { status: HousekeepingMaintenanceStatus.COMPLETED } }),
-      this.cleaningAssignmentRepository.count({ where: { status: CleaningStatus.PENDING } }),
-      this.cleaningAssignmentRepository.count({ where: { status: CleaningStatus.IN_PROGRESS } }),
-      this.cleaningAssignmentRepository.count({ where: { status: CleaningStatus.COMPLETED } }),
-      this.maintenanceReportRepository.find({ where: { createdAt: Between(today, tomorrow) }, order: { createdAt: 'DESC' } }),
-      this.cleaningAssignmentRepository.find({ where: { assignedDate: Between(today, tomorrow) }, order: { assignedDate: 'ASC' } }),
+      this.maintenanceReportRepository.count({
+        where: { status: HousekeepingMaintenanceStatus.PENDING },
+      }),
+      this.maintenanceReportRepository.count({
+        where: { status: HousekeepingMaintenanceStatus.IN_PROGRESS },
+      }),
+      this.maintenanceReportRepository.count({
+        where: { status: HousekeepingMaintenanceStatus.COMPLETED },
+      }),
+      this.cleaningAssignmentRepository.count({
+        where: { status: CleaningStatus.PENDING },
+      }),
+      this.cleaningAssignmentRepository.count({
+        where: { status: CleaningStatus.IN_PROGRESS },
+      }),
+      this.cleaningAssignmentRepository.count({
+        where: { status: CleaningStatus.COMPLETED },
+      }),
+      this.maintenanceReportRepository.find({
+        where: { createdAt: Between(today, tomorrow) },
+        order: { createdAt: 'DESC' },
+      }),
+      this.cleaningAssignmentRepository.find({
+        where: { assignedDate: Between(today, tomorrow) },
+        order: { assignedDate: 'ASC' },
+      }),
     ]);
 
     return {
@@ -203,32 +295,46 @@ export class HousekeepingService {
     };
   }
 
-  async getCleaningPerformance(employeeId?: number): Promise<CleaningPerformanceDto> {
+  async getCleaningPerformance(
+    employeeId?: number,
+  ): Promise<CleaningPerformanceDto> {
     const whereClause = employeeId
       ? { status: CleaningStatus.COMPLETED, employeeId }
       : { status: CleaningStatus.COMPLETED };
 
-    const assignments = await this.cleaningAssignmentRepository.find({ where: whereClause });
+    const assignments = await this.cleaningAssignmentRepository.find({
+      where: whereClause,
+    });
     const totalAssignments = await this.cleaningAssignmentRepository.count();
-    const completionRate = totalAssignments > 0 ? (assignments.length / totalAssignments) * 100 : 0;
+    const completionRate =
+      totalAssignments > 0 ? (assignments.length / totalAssignments) * 100 : 0;
 
-    const totalQuality = assignments.reduce((sum, a) => sum + (a.qualityScore || 0), 0);
-    const averageQualityScore = assignments.length > 0 ? totalQuality / assignments.length : 0;
+    const totalQuality = assignments.reduce(
+      (sum, a) => sum + (a.qualityScore || 0),
+      0,
+    );
+    const averageQualityScore =
+      assignments.length > 0 ? totalQuality / assignments.length : 0;
 
-    const employeeStats: Record<number, { count: number; totalScore: number }> = {};
+    const employeeStats: Record<number, { count: number; totalScore: number }> =
+      {};
     for (const assignment of assignments) {
       const empId = assignment.employeeId;
       if (typeof empId !== 'number') continue;
-      if (!employeeStats[empId]) employeeStats[empId] = { count: 0, totalScore: 0 };
+      if (!employeeStats[empId])
+        employeeStats[empId] = { count: 0, totalScore: 0 };
       employeeStats[empId].count += 1;
       employeeStats[empId].totalScore += assignment.qualityScore || 0;
     }
 
-    const employeePerformance = Object.entries(employeeStats).map(([id, stats]) => ({
-      employeeId: parseInt(id),
-      completedAssignments: stats.count,
-      averageQualityScore: stats.count > 0 ? stats.totalScore / stats.count : 0,
-    }));
+    const employeePerformance = Object.entries(employeeStats).map(
+      ([id, stats]) => ({
+        employeeId: parseInt(id),
+        completedAssignments: stats.count,
+        averageQualityScore:
+          stats.count > 0 ? stats.totalScore / stats.count : 0,
+      }),
+    );
 
     return { averageQualityScore, completionRate, employeePerformance };
   }

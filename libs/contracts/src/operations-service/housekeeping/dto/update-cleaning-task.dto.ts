@@ -6,12 +6,19 @@ import { CleaningStatus } from '../enums/cleaning-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCleaningTaskDto extends PartialType(CreateCleaningTaskDto) {
-  @ApiProperty({ description: 'Current status of the cleaning task', enum: CleaningStatus, required: false })
+  @ApiProperty({
+    description: 'Current status of the cleaning task',
+    enum: CleaningStatus,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(CleaningStatus)
   status?: CleaningStatus;
 
-  @ApiProperty({ description: 'Time when the cleaning started', required: false })
+  @ApiProperty({
+    description: 'Time when the cleaning started',
+    required: false,
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

@@ -14,7 +14,10 @@ import { CleaningStatus } from '../enums/cleaning-status.enum';
 import { TaskPriority } from '../enums/task-priority.enum';
 
 export class CleaningTaskDto {
-  @ApiProperty({ description: 'Unique identifier for the cleaning task', example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the cleaning task',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
@@ -24,41 +27,69 @@ export class CleaningTaskDto {
   @Length(1, 10)
   roomNumber: string;
 
-  @ApiProperty({ description: 'Current status of the cleaning task', enum: CleaningStatus, example: CleaningStatus.PENDING })
+  @ApiProperty({
+    description: 'Current status of the cleaning task',
+    enum: CleaningStatus,
+    example: CleaningStatus.PENDING,
+  })
   @IsEnum(CleaningStatus)
   status: CleaningStatus;
 
-  @ApiProperty({ description: 'Name of the employee assigned to this task', example: 'Mary Johnson', required: false })
+  @ApiProperty({
+    description: 'Name of the employee assigned to this task',
+    example: 'Mary Johnson',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   assignedEmployee?: string;
 
-  @ApiProperty({ description: 'Additional notes about the cleaning task', example: 'Deep cleaning required', required: false })
+  @ApiProperty({
+    description: 'Additional notes about the cleaning task',
+    example: 'Deep cleaning required',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 500)
   notes?: string;
 
-  @ApiProperty({ description: 'Time when the cleaning started', example: '2024-01-15T09:00:00Z', required: false })
+  @ApiProperty({
+    description: 'Time when the cleaning started',
+    example: '2024-01-15T09:00:00Z',
+    required: false,
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   startTime?: Date;
 
-  @ApiProperty({ description: 'Time when the cleaning ended', example: '2024-01-15T10:30:00Z', required: false })
+  @ApiProperty({
+    description: 'Time when the cleaning ended',
+    example: '2024-01-15T10:30:00Z',
+    required: false,
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   endTime?: Date;
 
-  @ApiProperty({ description: 'Estimated time to complete the task (in minutes)', example: 45, required: false })
+  @ApiProperty({
+    description: 'Estimated time to complete the task (in minutes)',
+    example: 45,
+    required: false,
+  })
   @IsOptional()
   @IsNumber()
   @Min(1)
   estimatedTime?: number;
 
-  @ApiProperty({ description: 'Priority level of the cleaning task', enum: TaskPriority, example: TaskPriority.NORMAL })
+  @ApiProperty({
+    description: 'Priority level of the cleaning task',
+    enum: TaskPriority,
+    example: TaskPriority.NORMAL,
+  })
   @IsEnum(TaskPriority)
   priority: TaskPriority;
 
@@ -67,12 +98,18 @@ export class CleaningTaskDto {
   @Min(1)
   roomId: number;
 
-  @ApiProperty({ description: 'Date when the record was created', example: '2024-01-15T08:00:00Z' })
+  @ApiProperty({
+    description: 'Date when the record was created',
+    example: '2024-01-15T08:00:00Z',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ description: 'Date when the record was last updated', example: '2024-01-15T10:30:00Z' })
+  @ApiProperty({
+    description: 'Date when the record was last updated',
+    example: '2024-01-15T10:30:00Z',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

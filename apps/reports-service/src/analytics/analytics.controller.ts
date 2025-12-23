@@ -84,7 +84,11 @@ export class AnalyticsController {
   @MessagePattern(ANALYTICS_PATTERNS.GET_METRIC_TOTALS)
   getMetricTotals(
     @Payload()
-    payload: { metric: AnalyticsMetric; startDate: string; endDate: string },
+    payload: {
+      metric: AnalyticsMetric;
+      startDate: string;
+      endDate: string;
+    },
   ): Promise<number> {
     return this.analyticsService.getTotalMetric(
       payload.metric,
@@ -96,7 +100,11 @@ export class AnalyticsController {
   @MessagePattern(ANALYTICS_PATTERNS.GET_METRIC_AVERAGES)
   getMetricAverages(
     @Payload()
-    payload: { metric: AnalyticsMetric; startDate: string; endDate: string },
+    payload: {
+      metric: AnalyticsMetric;
+      startDate: string;
+      endDate: string;
+    },
   ): Promise<number> {
     return this.analyticsService.getAverageMetric(
       payload.metric,
@@ -115,7 +123,11 @@ export class AnalyticsController {
   @MessagePattern(ANALYTICS_PATTERNS.RECORD_METRIC)
   recordMetric(
     @Payload()
-    payload: { metric: AnalyticsMetric; value: number; date?: string },
+    payload: {
+      metric: AnalyticsMetric;
+      value: number;
+      date?: string;
+    },
   ): Promise<AnalyticsDataDto> {
     return this.analyticsService.recordMetric(
       payload.metric,

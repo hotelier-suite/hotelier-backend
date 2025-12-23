@@ -14,9 +14,9 @@ export class NotificationsService {
   ) {}
 
   create(data: CreateNotificationDto): Observable<NotificationDto> {
-    return this.notificationsClient.send<NotificationDto, CreateNotificationDto>(
-      NOTIFICATIONS_PATTERNS.CREATE,
-      data,
-    );
+    return this.notificationsClient.send<
+      NotificationDto,
+      CreateNotificationDto
+    >(NOTIFICATIONS_PATTERNS.CREATE, data);
   }
 }

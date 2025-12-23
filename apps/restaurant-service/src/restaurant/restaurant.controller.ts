@@ -64,7 +64,9 @@ export class RestaurantController {
   }
 
   @MessagePattern(ROOM_SERVICE_ORDERS_PATTERNS.CREATE)
-  createOrder(@Payload() data: CreateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
+  createOrder(
+    @Payload() data: CreateRoomServiceOrderDto,
+  ): Promise<RoomServiceOrderDto> {
     return this.restaurantService.createOrder(data);
   }
 
@@ -92,7 +94,9 @@ export class RestaurantController {
   }
 
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.CREATE)
-  createBeverage(@Payload() data: CreateBeverageItemDto): Promise<BeverageInventoryDto> {
+  createBeverage(
+    @Payload() data: CreateBeverageItemDto,
+  ): Promise<BeverageInventoryDto> {
     return this.restaurantService.createBeverage(data);
   }
 
@@ -107,7 +111,10 @@ export class RestaurantController {
   updateBeverageStock(
     @Payload() payload: { id: number; stock: number },
   ): Promise<BeverageInventoryDto> {
-    return this.restaurantService.updateBeverageStock(payload.id, payload.stock);
+    return this.restaurantService.updateBeverageStock(
+      payload.id,
+      payload.stock,
+    );
   }
 
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.DELETE)
@@ -121,7 +128,9 @@ export class RestaurantController {
   }
 
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.FIND_BY_CATEGORY)
-  findBeveragesByCategory(@Payload() category: string): Promise<BeverageInventoryDto[]> {
+  findBeveragesByCategory(
+    @Payload() category: string,
+  ): Promise<BeverageInventoryDto[]> {
     return this.restaurantService.findBeveragesByCategory(category);
   }
 }

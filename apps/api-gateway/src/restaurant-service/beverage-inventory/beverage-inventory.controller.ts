@@ -30,7 +30,9 @@ import { AuditResource } from '@app/contracts/audit-service/enums';
 @AuditLog({ resource: AuditResource.RESTAURANT })
 @ApiBearerAuth()
 export class BeverageInventoryController {
-  constructor(private readonly beverageInventoryService: BeverageInventoryService) {}
+  constructor(
+    private readonly beverageInventoryService: BeverageInventoryService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -66,7 +68,9 @@ export class BeverageInventoryController {
     status: 404,
     description: 'Beverage item not found',
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<BeverageInventoryDto> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<BeverageInventoryDto> {
     return this.beverageInventoryService.findOne(id);
   }
 
@@ -89,7 +93,9 @@ export class BeverageInventoryController {
     status: 400,
     description: 'Invalid request data',
   })
-  create(@Body() data: CreateBeverageItemDto): Observable<BeverageInventoryDto> {
+  create(
+    @Body() data: CreateBeverageItemDto,
+  ): Observable<BeverageInventoryDto> {
     return this.beverageInventoryService.create(data);
   }
 

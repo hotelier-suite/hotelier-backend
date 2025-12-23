@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -55,7 +50,9 @@ export class PaymentsController {
     status: 404,
     description: 'Payment not found',
   })
-  getPaymentById(@Param('id', ParseIntPipe) id: number): Observable<PaymentDto> {
+  getPaymentById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<PaymentDto> {
     return this.paymentsService.findOne(id);
   }
 

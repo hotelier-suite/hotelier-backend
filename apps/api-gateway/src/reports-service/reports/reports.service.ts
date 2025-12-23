@@ -43,10 +43,10 @@ export class ReportsService {
   }
 
   update(id: number, data: UpdateReportDto): Observable<ReportDto> {
-    return this.reportsClient.send<ReportDto, { id: number; data: UpdateReportDto }>(
-      REPORTS_PATTERNS.UPDATE,
-      { id, data },
-    );
+    return this.reportsClient.send<
+      ReportDto,
+      { id: number; data: UpdateReportDto }
+    >(REPORTS_PATTERNS.UPDATE, { id, data });
   }
 
   delete(id: number): Observable<ReportDto> {
@@ -71,17 +71,17 @@ export class ReportsService {
   }
 
   findByDateRange(startDate: string, endDate: string): Observable<ReportDto[]> {
-    return this.reportsClient.send<ReportDto[], { startDate: string; endDate: string }>(
-      REPORTS_PATTERNS.FIND_BY_DATE_RANGE,
-      { startDate, endDate },
-    );
+    return this.reportsClient.send<
+      ReportDto[],
+      { startDate: string; endDate: string }
+    >(REPORTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 
   updateStatus(id: number, status: ReportStatus): Observable<ReportDto> {
-    return this.reportsClient.send<ReportDto, { id: number; status: ReportStatus }>(
-      REPORTS_PATTERNS.UPDATE_STATUS,
-      { id, status },
-    );
+    return this.reportsClient.send<
+      ReportDto,
+      { id: number; status: ReportStatus }
+    >(REPORTS_PATTERNS.UPDATE_STATUS, { id, status });
   }
 
   generateOccupancyReport(

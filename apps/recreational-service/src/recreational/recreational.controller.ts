@@ -131,14 +131,20 @@ export class RecreationalController {
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_DATE)
-  findBookingsByDate(@Payload() date: string): Promise<RecreationalBookingDto[]> {
+  findBookingsByDate(
+    @Payload() date: string,
+  ): Promise<RecreationalBookingDto[]> {
     return this.recreationalService.findBookingsByDate(new Date(date));
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY)
   findBookingsByFacility(
     @Payload()
-    payload: { facilityId: number; startDate?: string; endDate?: string },
+    payload: {
+      facilityId: number;
+      startDate?: string;
+      endDate?: string;
+    },
   ): Promise<RecreationalBookingDto[]> {
     return this.recreationalService.findBookingsByFacility(
       payload.facilityId,

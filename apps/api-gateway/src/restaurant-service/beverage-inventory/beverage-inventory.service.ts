@@ -17,10 +17,10 @@ export class BeverageInventoryService {
   ) {}
 
   findAll(): Observable<BeverageInventoryDto[]> {
-    return this.restaurantClient.send<BeverageInventoryDto[], Record<string, never>>(
-      BEVERAGE_INVENTORY_PATTERNS.FIND_ALL,
-      {},
-    );
+    return this.restaurantClient.send<
+      BeverageInventoryDto[],
+      Record<string, never>
+    >(BEVERAGE_INVENTORY_PATTERNS.FIND_ALL, {});
   }
 
   findOne(id: number): Observable<BeverageInventoryDto> {
@@ -31,24 +31,27 @@ export class BeverageInventoryService {
   }
 
   create(data: CreateBeverageItemDto): Observable<BeverageInventoryDto> {
-    return this.restaurantClient.send<BeverageInventoryDto, CreateBeverageItemDto>(
-      BEVERAGE_INVENTORY_PATTERNS.CREATE,
-      data,
-    );
+    return this.restaurantClient.send<
+      BeverageInventoryDto,
+      CreateBeverageItemDto
+    >(BEVERAGE_INVENTORY_PATTERNS.CREATE, data);
   }
 
-  update(id: number, data: UpdateBeverageItemDto): Observable<BeverageInventoryDto> {
-    return this.restaurantClient.send<BeverageInventoryDto, { id: number; data: UpdateBeverageItemDto }>(
-      BEVERAGE_INVENTORY_PATTERNS.UPDATE,
-      { id, data },
-    );
+  update(
+    id: number,
+    data: UpdateBeverageItemDto,
+  ): Observable<BeverageInventoryDto> {
+    return this.restaurantClient.send<
+      BeverageInventoryDto,
+      { id: number; data: UpdateBeverageItemDto }
+    >(BEVERAGE_INVENTORY_PATTERNS.UPDATE, { id, data });
   }
 
   updateStock(id: number, stock: number): Observable<BeverageInventoryDto> {
-    return this.restaurantClient.send<BeverageInventoryDto, { id: number; stock: number }>(
-      BEVERAGE_INVENTORY_PATTERNS.UPDATE_STOCK,
-      { id, stock },
-    );
+    return this.restaurantClient.send<
+      BeverageInventoryDto,
+      { id: number; stock: number }
+    >(BEVERAGE_INVENTORY_PATTERNS.UPDATE_STOCK, { id, stock });
   }
 
   delete(id: number): Observable<BeverageInventoryDto> {
@@ -59,10 +62,10 @@ export class BeverageInventoryService {
   }
 
   findLowStock(): Observable<BeverageInventoryDto[]> {
-    return this.restaurantClient.send<BeverageInventoryDto[], Record<string, never>>(
-      BEVERAGE_INVENTORY_PATTERNS.FIND_LOW_STOCK,
-      {},
-    );
+    return this.restaurantClient.send<
+      BeverageInventoryDto[],
+      Record<string, never>
+    >(BEVERAGE_INVENTORY_PATTERNS.FIND_LOW_STOCK, {});
   }
 
   findByCategory(category: string): Observable<BeverageInventoryDto[]> {

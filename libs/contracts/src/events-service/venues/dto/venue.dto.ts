@@ -27,7 +27,10 @@ export class VenueDto {
   @Min(1)
   capacity: number;
 
-  @ApiProperty({ description: 'Area of the venue in square meters', example: 400.5 })
+  @ApiProperty({
+    description: 'Area of the venue in square meters',
+    example: 400.5,
+  })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   area: number;
@@ -37,16 +40,26 @@ export class VenueDto {
   @Min(0)
   hourlyRate: number;
 
-  @ApiProperty({ description: 'Whether the venue is available for booking', example: true })
+  @ApiProperty({
+    description: 'Whether the venue is available for booking',
+    example: true,
+  })
   @IsBoolean()
   available: boolean;
 
-  @ApiProperty({ description: 'Venue location within the hotel', example: 'Main Building - Ground Floor' })
+  @ApiProperty({
+    description: 'Venue location within the hotel',
+    example: 'Main Building - Ground Floor',
+  })
   @IsString()
   @Length(1, 200)
   location: string;
 
-  @ApiProperty({ description: 'Venue description and features', example: 'Elegant ballroom perfect for weddings and corporate events', required: false })
+  @ApiProperty({
+    description: 'Venue description and features',
+    example: 'Elegant ballroom perfect for weddings and corporate events',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(1, 1000)

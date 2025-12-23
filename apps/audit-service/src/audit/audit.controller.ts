@@ -42,7 +42,10 @@ export class AuditController {
   findByResource(
     @Payload() payload: { resource: AuditResource; resourceId: string },
   ): Promise<AuditLogDto[]> {
-    return this.auditService.findByResource(payload.resource, payload.resourceId);
+    return this.auditService.findByResource(
+      payload.resource,
+      payload.resourceId,
+    );
   }
 
   @MessagePattern(AUDIT_PATTERNS.LOG_FIND_BY_ACTION)

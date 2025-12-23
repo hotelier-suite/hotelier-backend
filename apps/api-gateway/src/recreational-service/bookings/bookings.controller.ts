@@ -101,13 +101,19 @@ export class BookingsController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ): Observable<RecreationalBookingDto[]> {
-    const facilityId = facilityIdParam ? parseInt(facilityIdParam, 10) : undefined;
+    const facilityId = facilityIdParam
+      ? parseInt(facilityIdParam, 10)
+      : undefined;
 
     if (date) {
       return this.bookingsService.findByDate(date);
     }
     if (facilityId && !isNaN(facilityId)) {
-      return this.bookingsService.findByFacility(facilityId, startDate, endDate);
+      return this.bookingsService.findByFacility(
+        facilityId,
+        startDate,
+        endDate,
+      );
     }
     return this.bookingsService.findAll();
   }
@@ -115,7 +121,8 @@ export class BookingsController {
   @Get('statistics')
   @ApiOperation({
     summary: 'Get Booking Statistics',
-    description: 'Get comprehensive statistics about recreational facility bookings',
+    description:
+      'Get comprehensive statistics about recreational facility bookings',
   })
   @ApiResponse({
     status: 200,
@@ -160,7 +167,9 @@ export class BookingsController {
     description: 'Booking ID',
     type: Number,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<RecreationalBookingDto> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalBookingDto> {
     return this.bookingsService.findOne(id);
   }
 
@@ -214,7 +223,9 @@ export class BookingsController {
     description: 'Booking ID',
     type: Number,
   })
-  delete(@Param('id', ParseIntPipe) id: number): Observable<RecreationalBookingDto> {
+  delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalBookingDto> {
     return this.bookingsService.delete(id);
   }
 
@@ -277,7 +288,9 @@ export class BookingsController {
     description: 'Booking ID',
     type: Number,
   })
-  checkIn(@Param('id', ParseIntPipe) id: number): Observable<RecreationalBookingDto> {
+  checkIn(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalBookingDto> {
     return this.bookingsService.checkIn(id);
   }
 
@@ -304,7 +317,9 @@ export class BookingsController {
     description: 'Booking ID',
     type: Number,
   })
-  checkOut(@Param('id', ParseIntPipe) id: number): Observable<RecreationalBookingDto> {
+  checkOut(
+    @Param('id', ParseIntPipe) id: number,
+  ): Observable<RecreationalBookingDto> {
     return this.bookingsService.checkOut(id);
   }
 }

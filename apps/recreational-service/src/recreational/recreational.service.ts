@@ -24,7 +24,10 @@ import {
   BookingStatisticsDto,
   FacilityUsageStatsDto,
 } from '@app/contracts/recreational-service/bookings/dto';
-import { FacilityType, FacilityStatus } from '@app/contracts/recreational-service/facilities/enums';
+import {
+  FacilityType,
+  FacilityStatus,
+} from '@app/contracts/recreational-service/facilities/enums';
 import { RecreationalBookingStatus } from '@app/contracts/recreational-service/bookings/enums';
 
 @Injectable()
@@ -97,7 +100,9 @@ export class RecreationalService {
     return facilities as RecreationalFacilityDto[];
   }
 
-  async findFacilitiesByType(type: FacilityType): Promise<RecreationalFacilityDto[]> {
+  async findFacilitiesByType(
+    type: FacilityType,
+  ): Promise<RecreationalFacilityDto[]> {
     const facilities = await this.facilityRepository.find({
       where: { type },
       order: { name: 'ASC' },
@@ -149,7 +154,6 @@ export class RecreationalService {
     await this.facilityRepository.remove(facility);
     return { ...facility, id } as RecreationalFacilityDto;
   }
-
 
   // Booking Management
   async createBooking(
@@ -425,7 +429,6 @@ export class RecreationalService {
     const saved = await this.bookingRepository.save(booking);
     return saved as unknown as RecreationalBookingDto;
   }
-
 
   // Availability Management
   async getFacilityAvailability(

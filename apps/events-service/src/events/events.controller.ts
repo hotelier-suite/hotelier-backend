@@ -32,7 +32,9 @@ export class EventsController {
   }
 
   @MessagePattern(EVENTS_PATTERNS.UPDATE)
-  updateEvent(@Payload() payload: { id: number; data: UpdateEventDto }): Promise<EventDto> {
+  updateEvent(
+    @Payload() payload: { id: number; data: UpdateEventDto },
+  ): Promise<EventDto> {
     return this.eventsService.update(payload.id, payload.data);
   }
 
@@ -53,12 +55,16 @@ export class EventsController {
   }
 
   @MessagePattern(EVENTS_PATTERNS.CREATE_BOOKING)
-  createBooking(@Payload() data: CreateEventBookingDto): Promise<EventBookingDto> {
+  createBooking(
+    @Payload() data: CreateEventBookingDto,
+  ): Promise<EventBookingDto> {
     return this.eventsService.createBooking(data);
   }
 
   @MessagePattern(EVENTS_PATTERNS.UPDATE_BOOKING)
-  updateBooking(@Payload() payload: { id: number; data: UpdateEventBookingDto }): Promise<EventBookingDto> {
+  updateBooking(
+    @Payload() payload: { id: number; data: UpdateEventBookingDto },
+  ): Promise<EventBookingDto> {
     return this.eventsService.updateBooking(payload.id, payload.data);
   }
 
