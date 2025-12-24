@@ -23,10 +23,10 @@ import { StatisticsModule } from './statistics/statistics.module';
         },
       },
     ]),
+    StatisticsModule,
     InvoicesModule,
     PaymentsModule,
-    StatisticsModule,
   ],
-  exports: [ClientsModule, InvoicesModule, PaymentsModule, StatisticsModule],
+  exports: [ClientsModule, StatisticsModule, InvoicesModule, PaymentsModule],
 })
 export class BillingServiceModule {}
