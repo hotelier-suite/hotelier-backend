@@ -4,9 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthServiceModule } from './auth-service/auth-service.module';
-import { DatabaseModule } from './database/database.module';
 import { BookingServiceModule } from './booking-service/booking-service.module';
-import { DashboardModule } from './dashboard/dashboard.module';
+import { DashboardServiceModule } from './dashboard-service/dashboard-service.module';
 import { EventsServiceModule } from './events-service/events-service.module';
 import { RecreationalServiceModule } from './recreational-service/recreational-service.module';
 import { RestaurantServiceModule } from './restaurant-service/restaurant-service.module';
@@ -30,9 +29,8 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
       envFilePath: '.env',
     }),
     AuthServiceModule,
-    DatabaseModule,
     BookingServiceModule,
-    DashboardModule,
+    DashboardServiceModule,
     EventsServiceModule,
     RecreationalServiceModule,
     RestaurantServiceModule,
