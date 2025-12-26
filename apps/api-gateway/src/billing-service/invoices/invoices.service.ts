@@ -60,14 +60,14 @@ export class InvoicesService {
     );
   }
 
-  findByDateRange(
-    startDate: string,
-    endDate: string,
-  ): Observable<InvoiceDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Observable<InvoiceDto[]> {
     return this.billingClient.send<
       InvoiceDto[],
-      { startDate: string; endDate: string }
-    >(INVOICES_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
+      { startDate: Date; endDate: Date }
+    >(INVOICES_PATTERNS.FIND_BY_DATE_RANGE, {
+      startDate,
+      endDate,
+    });
   }
 
   findOverdue(): Observable<InvoiceDto[]> {

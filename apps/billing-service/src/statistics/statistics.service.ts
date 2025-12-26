@@ -8,7 +8,6 @@ import {
   PaymentStatus,
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
-  MonthlyReportResponseDto,
   InvoiceTotalResult,
 } from '@app/contracts/billing-service';
 
@@ -20,6 +19,37 @@ export class StatisticsService {
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
   ) {}
+
+  async getPaymentStatistics(): Promise<PaymentStatisticsResponseDto> {
+    const payments = await this.paymentRepository.find();
+
+    const totalPayments = payments.length;
+    const totalAmount = payments.reduce(
+      (sum, payment) => sum + Number(payment.amount),
+      0,
+    );
+    const averagePayment = totalPayments > 0 ? totalAmount / totalPayments : 0;
+    const completedPayments = payments.filter(
+      (p) => p.status === PaymentStatus.COMPLETED,
+    ).length;
+    const pendingPayments = payments.filter(
+      (p) => p.status === PaymentStatus.PENDING,
+    ).length;
+
+    return {
+      totalPayments,
+      totalAmount,
+      averagePayment,
+      completedPayments,
+      pendingPayments,
+    };
+  }
+
+  async getYearToDateFinancialSummary(): Promise<FinancialSummaryResponseDto> {
+    const startDate = new Date(new Date().getFullYear(), 0, 1);
+    const endDate = new Date();
+    return this.getFinancialSummary(startDate, endDate);
+  }
 
   async getFinancialSummary(
     startDate: Date,
@@ -77,49 +107,6 @@ export class StatisticsService {
       totalPaidInvoices: parseInt(paidResult?.count || '0') || 0,
       totalPendingInvoices: parseInt(pendingResult?.count || '0') || 0,
       totalOverdueInvoices: parseInt(overdueResult?.count || '0') || 0,
-    };
-  }
-
-  async getPaymentStatistics(): Promise<PaymentStatisticsResponseDto> {
-    const payments = await this.paymentRepository.find();
-
-    const totalPayments = payments.length;
-    const totalAmount = payments.reduce(
-      (sum, payment) => sum + Number(payment.amount),
-      0,
-    );
-    const averagePayment = totalPayments > 0 ? totalAmount / totalPayments : 0;
-    const completedPayments = payments.filter(
-      (p) => p.status === PaymentStatus.COMPLETED,
-    ).length;
-    const pendingPayments = payments.filter(
-      (p) => p.status === PaymentStatus.PENDING,
-    ).length;
-
-    return {
-      totalPayments,
-      totalAmount,
-      averagePayment,
-      completedPayments,
-      pendingPayments,
-    };
-  }
-
-  async generateMonthlyReport(
-    year: number,
-    month: number,
-  ): Promise<MonthlyReportResponseDto> {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
-
-    const summary = await this.getFinancialSummary(startDate, endDate);
-
-    return {
-      totalInvoices: summary.totalPaidInvoices + summary.totalPendingInvoices,
-      totalRevenue: summary.totalRevenue,
-      paidInvoices: summary.totalPaidInvoices,
-      pendingInvoices: summary.totalPendingInvoices,
-      overdueInvoices: summary.totalOverdueInvoices,
     };
   }
 }

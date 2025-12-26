@@ -29,13 +29,13 @@ export class AttendanceController {
   }
 
   @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_DATE)
-  findByDate(@Payload() date: string | Date): Promise<AttendanceDto[]> {
+  findByDate(@Payload() date: Date): Promise<AttendanceDto[]> {
     return this.attendanceService.findByDate(date);
   }
 
   @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_DATE_RANGE)
   findByDateRange(
-    @Payload() payload: { startDate: string | Date; endDate: string | Date },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<AttendanceDto[]> {
     return this.attendanceService.findByDateRange(
       payload.startDate,

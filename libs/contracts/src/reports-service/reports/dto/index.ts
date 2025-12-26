@@ -1,5 +1,6 @@
 export * from './report.dto';
 export * from './report-parameters.dto';
+export * from './date-range.dto';
 export * from './create-report.dto';
 export * from './update-report.dto';
 export * from './occupancy-report-data.dto';

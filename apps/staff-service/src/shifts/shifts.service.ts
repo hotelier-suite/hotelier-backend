@@ -54,31 +54,24 @@ export class ShiftsService {
     });
   }
 
-  findByDate(date: string | Date): Promise<ShiftDto[]> {
-    const parsedDate = this.toDate(date);
-
-    const startOfDay = new Date(parsedDate);
+  findByDate(date: Date): Promise<ShiftDto[]> {
+    const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(parsedDate);
+    const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
     return this.shiftRepository.find({
-      where: {
-        date: Between(startOfDay, endOfDay),
-      },
+      where: { date: Between(startOfDay, endOfDay) },
       order: { startTime: 'ASC' },
       relations: { employee: true },
     });
   }
 
-  findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
-  ): Promise<ShiftDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Promise<ShiftDto[]> {
     return this.shiftRepository.find({
       where: {
-        date: Between(this.toDate(startDate), this.toDate(endDate)),
+        date: Between(startDate, endDate),
       },
       relations: { employee: true },
       order: { date: 'DESC' },
@@ -105,19 +98,14 @@ export class ShiftsService {
       });
     }
 
-    const date = this.toDate(data.date as unknown);
-
     await this.checkShiftConflicts(
       data.employeeId,
-      date,
+      data.date,
       data.startTime,
       data.endTime,
     );
 
-    const created = await this.shiftRepository.save({
-      ...data,
-      date,
-    });
+    const created = await this.shiftRepository.save(data);
 
     const loaded = await this.shiftRepository.findOne({
       where: { id: created.id },
@@ -204,35 +192,5 @@ export class ShiftsService {
         message: `Employee already has a shift scheduled from ${conflictingShift.startTime} to ${conflictingShift.endTime} on this date`,
       });
     }
-  }
-
-  private toDate(input: unknown): Date {
-    if (input instanceof Date) {
-      return input;
-    }
-
-    if (typeof input === 'string' || typeof input === 'number') {
-      const parsed = new Date(input);
-
-      if (Number.isNaN(parsed.getTime())) {
-        throw new RpcException({
-          statusCode: 400,
-          message: 'Invalid date',
-        });
-      }
-
-      return parsed;
-    }
-
-    const parsed = new Date(input as string);
-
-    if (Number.isNaN(parsed.getTime())) {
-      throw new RpcException({
-        statusCode: 400,
-        message: 'Invalid date',
-      });
-    }
-
-    return parsed;
   }
 }

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsArray,
+  IsMilitaryTime,
   IsString,
   IsOptional,
   IsInt,
@@ -12,14 +13,14 @@ export class TimeSlotDto {
     description: 'Start time of the slot',
     example: '14:00',
   })
-  @IsString()
+  @IsMilitaryTime()
   startTime: string;
 
   @ApiProperty({
     description: 'End time of the slot',
     example: '15:00',
   })
-  @IsString()
+  @IsMilitaryTime()
   endTime: string;
 
   @ApiProperty({

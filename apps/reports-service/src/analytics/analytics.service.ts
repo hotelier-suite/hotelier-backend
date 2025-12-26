@@ -200,25 +200,21 @@ export class AnalyticsService {
   }
 
   async getOccupancyData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {
-    const start = startDate
-      ? new Date(startDate)
-      : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
+    const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ?? new Date();
 
     return this.getMetricsByType(AnalyticsMetric.OCCUPANCY_RATE, start, end);
   }
 
   async getRevenueData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {
-    const start = startDate
-      ? new Date(startDate)
-      : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
+    const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ?? new Date();
 
     return this.getMetricsByType(AnalyticsMetric.REVENUE_PER_ROOM, start, end);
   }
@@ -231,13 +227,11 @@ export class AnalyticsService {
   }
 
   async getSatisfactionData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {
-    const start = startDate
-      ? new Date(startDate)
-      : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
+    const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ?? new Date();
 
     return this.getMetricsByType(
       AnalyticsMetric.CUSTOMER_SATISFACTION,

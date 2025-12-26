@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  ParseArrayPipe,
+  ParseDatePipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -29,7 +31,6 @@ import {
 } from '@app/contracts/recreational-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
-import { ParseIntArrayPipe } from '../../common';
 
 @ApiTags('recreational')
 @Controller('recreational/facilities')
@@ -201,8 +202,12 @@ export class FacilitiesController {
     description: 'Date to check availability (YYYY-MM-DD)',
   })
   getMultipleAvailability(
-    @Query('facilityIds', ParseIntArrayPipe) facilityIds: number[],
-    @Query('date') date: string,
+    @Query(
+      'facilityIds',
+      new ParseArrayPipe({ items: Number, separator: ',', optional: true }),
+    )
+    facilityIds: number[],
+    @Query('date', ParseDatePipe) date: Date,
   ): Observable<FacilityAvailabilityDto[]> {
     return this.facilitiesService.getMultipleAvailability(facilityIds, date);
   }
@@ -234,7 +239,7 @@ export class FacilitiesController {
   })
   getAvailability(
     @Param('id', ParseIntPipe) id: number,
-    @Query('date') date: string,
+    @Query('date', ParseDatePipe) date: Date,
   ): Observable<FacilityAvailabilityDto> {
     return this.facilitiesService.getAvailability(id, date);
   }

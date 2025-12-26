@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { DateRangeDto } from './date-range.dto';
 
 export class ReportParametersDto {
   @ApiProperty({
@@ -11,13 +18,11 @@ export class ReportParametersDto {
 
   @ApiProperty({
     description: 'Date range for the report',
-    example: { startDate: '2024-01-01', endDate: '2024-01-31' },
+    type: DateRangeDto,
   })
-  @IsObject()
-  dateRange: {
-    startDate: Date;
-    endDate: Date;
-  };
+  @ValidateNested()
+  @Type(() => DateRangeDto)
+  dateRange: DateRangeDto;
 
   @ApiProperty({
     description: 'Include detailed breakdown in the report',

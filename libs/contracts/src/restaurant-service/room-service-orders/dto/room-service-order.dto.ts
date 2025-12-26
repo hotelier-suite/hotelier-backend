@@ -5,6 +5,7 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -65,8 +66,7 @@ export class RoomServiceOrderDto {
     description: 'Time when the order was placed',
     example: '14:30',
   })
-  @IsString()
-  @Length(1, 10)
+  @IsMilitaryTime()
   orderTime: string;
 
   @ApiProperty({

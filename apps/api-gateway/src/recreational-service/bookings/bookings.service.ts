@@ -78,8 +78,8 @@ export class BookingsService {
     );
   }
 
-  findByDate(date: string): Observable<RecreationalBookingDto[]> {
-    return this.recreationalClient.send<RecreationalBookingDto[], string>(
+  findByDate(date: Date): Observable<RecreationalBookingDto[]> {
+    return this.recreationalClient.send<RecreationalBookingDto[], Date>(
       RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_DATE,
       date,
     );
@@ -87,12 +87,12 @@ export class BookingsService {
 
   findByFacility(
     facilityId: number,
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Observable<RecreationalBookingDto[]> {
     return this.recreationalClient.send<
       RecreationalBookingDto[],
-      { facilityId: number; startDate?: string; endDate?: string }
+      { facilityId: number; startDate?: Date; endDate?: Date }
     >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY, {
       facilityId,
       startDate,
@@ -101,12 +101,15 @@ export class BookingsService {
   }
 
   getStatistics(
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
   ): Observable<BookingStatisticsDto> {
     return this.recreationalClient.send<
       BookingStatisticsDto,
-      { startDate: string; endDate: string }
-    >(RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS, { startDate, endDate });
+      { startDate: Date; endDate: Date }
+    >(RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS, {
+      startDate,
+      endDate,
+    });
   }
 }

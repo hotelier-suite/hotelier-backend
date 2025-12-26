@@ -158,11 +158,8 @@ export class DashboardService {
         this.billingClient
           .send<
             FinancialSummaryResponseDto,
-            { startDate: string; endDate: string }
-          >(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
-          })
+            Record<string, never>
+          >(STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY, {})
           .pipe(catchError(() => of({ totalRevenue: 0 }))),
       ),
       lastValueFrom(
@@ -291,11 +288,11 @@ export class DashboardService {
 
     const invoices = await lastValueFrom(
       this.billingClient
-        .send<InvoiceDto[], { startDate: string; endDate: string }>(
+        .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
           INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
           {
-            startDate: start.toISOString(),
-            endDate: today.toISOString(),
+            startDate: start,
+            endDate: today,
           },
         )
         .pipe(catchError(() => of([]))),

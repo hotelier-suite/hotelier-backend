@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsString,
   IsArray,
+  IsMilitaryTime,
   ValidateNested,
   IsObject,
 } from 'class-validator';
@@ -108,7 +109,7 @@ export class BookingStatisticsDto {
     description: 'Peak booking hour',
     example: '14:00',
   })
-  @IsString()
+  @IsMilitaryTime()
   peakHour: string;
 
   @ApiProperty({

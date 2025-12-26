@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsEnum,
   IsInt,
   IsNumber,
@@ -39,15 +40,17 @@ export class CreateEmployeeRequestDto {
     description: 'Start date of the request (YYYY-MM-DD)',
     example: '2024-01-15',
   })
-  @IsDateString()
-  startDate: string;
+  @Type(() => Date)
+  @IsDate()
+  startDate: Date;
 
   @ApiProperty({
     description: 'End date of the request (YYYY-MM-DD)',
     example: '2024-01-20',
   })
-  @IsDateString()
-  endDate: string;
+  @Type(() => Date)
+  @IsDate()
+  endDate: Date;
 
   @ApiProperty({
     description: 'Number of days requested',

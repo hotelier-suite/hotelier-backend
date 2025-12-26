@@ -48,7 +48,7 @@ export class AnalyticsController {
 
   @MessagePattern(ANALYTICS_PATTERNS.GET_OCCUPANCY_DATA)
   getOccupancyData(
-    @Payload() payload: { startDate?: string; endDate?: string },
+    @Payload() payload: { startDate?: Date; endDate?: Date },
   ): Promise<AnalyticsDataDto[]> {
     return this.analyticsService.getOccupancyData(
       payload.startDate,
@@ -58,7 +58,7 @@ export class AnalyticsController {
 
   @MessagePattern(ANALYTICS_PATTERNS.GET_REVENUE_DATA)
   getRevenueData(
-    @Payload() payload: { startDate?: string; endDate?: string },
+    @Payload() payload: { startDate?: Date; endDate?: Date },
   ): Promise<AnalyticsDataDto[]> {
     return this.analyticsService.getRevenueData(
       payload.startDate,
@@ -73,7 +73,7 @@ export class AnalyticsController {
 
   @MessagePattern(ANALYTICS_PATTERNS.GET_SATISFACTION_DATA)
   getSatisfactionData(
-    @Payload() payload: { startDate?: string; endDate?: string },
+    @Payload() payload: { startDate?: Date; endDate?: Date },
   ): Promise<AnalyticsDataDto[]> {
     return this.analyticsService.getSatisfactionData(
       payload.startDate,
@@ -86,14 +86,14 @@ export class AnalyticsController {
     @Payload()
     payload: {
       metric: AnalyticsMetric;
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date;
     },
   ): Promise<number> {
     return this.analyticsService.getTotalMetric(
       payload.metric,
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 
@@ -102,14 +102,14 @@ export class AnalyticsController {
     @Payload()
     payload: {
       metric: AnalyticsMetric;
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date;
     },
   ): Promise<number> {
     return this.analyticsService.getAverageMetric(
       payload.metric,
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 
@@ -126,13 +126,13 @@ export class AnalyticsController {
     payload: {
       metric: AnalyticsMetric;
       value: number;
-      date?: string;
+      date?: Date;
     },
   ): Promise<AnalyticsDataDto> {
     return this.analyticsService.recordMetric(
       payload.metric,
       payload.value,
-      payload.date ? new Date(payload.date) : undefined,
+      payload.date,
     );
   }
 }

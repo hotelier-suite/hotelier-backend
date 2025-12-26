@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseDatePipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -102,8 +103,10 @@ export class AttendanceController {
     status: 400,
     description: 'Invalid date format',
   })
-  findByDate(@Param('date') date: string): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByDate(new Date(date));
+  findByDate(
+    @Param('date', ParseDatePipe) date: Date,
+  ): Observable<AttendanceDto[]> {
+    return this.attendanceService.findByDate(date);
   }
 
   @Get('range/:startDate/:endDate')
@@ -132,13 +135,10 @@ export class AttendanceController {
     description: 'Invalid date format',
   })
   findByDateRange(
-    @Param('startDate') startDate: string,
-    @Param('endDate') endDate: string,
+    @Param('startDate', ParseDatePipe) startDate: Date,
+    @Param('endDate', ParseDatePipe) endDate: Date,
   ): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByDateRange(
-      new Date(startDate),
-      new Date(endDate),
-    );
+    return this.attendanceService.findByDateRange(startDate, endDate);
   }
 
   @Get('status/:status')

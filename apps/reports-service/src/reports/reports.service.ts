@@ -171,10 +171,10 @@ export class ReportsService {
         this.billingClient
           .send<
             FinancialSummaryResponseDto,
-            { startDate: string; endDate: string }
+            { startDate: Date; endDate: Date }
           >(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            startDate,
+            endDate,
           })
           .pipe(
             timeout(ReportsService.SERVICE_TIMEOUT),
@@ -194,11 +194,11 @@ export class ReportsService {
       ),
       lastValueFrom(
         this.billingClient
-          .send<InvoiceDto[], { startDate: string; endDate: string }>(
+          .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
             INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
             {
-              startDate: startDate.toISOString(),
-              endDate: endDate.toISOString(),
+              startDate,
+              endDate,
             },
           )
           .pipe(
@@ -725,11 +725,11 @@ export class ReportsService {
     // Query billing-service for invoices within the year
     const invoices = await lastValueFrom(
       this.billingClient
-        .send<InvoiceDto[], { startDate: string; endDate: string }>(
+        .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
           INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
           {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            startDate,
+            endDate,
           },
         )
         .pipe(

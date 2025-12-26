@@ -4,6 +4,7 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -19,12 +20,12 @@ export class CreateAttendanceDto {
 
   @ApiProperty({ required: false, example: '09:00' })
   @IsOptional()
-  @IsString()
+  @IsMilitaryTime()
   checkIn?: string;
 
   @ApiProperty({ required: false, example: '17:30' })
   @IsOptional()
-  @IsString()
+  @IsMilitaryTime()
   checkOut?: string;
 
   @ApiProperty({

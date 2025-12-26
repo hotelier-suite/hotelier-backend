@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Query,
   StreamableFile,
+  ParseDatePipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -117,8 +118,8 @@ export class ReportsController {
     type: [ReportDto],
   })
   getReportsByDateRange(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<ReportDto[]> {
     return this.reportsService.findByDateRange(startDate, endDate);
   }
@@ -145,8 +146,8 @@ export class ReportsController {
     type: FinancialSummaryDto,
   })
   getFinancialSummary(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<FinancialSummaryDto> {
     return this.reportsService.getFinancialSummary(startDate, endDate);
   }
@@ -175,13 +176,10 @@ export class ReportsController {
     type: [OccupancyDataDto],
   })
   getOccupancyByMonthYear(
-    @Query('year') year: string,
-    @Query('month') month?: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('month', new ParseIntPipe({ optional: true })) month?: number,
   ): Observable<OccupancyDataDto[]> {
-    return this.reportsService.getOccupancyByMonthYear(
-      parseInt(year),
-      month ? parseInt(month) : undefined,
-    );
+    return this.reportsService.getOccupancyByMonthYear(year, month);
   }
 
   @Get('analytics/monthly-revenue')
@@ -202,9 +200,9 @@ export class ReportsController {
     type: [MonthlyRevenueDto],
   })
   getMonthlyRevenueComparison(
-    @Query('year') year: string,
+    @Query('year', ParseIntPipe) year: number,
   ): Observable<MonthlyRevenueDto[]> {
-    return this.reportsService.getMonthlyRevenueComparison(parseInt(year));
+    return this.reportsService.getMonthlyRevenueComparison(year);
   }
 
   @Get('download/financial-report')
@@ -231,15 +229,12 @@ export class ReportsController {
     description: 'PDF report generated successfully',
   })
   async downloadFinancialReport(
-    @Query('year') year: string,
-    @Query('month') month: string | undefined,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('month', new ParseIntPipe({ optional: true })) month?: number,
   ): Promise<StreamableFile> {
     return new Promise((resolve, reject) => {
       this.reportsService
-        .generateFinancialReportPdfData(
-          parseInt(year),
-          month ? parseInt(month) : undefined,
-        )
+        .generateFinancialReportPdfData(year, month)
         .subscribe({
           next: (data) => {
             const doc = new PDFDocument({ margin: 50 });
@@ -446,8 +441,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateOccupancyReport(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateOccupancyReport(
@@ -483,8 +478,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateRevenueReport(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateRevenueReport(
@@ -521,8 +516,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateGuestSatisfactionReport(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateGuestSatisfactionReport(

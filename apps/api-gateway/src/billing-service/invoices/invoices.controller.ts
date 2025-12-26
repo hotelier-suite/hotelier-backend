@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  ParseDatePipe,
   StreamableFile,
 } from '@nestjs/common';
 import {
@@ -98,8 +99,8 @@ export class InvoicesController {
     type: [InvoiceDto],
   })
   getInvoicesByDateRange(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<InvoiceDto[]> {
     return this.invoicesService.findByDateRange(startDate, endDate);
   }

@@ -85,10 +85,7 @@ export class EventsService {
 
   // Event methods
   async create(data: CreateEventDto): Promise<EventDto> {
-    const event = await this.eventRepository.save({
-      ...data,
-      eventDate: new Date(data.eventDate),
-    });
+    const event = await this.eventRepository.save(data);
 
     const loaded = await this.eventRepository.findOne({
       where: { id: event.id },
@@ -138,12 +135,7 @@ export class EventsService {
       });
     }
 
-    const updateData = {
-      ...data,
-      eventDate: data.eventDate ? new Date(data.eventDate) : undefined,
-    };
-
-    await this.eventRepository.update(id, updateData);
+    await this.eventRepository.update(id, data);
     return this.findOneEvent(id);
   }
 
@@ -164,7 +156,6 @@ export class EventsService {
     return event;
   }
 
-  // Event Booking methods
   async createBooking(data: CreateEventBookingDto): Promise<EventBookingDto> {
     const venue = await this.venueRepository.findOne({
       where: { id: data.venueId },
@@ -177,7 +168,6 @@ export class EventsService {
       });
     }
 
-    const eventDate = new Date(data.eventDate);
     const totalCost = this.calculateBookingCost(
       venue.hourlyRate,
       data.startTime,
@@ -186,7 +176,6 @@ export class EventsService {
 
     const booking = await this.eventBookingRepository.save({
       ...data,
-      eventDate,
       totalCost,
     });
 
@@ -247,9 +236,6 @@ export class EventsService {
       });
     }
 
-    const eventDate = data.eventDate
-      ? new Date(data.eventDate)
-      : existing.eventDate;
     const startTime = data.startTime ?? existing.startTime;
     const endTime = data.endTime ?? existing.endTime;
     const venueId = data.venueId ?? existing.venueId;
@@ -273,7 +259,6 @@ export class EventsService {
 
     await this.eventBookingRepository.update(id, {
       ...data,
-      eventDate,
       totalCost,
     });
 
@@ -315,29 +300,20 @@ export class EventsService {
     startTime: string,
     endTime: string,
   ): number {
-    const [sh, sm] = String(startTime)
-      .split(':')
-      .map((x) => parseInt(x, 10));
-    const [eh, em] = String(endTime)
-      .split(':')
-      .map((x) => parseInt(x, 10));
+    const [startHours, startMinutes] = startTime.split(':').map(Number);
+    const [endHours, endMinutes] = endTime.split(':').map(Number);
 
-    if (
-      Number.isNaN(sh) ||
-      Number.isNaN(sm) ||
-      Number.isNaN(eh) ||
-      Number.isNaN(em)
-    ) {
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+    const durationHours = (endTotalMinutes - startTotalMinutes) / 60;
+
+    if (durationHours < 0) {
       throw new RpcException({
         statusCode: 400,
-        message: 'Invalid startTime or endTime format. Expected HH:MM',
+        message: 'End time must be after start time',
       });
     }
 
-    const startMinutes = sh * 60 + sm;
-    const endMinutes = eh * 60 + em;
-    const durationMinutes = Math.max(0, endMinutes - startMinutes);
-    const durationHours = durationMinutes / 60;
     const base = hourlyRate * durationHours;
     return Math.round(base * 100) / 100;
   }

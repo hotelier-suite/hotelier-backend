@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  ParseDatePipe,
   Patch,
   Delete,
 } from '@nestjs/common';
@@ -175,8 +176,8 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getOccupancyData(
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
+    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getOccupancyData(startDate, endDate);
   }
@@ -207,8 +208,8 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getRevenueData(
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
+    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getRevenueData(startDate, endDate);
   }
@@ -253,8 +254,8 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getSatisfactionData(
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
+    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getSatisfactionData(startDate, endDate);
   }

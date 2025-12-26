@@ -74,6 +74,7 @@ export class UserResponseDto {
     example: '2024-01-01T00:00:00.000Z',
   })
   @IsDate()
+  @Type(() => Date)
   registrationDate!: Date;
 
   @ApiProperty({
@@ -83,6 +84,7 @@ export class UserResponseDto {
   })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   lastVisit?: Date;
 
   @ApiProperty({
@@ -90,6 +92,7 @@ export class UserResponseDto {
     example: '2024-01-01T00:00:00.000Z',
   })
   @IsDate()
+  @Type(() => Date)
   createdAt!: Date;
 
   @ApiProperty({
@@ -97,6 +100,7 @@ export class UserResponseDto {
     example: '2024-01-15T10:30:00.000Z',
   })
   @IsDate()
+  @Type(() => Date)
   updatedAt!: Date;
 
   @ApiProperty({
@@ -106,6 +110,7 @@ export class UserResponseDto {
   })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   firstVisit?: Date;
 
   @ApiProperty({
@@ -122,6 +127,7 @@ export class UserResponseDto {
   })
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   lastLogin?: Date;
 
   @ApiProperty({

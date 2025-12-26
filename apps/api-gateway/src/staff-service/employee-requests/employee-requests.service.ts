@@ -54,12 +54,12 @@ export class EmployeeRequestsService {
   }
 
   findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
+    startDate: Date,
+    endDate: Date,
   ): Observable<EmployeeRequestDto[]> {
     return this.staffClient.send<
       EmployeeRequestDto[],
-      { startDate: string | Date; endDate: string | Date }
+      { startDate: Date; endDate: Date }
     >(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 

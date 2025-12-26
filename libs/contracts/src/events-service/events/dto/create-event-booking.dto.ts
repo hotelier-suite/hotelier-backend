@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
+  IsDate,
   IsEmail,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -31,17 +34,16 @@ export class CreateEventBookingDto {
   description?: string;
 
   @ApiProperty({ description: 'Event date', example: '2024-12-14' })
-  @IsString()
-  eventDate: string;
+  @Type(() => Date)
+  @IsDate()
+  eventDate: Date;
 
   @ApiProperty({ description: 'Event start time', example: '11:00' })
-  @IsString()
-  @Length(1, 20)
+  @IsMilitaryTime()
   startTime: string;
 
   @ApiProperty({ description: 'Event end time', example: '16:00' })
-  @IsString()
-  @Length(1, 20)
+  @IsMilitaryTime()
   endTime: string;
 
   @ApiProperty({ description: 'Number of attendees', example: 80, minimum: 1 })

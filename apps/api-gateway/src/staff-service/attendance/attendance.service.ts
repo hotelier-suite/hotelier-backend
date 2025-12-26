@@ -38,20 +38,17 @@ export class AttendanceService {
     );
   }
 
-  findByDate(date: string | Date): Observable<AttendanceDto[]> {
-    return this.staffClient.send<AttendanceDto[], string | Date>(
+  findByDate(date: Date): Observable<AttendanceDto[]> {
+    return this.staffClient.send<AttendanceDto[], Date>(
       ATTENDANCE_PATTERNS.FIND_BY_DATE,
       date,
     );
   }
 
-  findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
-  ): Observable<AttendanceDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Observable<AttendanceDto[]> {
     return this.staffClient.send<
       AttendanceDto[],
-      { startDate: string | Date; endDate: string | Date }
+      { startDate: Date; endDate: Date }
     >(ATTENDANCE_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 

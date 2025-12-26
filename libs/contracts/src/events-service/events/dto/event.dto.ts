@@ -4,6 +4,7 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -42,8 +43,7 @@ export class EventDto {
   eventDate: Date;
 
   @ApiProperty({ description: 'Event start time', example: '09:00' })
-  @IsString()
-  @Length(1, 20)
+  @IsMilitaryTime()
   startTime: string;
 
   @ApiProperty({
@@ -52,8 +52,7 @@ export class EventDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @Length(1, 20)
+  @IsMilitaryTime()
   endTime?: string;
 
   @ApiProperty({ description: 'Event venue', example: 'Conference Room Alpha' })

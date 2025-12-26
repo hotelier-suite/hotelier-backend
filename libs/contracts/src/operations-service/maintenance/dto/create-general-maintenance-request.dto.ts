@@ -6,6 +6,7 @@ import {
   IsInt,
   IsNumber,
   IsDateString,
+  IsMilitaryTime,
   Length,
   Min,
 } from 'class-validator';
@@ -82,8 +83,7 @@ export class CreateGeneralMaintenanceRequestDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @Length(0, 20)
+  @IsMilitaryTime()
   scheduledStartTime?: string;
 
   @ApiProperty({

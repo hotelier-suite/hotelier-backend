@@ -397,9 +397,9 @@ export class HousekeepingController {
   })
   @Get('cleaning-performance')
   getCleaningPerformance(
-    @Query('employeeId') employeeId?: string,
+    @Query('employeeId', new ParseIntPipe({ optional: true }))
+    employeeId?: number,
   ): Observable<CleaningPerformanceDto> {
-    const empId = employeeId ? parseInt(employeeId, 10) : undefined;
-    return this.housekeepingService.getCleaningPerformance(empId);
+    return this.housekeepingService.getCleaningPerformance(employeeId);
   }
 }

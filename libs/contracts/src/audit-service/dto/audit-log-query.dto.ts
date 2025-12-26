@@ -3,7 +3,7 @@ import {
   IsOptional,
   IsEnum,
   IsString,
-  IsDateString,
+  IsDate,
   IsNumber,
   Min,
   Max,
@@ -57,8 +57,9 @@ export class AuditLogQueryDto {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
-  startDate?: string;
+  @Type(() => Date)
+  @IsDate()
+  startDate?: Date;
 
   @ApiProperty({
     description: 'Filter by end date (ISO string)',
@@ -66,8 +67,9 @@ export class AuditLogQueryDto {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
-  endDate?: string;
+  @Type(() => Date)
+  @IsDate()
+  endDate?: Date;
 
   @ApiProperty({
     description: 'Search in description',

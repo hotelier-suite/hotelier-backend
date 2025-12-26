@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
 import { SpaceStatus, SpaceType } from '..';
 import type { VehicleDto } from '../../vehicles';
 import type { ParkingIncidentDto } from '../../incidents';
@@ -29,9 +31,13 @@ export class ParkingSpaceDto {
   location: string;
 
   @ApiProperty({ type: String })
+  @IsDate()
+  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({ type: String })
+  @IsDate()
+  @Type(() => Date)
   updatedAt: Date;
 
   @ApiProperty({ required: false })

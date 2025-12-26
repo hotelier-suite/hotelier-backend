@@ -32,10 +32,7 @@ export class AttendanceService {
       });
     }
 
-    const created = await this.attendanceRepository.save({
-      ...data,
-      date: this.toDate(data.date as unknown),
-    });
+    const created = await this.attendanceRepository.save(data);
 
     const loaded = await this.attendanceRepository.findOne({
       where: { id: created.id },
@@ -83,13 +80,11 @@ export class AttendanceService {
     });
   }
 
-  findByDate(date: string | Date): Promise<AttendanceDto[]> {
-    const parsedDate = this.toDate(date);
-
-    const startOfDay = new Date(parsedDate);
+  findByDate(date: Date): Promise<AttendanceDto[]> {
+    const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(parsedDate);
+    const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
     return this.attendanceRepository.find({
@@ -101,14 +96,9 @@ export class AttendanceService {
     });
   }
 
-  findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
-  ): Promise<AttendanceDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Promise<AttendanceDto[]> {
     return this.attendanceRepository.find({
-      where: {
-        date: Between(this.toDate(startDate), this.toDate(endDate)),
-      },
+      where: { date: Between(startDate, endDate) },
       order: { date: 'ASC' },
       relations: { employee: true },
     });
@@ -125,12 +115,7 @@ export class AttendanceService {
   async update(id: number, data: UpdateAttendanceDto): Promise<AttendanceDto> {
     await this.findOne(id);
 
-    const updateData: UpdateAttendanceDto = {
-      ...data,
-      date: data.date ? this.toDate(data.date as unknown) : data.date,
-    };
-
-    await this.attendanceRepository.update(id, updateData);
+    await this.attendanceRepository.update(id, data);
 
     return this.findOne(id);
   }
@@ -220,35 +205,5 @@ export class AttendanceService {
       checkOut: time,
       hoursWorked: Math.max(0, hoursWorked),
     });
-  }
-
-  private toDate(input: unknown): Date {
-    if (input instanceof Date) {
-      return input;
-    }
-
-    if (typeof input === 'string' || typeof input === 'number') {
-      const parsed = new Date(input);
-
-      if (Number.isNaN(parsed.getTime())) {
-        throw new RpcException({
-          statusCode: 400,
-          message: 'Invalid date',
-        });
-      }
-
-      return parsed;
-    }
-
-    const parsed = new Date(input as string);
-
-    if (Number.isNaN(parsed.getTime())) {
-      throw new RpcException({
-        statusCode: 400,
-        message: 'Invalid date',
-      });
-    }
-
-    return parsed;
   }
 }

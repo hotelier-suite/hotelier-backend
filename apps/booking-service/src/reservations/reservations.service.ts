@@ -82,11 +82,13 @@ export class ReservationsService {
     return reservation;
   }
 
-  async getAvailability(query: GetAvailabilityDto): Promise<RoomDto[]> {
-    const start = this.toDate(query.startDate);
-    const end = this.toDate(query.endDate);
-
-    if (start >= end) {
+  async getAvailability({
+    startDate,
+    endDate,
+    type,
+    guests,
+  }: GetAvailabilityDto): Promise<RoomDto[]> {
+    if (startDate >= endDate) {
       throw new RpcException({
         statusCode: 400,
         message: 'Invalid date range',
@@ -103,17 +105,17 @@ export class ReservationsService {
     qb.leftJoin(
       Reservation,
       'res',
-      'res.roomId = room.id AND res.checkInDate < :end AND res.checkOutDate > :start AND res.status IN (:...statuses)',
-      { start, end, statuses: blockingStatuses },
+      'res.roomId = room.id AND res.checkInDate < :endDate AND res.checkOutDate > :startDate AND res.status IN (:...statuses)',
+      { startDate, endDate, statuses: blockingStatuses },
     );
     qb.where('res.id IS NULL');
 
-    if (query.type) {
-      qb.andWhere('room.type = :type', { type: query.type });
+    if (type) {
+      qb.andWhere('room.type = :type', { type });
     }
 
-    if (typeof query.guests === 'number') {
-      qb.andWhere('room.capacity >= :minGuests', { minGuests: query.guests });
+    if (typeof guests === 'number') {
+      qb.andWhere('room.capacity >= :minGuests', { minGuests: guests });
     }
 
     qb.orderBy('room.number', 'ASC');
@@ -122,8 +124,8 @@ export class ReservationsService {
   }
 
   async create(data: CreateReservationDto): Promise<ReservationDto> {
-    const checkInDate = this.toDate(data.checkInDate);
-    const checkOutDate = this.toDate(data.checkOutDate);
+    const checkInDate = data.checkInDate;
+    const checkOutDate = data.checkOutDate;
 
     const nights = this.calculateNights(checkInDate, checkOutDate);
 
@@ -257,13 +259,8 @@ export class ReservationsService {
       });
     }
 
-    const checkInDate = data.checkInDate
-      ? this.toDate(data.checkInDate)
-      : existing.checkInDate;
-
-    const checkOutDate = data.checkOutDate
-      ? this.toDate(data.checkOutDate)
-      : existing.checkOutDate;
+    const checkInDate = data.checkInDate ?? existing.checkInDate;
+    const checkOutDate = data.checkOutDate ?? existing.checkOutDate;
 
     const nights =
       data.checkInDate || data.checkOutDate
@@ -469,19 +466,6 @@ export class ReservationsService {
 
     await this.reservationsRepository.remove(reservation);
     return reservation;
-  }
-
-  private toDate(value: string): Date {
-    const parsed = new Date(value);
-
-    if (Number.isNaN(parsed.getTime())) {
-      throw new RpcException({
-        statusCode: 400,
-        message: 'Invalid date range',
-      });
-    }
-
-    return parsed;
   }
 
   private calculateNights(checkInDate: Date, checkOutDate: Date): number {

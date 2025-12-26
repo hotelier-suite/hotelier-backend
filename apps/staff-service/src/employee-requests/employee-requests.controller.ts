@@ -45,7 +45,7 @@ export class EmployeeRequestsController {
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_DATE_RANGE)
   findByDateRange(
-    @Payload() payload: { startDate: string | Date; endDate: string | Date },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestsService.findByDateRange(
       payload.startDate,

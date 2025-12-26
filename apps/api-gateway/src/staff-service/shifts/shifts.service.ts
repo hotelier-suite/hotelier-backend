@@ -38,20 +38,17 @@ export class ShiftsService {
     );
   }
 
-  findByDate(date: string | Date): Observable<ShiftDto[]> {
-    return this.staffClient.send<ShiftDto[], string | Date>(
+  findByDate(date: Date): Observable<ShiftDto[]> {
+    return this.staffClient.send<ShiftDto[], Date>(
       SHIFTS_PATTERNS.FIND_BY_DATE,
       date,
     );
   }
 
-  findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
-  ): Observable<ShiftDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Observable<ShiftDto[]> {
     return this.staffClient.send<
       ShiftDto[],
-      { startDate: string | Date; endDate: string | Date }
+      { startDate: Date; endDate: Date }
     >(SHIFTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 

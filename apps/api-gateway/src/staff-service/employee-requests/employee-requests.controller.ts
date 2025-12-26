@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseDatePipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -161,13 +162,10 @@ export class EmployeeRequestsController {
     type: [EmployeeRequestDto],
   })
   findByDateRange(
-    @Param('startDate') startDate: string,
-    @Param('endDate') endDate: string,
+    @Param('startDate', ParseDatePipe) startDate: Date,
+    @Param('endDate', ParseDatePipe) endDate: Date,
   ): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByDateRange(
-      new Date(startDate),
-      new Date(endDate),
-    );
+    return this.employeeRequestsService.findByDateRange(startDate, endDate);
   }
 
   @Post()

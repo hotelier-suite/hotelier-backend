@@ -56,11 +56,11 @@ export class ReportsController {
 
   @MessagePattern(REPORTS_PATTERNS.FIND_BY_DATE_RANGE)
   findByDateRange(
-    @Payload() payload: { startDate: string; endDate: string },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<ReportDto[]> {
     return this.reportsService.findByDateRange(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 
@@ -75,14 +75,14 @@ export class ReportsController {
   generateOccupancyReport(
     @Payload()
     payload: {
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date;
       generatedBy: string;
     },
   ): Promise<ReportDto> {
     return this.reportsService.generateOccupancyReport(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
       payload.generatedBy,
     );
   }
@@ -91,14 +91,14 @@ export class ReportsController {
   generateRevenueReport(
     @Payload()
     payload: {
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date;
       generatedBy: string;
     },
   ): Promise<ReportDto> {
     return this.reportsService.generateRevenueReport(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
       payload.generatedBy,
     );
   }
@@ -107,25 +107,25 @@ export class ReportsController {
   generateGuestSatisfactionReport(
     @Payload()
     payload: {
-      startDate: string;
-      endDate: string;
+      startDate: Date;
+      endDate: Date;
       generatedBy: string;
     },
   ): Promise<ReportDto> {
     return this.reportsService.generateGuestSatisfactionReport(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
       payload.generatedBy,
     );
   }
 
   @MessagePattern(REPORTS_PATTERNS.GET_FINANCIAL_SUMMARY)
   getFinancialSummary(
-    @Payload() payload: { startDate: string; endDate: string },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<FinancialSummaryDto> {
     return this.reportsService.getFinancialSummary(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 

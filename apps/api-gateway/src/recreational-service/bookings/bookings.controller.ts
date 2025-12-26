@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  ParseDatePipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -96,19 +97,16 @@ export class BookingsController {
     description: 'Filter bookings until end date (YYYY-MM-DD)',
   })
   findAll(
-    @Query('date') date?: string,
-    @Query('facilityId') facilityIdParam?: string,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
+    @Query('date', new ParseDatePipe({ optional: true })) date?: Date,
+    @Query('facilityId', new ParseIntPipe({ optional: true }))
+    facilityId?: number,
+    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
+    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
   ): Observable<RecreationalBookingDto[]> {
-    const facilityId = facilityIdParam
-      ? parseInt(facilityIdParam, 10)
-      : undefined;
-
     if (date) {
       return this.bookingsService.findByDate(date);
     }
-    if (facilityId && !isNaN(facilityId)) {
+    if (facilityId) {
       return this.bookingsService.findByFacility(
         facilityId,
         startDate,
@@ -142,8 +140,8 @@ export class BookingsController {
     description: 'End date for statistics (YYYY-MM-DD)',
   })
   getStatistics(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<BookingStatisticsDto> {
     return this.bookingsService.getStatistics(startDate, endDate);
   }

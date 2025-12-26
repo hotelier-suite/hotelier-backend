@@ -21,17 +21,15 @@ export class StatisticsController {
   @Get('invoices/statistics')
   @ApiOperation({
     summary: 'Get Billing Statistics',
-    description: 'Retrieve comprehensive billing statistics.',
+    description: 'Retrieve year-to-date billing statistics.',
   })
   @ApiResponse({
     status: 200,
     description: 'Billing statistics retrieved successfully',
     type: FinancialSummaryResponseDto,
   })
-  getBillingStatistics(): Observable<FinancialSummaryResponseDto> {
-    const startDate = new Date(new Date().getFullYear(), 0, 1).toISOString();
-    const endDate = new Date().toISOString();
-    return this.statisticsService.getFinancialSummary(startDate, endDate);
+  getYearToDateBillingStatistics(): Observable<FinancialSummaryResponseDto> {
+    return this.statisticsService.getYearToDateFinancialSummary();
   }
 
   @Get('payments/statistics')

@@ -70,11 +70,14 @@ export class ReportsService {
     );
   }
 
-  findByDateRange(startDate: string, endDate: string): Observable<ReportDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Observable<ReportDto[]> {
     return this.reportsClient.send<
       ReportDto[],
-      { startDate: string; endDate: string }
-    >(REPORTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
+      { startDate: Date; endDate: Date }
+    >(REPORTS_PATTERNS.FIND_BY_DATE_RANGE, {
+      startDate,
+      endDate,
+    });
   }
 
   updateStatus(id: number, status: ReportStatus): Observable<ReportDto> {
@@ -85,35 +88,43 @@ export class ReportsService {
   }
 
   generateOccupancyReport(
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
     generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsClient.send<
       ReportDto,
-      { startDate: string; endDate: string; generatedBy: string }
-    >(REPORTS_PATTERNS.GENERATE_OCCUPANCY, { startDate, endDate, generatedBy });
+      { startDate: Date; endDate: Date; generatedBy: string }
+    >(REPORTS_PATTERNS.GENERATE_OCCUPANCY, {
+      startDate,
+      endDate,
+      generatedBy,
+    });
   }
 
   generateRevenueReport(
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
     generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsClient.send<
       ReportDto,
-      { startDate: string; endDate: string; generatedBy: string }
-    >(REPORTS_PATTERNS.GENERATE_REVENUE, { startDate, endDate, generatedBy });
+      { startDate: Date; endDate: Date; generatedBy: string }
+    >(REPORTS_PATTERNS.GENERATE_REVENUE, {
+      startDate,
+      endDate,
+      generatedBy,
+    });
   }
 
   generateGuestSatisfactionReport(
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
     generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsClient.send<
       ReportDto,
-      { startDate: string; endDate: string; generatedBy: string }
+      { startDate: Date; endDate: Date; generatedBy: string }
     >(REPORTS_PATTERNS.GENERATE_GUEST_SATISFACTION, {
       startDate,
       endDate,
@@ -122,13 +133,16 @@ export class ReportsService {
   }
 
   getFinancialSummary(
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
   ): Observable<FinancialSummaryDto> {
     return this.reportsClient.send<
       FinancialSummaryDto,
-      { startDate: string; endDate: string }
-    >(REPORTS_PATTERNS.GET_FINANCIAL_SUMMARY, { startDate, endDate });
+      { startDate: Date; endDate: Date }
+    >(REPORTS_PATTERNS.GET_FINANCIAL_SUMMARY, {
+      startDate,
+      endDate,
+    });
   }
 
   getOccupancyByMonthYear(

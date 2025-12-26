@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsEmail,
   IsEnum,
   IsInt,
@@ -29,12 +30,14 @@ export class CreateReservationDto {
   guestPhone?: string;
 
   @ApiProperty({ example: '2025-09-20' })
-  @IsDateString()
-  checkInDate: string;
+  @Type(() => Date)
+  @IsDate()
+  checkInDate: Date;
 
   @ApiProperty({ example: '2025-09-23' })
-  @IsDateString()
-  checkOutDate: string;
+  @Type(() => Date)
+  @IsDate()
+  checkOutDate: Date;
 
   @ApiProperty({ example: 2, minimum: 1 })
   @IsInt()

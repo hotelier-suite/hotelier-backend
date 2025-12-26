@@ -108,18 +108,16 @@ export class BookingsService {
       });
     }
 
-    const bookingDate = new Date(data.bookingDate);
-
     this.validateFacilityAvailability(
       facility,
-      bookingDate,
+      data.bookingDate,
       data.startTime,
       data.endTime,
     );
 
     await this.checkBookingConflicts(
       data.facilityId,
-      bookingDate,
+      data.bookingDate,
       data.startTime,
       data.endTime,
     );
@@ -133,7 +131,6 @@ export class BookingsService {
 
     const booking = this.bookingRepository.create({
       ...data,
-      bookingDate,
       totalCost: 0,
       status: RecreationalBookingStatus.PENDING,
     });
@@ -144,7 +141,7 @@ export class BookingsService {
       .create({
         type: NotificationType.INFO,
         title: 'Recreational Booking Created',
-        message: `New booking for ${facility.name} on ${bookingDate.toISOString().split('T')[0]} from ${data.startTime} to ${data.endTime}`,
+        message: `New booking for ${facility.name} on ${data.bookingDate.toISOString().split('T')[0]} from ${data.startTime} to ${data.endTime}`,
         refId: saved.id,
         refType: 'recreational_booking',
       })
@@ -186,9 +183,7 @@ export class BookingsService {
         });
       }
 
-      const bookingDate = data.bookingDate
-        ? new Date(data.bookingDate)
-        : booking.bookingDate;
+      const bookingDate = data.bookingDate || booking.bookingDate;
       const startTime = data.startTime || booking.startTime;
       const endTime = data.endTime || booking.endTime;
 
@@ -564,13 +559,15 @@ export class BookingsService {
   }
 
   private calculateDailyOperatingHours(facility: RecreationalFacility): number {
-    const openingHour = parseInt(facility.openingTime.split(':')[0]);
-    const openingMinute = parseInt(facility.openingTime.split(':')[1]);
-    const closingHour = parseInt(facility.closingTime.split(':')[0]);
-    const closingMinute = parseInt(facility.closingTime.split(':')[1]);
+    const [openingHours, openingMinutes] = facility.openingTime
+      .split(':')
+      .map(Number);
+    const [closingHours, closingMinutes] = facility.closingTime
+      .split(':')
+      .map(Number);
 
-    const openingTimeInMinutes = openingHour * 60 + openingMinute;
-    const closingTimeInMinutes = closingHour * 60 + closingMinute;
+    const openingTimeInMinutes = openingHours * 60 + openingMinutes;
+    const closingTimeInMinutes = closingHours * 60 + closingMinutes;
 
     return (closingTimeInMinutes - openingTimeInMinutes) / 60;
   }

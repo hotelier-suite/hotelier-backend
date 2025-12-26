@@ -60,8 +60,8 @@ export class BookingsController {
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_DATE)
-  findByDate(@Payload() date: string): Promise<RecreationalBookingDto[]> {
-    return this.bookingsService.findByDate(new Date(date));
+  findByDate(@Payload() date: Date): Promise<RecreationalBookingDto[]> {
+    return this.bookingsService.findByDate(date);
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY)
@@ -69,24 +69,24 @@ export class BookingsController {
     @Payload()
     payload: {
       facilityId: number;
-      startDate?: string;
-      endDate?: string;
+      startDate?: Date;
+      endDate?: Date;
     },
   ): Promise<RecreationalBookingDto[]> {
     return this.bookingsService.findByFacility(
       payload.facilityId,
-      payload.startDate ? new Date(payload.startDate) : undefined,
-      payload.endDate ? new Date(payload.endDate) : undefined,
+      payload.startDate,
+      payload.endDate,
     );
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS)
   getStatistics(
-    @Payload() payload: { startDate: string; endDate: string },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<BookingStatisticsDto> {
     return this.bookingsService.getStatistics(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 }

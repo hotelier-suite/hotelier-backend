@@ -4,6 +4,7 @@ import {
   IsDate,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsOptional,
   IsString,
   Length,
@@ -24,13 +25,11 @@ export class ShiftDto {
   date: Date;
 
   @ApiProperty({ example: '08:00' })
-  @IsString()
-  @Length(1, 10)
+  @IsMilitaryTime()
   startTime: string;
 
   @ApiProperty({ example: '16:00' })
-  @IsString()
-  @Length(1, 10)
+  @IsMilitaryTime()
   endTime: string;
 
   @ApiProperty({ enum: ShiftType, example: ShiftType.MORNING })

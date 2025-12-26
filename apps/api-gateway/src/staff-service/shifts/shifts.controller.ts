@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseDatePipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -109,8 +110,8 @@ export class ShiftsController {
     description: 'Shifts for date retrieved successfully',
     type: [ShiftDto],
   })
-  findByDate(@Param('date') date: string): Observable<ShiftDto[]> {
-    return this.shiftsService.findByDate(new Date(date));
+  findByDate(@Param('date', ParseDatePipe) date: Date): Observable<ShiftDto[]> {
+    return this.shiftsService.findByDate(date);
   }
 
   @Get('range/:startDate/:endDate')
@@ -136,13 +137,10 @@ export class ShiftsController {
     type: [ShiftDto],
   })
   findByDateRange(
-    @Param('startDate') startDate: string,
-    @Param('endDate') endDate: string,
+    @Param('startDate', ParseDatePipe) startDate: Date,
+    @Param('endDate', ParseDatePipe) endDate: Date,
   ): Observable<ShiftDto[]> {
-    return this.shiftsService.findByDateRange(
-      new Date(startDate),
-      new Date(endDate),
-    );
+    return this.shiftsService.findByDateRange(startDate, endDate);
   }
 
   @Get('status/:status')

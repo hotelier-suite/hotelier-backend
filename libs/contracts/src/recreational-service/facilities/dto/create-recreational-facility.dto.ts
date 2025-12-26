@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -89,16 +90,14 @@ export class CreateRecreationalFacilityDto {
     description: 'Operating hours start time',
     example: '06:00',
   })
-  @IsString()
-  @Length(5, 5)
+  @IsMilitaryTime()
   openingTime: string;
 
   @ApiProperty({
     description: 'Operating hours end time',
     example: '22:00',
   })
-  @IsString()
-  @Length(5, 5)
+  @IsMilitaryTime()
   closingTime: string;
 
   @ApiProperty({

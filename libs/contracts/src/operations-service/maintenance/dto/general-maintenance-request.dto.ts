@@ -5,6 +5,7 @@ import {
   IsDateString,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -101,8 +102,7 @@ export class GeneralMaintenanceRequestDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
-  @Length(0, 20)
+  @IsMilitaryTime()
   scheduledStartTime?: string;
 
   @ApiProperty({

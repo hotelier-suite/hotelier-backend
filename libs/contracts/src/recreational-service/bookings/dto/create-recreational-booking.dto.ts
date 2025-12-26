@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsEnum,
   IsInt,
+  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,
@@ -62,16 +63,14 @@ export class CreateRecreationalBookingDto {
     description: 'Booking start time',
     example: '14:00',
   })
-  @IsString()
-  @Length(5, 5)
+  @IsMilitaryTime()
   startTime: string;
 
   @ApiProperty({
     description: 'Booking end time',
     example: '16:00',
   })
-  @IsString()
-  @Length(5, 5)
+  @IsMilitaryTime()
   endTime: string;
 
   @ApiProperty({

@@ -74,21 +74,21 @@ export class FacilitiesService {
 
   getAvailability(
     facilityId: number,
-    date: string,
+    date: Date,
   ): Observable<FacilityAvailabilityDto> {
     return this.recreationalClient.send<
       FacilityAvailabilityDto,
-      { facilityId: number; date: string }
+      { facilityId: number; date: Date }
     >(RECREATIONAL_FACILITIES_PATTERNS.GET_AVAILABILITY, { facilityId, date });
   }
 
   getMultipleAvailability(
     facilityIds: number[],
-    date: string,
+    date: Date,
   ): Observable<FacilityAvailabilityDto[]> {
     return this.recreationalClient.send<
       FacilityAvailabilityDto[],
-      { facilityIds: number[]; date: string }
+      { facilityIds: number[]; date: Date }
     >(RECREATIONAL_FACILITIES_PATTERNS.GET_MULTIPLE_AVAILABILITY, {
       facilityIds,
       date,

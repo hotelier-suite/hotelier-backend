@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNumber,
@@ -69,6 +70,7 @@ export class ProfileResponseDto {
     example: '2024-01-01T00:00:00.000Z',
   })
   @IsDate()
+  @Type(() => Date)
   registrationDate: Date;
 
   @ApiProperty({

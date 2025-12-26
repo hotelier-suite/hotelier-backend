@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDate, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 import { GuestType, VehicleStatus, VehicleType } from '..';
 import type { ParkingSpaceDto } from '../../spaces';
 import type { ParkingIncidentDto } from '../../incidents';
@@ -35,9 +37,14 @@ export class VehicleDto {
   assignedSpace?: string;
 
   @ApiProperty({ type: String })
+  @IsDate()
+  @Type(() => Date)
   entryTime: Date;
 
   @ApiProperty({ required: false, type: String })
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
   exitTime?: Date;
 
   @ApiProperty({ enum: VehicleStatus, example: VehicleStatus.PARKED })
@@ -47,9 +54,13 @@ export class VehicleDto {
   notes?: string;
 
   @ApiProperty({ type: String })
+  @IsDate()
+  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({ type: String })
+  @IsDate()
+  @Type(() => Date)
   updatedAt: Date;
 
   @ApiProperty({ required: false })

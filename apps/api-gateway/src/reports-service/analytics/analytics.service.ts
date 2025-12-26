@@ -64,23 +64,29 @@ export class AnalyticsService {
   }
 
   getOccupancyData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.reportsClient.send<
       AnalyticsDataDto[],
-      { startDate?: string; endDate?: string }
-    >(ANALYTICS_PATTERNS.GET_OCCUPANCY_DATA, { startDate, endDate });
+      { startDate?: Date; endDate?: Date }
+    >(ANALYTICS_PATTERNS.GET_OCCUPANCY_DATA, {
+      startDate,
+      endDate,
+    });
   }
 
   getRevenueData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.reportsClient.send<
       AnalyticsDataDto[],
-      { startDate?: string; endDate?: string }
-    >(ANALYTICS_PATTERNS.GET_REVENUE_DATA, { startDate, endDate });
+      { startDate?: Date; endDate?: Date }
+    >(ANALYTICS_PATTERNS.GET_REVENUE_DATA, {
+      startDate,
+      endDate,
+    });
   }
 
   getGuestTypeData(): Observable<AnalyticsDataDto[]> {
@@ -91,34 +97,37 @@ export class AnalyticsService {
   }
 
   getSatisfactionData(
-    startDate?: string,
-    endDate?: string,
+    startDate?: Date,
+    endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.reportsClient.send<
       AnalyticsDataDto[],
-      { startDate?: string; endDate?: string }
-    >(ANALYTICS_PATTERNS.GET_SATISFACTION_DATA, { startDate, endDate });
+      { startDate?: Date; endDate?: Date }
+    >(ANALYTICS_PATTERNS.GET_SATISFACTION_DATA, {
+      startDate,
+      endDate,
+    });
   }
 
   getMetricTotals(
     metric: AnalyticsMetric,
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
   ): Observable<number> {
     return this.reportsClient.send<
       number,
-      { metric: AnalyticsMetric; startDate: string; endDate: string }
+      { metric: AnalyticsMetric; startDate: Date; endDate: Date }
     >(ANALYTICS_PATTERNS.GET_METRIC_TOTALS, { metric, startDate, endDate });
   }
 
   getMetricAverages(
     metric: AnalyticsMetric,
-    startDate: string,
-    endDate: string,
+    startDate: Date,
+    endDate: Date,
   ): Observable<number> {
     return this.reportsClient.send<
       number,
-      { metric: AnalyticsMetric; startDate: string; endDate: string }
+      { metric: AnalyticsMetric; startDate: Date; endDate: Date }
     >(ANALYTICS_PATTERNS.GET_METRIC_AVERAGES, { metric, startDate, endDate });
   }
 
@@ -135,11 +144,11 @@ export class AnalyticsService {
   recordMetric(
     metric: AnalyticsMetric,
     value: number,
-    date?: string,
+    date?: Date,
   ): Observable<AnalyticsDataDto> {
     return this.reportsClient.send<
       AnalyticsDataDto,
-      { metric: AnalyticsMetric; value: number; date?: string }
+      { metric: AnalyticsMetric; value: number; date?: Date }
     >(ANALYTICS_PATTERNS.RECORD_METRIC, { metric, value, date });
   }
 }

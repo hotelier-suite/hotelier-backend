@@ -69,20 +69,17 @@ export class EmployeeRequestsService {
   }
 
   findByDateRange(
-    startDate: string | Date,
-    endDate: string | Date,
+    startDate: Date,
+    endDate: Date,
   ): Promise<EmployeeRequestDto[]> {
-    const parsedStartDate = this.toDate(startDate);
-    const parsedEndDate = this.toDate(endDate);
-
     return this.employeeRequestRepository
       .createQueryBuilder('request')
       .leftJoinAndSelect('request.employee', 'employee')
       .where(
         'request.startDate >= :startDate AND request.endDate <= :endDate',
         {
-          startDate: parsedStartDate,
-          endDate: parsedEndDate,
+          startDate,
+          endDate,
         },
       )
       .orderBy('request.createdAt', 'DESC')
@@ -105,8 +102,8 @@ export class EmployeeRequestsService {
       employeeId: data.employeeId,
       type: data.type,
       reason: data.reason,
-      startDate: this.toDate(data.startDate),
-      endDate: this.toDate(data.endDate),
+      startDate: data.startDate,
+      endDate: data.endDate,
       days: data.days,
       status: RequestStatus.PENDING,
     });
@@ -146,35 +143,5 @@ export class EmployeeRequestsService {
     await this.employeeRequestRepository.delete(id);
 
     return request;
-  }
-
-  private toDate(input: unknown): Date {
-    if (input instanceof Date) {
-      return input;
-    }
-
-    if (typeof input === 'string' || typeof input === 'number') {
-      const parsed = new Date(input);
-
-      if (Number.isNaN(parsed.getTime())) {
-        throw new RpcException({
-          statusCode: 400,
-          message: 'Invalid date',
-        });
-      }
-
-      return parsed;
-    }
-
-    const parsed = new Date(input as string);
-
-    if (Number.isNaN(parsed.getTime())) {
-      throw new RpcException({
-        statusCode: 400,
-        message: 'Invalid date',
-      });
-    }
-
-    return parsed;
   }
 }

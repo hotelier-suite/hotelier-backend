@@ -29,13 +29,13 @@ export class ShiftsController {
   }
 
   @MessagePattern(SHIFTS_PATTERNS.FIND_BY_DATE)
-  findByDate(@Payload() date: string | Date): Promise<ShiftDto[]> {
+  findByDate(@Payload() date: Date): Promise<ShiftDto[]> {
     return this.shiftsService.findByDate(date);
   }
 
   @MessagePattern(SHIFTS_PATTERNS.FIND_BY_DATE_RANGE)
   findByDateRange(
-    @Payload() payload: { startDate: string | Date; endDate: string | Date },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<ShiftDto[]> {
     return this.shiftsService.findByDateRange(
       payload.startDate,

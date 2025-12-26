@@ -6,7 +6,6 @@ import {
   STATISTICS_PATTERNS,
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
-  MonthlyReportResponseDto,
 } from '@app/contracts/billing-service';
 
 @Injectable()
@@ -16,14 +15,11 @@ export class StatisticsService {
     private readonly billingClient: ClientProxy,
   ) {}
 
-  getFinancialSummary(
-    startDate: string,
-    endDate: string,
-  ): Observable<FinancialSummaryResponseDto> {
+  getYearToDateFinancialSummary(): Observable<FinancialSummaryResponseDto> {
     return this.billingClient.send<
       FinancialSummaryResponseDto,
-      { startDate: string; endDate: string }
-    >(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, { startDate, endDate });
+      Record<string, never>
+    >(STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY, {});
   }
 
   getPaymentStatistics(): Observable<PaymentStatisticsResponseDto> {
@@ -31,15 +27,5 @@ export class StatisticsService {
       PaymentStatisticsResponseDto,
       Record<string, never>
     >(STATISTICS_PATTERNS.PAYMENTS, {});
-  }
-
-  generateMonthlyReport(
-    year: number,
-    month: number,
-  ): Observable<MonthlyReportResponseDto> {
-    return this.billingClient.send<
-      MonthlyReportResponseDto,
-      { year: number; month: number }
-    >(STATISTICS_PATTERNS.MONTHLY_REPORT, { year, month });
   }
 }

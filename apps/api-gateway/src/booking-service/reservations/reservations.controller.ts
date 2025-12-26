@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseDatePipe,
   Patch,
   Post,
   Query,
@@ -162,18 +163,16 @@ export class ReservationsController {
   })
   @ApiResponse({ status: 200, description: 'Available rooms', type: [RoomDto] })
   getAvailability(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
+    @Query('startDate', ParseDatePipe) startDate: Date,
+    @Query('endDate', ParseDatePipe) endDate: Date,
     @Query('type') type?: RoomType,
-    @Query('guests') guests?: string,
+    @Query('guests', new ParseIntPipe({ optional: true })) guests?: number,
   ): Observable<RoomDto[]> {
-    const guestsNum = guests ? parseInt(guests, 10) : undefined;
-
     return this.reservationsService.getAvailability({
       startDate,
       endDate,
       type,
-      guests: guestsNum,
+      guests,
     });
   }
 

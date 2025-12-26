@@ -48,11 +48,11 @@ export class InvoicesController {
 
   @MessagePattern(INVOICES_PATTERNS.FIND_BY_DATE_RANGE)
   findByDateRange(
-    @Payload() payload: { startDate: string; endDate: string },
+    @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<InvoiceDto[]> {
     return this.invoicesService.findByDateRange(
-      new Date(payload.startDate),
-      new Date(payload.endDate),
+      payload.startDate,
+      payload.endDate,
     );
   }
 

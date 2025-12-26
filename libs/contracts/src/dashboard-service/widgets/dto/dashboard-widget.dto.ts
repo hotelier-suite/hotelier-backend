@@ -5,8 +5,10 @@ import {
   IsOptional,
   IsBoolean,
   IsObject,
+  IsDate,
   Min,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class DashboardWidgetDto {
   @ApiProperty({
@@ -80,11 +82,15 @@ export class DashboardWidgetDto {
     description: 'Widget creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
   })
+  @IsDate()
+  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
     description: 'Widget last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
   })
+  @IsDate()
+  @Type(() => Date)
   updatedAt: Date;
 }

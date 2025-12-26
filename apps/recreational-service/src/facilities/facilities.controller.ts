@@ -57,21 +57,21 @@ export class FacilitiesController {
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.GET_AVAILABILITY)
   getAvailability(
-    @Payload() payload: { facilityId: number; date: string },
+    @Payload() payload: { facilityId: number; date: Date },
   ): Promise<FacilityAvailabilityDto> {
     return this.facilitiesService.getAvailability(
       payload.facilityId,
-      new Date(payload.date),
+      payload.date,
     );
   }
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.GET_MULTIPLE_AVAILABILITY)
   getMultipleAvailability(
-    @Payload() payload: { facilityIds: number[]; date: string },
+    @Payload() payload: { facilityIds: number[]; date: Date },
   ): Promise<FacilityAvailabilityDto[]> {
     return this.facilitiesService.getMultipleAvailability(
       payload.facilityIds,
-      new Date(payload.date),
+      payload.date,
     );
   }
 }

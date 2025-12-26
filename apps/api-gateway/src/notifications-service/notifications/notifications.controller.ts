@@ -4,10 +4,12 @@ import {
   Patch,
   Param,
   ParseIntPipe,
+  ParseBoolPipe,
   Query,
   Sse,
   MessageEvent,
   UseGuards,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -44,10 +46,10 @@ export class NotificationsController {
   })
   list(
     @CurrentUserId() userId: number,
-    @Query('includeRead') includeRead?: string,
+    @Query('includeRead', new DefaultValuePipe(false), ParseBoolPipe)
+    includeRead: boolean,
   ): Observable<NotificationDto[]> {
-    const include = String(includeRead).toLowerCase() === 'true';
-    return this.notificationsService.listForUser(userId, include);
+    return this.notificationsService.listForUser(userId, includeRead);
   }
 
   @Patch(':id/read')

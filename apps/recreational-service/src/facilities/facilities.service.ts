@@ -247,9 +247,10 @@ export class FacilitiesService {
     date: Date,
   ): Promise<TimeSlotDto[]> {
     const slots: TimeSlotDto[] = [];
-    const openingHour = parseInt(facility.openingTime.split(':')[0]);
-    const openingMinute = parseInt(facility.openingTime.split(':')[1]);
-    const closingHour = parseInt(facility.closingTime.split(':')[0]);
+    const [openingHours, openingMinutes] = facility.openingTime
+      .split(':')
+      .map(Number);
+    const [closingHours] = facility.closingTime.split(':').map(Number);
 
     const existingBookings = await this.bookingRepository.find({
       where: {
@@ -262,9 +263,9 @@ export class FacilitiesService {
       },
     });
 
-    for (let hour = openingHour; hour < closingHour; hour++) {
-      const startTime = `${hour.toString().padStart(2, '0')}:${openingMinute.toString().padStart(2, '0')}`;
-      const endTime = `${(hour + 1).toString().padStart(2, '0')}:${openingMinute.toString().padStart(2, '0')}`;
+    for (let hour = openingHours; hour < closingHours; hour++) {
+      const startTime = `${hour.toString().padStart(2, '0')}:${openingMinutes.toString().padStart(2, '0')}`;
+      const endTime = `${(hour + 1).toString().padStart(2, '0')}:${openingMinutes.toString().padStart(2, '0')}`;
 
       const hasConflict = existingBookings.some((booking) => {
         return (
