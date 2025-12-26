@@ -14,11 +14,8 @@ import {
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
   MonthlyReportResponseDto,
+  InvoiceTotalResult,
 } from '@app/contracts/billing-service';
-
-interface InvoiceTotalResultInterface {
-  total: string;
-}
 
 @Injectable()
 export class BillingService {
@@ -215,7 +212,7 @@ export class BillingService {
         startDate,
         endDate,
       })
-      .getRawOne<InvoiceTotalResultInterface>();
+      .getRawOne<InvoiceTotalResult>();
 
     const paidResult = await this.invoiceRepository
       .createQueryBuilder('invoice')

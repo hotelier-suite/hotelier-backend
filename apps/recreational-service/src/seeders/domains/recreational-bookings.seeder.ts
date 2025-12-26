@@ -6,30 +6,7 @@ import {
   RecreationalBookingStatus,
   BookingPriority,
 } from '@app/contracts/recreational-service';
-
-/**
- * Interface for recreational booking input data used during seeding.
- * Compatible with DeepPartial<RecreationalBooking>.
- */
-interface RecreationalBookingInput {
-  guestName: string;
-  guestEmail: string;
-  guestPhone: string;
-  roomNumber: string;
-  bookingDate: Date;
-  startTime: string;
-  endTime: string;
-  duration: number;
-  participants: number;
-  totalCost: number;
-  status: RecreationalBookingStatus;
-  priority: BookingPriority;
-  specialRequests?: string;
-  staffNotes?: string;
-  actualCheckIn?: Date;
-  actualCheckOut?: Date;
-  facilityId: number;
-}
+import { RecreationalBookingInput } from '../interfaces';
 
 @Injectable()
 export class RecreationalBookingsSeeder {

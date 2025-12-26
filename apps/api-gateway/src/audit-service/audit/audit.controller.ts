@@ -27,18 +27,11 @@ import {
   AuditStatisticsDto,
   AuditResource,
   AuditAction,
+  AuditLogWithUser,
 } from '@app/contracts/audit-service';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE_CLIENT } from '../../auth-service';
 import { USERS_PATTERNS, UserResponseDto } from '@app/contracts/auth-service';
-
-interface AuditLogWithUser extends AuditLogDto {
-  user?: {
-    id: number;
-    name: string;
-    email: string;
-  };
-}
 
 @ApiTags('audit')
 @Controller('audit')

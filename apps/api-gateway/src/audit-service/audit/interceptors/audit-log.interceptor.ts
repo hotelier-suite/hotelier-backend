@@ -9,14 +9,13 @@ import { tap, catchError } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { AuditService } from '..';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service';
-import { AUDIT_LOG_KEY, AuditLogOptions } from '../decorators';
-
-interface RequestUser {
-  sub?: number;
-  id?: number;
-  [key: string]: unknown;
-}
+import {
+  AuditAction,
+  AuditResource,
+  AuditLogOptions,
+} from '@app/contracts/audit-service';
+import { RequestUser } from '@app/contracts/common';
+import { AUDIT_LOG_KEY } from '../decorators';
 
 @Injectable()
 export class AuditLogInterceptor implements NestInterceptor {

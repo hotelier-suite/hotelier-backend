@@ -1,14 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service';
-
-export interface AuditLogOptions {
-  action?: AuditAction;
-  resource?: AuditResource;
-  description?: string;
-  resourceIdParam?: string;
-  includeBody?: boolean;
-  includeResult?: boolean;
-}
+import { AuditLogOptions } from '@app/contracts/audit-service';
 
 export const AUDIT_LOG_KEY = 'audit_log';
 

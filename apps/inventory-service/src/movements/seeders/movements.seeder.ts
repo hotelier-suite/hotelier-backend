@@ -7,17 +7,7 @@ import {
   MovementType,
   InventoryStatus,
 } from '@app/contracts/inventory-service';
-
-type MovementSeedData = {
-  type: MovementType;
-  inventoryId: number;
-  quantity: number;
-  reason: string;
-  cost?: number;
-  user: string;
-  responsible?: string;
-  notes?: string;
-};
+import { MovementSeedData } from '../../seeders/interfaces';
 
 @Injectable()
 export class MovementsSeeder {

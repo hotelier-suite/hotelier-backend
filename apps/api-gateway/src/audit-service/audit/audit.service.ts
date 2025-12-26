@@ -9,18 +9,8 @@ import {
   AuditLogQueryDto,
   AuditStatisticsDto,
   AuditResource,
-  AuditAction,
+  AuditLogParams,
 } from '@app/contracts/audit-service';
-
-export interface AuditLogParams {
-  userId: number;
-  action: AuditAction;
-  resource: AuditResource;
-  description: string;
-  resourceId?: string;
-  details?: Record<string, unknown>;
-  userAgent?: string;
-}
 
 @Injectable()
 export class AuditService {

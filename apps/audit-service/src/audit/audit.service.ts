@@ -9,29 +9,11 @@ import {
   AuditStatisticsDto,
   AuditResource,
   AuditAction,
+  ActionSummaryResult,
+  ResourceSummaryResult,
+  UserSummaryResult,
+  DateSummaryResult,
 } from '@app/contracts/audit-service';
-
-// Query result interfaces
-interface ActionSummaryResult {
-  action: string;
-  count: string;
-}
-
-interface ResourceSummaryResult {
-  resource: string;
-  count: string;
-}
-
-interface UserSummaryResult {
-  userId: string;
-  userName: string;
-  count: string;
-}
-
-interface DateSummaryResult {
-  date: string;
-  count: string;
-}
 
 @Injectable()
 export class AuditService {
