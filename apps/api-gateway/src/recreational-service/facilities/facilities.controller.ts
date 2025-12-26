@@ -29,6 +29,7 @@ import {
 } from '@app/contracts/recreational-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
+import { ParseIntArrayPipe } from '../../common';
 
 @ApiTags('recreational')
 @Controller('recreational/facilities')
@@ -174,6 +175,36 @@ export class FacilitiesController {
     @Param('id', ParseIntPipe) id: number,
   ): Observable<RecreationalFacilityDto> {
     return this.facilitiesService.delete(id);
+  }
+
+  @Get('availability')
+  @ApiOperation({
+    summary: 'Get Multiple Facilities Availability',
+    description: 'Get availability for multiple facilities on a specific date',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Multiple facilities availability information',
+    type: [FacilityAvailabilityDto],
+  })
+  @ApiQuery({
+    name: 'facilityIds',
+    required: false,
+    type: String,
+    description:
+      'Comma-separated facility IDs (e.g., "1,2,3"). If not provided, returns all facilities.',
+  })
+  @ApiQuery({
+    name: 'date',
+    required: true,
+    type: String,
+    description: 'Date to check availability (YYYY-MM-DD)',
+  })
+  getMultipleAvailability(
+    @Query('facilityIds', ParseIntArrayPipe) facilityIds: number[],
+    @Query('date') date: string,
+  ): Observable<FacilityAvailabilityDto[]> {
+    return this.facilitiesService.getMultipleAvailability(facilityIds, date);
   }
 
   @Get(':id/availability')

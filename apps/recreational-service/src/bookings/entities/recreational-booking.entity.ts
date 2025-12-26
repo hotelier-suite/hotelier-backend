@@ -11,7 +11,7 @@ import {
   RecreationalBookingStatus,
   BookingPriority,
 } from '@app/contracts/recreational-service';
-import { RecreationalFacility } from './recreational-facility.entity';
+import { RecreationalFacility } from '../../facilities/entities';
 
 @Entity('recreational_bookings')
 export class RecreationalBooking {

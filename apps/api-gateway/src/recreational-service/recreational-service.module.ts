@@ -3,7 +3,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RECREATIONAL_SERVICE_CLIENT } from './constants';
 import { FacilitiesModule } from './facilities';
 import { BookingsModule } from './bookings';
-import { AvailabilityModule } from './availability';
 
 @Global()
 @Module({
@@ -25,7 +24,6 @@ import { AvailabilityModule } from './availability';
     ]),
     FacilitiesModule,
     BookingsModule,
-    AvailabilityModule,
   ],
   exports: [ClientsModule, FacilitiesModule, BookingsModule],
 })

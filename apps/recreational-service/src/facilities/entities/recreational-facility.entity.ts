@@ -10,7 +10,7 @@ import {
   FacilityType,
   FacilityStatus,
 } from '@app/contracts/recreational-service';
-import { RecreationalBooking } from './recreational-booking.entity';
+import { RecreationalBooking } from '../../bookings/entities';
 
 @Entity('recreational_facilities')
 export class RecreationalFacility {

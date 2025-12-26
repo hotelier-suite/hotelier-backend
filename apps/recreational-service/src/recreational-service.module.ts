@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database';
-import { RecreationalModule } from './recreational';
+import { FacilitiesModule } from './facilities';
+import { BookingsModule } from './bookings';
 import { SeedersModule } from './seeders';
 import { NotificationsServiceModule } from './notifications-service';
 
@@ -13,7 +14,8 @@ import { NotificationsServiceModule } from './notifications-service';
     }),
     DatabaseModule,
     NotificationsServiceModule,
-    RecreationalModule,
+    FacilitiesModule,
+    BookingsModule,
     SeedersModule,
   ],
 })

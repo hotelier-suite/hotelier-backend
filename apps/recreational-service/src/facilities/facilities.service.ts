@@ -1,0 +1,287 @@
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, FindOptionsSelect, And, Not } from 'typeorm';
+import { RecreationalFacility } from './entities';
+import { RecreationalBooking } from '../bookings/entities';
+import { NotificationsService } from '../notifications-service';
+import { NotificationType } from '@app/contracts/notifications-service';
+import {
+  CreateRecreationalFacilityDto,
+  UpdateRecreationalFacilityDto,
+  RecreationalFacilityDto,
+  FacilityAvailabilityDto,
+  TimeSlotDto,
+  FacilityType,
+  FacilityStatus,
+  RecreationalBookingStatus,
+} from '@app/contracts/recreational-service';
+
+@Injectable()
+export class FacilitiesService {
+  constructor(
+    @InjectRepository(RecreationalFacility)
+    private readonly facilityRepository: Repository<RecreationalFacility>,
+    @InjectRepository(RecreationalBooking)
+    private readonly bookingRepository: Repository<RecreationalBooking>,
+    private readonly notificationsService: NotificationsService,
+  ) {}
+
+  private readonly facilityReadSelect: FindOptionsSelect<RecreationalFacility> =
+    {
+      id: true,
+      name: true,
+      type: true,
+      status: true,
+      capacity: true,
+      area: true,
+      location: true,
+      description: true,
+      hourlyRate: true,
+      isAvailable: true,
+      openingTime: true,
+      closingTime: true,
+      minimumBookingHours: true,
+      maximumBookingHours: true,
+      amenities: true,
+      rules: true,
+      advanceBookingHours: true,
+      availableDays: true,
+      maintenanceNotes: true,
+      createdAt: true,
+      updatedAt: true,
+    };
+
+  async create(
+    data: CreateRecreationalFacilityDto,
+  ): Promise<RecreationalFacilityDto> {
+    const facility = this.facilityRepository.create(data);
+    const saved = await this.facilityRepository.save(facility);
+
+    const loaded = await this.facilityRepository.findOne({
+      where: { id: saved.id },
+      select: this.facilityReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load facility with id ${saved.id} after creation`,
+      });
+    }
+
+    this.notificationsService
+      .create({
+        type: NotificationType.INFO,
+        title: 'New Recreational Facility Added',
+        message: `New ${data.type.toLowerCase()} facility "${data.name}" has been added to the system.`,
+        refId: saved.id,
+        refType: 'recreational_facility',
+      })
+      .subscribe({
+        error: () => {
+          return;
+        },
+      });
+
+    return loaded;
+  }
+
+  findAll(): Promise<RecreationalFacilityDto[]> {
+    return this.facilityRepository.find({
+      select: this.facilityReadSelect,
+      order: { name: 'ASC' },
+    });
+  }
+
+  async findOne(id: number): Promise<RecreationalFacilityDto> {
+    const facility = await this.facilityRepository.findOne({
+      where: { id },
+      select: this.facilityReadSelect,
+    });
+
+    if (!facility) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
+    }
+
+    return facility;
+  }
+
+  findAvailable(): Promise<RecreationalFacilityDto[]> {
+    return this.facilityRepository.find({
+      where: {
+        isAvailable: true,
+        status: FacilityStatus.AVAILABLE,
+      },
+      select: this.facilityReadSelect,
+      order: { name: 'ASC' },
+    });
+  }
+
+  findByType(type: FacilityType): Promise<RecreationalFacilityDto[]> {
+    return this.facilityRepository.find({
+      where: { type },
+      select: this.facilityReadSelect,
+      order: { name: 'ASC' },
+    });
+  }
+
+  async update(
+    id: number,
+    data: UpdateRecreationalFacilityDto,
+  ): Promise<RecreationalFacilityDto> {
+    const existing = await this.facilityRepository.findOne({ where: { id } });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
+    }
+
+    await this.facilityRepository.update(id, data);
+    return this.findOne(id);
+  }
+
+  async delete(id: number): Promise<RecreationalFacilityDto> {
+    const facility = await this.facilityRepository.findOne({
+      where: { id },
+      select: this.facilityReadSelect,
+    });
+
+    if (!facility) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
+    }
+
+    const activeBookings = await this.bookingRepository.count({
+      where: {
+        facilityId: id,
+        status: And(
+          Not(RecreationalBookingStatus.COMPLETED),
+          Not(RecreationalBookingStatus.CANCELLED),
+          Not(RecreationalBookingStatus.NO_SHOW),
+        ),
+      },
+    });
+
+    if (activeBookings > 0) {
+      throw new RpcException({
+        statusCode: 400,
+        message: `Cannot delete facility with ${activeBookings} active bookings`,
+      });
+    }
+
+    await this.facilityRepository.remove(facility);
+    return { ...facility, id };
+  }
+
+  async getAvailability(
+    facilityId: number,
+    date: Date,
+  ): Promise<FacilityAvailabilityDto> {
+    const facility = await this.facilityRepository.findOne({
+      where: { id: facilityId },
+    });
+
+    if (!facility) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${facilityId} not found`,
+      });
+    }
+
+    const dayOfWeek = date.getDay();
+    const isAvailableDay =
+      !facility.availableDays || facility.availableDays.includes(dayOfWeek);
+
+    if (
+      !isAvailableDay ||
+      !facility.isAvailable ||
+      facility.status !== FacilityStatus.AVAILABLE
+    ) {
+      return {
+        facilityId: facility.id,
+        facilityName: facility.name,
+        date: date.toISOString().split('T')[0],
+        isAvailable: false,
+        availableSlots: [],
+        notes: 'Facility not available on this date',
+      };
+    }
+
+    const availableSlots = await this.generateAvailableTimeSlots(
+      facility,
+      date,
+    );
+
+    return {
+      facilityId: facility.id,
+      facilityName: facility.name,
+      date: date.toISOString().split('T')[0],
+      isAvailable: availableSlots.some((slot) => slot.isAvailable),
+      availableSlots,
+      notes: facility.maintenanceNotes,
+    };
+  }
+
+  async getMultipleAvailability(
+    facilityIds: number[],
+    date: Date,
+  ): Promise<FacilityAvailabilityDto[]> {
+    const availabilityPromises = facilityIds.map((id) =>
+      this.getAvailability(id, date).catch(() => null),
+    );
+
+    const results = await Promise.all(availabilityPromises);
+    return results.filter(Boolean) as FacilityAvailabilityDto[];
+  }
+
+  private async generateAvailableTimeSlots(
+    facility: RecreationalFacility,
+    date: Date,
+  ): Promise<TimeSlotDto[]> {
+    const slots: TimeSlotDto[] = [];
+    const openingHour = parseInt(facility.openingTime.split(':')[0]);
+    const openingMinute = parseInt(facility.openingTime.split(':')[1]);
+    const closingHour = parseInt(facility.closingTime.split(':')[0]);
+
+    const existingBookings = await this.bookingRepository.find({
+      where: {
+        facilityId: facility.id,
+        bookingDate: date,
+        status: And(
+          Not(RecreationalBookingStatus.CANCELLED),
+          Not(RecreationalBookingStatus.NO_SHOW),
+        ),
+      },
+    });
+
+    for (let hour = openingHour; hour < closingHour; hour++) {
+      const startTime = `${hour.toString().padStart(2, '0')}:${openingMinute.toString().padStart(2, '0')}`;
+      const endTime = `${(hour + 1).toString().padStart(2, '0')}:${openingMinute.toString().padStart(2, '0')}`;
+
+      const hasConflict = existingBookings.some((booking) => {
+        return (
+          (booking.startTime <= startTime && booking.endTime > startTime) ||
+          (booking.startTime < endTime && booking.endTime >= endTime) ||
+          (booking.startTime >= startTime && booking.endTime <= endTime)
+        );
+      });
+
+      slots.push({
+        startTime,
+        endTime,
+        isAvailable: !hasConflict,
+        reason: hasConflict ? 'Already booked' : undefined,
+      });
+    }
+
+    return slots;
+  }
+}

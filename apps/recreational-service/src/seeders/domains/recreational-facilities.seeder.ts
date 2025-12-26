@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RecreationalFacility } from '../../recreational';
+import { RecreationalFacility } from '../../facilities';
 import {
   FacilityType,
   FacilityStatus,

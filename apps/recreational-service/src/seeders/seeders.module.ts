@@ -5,7 +5,8 @@ import {
   RecreationalFacilitiesSeeder,
   RecreationalBookingsSeeder,
 } from './domains';
-import { RecreationalFacility, RecreationalBooking } from '../recreational';
+import { RecreationalFacility } from '../facilities';
+import { RecreationalBooking } from '../bookings';
 
 @Module({
   imports: [

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RecreationalBooking, RecreationalFacility } from '../../recreational';
+import { RecreationalBooking } from '../../bookings';
+import { RecreationalFacility } from '../../facilities';
 import {
   RecreationalBookingStatus,
   BookingPriority,
