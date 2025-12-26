@@ -59,7 +59,7 @@ export class InventoryItemDto {
 
   @ApiProperty({ required: false, example: 1 })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(1)
   supplierId?: number;
 

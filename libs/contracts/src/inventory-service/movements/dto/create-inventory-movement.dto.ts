@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -15,7 +16,7 @@ export class CreateInventoryMovementDto {
   type: MovementType;
 
   @ApiProperty({ example: 1, minimum: 1 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   inventoryId: number;
 

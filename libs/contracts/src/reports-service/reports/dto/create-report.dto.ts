@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Length,
+  ValidateNested,
+} from 'class-validator';
 import { ReportType, ReportStatus } from '..';
 import { ReportParametersDto } from './report-parameters.dto';
 
@@ -55,6 +62,8 @@ export class CreateReportDto {
     required: false,
   })
   @IsOptional()
+  @ValidateNested()
+  @Type(() => ReportParametersDto)
   parameters?: ReportParametersDto;
 
   @ApiProperty({

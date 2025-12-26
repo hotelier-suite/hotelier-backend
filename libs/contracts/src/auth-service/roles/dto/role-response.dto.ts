@@ -4,9 +4,10 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { RolePermissionResponseDto } from './role-permission-response.dto';
@@ -16,7 +17,8 @@ export class RoleResponseDto {
     description: 'Role unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({

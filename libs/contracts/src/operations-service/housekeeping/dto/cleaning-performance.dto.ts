@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, Max, Min, ValidateNested } from 'class-validator';
 import { EmployeePerformanceDto } from './employee-performance.dto';
 
 export class CleaningPerformanceDto {
   @ApiProperty({ description: 'Overall average quality score', example: 8.7 })
   @IsNumber()
+  @Min(0)
   averageQualityScore: number;
 
   @ApiProperty({
@@ -12,6 +14,8 @@ export class CleaningPerformanceDto {
     example: 92.5,
   })
   @IsNumber()
+  @Min(0)
+  @Max(100)
   completionRate: number;
 
   @ApiProperty({
@@ -19,5 +23,7 @@ export class CleaningPerformanceDto {
     type: [EmployeePerformanceDto],
   })
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => EmployeePerformanceDto)
   employeePerformance: EmployeePerformanceDto[];
 }

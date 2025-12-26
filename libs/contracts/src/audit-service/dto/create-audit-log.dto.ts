@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { AuditAction, AuditResource } from '..';
 
 export class CreateAuditLogDto {
@@ -8,6 +15,7 @@ export class CreateAuditLogDto {
     example: 1,
   })
   @IsInt()
+  @Min(1)
   userId: number;
 
   @ApiProperty({

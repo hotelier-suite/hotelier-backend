@@ -87,6 +87,7 @@ export class MenuItemDto {
   })
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
   ingredients?: string[];
 
   @ApiProperty({
@@ -96,6 +97,7 @@ export class MenuItemDto {
   })
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
   allergens?: string[];
 
   @ApiProperty({

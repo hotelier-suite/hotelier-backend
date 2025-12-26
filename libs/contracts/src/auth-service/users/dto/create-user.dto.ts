@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -16,6 +17,7 @@ export class CreateUserDto {
     example: 'admin@hotelier.com',
   })
   @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
   email!: string;
 
   @ApiProperty({
@@ -30,6 +32,7 @@ export class CreateUserDto {
     example: 'System Administrator',
   })
   @IsString()
+  @Transform(({ value }) => value?.trim())
   name!: string;
 
   @ApiProperty({

@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -53,7 +54,7 @@ export class CreateInventoryItemDto {
 
   @ApiProperty({ required: false, example: 1 })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(1)
   supplierId?: number;
 

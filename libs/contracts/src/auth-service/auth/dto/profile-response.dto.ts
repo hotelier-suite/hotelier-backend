@@ -2,28 +2,33 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsString,
-  IsNumber,
+  IsInt,
   IsBoolean,
   IsArray,
   IsOptional,
   IsEnum,
   IsDate,
+  IsEmail,
+  Min,
+  ValidateNested,
 } from 'class-validator';
 import { LoyaltyLevel } from '../../users';
+import { UserRoleDto } from '../../users/dto/user-role.dto';
 
 export class ProfileResponseDto {
   @ApiProperty({
     description: 'User unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id: number;
 
   @ApiProperty({
     description: 'User email address',
     example: 'admin@hotelier.com',
   })
-  @IsString()
+  @IsEmail()
   email: string;
 
   @ApiProperty({
@@ -54,7 +59,8 @@ export class ProfileResponseDto {
     example: 1250,
     minimum: 0,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(0)
   loyaltyPoints: number;
 
   @ApiProperty({
@@ -75,25 +81,12 @@ export class ProfileResponseDto {
 
   @ApiProperty({
     description: 'User roles',
-    type: 'array',
-    items: {
-      type: 'object',
-      properties: {
-        id: { type: 'number', example: 1 },
-        name: { type: 'string', example: 'admin' },
-        description: {
-          type: 'string',
-          example: 'System Administrator - Full access',
-        },
-      },
-    },
+    type: [UserRoleDto],
   })
   @IsArray()
-  roles: Array<{
-    id: number;
-    name: string;
-    description?: string;
-  }>;
+  @ValidateNested({ each: true })
+  @Type(() => UserRoleDto)
+  roles: UserRoleDto[];
 
   @ApiProperty({
     description: 'User permissions',
@@ -102,5 +95,6 @@ export class ProfileResponseDto {
     example: ['users:create', 'users:read', 'users:update', 'users:delete'],
   })
   @IsArray()
+  @IsString({ each: true })
   permissions: string[];
 }

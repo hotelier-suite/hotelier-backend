@@ -1,13 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNumber, Min } from 'class-validator';
 
 export class RevenueDataDto {
   @ApiProperty({
-    description: 'Date in YYYY-MM-DD format',
+    description: 'Date',
+    type: String,
     example: '2024-01-15',
   })
-  @IsString()
-  date: string;
+  @IsDate()
+  @Type(() => Date)
+  date: Date;
 
   @ApiProperty({
     description: 'Revenue amount for the date',

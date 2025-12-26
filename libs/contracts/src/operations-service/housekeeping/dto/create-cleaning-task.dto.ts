@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
+  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -56,7 +57,7 @@ export class CreateCleaningTaskDto {
   priority?: TaskPriority;
 
   @ApiProperty({ description: 'ID of the room to be cleaned', example: 101 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 }

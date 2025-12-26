@@ -136,7 +136,7 @@ export class MaintenanceReportDto {
     required: false,
   })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId?: number;
 

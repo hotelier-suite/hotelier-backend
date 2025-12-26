@@ -18,6 +18,7 @@ import {
   RecreationalBookingDto,
   BookingStatisticsDto,
   FacilityUsageStatsDto,
+  BookingStatusBreakdownDto,
   RecreationalBookingStatus,
   FacilityStatus,
 } from '@app/contracts/recreational-service';
@@ -367,14 +368,30 @@ export class BookingsService {
     const averageBookingValue =
       totalBookings > 0 ? totalRevenue / totalBookings : 0;
 
-    const statusBreakdown = bookings.reduce(
-      (acc, booking) => {
-        const status = booking.status || 'PENDING';
-        acc[status] = (acc[status] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
+    const statusBreakdown = bookings.reduce((acc, booking) => {
+      const status = booking.status || RecreationalBookingStatus.PENDING;
+      switch (status) {
+        case RecreationalBookingStatus.PENDING:
+          acc.pending = (acc.pending || 0) + 1;
+          break;
+        case RecreationalBookingStatus.CONFIRMED:
+          acc.confirmed = (acc.confirmed || 0) + 1;
+          break;
+        case RecreationalBookingStatus.CHECKED_IN:
+          acc.checkedIn = (acc.checkedIn || 0) + 1;
+          break;
+        case RecreationalBookingStatus.COMPLETED:
+          acc.completed = (acc.completed || 0) + 1;
+          break;
+        case RecreationalBookingStatus.CANCELLED:
+          acc.cancelled = (acc.cancelled || 0) + 1;
+          break;
+        case RecreationalBookingStatus.NO_SHOW:
+          acc.noShow = (acc.noShow || 0) + 1;
+          break;
+      }
+      return acc;
+    }, {} as BookingStatusBreakdownDto);
 
     const facilityTypeCounts = bookings.reduce(
       (acc, booking) => {
@@ -415,8 +432,8 @@ export class BookingsService {
       facilitiesUsage: facilityStats,
       statusBreakdown,
       period: {
-        startDate: startDate.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
+        startDate,
+        endDate,
       },
     };
   }

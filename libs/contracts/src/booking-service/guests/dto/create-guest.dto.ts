@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -11,10 +11,12 @@ import {
 export class CreateGuestDto {
   @ApiProperty({ example: 'John Smith' })
   @IsString()
+  @Transform(({ value }) => value?.trim())
   name: string;
 
   @ApiProperty({ example: 'john.smith@example.com' })
   @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
   email: string;
 
   @ApiProperty({ required: false, example: '+1234567890' })

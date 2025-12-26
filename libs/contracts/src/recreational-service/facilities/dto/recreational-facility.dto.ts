@@ -149,6 +149,7 @@ export class RecreationalFacilityDto {
   })
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
   amenities?: string[];
 
   @ApiProperty({
@@ -158,6 +159,7 @@ export class RecreationalFacilityDto {
   })
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
   rules?: string[];
 
   @ApiProperty({
@@ -181,6 +183,9 @@ export class RecreationalFacilityDto {
   })
   @IsOptional()
   @IsArray()
+  @IsInt({ each: true })
+  @Min(0, { each: true })
+  @Max(6, { each: true })
   availableDays?: number[];
 
   @ApiProperty({

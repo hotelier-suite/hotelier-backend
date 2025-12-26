@@ -93,7 +93,7 @@ export class CleaningTaskDto {
   priority: TaskPriority;
 
   @ApiProperty({ description: 'ID of the room to be cleaned', example: 101 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 

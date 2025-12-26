@@ -1,44 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsArray,
-  IsMilitaryTime,
+  IsDate,
   IsString,
   IsOptional,
   IsInt,
+  Min,
+  ValidateNested,
 } from 'class-validator';
-
-export class TimeSlotDto {
-  @ApiProperty({
-    description: 'Start time of the slot',
-    example: '14:00',
-  })
-  @IsMilitaryTime()
-  startTime: string;
-
-  @ApiProperty({
-    description: 'End time of the slot',
-    example: '15:00',
-  })
-  @IsMilitaryTime()
-  endTime: string;
-
-  @ApiProperty({
-    description: 'Whether this slot is available',
-    example: true,
-  })
-  @IsBoolean()
-  isAvailable: boolean;
-
-  @ApiProperty({
-    description: 'Reason if not available',
-    example: 'Already booked',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  reason?: string;
-}
+import { TimeSlotDto } from './time-slot.dto';
 
 export class FacilityAvailabilityDto {
   @ApiProperty({
@@ -46,6 +18,7 @@ export class FacilityAvailabilityDto {
     example: 1,
   })
   @IsInt()
+  @Min(1)
   facilityId: number;
 
   @ApiProperty({
@@ -57,10 +30,12 @@ export class FacilityAvailabilityDto {
 
   @ApiProperty({
     description: 'Date being checked',
+    type: String,
     example: '2024-12-15',
   })
-  @IsString()
-  date: string;
+  @IsDate()
+  @Type(() => Date)
+  date: Date;
 
   @ApiProperty({
     description: 'Whether the facility is available on this date',
@@ -74,6 +49,8 @@ export class FacilityAvailabilityDto {
     type: [TimeSlotDto],
   })
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TimeSlotDto)
   availableSlots: TimeSlotDto[];
 
   @ApiProperty({

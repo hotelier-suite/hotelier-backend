@@ -125,7 +125,7 @@ export class HousekeepingMaintenanceRequestDto {
     description: 'ID of the room where maintenance is needed',
     example: 101,
   })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 

@@ -1,23 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNumber,
-  IsArray,
-  ValidateNested,
-  Min,
-  IsString,
-} from 'class-validator';
+import { IsNumber, IsArray, ValidateNested, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export class DailyRevenueDto {
-  @ApiProperty({ description: 'Date', example: '2024-01-15' })
-  @IsString()
-  date: string;
-
-  @ApiProperty({ description: 'Revenue amount', example: 1250.75 })
-  @IsNumber()
-  @Min(0)
-  revenue: number;
-}
+import { DailyRevenueDto } from './daily-revenue.dto';
 
 export class RevenueReportDataDto {
   @ApiProperty({ description: 'Total revenue', example: 25000.75 })

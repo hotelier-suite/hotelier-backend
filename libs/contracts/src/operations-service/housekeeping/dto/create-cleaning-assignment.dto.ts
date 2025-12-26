@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
 
 export class CreateCleaningAssignmentDto {
   @ApiProperty({
@@ -8,12 +8,12 @@ export class CreateCleaningAssignmentDto {
     required: false,
   })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(1)
   employeeId?: number;
 
   @ApiProperty({ description: 'ID of the room to be cleaned', example: 101 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 

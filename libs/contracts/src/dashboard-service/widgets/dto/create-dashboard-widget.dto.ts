@@ -28,16 +28,7 @@ export class CreateDashboardWidgetDto {
     example: { chartType: 'line', dataSource: 'revenue' },
   })
   @IsObject()
-  configuration: any;
-
-  @ApiProperty({
-    description: 'Widget data',
-    example: { values: [100, 200, 300] },
-    required: false,
-  })
-  @IsOptional()
-  @IsObject()
-  data?: any;
+  configuration: Record<string, unknown>;
 
   @ApiProperty({
     description: 'Widget position on dashboard',

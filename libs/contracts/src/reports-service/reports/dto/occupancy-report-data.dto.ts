@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsInt, Min } from 'class-validator';
+import { IsNumber, IsInt, Max, Min } from 'class-validator';
 
 export class OccupancyReportDataDto {
   @ApiProperty({ description: 'Total number of rooms', example: 150 })
@@ -20,6 +20,7 @@ export class OccupancyReportDataDto {
   @ApiProperty({ description: 'Occupancy rate percentage', example: 80.0 })
   @IsNumber()
   @Min(0)
+  @Max(100)
   occupancyRate: number;
 
   @ApiProperty({ description: 'Average daily rate', example: 125.5 })

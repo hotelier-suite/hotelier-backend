@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
@@ -22,6 +22,7 @@ export class CreateRecreationalBookingDto {
   })
   @IsString()
   @Length(1, 100)
+  @Transform(({ value }) => value?.trim())
   guestName: string;
 
   @ApiProperty({
@@ -29,6 +30,7 @@ export class CreateRecreationalBookingDto {
     example: 'sarah.johnson@email.com',
   })
   @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
   guestEmail: string;
 
   @ApiProperty({

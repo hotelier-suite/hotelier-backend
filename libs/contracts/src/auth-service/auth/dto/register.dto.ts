@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsInt,
   IsOptional,
   IsString,
   Matches,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -14,6 +16,7 @@ export class RegisterDto {
     example: 'john.doe@hotelier.com',
   })
   @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
   email!: string;
 
   @ApiProperty({
@@ -42,6 +45,7 @@ export class RegisterDto {
     example: 'John Doe',
   })
   @IsString()
+  @Transform(({ value }) => value?.trim())
   name!: string;
 
   @ApiProperty({
@@ -60,5 +64,6 @@ export class RegisterDto {
   })
   @IsOptional()
   @IsInt()
+  @Min(1)
   roleId?: number;
 }

@@ -18,10 +18,7 @@ export class DashboardWidget {
   type: string;
 
   @Column('json')
-  configuration: any;
-
-  @Column('json', { nullable: true })
-  data?: any;
+  configuration: Record<string, unknown>;
 
   @Column({ default: 0 })
   position: number;

@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 import { ReservationDto } from './reservation.dto';
 
 export class CheckoutReservationResponseDto {
@@ -6,6 +8,8 @@ export class CheckoutReservationResponseDto {
     type: () => ReservationDto,
     description: 'Updated reservation after checkout',
   })
+  @ValidateNested()
+  @Type(() => ReservationDto)
   reservation!: ReservationDto;
 
   @ApiProperty({

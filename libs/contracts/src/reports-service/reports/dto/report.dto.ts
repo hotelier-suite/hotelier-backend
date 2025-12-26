@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDate,
@@ -8,11 +8,29 @@ import {
   IsString,
   Length,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { ReportType } from '../enums';
 import { ReportStatus } from '../enums';
 import { ReportParametersDto } from './report-parameters.dto';
+import { OccupancyReportDataDto } from './occupancy-report-data.dto';
+import { RevenueReportDataDto } from './revenue-report-data.dto';
+import { FinancialSummaryDto } from './financial-summary.dto';
+import { StaffReportDataDto } from './staff-report-data.dto';
+import { GuestSatisfactionReportDataDto } from './guest-satisfaction-report-data.dto';
+import { MaintenanceReportDataDto } from './maintenance-report-data.dto';
+import { CustomReportDataDto } from './custom-report-data.dto';
+import type { ReportData } from '../types';
 
+@ApiExtraModels(
+  OccupancyReportDataDto,
+  RevenueReportDataDto,
+  FinancialSummaryDto,
+  StaffReportDataDto,
+  GuestSatisfactionReportDataDto,
+  MaintenanceReportDataDto,
+  CustomReportDataDto,
+)
 export class ReportDto {
   @ApiProperty({ description: 'Unique identifier for the report', example: 1 })
   @IsInt()
@@ -69,15 +87,26 @@ export class ReportDto {
     required: false,
   })
   @IsOptional()
+  @ValidateNested()
+  @Type(() => ReportParametersDto)
   parameters?: ReportParametersDto;
 
   @ApiProperty({
-    description: 'Generated report data in JSON format',
-    example: { totalRooms: 150, occupiedRooms: 120, occupancyRate: 80 },
+    description:
+      'Generated report data. Structure depends on report type: OCCUPANCY → OccupancyReportDataDto, REVENUE → RevenueReportDataDto, FINANCIAL → FinancialSummaryDto, STAFF → StaffReportDataDto, GUEST_SATISFACTION → GuestSatisfactionReportDataDto, MAINTENANCE → MaintenanceReportDataDto, CUSTOM → CustomReportDataDto',
     required: false,
+    oneOf: [
+      { $ref: getSchemaPath(OccupancyReportDataDto) },
+      { $ref: getSchemaPath(RevenueReportDataDto) },
+      { $ref: getSchemaPath(FinancialSummaryDto) },
+      { $ref: getSchemaPath(StaffReportDataDto) },
+      { $ref: getSchemaPath(GuestSatisfactionReportDataDto) },
+      { $ref: getSchemaPath(MaintenanceReportDataDto) },
+      { $ref: getSchemaPath(CustomReportDataDto) },
+    ],
   })
   @IsOptional()
-  data?: object;
+  data?: ReportData;
 
   @ApiProperty({
     description: 'File path where the report is stored',

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -21,6 +21,7 @@ export class CreateEventBookingDto {
   })
   @IsString()
   @Length(1, 200)
+  @Transform(({ value }) => value?.trim())
   title: string;
 
   @ApiProperty({
@@ -31,6 +32,7 @@ export class CreateEventBookingDto {
   @IsOptional()
   @IsString()
   @Length(0, 1000)
+  @Transform(({ value }) => value?.trim())
   description?: string;
 
   @ApiProperty({ description: 'Event date', example: '2024-12-14' })
@@ -75,6 +77,7 @@ export class CreateEventBookingDto {
   @ApiProperty({ description: 'Client name', example: 'James Smith' })
   @IsString()
   @Length(1, 100)
+  @Transform(({ value }) => value?.trim())
   clientName: string;
 
   @ApiProperty({
@@ -82,6 +85,7 @@ export class CreateEventBookingDto {
     example: 'carlos.martinez@email.com',
   })
   @IsEmail()
+  @Transform(({ value }) => value?.toLowerCase().trim())
   clientEmail: string;
 
   @ApiProperty({

@@ -6,7 +6,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
-import { RoomServiceStatus } from '@app/contracts/restaurant-service';
+import {
+  RoomServiceStatus,
+  RoomServiceOrderItemDto,
+} from '@app/contracts/restaurant-service';
 
 @Entity('room_service_orders')
 export class RoomServiceOrder {
@@ -23,7 +26,7 @@ export class RoomServiceOrder {
   guest: string;
 
   @Column('json')
-  items: any[];
+  items: RoomServiceOrderItemDto[];
 
   @Column('decimal', {
     precision: 10,

@@ -11,6 +11,7 @@ import {
   IsString,
   Length,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { EventStatus } from '..';
 import { VenueDto } from '../../venues';
@@ -123,6 +124,8 @@ export class EventBookingDto {
     required: false,
   })
   @IsOptional()
+  @ValidateNested()
+  @Type(() => VenueDto)
   venue?: VenueDto;
 
   @ApiProperty({

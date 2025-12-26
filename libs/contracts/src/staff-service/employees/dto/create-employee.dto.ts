@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsEnum,
   IsInt,
@@ -13,11 +14,13 @@ export class CreateEmployeeDto {
   @ApiProperty({ example: 'EMP001' })
   @IsString()
   @Length(1, 20)
+  @Transform(({ value }) => value?.trim().toUpperCase())
   employeeId: string;
 
   @ApiProperty({ example: 'Mary Johnson' })
   @IsString()
   @Length(1, 100)
+  @Transform(({ value }) => value?.trim())
   name: string;
 
   @ApiProperty({ enum: Department, example: Department.HOUSEKEEPING })
@@ -27,6 +30,7 @@ export class CreateEmployeeDto {
   @ApiProperty({ example: 'Housekeeping Supervisor' })
   @IsString()
   @Length(1, 100)
+  @Transform(({ value }) => value?.trim())
   position: string;
 
   @ApiProperty({ required: false, example: 'Morning' })

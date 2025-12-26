@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class UserRoleDto {
   @ApiProperty({ description: 'Role ID', example: 1 })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({ description: 'Role name', example: 'admin' })

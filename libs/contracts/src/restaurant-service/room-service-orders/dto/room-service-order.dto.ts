@@ -11,8 +11,10 @@ import {
   IsString,
   Length,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import { RoomServiceStatus } from '..';
+import { RoomServiceOrderItemDto } from './room-service-order-item.dto';
 
 export class RoomServiceOrderDto {
   @ApiProperty({
@@ -49,10 +51,12 @@ export class RoomServiceOrderDto {
 
   @ApiProperty({
     description: 'List of ordered items',
-    example: [{ item: 'Club Sandwich', quantity: 1, price: 18.5 }],
+    type: [RoomServiceOrderItemDto],
   })
   @IsArray()
-  items: any[];
+  @ValidateNested({ each: true })
+  @Type(() => RoomServiceOrderItemDto)
+  items: RoomServiceOrderItemDto[];
 
   @ApiProperty({
     description: 'Total amount of the order',

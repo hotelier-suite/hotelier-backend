@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsInt,
@@ -7,7 +8,9 @@ import {
   IsString,
   Length,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { RoomServiceOrderItemDto } from './room-service-order-item.dto';
 
 export class CreateRoomServiceOrderDto {
   @ApiProperty({
@@ -16,6 +19,7 @@ export class CreateRoomServiceOrderDto {
   })
   @IsString()
   @Length(1, 10)
+  @Transform(({ value }) => value?.trim())
   room: string;
 
   @ApiProperty({
@@ -24,14 +28,17 @@ export class CreateRoomServiceOrderDto {
   })
   @IsString()
   @Length(1, 100)
+  @Transform(({ value }) => value?.trim())
   guest: string;
 
   @ApiProperty({
     description: 'List of ordered items',
-    example: [{ item: 'Club Sandwich', quantity: 1, price: 18.5 }],
+    type: [RoomServiceOrderItemDto],
   })
   @IsArray()
-  items: any[];
+  @ValidateNested({ each: true })
+  @Type(() => RoomServiceOrderItemDto)
+  items: RoomServiceOrderItemDto[];
 
   @ApiProperty({
     description: 'Total amount of the order',

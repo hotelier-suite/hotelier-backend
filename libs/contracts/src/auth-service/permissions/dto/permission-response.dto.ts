@@ -3,9 +3,10 @@ import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
+  Min,
 } from 'class-validator';
 
 export class PermissionResponseDto {
@@ -13,7 +14,8 @@ export class PermissionResponseDto {
     description: 'Permission unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({

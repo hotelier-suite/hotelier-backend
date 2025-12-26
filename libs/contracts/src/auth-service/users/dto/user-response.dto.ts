@@ -4,10 +4,12 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsEmail,
   IsEnum,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { LoyaltyLevel } from '..';
@@ -18,14 +20,15 @@ export class UserResponseDto {
     description: 'User unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({
     description: 'User email address',
     example: 'admin@hotelier.com',
   })
-  @IsString()
+  @IsEmail()
   email!: string;
 
   @ApiProperty({
@@ -49,7 +52,8 @@ export class UserResponseDto {
     example: 1250,
     minimum: 0,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(0)
   loyaltyPoints!: number;
 
   @ApiProperty({

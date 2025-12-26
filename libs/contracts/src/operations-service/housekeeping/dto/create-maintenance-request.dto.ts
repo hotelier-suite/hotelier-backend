@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
   Length,
@@ -56,7 +56,7 @@ export class CreateHousekeepingMaintenanceRequestDto {
     description: 'ID of the room where maintenance is needed',
     example: 101,
   })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 }

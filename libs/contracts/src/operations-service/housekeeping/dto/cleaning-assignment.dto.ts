@@ -87,12 +87,12 @@ export class CleaningAssignmentDto {
     required: false,
   })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(1)
   employeeId?: number;
 
   @ApiProperty({ description: 'ID of the room to be cleaned', example: 101 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   roomId: number;
 

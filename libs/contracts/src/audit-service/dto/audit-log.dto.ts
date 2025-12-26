@@ -25,6 +25,7 @@ export class AuditLogDto {
     example: 1,
   })
   @IsInt()
+  @Min(1)
   userId: number;
 
   @ApiProperty({

@@ -1,9 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class SupplierResponseDto {
   @ApiProperty({ example: 1 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   id: number;
 

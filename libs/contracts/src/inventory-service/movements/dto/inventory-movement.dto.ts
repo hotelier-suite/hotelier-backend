@@ -24,7 +24,7 @@ export class InventoryMovementDto {
   type: MovementType;
 
   @ApiProperty({ example: 1, minimum: 1 })
-  @IsNumber()
+  @IsInt()
   @Min(1)
   inventoryId: number;
 
