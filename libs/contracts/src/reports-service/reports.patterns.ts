@@ -1,5 +1,4 @@
 export const REPORTS_PATTERNS = {
-  // Report patterns
   CREATE: 'reports.create',
   FIND_ALL: 'reports.findAll',
   FIND_ONE: 'reports.findOne',

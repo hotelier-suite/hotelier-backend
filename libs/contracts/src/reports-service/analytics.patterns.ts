@@ -1,5 +1,4 @@
 export const ANALYTICS_PATTERNS = {
-  // Analytics data patterns
   CREATE: 'analytics.data.create',
   FIND_ALL: 'analytics.data.findAll',
   FIND_ONE: 'analytics.data.findOne',
