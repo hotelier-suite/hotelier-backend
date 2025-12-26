@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsSelect } from 'typeorm';
 import { MenuItem, RoomServiceOrder, BeverageInventory } from './entities';
 import {
   MenuItemDto,
@@ -27,20 +28,77 @@ export class RestaurantService {
     private readonly beverageInventoryRepository: Repository<BeverageInventory>,
   ) {}
 
+  private readonly menuItemReadSelect: FindOptionsSelect<MenuItem> = {
+    id: true,
+    itemCode: true,
+    category: true,
+    name: true,
+    description: true,
+    price: true,
+    available: true,
+    preparationTime: true,
+    ingredients: true,
+    allergens: true,
+    createdAt: true,
+    updatedAt: true,
+  };
+
+  private readonly roomServiceOrderReadSelect: FindOptionsSelect<RoomServiceOrder> =
+    {
+      id: true,
+      orderNumber: true,
+      room: true,
+      guest: true,
+      items: true,
+      total: true,
+      orderTime: true,
+      estimatedTime: true,
+      status: true,
+      waiter: true,
+      specialInstructions: true,
+      guestId: true,
+      createdAt: true,
+      updatedAt: true,
+    };
+
+  private readonly beverageReadSelect: FindOptionsSelect<BeverageInventory> = {
+    id: true,
+    itemCode: true,
+    name: true,
+    category: true,
+    stock: true,
+    minimumStock: true,
+    unit: true,
+    unitCost: true,
+    supplier: true,
+    lastPurchase: true,
+    status: true,
+    createdAt: true,
+    updatedAt: true,
+  };
+
   // Menu Items
-  async findAllMenuItems(): Promise<MenuItemDto[]> {
-    const items = await this.menuItemRepository.find({
+  findAllMenuItems(): Promise<MenuItemDto[]> {
+    return this.menuItemRepository.find({
+      select: this.menuItemReadSelect,
       order: { category: 'ASC', name: 'ASC' },
     });
-    return items.map((item) => this.toMenuItemDto(item));
   }
 
   async findOneMenuItem(id: number): Promise<MenuItemDto> {
-    const item = await this.menuItemRepository.findOne({ where: { id } });
+    const item = await this.menuItemRepository.findOne({
+      where: { id },
+      select: this.menuItemReadSelect,
+    });
+
     if (!item) {
-      throw new NotFoundException(`Menu item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Menu item with id ${id} not found`,
+      });
     }
-    return this.toMenuItemDto(item);
+
+    return item;
   }
 
   async createMenuItem(data: CreateMenuItemDto): Promise<MenuItemDto> {
@@ -52,7 +110,20 @@ export class RestaurantService {
       itemCode,
       available: data.available ?? true,
     });
-    return this.toMenuItemDto(item);
+
+    const loaded = await this.menuItemRepository.findOne({
+      where: { id: item.id },
+      select: this.menuItemReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load menu item with id ${item.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
   async updateMenuItem(
@@ -60,8 +131,12 @@ export class RestaurantService {
     data: UpdateMenuItemDto,
   ): Promise<MenuItemDto> {
     const existing = await this.menuItemRepository.findOne({ where: { id } });
+
     if (!existing) {
-      throw new NotFoundException(`Menu item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Menu item with id ${id} not found`,
+      });
     }
 
     await this.menuItemRepository.update(id, data);
@@ -69,31 +144,44 @@ export class RestaurantService {
   }
 
   async deleteMenuItem(id: number): Promise<MenuItemDto> {
-    const item = await this.menuItemRepository.findOne({ where: { id } });
+    const item = await this.menuItemRepository.findOne({
+      where: { id },
+      select: this.menuItemReadSelect,
+    });
+
     if (!item) {
-      throw new NotFoundException(`Menu item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Menu item with id ${id} not found`,
+      });
     }
-    const dto = this.toMenuItemDto(item);
+
     await this.menuItemRepository.remove(item);
-    return dto;
+    return item;
   }
 
   // Room Service Orders
-  async findAllOrders(): Promise<RoomServiceOrderDto[]> {
-    const orders = await this.roomServiceOrderRepository.find({
+  findAllOrders(): Promise<RoomServiceOrderDto[]> {
+    return this.roomServiceOrderRepository.find({
+      select: this.roomServiceOrderReadSelect,
       order: { createdAt: 'DESC' },
     });
-    return orders.map((order) => this.toRoomServiceOrderDto(order));
   }
 
   async findOneOrder(id: number): Promise<RoomServiceOrderDto> {
     const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
+      select: this.roomServiceOrderReadSelect,
     });
+
     if (!order) {
-      throw new NotFoundException(`Room service order with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Room service order with id ${id} not found`,
+      });
     }
-    return this.toRoomServiceOrderDto(order);
+
+    return order;
   }
 
   async createOrder(
@@ -111,7 +199,20 @@ export class RestaurantService {
       }),
       status: RoomServiceStatus.PENDING,
     });
-    return this.toRoomServiceOrderDto(order);
+
+    const loaded = await this.roomServiceOrderRepository.findOne({
+      where: { id: order.id },
+      select: this.roomServiceOrderReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load order with id ${order.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
   async updateOrder(
@@ -121,8 +222,12 @@ export class RestaurantService {
     const existing = await this.roomServiceOrderRepository.findOne({
       where: { id },
     });
+
     if (!existing) {
-      throw new NotFoundException(`Room service order with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Room service order with id ${id} not found`,
+      });
     }
 
     await this.roomServiceOrderRepository.update(id, data);
@@ -132,31 +237,42 @@ export class RestaurantService {
   async deleteOrder(id: number): Promise<RoomServiceOrderDto> {
     const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
+      select: this.roomServiceOrderReadSelect,
     });
+
     if (!order) {
-      throw new NotFoundException(`Room service order with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Room service order with id ${id} not found`,
+      });
     }
-    const dto = this.toRoomServiceOrderDto(order);
+
     await this.roomServiceOrderRepository.remove(order);
-    return dto;
+    return order;
   }
 
   // Beverage Inventory
-  async findAllBeverages(): Promise<BeverageInventoryDto[]> {
-    const beverages = await this.beverageInventoryRepository.find({
+  findAllBeverages(): Promise<BeverageInventoryDto[]> {
+    return this.beverageInventoryRepository.find({
+      select: this.beverageReadSelect,
       order: { name: 'ASC' },
     });
-    return beverages.map((beverage) => this.toBeverageInventoryDto(beverage));
   }
 
   async findOneBeverage(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageInventoryRepository.findOne({
       where: { id },
+      select: this.beverageReadSelect,
     });
+
     if (!beverage) {
-      throw new NotFoundException(`Beverage item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Beverage item with id ${id} not found`,
+      });
     }
-    return this.toBeverageInventoryDto(beverage);
+
+    return beverage;
   }
 
   async createBeverage(
@@ -175,7 +291,20 @@ export class RestaurantService {
       itemCode,
       status,
     });
-    return this.toBeverageInventoryDto(beverage);
+
+    const loaded = await this.beverageInventoryRepository.findOne({
+      where: { id: beverage.id },
+      select: this.beverageReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load beverage with id ${beverage.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
   async updateBeverage(
@@ -185,11 +314,14 @@ export class RestaurantService {
     const existing = await this.beverageInventoryRepository.findOne({
       where: { id },
     });
+
     if (!existing) {
-      throw new NotFoundException(`Beverage item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Beverage item with id ${id} not found`,
+      });
     }
 
-    // Recalculate status if stock or minimumStock changed
     const stock = data.stock ?? existing.stock;
     const minimumStock = data.minimumStock ?? existing.minimumStock;
     const status =
@@ -208,8 +340,12 @@ export class RestaurantService {
     const existing = await this.beverageInventoryRepository.findOne({
       where: { id },
     });
+
     if (!existing) {
-      throw new NotFoundException(`Beverage item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Beverage item with id ${id} not found`,
+      });
     }
 
     const status =
@@ -224,87 +360,33 @@ export class RestaurantService {
   async deleteBeverage(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageInventoryRepository.findOne({
       where: { id },
+      select: this.beverageReadSelect,
     });
+
     if (!beverage) {
-      throw new NotFoundException(`Beverage item with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Beverage item with id ${id} not found`,
+      });
     }
-    const dto = this.toBeverageInventoryDto(beverage);
+
     await this.beverageInventoryRepository.remove(beverage);
-    return dto;
+    return beverage;
   }
 
-  async findLowStockBeverages(): Promise<BeverageInventoryDto[]> {
-    const beverages = await this.beverageInventoryRepository.find({
+  findLowStockBeverages(): Promise<BeverageInventoryDto[]> {
+    return this.beverageInventoryRepository.find({
       where: { status: BeverageStatus.LOW_STOCK },
+      select: this.beverageReadSelect,
       order: { name: 'ASC' },
     });
-    return beverages.map((beverage) => this.toBeverageInventoryDto(beverage));
   }
 
-  async findBeveragesByCategory(
-    category: string,
-  ): Promise<BeverageInventoryDto[]> {
-    const beverages = await this.beverageInventoryRepository.find({
+  findBeveragesByCategory(category: string): Promise<BeverageInventoryDto[]> {
+    return this.beverageInventoryRepository.find({
       where: { category },
+      select: this.beverageReadSelect,
       order: { name: 'ASC' },
     });
-    return beverages.map((beverage) => this.toBeverageInventoryDto(beverage));
-  }
-
-  // DTO Converters
-  private toMenuItemDto(item: MenuItem): MenuItemDto {
-    return {
-      id: item.id,
-      itemCode: item.itemCode,
-      category: item.category,
-      name: item.name,
-      description: item.description,
-      price: Number(item.price),
-      available: item.available,
-      preparationTime: item.preparationTime,
-      ingredients: item.ingredients,
-      allergens: item.allergens,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    };
-  }
-
-  private toRoomServiceOrderDto(order: RoomServiceOrder): RoomServiceOrderDto {
-    return {
-      id: order.id,
-      orderNumber: order.orderNumber,
-      room: order.room,
-      guest: order.guest,
-      items: order.items,
-      total: Number(order.total),
-      orderTime: order.orderTime,
-      estimatedTime: order.estimatedTime,
-      status: order.status,
-      waiter: order.waiter,
-      specialInstructions: order.specialInstructions,
-      guestId: order.guestId,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt,
-    };
-  }
-
-  private toBeverageInventoryDto(
-    beverage: BeverageInventory,
-  ): BeverageInventoryDto {
-    return {
-      id: beverage.id,
-      itemCode: beverage.itemCode,
-      name: beverage.name,
-      category: beverage.category,
-      stock: beverage.stock,
-      minimumStock: beverage.minimumStock,
-      unit: beverage.unit,
-      unitCost: Number(beverage.unitCost),
-      supplier: beverage.supplier,
-      lastPurchase: beverage.lastPurchase,
-      status: beverage.status,
-      createdAt: beverage.createdAt,
-      updatedAt: beverage.updatedAt,
-    };
   }
 }

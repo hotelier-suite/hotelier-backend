@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThanOrEqual } from 'typeorm';
+import {
+  Repository,
+  MoreThanOrEqual,
+  FindOptionsSelect,
+  FindOptionsRelations,
+} from 'typeorm';
 import { Event, EventBooking } from './entities';
 import { Venue } from '../venues';
 import {
@@ -10,7 +16,6 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
-  VenueDto,
 } from '@app/contracts/events-service';
 
 @Injectable()
@@ -24,47 +29,139 @@ export class EventsService {
     private readonly venueRepository: Repository<Venue>,
   ) {}
 
+  private readonly eventReadSelect: FindOptionsSelect<Event> = {
+    id: true,
+    title: true,
+    description: true,
+    eventDate: true,
+    startTime: true,
+    endTime: true,
+    venue: true,
+    capacity: true,
+    attendees: true,
+    status: true,
+    organizer: true,
+    cost: true,
+    revenue: true,
+    createdAt: true,
+    updatedAt: true,
+  };
+
+  private readonly bookingReadSelect: FindOptionsSelect<EventBooking> = {
+    id: true,
+    title: true,
+    description: true,
+    eventDate: true,
+    startTime: true,
+    endTime: true,
+    attendees: true,
+    totalCost: true,
+    status: true,
+    clientName: true,
+    clientEmail: true,
+    clientPhone: true,
+    notes: true,
+    venueId: true,
+    guestId: true,
+    createdAt: true,
+    updatedAt: true,
+    venue: {
+      id: true,
+      name: true,
+      capacity: true,
+      area: true,
+      hourlyRate: true,
+      available: true,
+      location: true,
+      description: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  };
+
+  private readonly bookingReadRelations: FindOptionsRelations<EventBooking> = {
+    venue: true,
+  };
+
   // Event methods
   async create(data: CreateEventDto): Promise<EventDto> {
     const event = await this.eventRepository.save({
       ...data,
       eventDate: new Date(data.eventDate),
     });
-    return this.toEventDto(event);
+
+    const loaded = await this.eventRepository.findOne({
+      where: { id: event.id },
+      select: this.eventReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load event with id ${event.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
-  async findAllEvents(): Promise<EventDto[]> {
-    const events = await this.eventRepository.find({
+  findAllEvents(): Promise<EventDto[]> {
+    return this.eventRepository.find({
+      select: this.eventReadSelect,
       order: { eventDate: 'ASC' },
     });
-    return events.map((event) => this.toEventDto(event));
   }
 
   async findOneEvent(id: number): Promise<EventDto> {
-    const event = await this.eventRepository.findOne({ where: { id } });
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      select: this.eventReadSelect,
+    });
+
     if (!event) {
-      throw new NotFoundException(`Event with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event with id ${id} not found`,
+      });
     }
-    return this.toEventDto(event);
+
+    return event;
   }
 
   async update(id: number, data: UpdateEventDto): Promise<EventDto> {
+    const existing = await this.eventRepository.findOne({ where: { id } });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event with id ${id} not found`,
+      });
+    }
+
     const updateData = {
       ...data,
       eventDate: data.eventDate ? new Date(data.eventDate) : undefined,
     };
+
     await this.eventRepository.update(id, updateData);
     return this.findOneEvent(id);
   }
 
   async deleteEvent(id: number): Promise<EventDto> {
-    const event = await this.eventRepository.findOne({ where: { id } });
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      select: this.eventReadSelect,
+    });
+
     if (!event) {
-      throw new NotFoundException(`Event with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event with id ${id} not found`,
+      });
     }
-    const dto = this.toEventDto(event);
+
     await this.eventRepository.remove(event);
-    return dto;
+    return event;
   }
 
   // Event Booking methods
@@ -72,13 +169,17 @@ export class EventsService {
     const venue = await this.venueRepository.findOne({
       where: { id: data.venueId },
     });
+
     if (!venue) {
-      throw new NotFoundException(`Venue with id ${data.venueId} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Venue with id ${data.venueId} not found`,
+      });
     }
 
     const eventDate = new Date(data.eventDate);
     const totalCost = this.calculateBookingCost(
-      Number(venue.hourlyRate),
+      venue.hourlyRate,
       data.startTime,
       data.endTime,
     );
@@ -89,31 +190,45 @@ export class EventsService {
       totalCost,
     });
 
-    const savedBooking = await this.eventBookingRepository.findOne({
+    const loaded = await this.eventBookingRepository.findOne({
       where: { id: booking.id },
-      relations: { venue: true },
+      select: this.bookingReadSelect,
+      relations: this.bookingReadRelations,
     });
 
-    return this.toBookingDto(savedBooking!);
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load booking with id ${booking.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
-  async findAllBookings(): Promise<EventBookingDto[]> {
-    const bookings = await this.eventBookingRepository.find({
-      relations: { venue: true },
+  findAllBookings(): Promise<EventBookingDto[]> {
+    return this.eventBookingRepository.find({
+      select: this.bookingReadSelect,
+      relations: this.bookingReadRelations,
       order: { eventDate: 'ASC' },
     });
-    return bookings.map((booking) => this.toBookingDto(booking));
   }
 
   async findOneBooking(id: number): Promise<EventBookingDto> {
     const booking = await this.eventBookingRepository.findOne({
       where: { id },
-      relations: { venue: true },
+      select: this.bookingReadSelect,
+      relations: this.bookingReadRelations,
     });
+
     if (!booking) {
-      throw new NotFoundException(`Event booking with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event booking with id ${id} not found`,
+      });
     }
-    return this.toBookingDto(booking);
+
+    return booking;
   }
 
   async updateBooking(
@@ -122,10 +237,14 @@ export class EventsService {
   ): Promise<EventBookingDto> {
     const existing = await this.eventBookingRepository.findOne({
       where: { id },
-      relations: { venue: true },
+      relations: this.bookingReadRelations,
     });
+
     if (!existing) {
-      throw new NotFoundException(`Event booking with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event booking with id ${id} not found`,
+      });
     }
 
     const eventDate = data.eventDate
@@ -138,12 +257,16 @@ export class EventsService {
     const venue = await this.venueRepository.findOne({
       where: { id: venueId },
     });
+
     if (!venue) {
-      throw new NotFoundException(`Venue with id ${venueId} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Venue with id ${venueId} not found`,
+      });
     }
 
     const totalCost = this.calculateBookingCost(
-      Number(venue.hourlyRate),
+      venue.hourlyRate,
       startTime,
       endTime,
     );
@@ -160,26 +283,31 @@ export class EventsService {
   async deleteBooking(id: number): Promise<EventBookingDto> {
     const booking = await this.eventBookingRepository.findOne({
       where: { id },
-      relations: { venue: true },
+      select: this.bookingReadSelect,
+      relations: this.bookingReadRelations,
     });
+
     if (!booking) {
-      throw new NotFoundException(`Event booking with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Event booking with id ${id} not found`,
+      });
     }
-    const dto = this.toBookingDto(booking);
+
     await this.eventBookingRepository.remove(booking);
-    return dto;
+    return booking;
   }
 
-  async getUpcomingBookings(): Promise<EventBookingDto[]> {
+  getUpcomingBookings(): Promise<EventBookingDto[]> {
     const now = new Date();
-    const bookings = await this.eventBookingRepository.find({
+    return this.eventBookingRepository.find({
       where: {
         eventDate: MoreThanOrEqual(now),
       },
-      relations: { venue: true },
+      select: this.bookingReadSelect,
+      relations: this.bookingReadRelations,
       order: { eventDate: 'ASC' },
     });
-    return bookings.map((booking) => this.toBookingDto(booking));
   }
 
   private calculateBookingCost(
@@ -193,78 +321,24 @@ export class EventsService {
     const [eh, em] = String(endTime)
       .split(':')
       .map((x) => parseInt(x, 10));
+
     if (
       Number.isNaN(sh) ||
       Number.isNaN(sm) ||
       Number.isNaN(eh) ||
       Number.isNaN(em)
     ) {
-      throw new Error('Invalid startTime or endTime format. Expected HH:MM');
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Invalid startTime or endTime format. Expected HH:MM',
+      });
     }
+
     const startMinutes = sh * 60 + sm;
     const endMinutes = eh * 60 + em;
     const durationMinutes = Math.max(0, endMinutes - startMinutes);
     const durationHours = durationMinutes / 60;
     const base = hourlyRate * durationHours;
     return Math.round(base * 100) / 100;
-  }
-
-  private toEventDto(event: Event): EventDto {
-    return {
-      id: event.id,
-      title: event.title,
-      description: event.description,
-      eventDate: event.eventDate,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      venue: event.venue,
-      capacity: event.capacity,
-      attendees: event.attendees,
-      status: event.status,
-      organizer: event.organizer,
-      cost: event.cost ? Number(event.cost) : undefined,
-      revenue: event.revenue ? Number(event.revenue) : undefined,
-      createdAt: event.createdAt,
-      updatedAt: event.updatedAt,
-    };
-  }
-
-  private toBookingDto(booking: EventBooking): EventBookingDto {
-    const dto: EventBookingDto = {
-      id: booking.id,
-      title: booking.title,
-      description: booking.description,
-      eventDate: booking.eventDate,
-      startTime: booking.startTime,
-      endTime: booking.endTime,
-      attendees: booking.attendees,
-      totalCost: Number(booking.totalCost),
-      status: booking.status,
-      clientName: booking.clientName,
-      clientEmail: booking.clientEmail,
-      clientPhone: booking.clientPhone,
-      notes: booking.notes,
-      venueId: booking.venueId,
-      guestId: booking.guestId,
-      createdAt: booking.createdAt,
-      updatedAt: booking.updatedAt,
-    };
-
-    if (booking.venue) {
-      dto.venue = {
-        id: booking.venue.id,
-        name: booking.venue.name,
-        capacity: booking.venue.capacity,
-        area: Number(booking.venue.area),
-        hourlyRate: Number(booking.venue.hourlyRate),
-        available: booking.venue.available,
-        location: booking.venue.location,
-        description: booking.venue.description,
-        createdAt: booking.venue.createdAt,
-        updatedAt: booking.venue.updatedAt,
-      } as VenueDto;
-    }
-
-    return dto;
   }
 }

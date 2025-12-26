@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { DecimalTransformer } from '@app/contracts/common';
 import { EventStatus } from '@app/contracts/events-service';
 import { Venue } from '../../venues';
 
@@ -33,7 +34,11 @@ export class EventBooking {
   @Column()
   attendees: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   totalCost: number;
 
   @Column({

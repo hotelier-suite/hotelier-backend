@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { AnalyticsData } from './entities';
@@ -40,7 +41,10 @@ export class AnalyticsService {
     });
 
     if (!analyticsData) {
-      throw new NotFoundException(`Analytics data with ID ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Analytics data with ID ${id} not found`,
+      });
     }
 
     return analyticsData as AnalyticsDataDto;

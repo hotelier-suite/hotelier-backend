@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DecimalTransformer } from '@app/contracts/common';
 import { EventStatus } from '@app/contracts/events-service';
 
 @Entity('events')
@@ -46,10 +47,20 @@ export class Event {
   @Column()
   organizer: string;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    nullable: true,
+    transformer: DecimalTransformer,
+  })
   cost?: number;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    nullable: true,
+    transformer: DecimalTransformer,
+  })
   revenue?: number;
 
   @CreateDateColumn()

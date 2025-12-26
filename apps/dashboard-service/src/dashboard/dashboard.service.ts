@@ -1,7 +1,7 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { of, lastValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { DashboardWidget } from './entities';
@@ -79,7 +79,10 @@ export class DashboardService {
   async findOneWidget(id: number): Promise<DashboardWidgetDto> {
     const widget = await this.widgetRepository.findOne({ where: { id } });
     if (!widget) {
-      throw new NotFoundException(`Widget with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Widget with id ${id} not found`,
+      });
     }
     return widget;
   }
@@ -115,7 +118,10 @@ export class DashboardService {
     );
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new RpcException({
+        statusCode: 404,
+        message: 'User not found',
+      });
     }
 
     const endDate = new Date();
@@ -273,7 +279,10 @@ export class DashboardService {
     );
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new RpcException({
+        statusCode: 404,
+        message: 'User not found',
+      });
     }
 
     const today = new Date();
@@ -354,7 +363,10 @@ export class DashboardService {
     );
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new RpcException({
+        statusCode: 404,
+        message: 'User not found',
+      });
     }
 
     const [reservations, invoices, assignments, guestRequests] =

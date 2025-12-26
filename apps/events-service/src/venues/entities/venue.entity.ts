@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+import { DecimalTransformer } from '@app/contracts/common';
 import { EventBooking } from '../../events';
 
 @Entity('venues')
@@ -19,10 +20,18 @@ export class Venue {
   @Column()
   capacity: number;
 
-  @Column('decimal', { precision: 8, scale: 2 })
+  @Column('decimal', {
+    precision: 8,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   area: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   hourlyRate: number;
 
   @Column({ default: true })

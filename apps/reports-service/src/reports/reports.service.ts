@@ -1,12 +1,10 @@
 import {
   Injectable,
-  NotFoundException,
   Inject,
-  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom, of, timeout, catchError } from 'rxjs';
 import { Report } from './entities';
 import {
@@ -63,7 +61,10 @@ export class ReportsService {
       where: { id },
     });
     if (!report) {
-      throw new NotFoundException(`Report with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Report with id ${id} not found`,
+      });
     }
     return report as ReportDto;
   }
@@ -182,13 +183,15 @@ export class ReportsService {
             timeout(ReportsService.SERVICE_TIMEOUT),
             catchError((error: Error) => {
               if (error.name === 'TimeoutError') {
-                throw new ServiceUnavailableException(
-                  'Billing service request timed out',
-                );
+                throw new RpcException({
+                  statusCode: 503,
+                  message: 'Billing service request timed out',
+                });
               }
-              throw new ServiceUnavailableException(
-                'Billing service is unavailable',
-              );
+              throw new RpcException({
+                statusCode: 503,
+                message: 'Billing service is unavailable',
+              });
             }),
           ),
       ),
@@ -336,13 +339,15 @@ export class ReportsService {
             timeout(ReportsService.SERVICE_TIMEOUT),
             catchError((error: Error) => {
               if (error.name === 'TimeoutError') {
-                throw new ServiceUnavailableException(
-                  'Booking service request timed out',
-                );
+                throw new RpcException({
+                  statusCode: 503,
+                  message: 'Booking service request timed out',
+                });
               }
-              throw new ServiceUnavailableException(
-                'Booking service is unavailable',
-              );
+              throw new RpcException({
+                statusCode: 503,
+                message: 'Booking service is unavailable',
+              });
             }),
           ),
       ),
@@ -356,13 +361,15 @@ export class ReportsService {
             timeout(ReportsService.SERVICE_TIMEOUT),
             catchError((error: Error) => {
               if (error.name === 'TimeoutError') {
-                throw new ServiceUnavailableException(
-                  'Booking service request timed out',
-                );
+                throw new RpcException({
+                  statusCode: 503,
+                  message: 'Booking service request timed out',
+                });
               }
-              throw new ServiceUnavailableException(
-                'Booking service is unavailable',
-              );
+              throw new RpcException({
+                statusCode: 503,
+                message: 'Booking service is unavailable',
+              });
             }),
           ),
       ),
@@ -732,13 +739,15 @@ export class ReportsService {
           timeout(ReportsService.SERVICE_TIMEOUT),
           catchError((error: Error) => {
             if (error.name === 'TimeoutError') {
-              throw new ServiceUnavailableException(
-                'Billing service request timed out',
-              );
+              throw new RpcException({
+                statusCode: 503,
+                message: 'Billing service request timed out',
+              });
             }
-            throw new ServiceUnavailableException(
-              'Billing service is unavailable',
-            );
+            throw new RpcException({
+              statusCode: 503,
+              message: 'Billing service is unavailable',
+            });
           }),
         ),
     );

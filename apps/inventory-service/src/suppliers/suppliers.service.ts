@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsSelect, FindOptionsRelations } from 'typeorm';
 import { Supplier } from './entities';
 import {
   SupplierResponseDto,
@@ -16,19 +16,46 @@ export class SuppliersService {
     private readonly supplierRepository: Repository<Supplier>,
   ) {}
 
+  private readonly supplierReadSelect: FindOptionsSelect<Supplier> = {
+    id: true,
+    name: true,
+    contact: true,
+    email: true,
+    phone: true,
+    category: true,
+    rating: true,
+    deliveryTime: true,
+    paymentTerms: true,
+    inventoryItems: {
+      id: true,
+    },
+  };
+
+  private readonly supplierReadRelations: FindOptionsRelations<Supplier> = {
+    inventoryItems: true,
+  };
+
   async findAll(): Promise<SupplierResponseDto[]> {
     const suppliers = await this.supplierRepository.find({
-      relations: { inventoryItems: true },
+      select: this.supplierReadSelect,
+      relations: this.supplierReadRelations,
       order: { name: 'ASC' },
     });
 
-    return suppliers.map((supplier) => this.toResponseDto(supplier));
+    return suppliers.map((supplier) => {
+      const { inventoryItems, ...rest } = supplier;
+      return {
+        ...rest,
+        totalItems: inventoryItems?.length ?? 0,
+      };
+    });
   }
 
   async findOne(id: number): Promise<SupplierResponseDto> {
     const supplier = await this.supplierRepository.findOne({
       where: { id },
-      relations: { inventoryItems: true },
+      select: this.supplierReadSelect,
+      relations: this.supplierReadRelations,
     });
 
     if (!supplier) {
@@ -38,23 +65,33 @@ export class SuppliersService {
       });
     }
 
-    return this.toResponseDto(supplier);
+    const { inventoryItems, ...rest } = supplier;
+    return {
+      ...rest,
+      totalItems: inventoryItems?.length ?? 0,
+    };
   }
 
   async create(data: CreateSupplierDto): Promise<SupplierResponseDto> {
     const created = await this.supplierRepository.save(data);
 
+    const loaded = await this.supplierRepository.findOne({
+      where: { id: created.id },
+      select: this.supplierReadSelect,
+      relations: this.supplierReadRelations,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load supplier with id ${created.id} after creation`,
+      });
+    }
+
+    const { inventoryItems, ...rest } = loaded;
     return {
-      id: created.id,
-      name: created.name,
-      contact: created.contact,
-      email: created.email,
-      phone: created.phone,
-      category: created.category,
-      rating: created.rating,
-      deliveryTime: created.deliveryTime,
-      paymentTerms: created.paymentTerms,
-      totalItems: 0,
+      ...rest,
+      totalItems: inventoryItems?.length ?? 0,
     };
   }
 
@@ -74,14 +111,14 @@ export class SuppliersService {
     }
 
     await this.supplierRepository.update(id, data);
-
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<SupplierResponseDto> {
     const supplier = await this.supplierRepository.findOne({
       where: { id },
-      relations: { inventoryItems: true },
+      select: this.supplierReadSelect,
+      relations: this.supplierReadRelations,
     });
 
     if (!supplier) {
@@ -99,24 +136,13 @@ export class SuppliersService {
       });
     }
 
-    const response = this.toResponseDto(supplier);
-    await this.supplierRepository.remove(supplier);
-
-    return response;
-  }
-
-  private toResponseDto(supplier: Supplier): SupplierResponseDto {
-    return {
-      id: supplier.id,
-      name: supplier.name,
-      contact: supplier.contact,
-      email: supplier.email,
-      phone: supplier.phone,
-      category: supplier.category,
-      rating: supplier.rating,
-      deliveryTime: supplier.deliveryTime,
-      paymentTerms: supplier.paymentTerms,
-      totalItems: supplier.inventoryItems?.length ?? 0,
+    const { inventoryItems, ...rest } = supplier;
+    const response: SupplierResponseDto = {
+      ...rest,
+      totalItems: inventoryItems?.length ?? 0,
     };
+
+    await this.supplierRepository.remove(supplier);
+    return response;
   }
 }

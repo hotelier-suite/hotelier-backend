@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, FindOptionsSelect } from 'typeorm';
 import { AuditLog } from './entities';
 import {
   AuditLogDto,
@@ -22,10 +23,35 @@ export class AuditService {
     private auditLogRepository: Repository<AuditLog>,
   ) {}
 
+  private readonly auditLogReadSelect: FindOptionsSelect<AuditLog> = {
+    id: true,
+    userId: true,
+    action: true,
+    resource: true,
+    resourceId: true,
+    userAgent: true,
+    details: true,
+    description: true,
+    createdAt: true,
+  };
+
   async create(data: CreateAuditLogDto): Promise<AuditLogDto> {
     const auditLog = this.auditLogRepository.create(data);
     const saved = await this.auditLogRepository.save(auditLog);
-    return this.toAuditLogDto(saved);
+
+    const loaded = await this.auditLogRepository.findOne({
+      where: { id: saved.id },
+      select: this.auditLogReadSelect,
+    });
+
+    if (!loaded) {
+      throw new RpcException({
+        statusCode: 500,
+        message: `Failed to load audit log with id ${saved.id} after creation`,
+      });
+    }
+
+    return loaded;
   }
 
   async findAll(
@@ -104,51 +130,51 @@ export class AuditService {
 
     const [data, total] = await queryBuilder.getManyAndCount();
 
-    return {
-      data: data.map((log) => this.toAuditLogDto(log)),
-      total,
-    };
+    return { data, total };
   }
 
   async findOne(id: number): Promise<AuditLogDto> {
     const auditLog = await this.auditLogRepository.findOne({
       where: { id },
+      select: this.auditLogReadSelect,
     });
+
     if (!auditLog) {
-      throw new NotFoundException(`Audit log with id ${id} not found`);
+      throw new RpcException({
+        statusCode: 404,
+        message: `Audit log with id ${id} not found`,
+      });
     }
-    return this.toAuditLogDto(auditLog);
+
+    return auditLog;
   }
 
-  async findByUser(
-    userId: number,
-    limit: number = 100,
-  ): Promise<AuditLogDto[]> {
-    const logs = await this.auditLogRepository.find({
+  findByUser(userId: number, limit: number = 100): Promise<AuditLogDto[]> {
+    return this.auditLogRepository.find({
       where: { userId },
+      select: this.auditLogReadSelect,
       order: { createdAt: 'DESC' },
       take: limit,
     });
-    return logs.map((log) => this.toAuditLogDto(log));
   }
 
-  async findByResource(
+  findByResource(
     resource: AuditResource,
     resourceId: string,
   ): Promise<AuditLogDto[]> {
-    const logs = await this.auditLogRepository.find({
+    return this.auditLogRepository.find({
       where: { resource, resourceId },
+      select: this.auditLogReadSelect,
       order: { createdAt: 'DESC' },
     });
-    return logs.map((log) => this.toAuditLogDto(log));
   }
 
-  async findByAction(action: string): Promise<AuditLogDto[]> {
-    const logs = await this.auditLogRepository.find({
+  findByAction(action: string): Promise<AuditLogDto[]> {
+    return this.auditLogRepository.find({
       where: { action: action as AuditAction },
+      select: this.auditLogReadSelect,
       order: { createdAt: 'DESC' },
     });
-    return logs.map((log) => this.toAuditLogDto(log));
   }
 
   async getStatistics(days: number = 30): Promise<AuditStatisticsDto> {
@@ -236,19 +262,5 @@ export class AuditService {
     });
 
     return result.affected || 0;
-  }
-
-  private toAuditLogDto(auditLog: AuditLog): AuditLogDto {
-    return {
-      id: auditLog.id,
-      userId: auditLog.userId,
-      action: auditLog.action,
-      resource: auditLog.resource,
-      resourceId: auditLog.resourceId,
-      userAgent: auditLog.userAgent,
-      details: auditLog.details,
-      description: auditLog.description,
-      createdAt: auditLog.createdAt,
-    };
   }
 }

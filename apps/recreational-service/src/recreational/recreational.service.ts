@@ -1,9 +1,5 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, And, Not } from 'typeorm';
 import { RecreationalFacility, RecreationalBooking } from './entities';
@@ -77,9 +73,10 @@ export class RecreationalService {
       relations: ['bookings'],
     });
     if (!facility) {
-      throw new NotFoundException(
-        `Recreational facility with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
     }
     return facility as RecreationalFacilityDto;
   }
@@ -111,9 +108,10 @@ export class RecreationalService {
   ): Promise<RecreationalFacilityDto> {
     const facility = await this.facilityRepository.findOne({ where: { id } });
     if (!facility) {
-      throw new NotFoundException(
-        `Recreational facility with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
     }
     Object.assign(facility, data);
     const saved = await this.facilityRepository.save(facility);
@@ -123,9 +121,10 @@ export class RecreationalService {
   async deleteFacility(id: number): Promise<RecreationalFacilityDto> {
     const facility = await this.facilityRepository.findOne({ where: { id } });
     if (!facility) {
-      throw new NotFoundException(
-        `Recreational facility with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${id} not found`,
+      });
     }
 
     // Check if facility has active bookings
@@ -141,9 +140,10 @@ export class RecreationalService {
     });
 
     if (activeBookings > 0) {
-      throw new BadRequestException(
-        `Cannot delete facility with ${activeBookings} active bookings`,
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: `Cannot delete facility with ${activeBookings} active bookings`,
+      });
     }
 
     await this.facilityRepository.remove(facility);
@@ -158,9 +158,10 @@ export class RecreationalService {
       where: { id: data.facilityId },
     });
     if (!facility) {
-      throw new NotFoundException(
-        `Recreational facility with ID ${data.facilityId} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${data.facilityId} not found`,
+      });
     }
 
     // Parse bookingDate as Date object
@@ -184,9 +185,10 @@ export class RecreationalService {
 
     // Validate participants count
     if (data.participants > facility.capacity) {
-      throw new BadRequestException(
-        `Number of participants (${data.participants}) exceeds facility capacity (${facility.capacity})`,
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: `Number of participants (${data.participants}) exceeds facility capacity (${facility.capacity})`,
+      });
     }
 
     // Recreational facilities are free for guests
@@ -234,9 +236,10 @@ export class RecreationalService {
       relations: ['facility'],
     });
     if (!booking) {
-      throw new NotFoundException(
-        `Recreational booking with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational booking with ID ${id} not found`,
+      });
     }
     return booking as unknown as RecreationalBookingDto;
   }
@@ -288,9 +291,10 @@ export class RecreationalService {
       relations: ['facility'],
     });
     if (!booking) {
-      throw new NotFoundException(
-        `Recreational booking with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational booking with ID ${id} not found`,
+      });
     }
 
     // If changing time/date, validate availability
@@ -300,9 +304,10 @@ export class RecreationalService {
         where: { id: facilityId },
       });
       if (!facility) {
-        throw new NotFoundException(
-          `Recreational facility with ID ${facilityId} not found`,
-        );
+        throw new RpcException({
+          statusCode: 404,
+          message: `Recreational facility with ID ${facilityId} not found`,
+        });
       }
       const bookingDate = data.bookingDate
         ? new Date(data.bookingDate)
@@ -342,13 +347,17 @@ export class RecreationalService {
       relations: ['facility'],
     });
     if (!booking) {
-      throw new NotFoundException(
-        `Recreational booking with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational booking with ID ${id} not found`,
+      });
     }
 
     if (booking.status === RecreationalBookingStatus.COMPLETED) {
-      throw new BadRequestException('Cannot cancel a completed booking');
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Cannot cancel a completed booking',
+      });
     }
 
     booking.status = RecreationalBookingStatus.CANCELLED;
@@ -383,15 +392,17 @@ export class RecreationalService {
       relations: ['facility'],
     });
     if (!booking) {
-      throw new NotFoundException(
-        `Recreational booking with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational booking with ID ${id} not found`,
+      });
     }
 
     if (booking.status !== RecreationalBookingStatus.CONFIRMED) {
-      throw new BadRequestException(
-        'Only confirmed bookings can be checked in',
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Only confirmed bookings can be checked in',
+      });
     }
 
     booking.status = RecreationalBookingStatus.CHECKED_IN;
@@ -407,15 +418,17 @@ export class RecreationalService {
       relations: ['facility'],
     });
     if (!booking) {
-      throw new NotFoundException(
-        `Recreational booking with ID ${id} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational booking with ID ${id} not found`,
+      });
     }
 
     if (booking.status !== RecreationalBookingStatus.CHECKED_IN) {
-      throw new BadRequestException(
-        'Only checked-in bookings can be checked out',
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Only checked-in bookings can be checked out',
+      });
     }
 
     booking.status = RecreationalBookingStatus.COMPLETED;
@@ -434,9 +447,10 @@ export class RecreationalService {
       where: { id: facilityId },
     });
     if (!facility) {
-      throw new NotFoundException(
-        `Recreational facility with ID ${facilityId} not found`,
-      );
+      throw new RpcException({
+        statusCode: 404,
+        message: `Recreational facility with ID ${facilityId} not found`,
+      });
     }
 
     // Check if facility is available on this day
@@ -574,14 +588,18 @@ export class RecreationalService {
   ): void {
     // Check if facility is generally available
     if (!facility.isAvailable || facility.status !== FacilityStatus.AVAILABLE) {
-      throw new BadRequestException('Facility is not available for booking');
+      throw new RpcException({
+        statusCode: 400,
+        message: 'Facility is not available for booking',
+      });
     }
 
     // Check if booking is within operating hours
     if (startTime < facility.openingTime || endTime > facility.closingTime) {
-      throw new BadRequestException(
-        `Booking time must be within operating hours (${facility.openingTime} - ${facility.closingTime})`,
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: `Booking time must be within operating hours (${facility.openingTime} - ${facility.closingTime})`,
+      });
     }
 
     // Calculate duration
@@ -593,9 +611,10 @@ export class RecreationalService {
       duration < facility.minimumBookingHours ||
       duration > facility.maximumBookingHours
     ) {
-      throw new BadRequestException(
-        `Booking duration must be between ${facility.minimumBookingHours} and ${facility.maximumBookingHours} hours`,
-      );
+      throw new RpcException({
+        statusCode: 400,
+        message: `Booking duration must be between ${facility.minimumBookingHours} and ${facility.maximumBookingHours} hours`,
+      });
     }
   }
 
@@ -647,11 +666,12 @@ export class RecreationalService {
         (slot) => slot.isAvailable && slot.startTime > startTime,
       );
 
-      throw new ConflictException(
-        nextAvailable
+      throw new RpcException({
+        statusCode: 409,
+        message: nextAvailable
           ? `The ${startTime} time slot is not available because a booking already exists.\n\nYou can book at ${nextAvailable.startTime}, which is the next available time slot.`
           : 'Sorry, there are no available time slots for this day. Please try booking on another date.',
-      );
+      });
     }
   }
 

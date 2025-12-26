@@ -16,6 +16,7 @@ import {
   Max,
   Length,
 } from 'class-validator';
+import { DecimalTransformer } from '@app/contracts/common';
 import { InventoryItem } from '../../items';
 
 @Entity('suppliers')
@@ -91,10 +92,7 @@ export class Supplier {
     precision: 2,
     scale: 1,
     nullable: true,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   rating?: number;
 
