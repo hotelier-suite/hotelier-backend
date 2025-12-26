@@ -8,7 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PaymentMethod, PaymentStatus } from '@app/contracts/billing-service';
-import { Invoice } from './invoice.entity';
+import { DecimalTransformer } from '@app/contracts/common';
+import { Invoice } from '../../invoices/entities';
 
 @Entity('payments')
 export class Payment {
@@ -18,7 +19,11 @@ export class Payment {
   @Column({ unique: true })
   reference: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   amount: number;
 
   @Column({

@@ -1,25 +1,25 @@
 export const BILLING_PATTERNS = {
   // Invoice patterns
-  INVOICE_CREATE: 'billing.invoice.create',
-  INVOICE_FIND_ALL: 'billing.invoice.findAll',
-  INVOICE_FIND_ONE: 'billing.invoice.findOne',
-  INVOICE_UPDATE: 'billing.invoice.update',
-  INVOICE_DELETE: 'billing.invoice.delete',
-  INVOICE_MARK_AS_PAID: 'billing.invoice.markAsPaid',
-  INVOICE_DOWNLOAD: 'billing.invoice.download',
-  INVOICE_FIND_BY_STATUS: 'billing.invoice.findByStatus',
-  INVOICE_FIND_BY_DATE_RANGE: 'billing.invoice.findByDateRange',
-  INVOICE_FIND_OVERDUE: 'billing.invoice.findOverdue',
-  INVOICE_FIND_BY_CUSTOMER: 'billing.invoice.findByCustomer',
+  INVOICE_CREATE: 'invoices.create',
+  INVOICE_FIND_ALL: 'invoices.findAll',
+  INVOICE_FIND_ONE: 'invoices.findOne',
+  INVOICE_UPDATE: 'invoices.update',
+  INVOICE_DELETE: 'invoices.delete',
+  INVOICE_MARK_AS_PAID: 'invoices.markAsPaid',
+  INVOICE_DOWNLOAD: 'invoices.download',
+  INVOICE_FIND_BY_STATUS: 'invoices.findByStatus',
+  INVOICE_FIND_BY_DATE_RANGE: 'invoices.findByDateRange',
+  INVOICE_FIND_OVERDUE: 'invoices.findOverdue',
+  INVOICE_FIND_BY_CUSTOMER: 'invoices.findByCustomer',
 
   // Payment patterns
-  PAYMENT_CREATE: 'billing.payment.create',
-  PAYMENT_FIND_ALL: 'billing.payment.findAll',
-  PAYMENT_FIND_ONE: 'billing.payment.findOne',
-  PAYMENT_FIND_BY_INVOICE: 'billing.payment.findByInvoice',
+  PAYMENT_CREATE: 'payments.create',
+  PAYMENT_FIND_ALL: 'payments.findAll',
+  PAYMENT_FIND_ONE: 'payments.findOne',
+  PAYMENT_FIND_BY_INVOICE: 'payments.findByInvoice',
 
   // Statistics patterns
-  STATISTICS_FINANCIAL_SUMMARY: 'billing.statistics.financialSummary',
-  STATISTICS_PAYMENTS: 'billing.statistics.payments',
-  STATISTICS_MONTHLY_REPORT: 'billing.statistics.monthlyReport',
+  STATISTICS_FINANCIAL_SUMMARY: 'statistics.financialSummary',
+  STATISTICS_PAYMENTS: 'statistics.payments',
+  STATISTICS_MONTHLY_REPORT: 'statistics.monthlyReport',
 } as const;

@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { DecimalTransformer } from '../../database';
+import { DecimalTransformer } from '@app/contracts/common';
 import { RoomServiceStatus } from '@app/contracts/restaurant-service';
 
 @Entity('room_service_orders')

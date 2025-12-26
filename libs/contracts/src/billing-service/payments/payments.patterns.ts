@@ -1,6 +1,6 @@
 export const PAYMENTS_PATTERNS = {
-  CREATE: 'billing.payment.create',
-  FIND_ALL: 'billing.payment.findAll',
-  FIND_ONE: 'billing.payment.findOne',
-  FIND_BY_INVOICE: 'billing.payment.findByInvoice',
+  CREATE: 'payments.create',
+  FIND_ALL: 'payments.findAll',
+  FIND_ONE: 'payments.findOne',
+  FIND_BY_INVOICE: 'payments.findByInvoice',
 } as const;

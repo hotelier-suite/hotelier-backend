@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database';
-import { BillingModule } from './billing';
+import { InvoicesModule } from './invoices';
+import { PaymentsModule } from './payments';
+import { StatisticsModule } from './statistics';
 import { SeedersModule } from './seeders';
 
 @Module({
@@ -11,7 +13,9 @@ import { SeedersModule } from './seeders';
       envFilePath: '.env',
     }),
     DatabaseModule,
-    BillingModule,
+    InvoicesModule,
+    PaymentsModule,
+    StatisticsModule,
     SeedersModule,
   ],
 })

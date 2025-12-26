@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Payment, Invoice } from '../../billing';
+import { Invoice } from '../../invoices';
+import { Payment } from '../../payments';
 import { PaymentMethod, PaymentStatus } from '@app/contracts/billing-service';
 
 @Injectable()

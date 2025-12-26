@@ -7,8 +7,9 @@ import {
   OneToMany,
 } from 'typeorm';
 import { InvoiceStatus, PaymentMethod } from '@app/contracts/billing-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { InvoiceItem } from './invoice-item.entity';
-import { Payment } from './payment.entity';
+import { Payment } from '../../payments/entities';
 
 @Entity('invoices')
 export class Invoice {
@@ -27,13 +28,25 @@ export class Invoice {
   @Column({ type: 'timestamp' })
   dueDate: Date;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   subtotal: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   taxes: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   total: number;
 
   @Column({ length: 10, default: 'COP' })
@@ -62,7 +75,7 @@ export class Invoice {
   @OneToMany(() => InvoiceItem, (item) => item.invoice, { cascade: true })
   invoiceItems: InvoiceItem[];
 
-  @OneToMany(() => Payment, (payment) => payment.invoice, { cascade: true })
+  @OneToMany(() => Payment, (payment) => payment.invoice)
   payments: Payment[];
 
   @CreateDateColumn()

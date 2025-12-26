@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { DecimalTransformer } from '../../database';
+import { DecimalTransformer } from '@app/contracts/common';
 
 @Entity('menu_items')
 export class MenuItem {

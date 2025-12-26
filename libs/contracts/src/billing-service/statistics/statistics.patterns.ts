@@ -1,5 +1,5 @@
 export const STATISTICS_PATTERNS = {
-  FINANCIAL_SUMMARY: 'billing.statistics.financialSummary',
-  PAYMENTS: 'billing.statistics.payments',
-  MONTHLY_REPORT: 'billing.statistics.monthlyReport',
+  FINANCIAL_SUMMARY: 'statistics.financialSummary',
+  PAYMENTS: 'statistics.payments',
+  MONTHLY_REPORT: 'statistics.monthlyReport',
 } as const;

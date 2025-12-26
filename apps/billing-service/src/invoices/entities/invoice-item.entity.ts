@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { DecimalTransformer } from '@app/contracts/common';
 import { Invoice } from './invoice.entity';
 
 @Entity('invoice_items')
@@ -18,10 +19,18 @@ export class InvoiceItem {
   @Column()
   quantity: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   price: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
   total: number;
 
   @Column()
