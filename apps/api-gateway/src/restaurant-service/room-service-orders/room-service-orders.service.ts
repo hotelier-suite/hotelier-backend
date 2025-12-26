@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { RESTAURANT_SERVICE_CLIENT } from '../constants';
-import { ROOM_SERVICE_ORDERS_PATTERNS } from '@app/contracts/restaurant-service/room-service-orders/room-service-orders.patterns';
 import {
+  ROOM_SERVICE_ORDERS_PATTERNS,
   RoomServiceOrderDto,
   CreateRoomServiceOrderDto,
   UpdateRoomServiceOrderDto,
-} from '@app/contracts/restaurant-service/room-service-orders/dto';
+} from '@app/contracts/restaurant-service';
 
 @Injectable()
 export class RoomServiceOrdersService {

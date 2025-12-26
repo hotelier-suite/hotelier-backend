@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { RECREATIONAL_SERVICE_CLIENT } from '../constants';
-import { RECREATIONAL_BOOKINGS_PATTERNS } from '@app/contracts/recreational-service/bookings/bookings.patterns';
 import {
+  RECREATIONAL_BOOKINGS_PATTERNS,
   RecreationalBookingDto,
   CreateRecreationalBookingDto,
   UpdateRecreationalBookingDto,
   BookingStatisticsDto,
-} from '@app/contracts/recreational-service/bookings/dto';
+} from '@app/contracts/recreational-service';
 
 @Injectable()
 export class BookingsService {

@@ -8,7 +8,7 @@ import {
   IsString,
   IsObject,
 } from 'class-validator';
-import { AnalyticsMetric } from '../enums/analytics-metric.enum';
+import { AnalyticsMetric } from '..';
 
 export class CreateAnalyticsDataDto {
   @ApiProperty({

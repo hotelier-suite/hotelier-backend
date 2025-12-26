@@ -21,7 +21,7 @@ import {
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
-} from '@app/contracts/events-service/venues/dto';
+} from '@app/contracts/events-service';
 
 @ApiTags('venues')
 @Controller('venues')

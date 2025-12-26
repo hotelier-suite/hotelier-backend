@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { MAINTENANCE_PATTERNS } from '@app/contracts/operations-service/maintenance/maintenance.patterns';
+import { MaintenanceService } from './maintenance.service';
 import {
+  MAINTENANCE_PATTERNS,
   GeneralMaintenanceRequestDto,
   CreateGeneralMaintenanceRequestDto,
   UpdateGeneralMaintenanceRequestDto,
-} from '@app/contracts/operations-service/maintenance/dto';
-import { MaintenanceService } from './maintenance.service';
+} from '@app/contracts/operations-service';
 
 @Controller()
 export class MaintenanceController {

@@ -10,9 +10,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import type { EmployeeDto } from '../../employees/dto/employee.dto';
-import { RequestStatus } from '../enums/request-status.enum';
-import { RequestType } from '../enums/request-type.enum';
+import type { EmployeeDto } from '../../employees';
+import { RequestStatus, RequestType } from '..';
 
 export class EmployeeRequestDto {
   @ApiProperty({ example: 1 })

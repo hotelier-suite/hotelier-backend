@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { EventBooking } from '../../events/entities/event-booking.entity';
+import { EventBooking } from '../../events';
 
 @Entity('venues')
 export class Venue {

@@ -10,8 +10,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import {
   ApiTags,
   ApiOperation,
@@ -27,7 +27,7 @@ import {
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
   AnalyticsDataDto,
-} from '@app/contracts/reports-service/analytics/dto';
+} from '@app/contracts/reports-service';
 
 @ApiTags('reports-analytics')
 @Controller('reports-analytics')

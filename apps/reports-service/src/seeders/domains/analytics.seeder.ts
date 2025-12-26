@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AnalyticsData } from '../../analytics/entities/analytics-data.entity';
-import { AnalyticsMetric } from '@app/contracts/reports-service/analytics/enums/analytics-metric.enum';
+import { AnalyticsData } from '../../analytics';
+import { AnalyticsMetric } from '@app/contracts/reports-service';
 
 @Injectable()
 export class AnalyticsSeeder {

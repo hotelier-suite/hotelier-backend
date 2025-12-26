@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RequestPriority } from '../enums/request-priority.enum';
-import { RequestStatus } from '../enums/request-status.enum';
-import { RequestType } from '../enums/request-type.enum';
+import { RequestPriority, RequestStatus, RequestType } from '..';
 
 export class GuestRequestDto {
   @ApiProperty({ example: 1 })

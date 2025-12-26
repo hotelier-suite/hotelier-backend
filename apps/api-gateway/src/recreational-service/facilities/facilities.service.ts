@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { RECREATIONAL_SERVICE_CLIENT } from '../constants';
-import { RECREATIONAL_FACILITIES_PATTERNS } from '@app/contracts/recreational-service/facilities/facilities.patterns';
 import {
-  RecreationalFacilityDto,
   CreateRecreationalFacilityDto,
-  UpdateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-} from '@app/contracts/recreational-service/facilities/dto';
-import { FacilityType } from '@app/contracts/recreational-service/facilities/enums';
+  FacilityType,
+  RecreationalFacilityDto,
+  RECREATIONAL_FACILITIES_PATTERNS,
+  UpdateRecreationalFacilityDto,
+} from '@app/contracts/recreational-service';
 
 @Injectable()
 export class FacilitiesService {

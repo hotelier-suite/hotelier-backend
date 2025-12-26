@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SUPPLIERS_PATTERNS } from '@app/contracts/inventory-service/suppliers/suppliers.patterns';
-import { CreateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/create-supplier.dto';
-import { UpdateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/update-supplier.dto';
-import { SupplierResponseDto } from '@app/contracts/inventory-service/suppliers/dto/supplier-response.dto';
 import { SuppliersService } from './suppliers.service';
+import {
+  SUPPLIERS_PATTERNS,
+  CreateSupplierDto,
+  UpdateSupplierDto,
+  SupplierResponseDto,
+} from '@app/contracts/inventory-service';
 
 @Controller()
 export class SuppliersController {

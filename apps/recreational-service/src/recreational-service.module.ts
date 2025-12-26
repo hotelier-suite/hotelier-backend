@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { RecreationalModule } from './recreational/recreational.module';
-import { SeedersModule } from './seeders/seeders.module';
-import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
+import { DatabaseModule } from './database';
+import { RecreationalModule } from './recreational';
+import { SeedersModule } from './seeders';
+import { NotificationsServiceModule } from './notifications-service';
 
 @Module({
   imports: [

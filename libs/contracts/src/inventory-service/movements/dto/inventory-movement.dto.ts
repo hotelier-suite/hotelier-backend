@@ -10,8 +10,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import type { InventoryItemDto } from '../../items/dto/inventory-item.dto';
-import { MovementType } from '../enums/movement-type.enum';
+import type { InventoryItemDto } from '../../items';
+import { MovementType } from '..';
 
 export class InventoryMovementDto {
   @ApiProperty({ example: 1 })

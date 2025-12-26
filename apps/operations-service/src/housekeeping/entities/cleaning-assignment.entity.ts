@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CleaningStatus } from '@app/contracts/operations-service/housekeeping/enums/cleaning-status.enum';
+import { CleaningStatus } from '@app/contracts/operations-service';
 
 @Entity('cleaning_assignments')
 export class CleaningAssignment {

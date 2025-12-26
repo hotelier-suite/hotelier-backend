@@ -5,7 +5,14 @@ export class RecentActivityDto {
   @ApiProperty({
     description: 'Activity type',
     example: 'check-in',
-    enum: ['check-in', 'check-out', 'booking', 'maintenance', 'payment', 'request'],
+    enum: [
+      'check-in',
+      'check-out',
+      'booking',
+      'maintenance',
+      'payment',
+      'request',
+    ],
   })
   @IsString()
   type: string;

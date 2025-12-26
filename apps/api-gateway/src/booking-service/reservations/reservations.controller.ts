@@ -22,15 +22,17 @@ import {
 import { Observable } from 'rxjs';
 import type { Request } from 'express';
 import { ReservationsService } from './reservations.service';
-import { CreateReservationDto } from '@app/contracts/booking-service/reservations/dto/create-reservation.dto';
-import { UpdateReservationDto } from '@app/contracts/booking-service/reservations/dto/update-reservation.dto';
-import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
-import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/reservations/dto/checkout-reservation-response.dto';
-import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
-import { RoomType } from '@app/contracts/booking-service/rooms/enums/room-type.enum';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateReservationDto,
+  UpdateReservationDto,
+  ReservationDto,
+  CheckoutReservationResponseDto,
+  BookingChannel,
+  RoomType,
+  RoomDto,
+} from '@app/contracts/booking-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('reservations')
 @Controller('reservations')

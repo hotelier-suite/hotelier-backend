@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { WidgetsSeeder } from './domains/widgets.seeder';
+import { WidgetsSeeder } from './domains';
 
 @Injectable()
 export class SeedersService {

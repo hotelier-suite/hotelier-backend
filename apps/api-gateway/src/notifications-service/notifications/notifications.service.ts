@@ -1,13 +1,15 @@
 import { Inject, Injectable, MessageEvent } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { filter, Observable, Subject, tap } from 'rxjs';
-import { NOTIFICATIONS_PATTERNS } from '@app/contracts/notifications-service/notifications/notifications.patterns';
-import { CreateNotificationDto } from '@app/contracts/notifications-service/notifications/dto/create-notification.dto';
-import { ListNotificationsPayloadDto } from '@app/contracts/notifications-service/notifications/dto/list-notifications-payload.dto';
-import { MarkAllNotificationsReadPayloadDto } from '@app/contracts/notifications-service/notifications/dto/mark-all-notifications-read-payload.dto';
-import { MarkNotificationReadPayloadDto } from '@app/contracts/notifications-service/notifications/dto/mark-notification-read-payload.dto';
-import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import {
+  NOTIFICATIONS_PATTERNS,
+  CreateNotificationDto,
+  ListNotificationsPayloadDto,
+  MarkAllNotificationsReadPayloadDto,
+  MarkNotificationReadPayloadDto,
+  NotificationDto,
+  NotificationType,
+} from '@app/contracts/notifications-service';
 import { NOTIFICATIONS_SERVICE_CLIENT } from '../constants';
 
 @Injectable()

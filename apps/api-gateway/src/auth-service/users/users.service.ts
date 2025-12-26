@@ -1,12 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { USERS_PATTERNS } from '@app/contracts/auth-service/users/users.patterns';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { CreateUserDto } from '@app/contracts/auth-service/users/dto/create-user.dto';
-import { UpdateUserDto } from '@app/contracts/auth-service/users/dto/update-user.dto';
-import { UserRolesPayloadDto } from '@app/contracts/auth-service/users/dto/user-roles-payload.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
+import {
+  USERS_PATTERNS,
+  UserResponseDto,
+  CreateUserDto,
+  UpdateUserDto,
+  UserRolesPayloadDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+} from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
 

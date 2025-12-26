@@ -1,24 +1,20 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { RestaurantService } from './restaurant.service';
-import { MENU_ITEMS_PATTERNS } from '@app/contracts/restaurant-service/menu-items/menu-items.patterns';
-import { ROOM_SERVICE_ORDERS_PATTERNS } from '@app/contracts/restaurant-service/room-service-orders/room-service-orders.patterns';
-import { BEVERAGE_INVENTORY_PATTERNS } from '@app/contracts/restaurant-service/beverage-inventory/beverage-inventory.patterns';
 import {
+  MENU_ITEMS_PATTERNS,
   MenuItemDto,
   CreateMenuItemDto,
   UpdateMenuItemDto,
-} from '@app/contracts/restaurant-service/menu-items/dto';
-import {
+  ROOM_SERVICE_ORDERS_PATTERNS,
   RoomServiceOrderDto,
   CreateRoomServiceOrderDto,
   UpdateRoomServiceOrderDto,
-} from '@app/contracts/restaurant-service/room-service-orders/dto';
-import {
+  BEVERAGE_INVENTORY_PATTERNS,
   BeverageInventoryDto,
   CreateBeverageItemDto,
   UpdateBeverageItemDto,
-} from '@app/contracts/restaurant-service/beverage-inventory/dto';
+} from '@app/contracts/restaurant-service';
 
 @Controller()
 export class RestaurantController {

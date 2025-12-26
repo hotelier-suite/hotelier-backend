@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { RequestStatus } from '../enums/request-status.enum';
+import { RequestStatus } from '..';
 
 export class UpdateEmployeeRequestDto {
   @ApiProperty({

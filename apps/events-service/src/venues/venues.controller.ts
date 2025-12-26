@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { VENUES_PATTERNS } from '@app/contracts/events-service/venues/venues.patterns';
+import { VenuesService } from './venues.service';
 import {
+  VENUES_PATTERNS,
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
-} from '@app/contracts/events-service/venues/dto';
-import { VenuesService } from './venues.service';
+} from '@app/contracts/events-service';
 
 @Controller()
 export class VenuesController {

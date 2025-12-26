@@ -8,12 +8,9 @@ import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { AuditService } from '../audit.service';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
-import {
-  AUDIT_LOG_KEY,
-  AuditLogOptions,
-} from '../decorators/audit-log.decorator';
+import { AuditService } from '..';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
+import { AUDIT_LOG_KEY, AuditLogOptions } from '../decorators';
 
 interface RequestUser {
   sub?: number;

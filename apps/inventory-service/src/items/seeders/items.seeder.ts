@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InventoryItem } from '../entities/inventory-item.entity';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
-import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
+import { InventoryItem } from '../entities';
+import { Supplier } from '../../suppliers';
+import {
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
 
 @Injectable()
 export class ItemsSeeder {

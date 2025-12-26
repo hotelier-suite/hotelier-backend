@@ -9,7 +9,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { InventoryCategory } from '../enums/inventory-category.enum';
+import { InventoryCategory } from '..';
 
 export class CreateInventoryItemDto {
   @ApiProperty({ example: 'Bed Sheets - White Cotton' })

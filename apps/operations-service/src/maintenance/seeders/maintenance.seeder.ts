@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GeneralMaintenanceRequest } from '../entities/general-maintenance-request.entity';
-import { MaintenanceType } from '@app/contracts/operations-service/maintenance/enums/maintenance-type.enum';
-import { MaintenancePriority } from '@app/contracts/operations-service/maintenance/enums/maintenance-priority.enum';
-import { MaintenanceStatus } from '@app/contracts/operations-service/maintenance/enums/maintenance-status.enum';
+import { GeneralMaintenanceRequest } from '../entities';
+import {
+  MaintenanceType,
+  MaintenancePriority,
+  MaintenanceStatus,
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class MaintenanceSeeder {

@@ -2,12 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GUEST_REQUESTS_PATTERNS } from '@app/contracts/guest-requests-service/guest-requests/guest-requests.patterns';
-import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
-import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
-import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import {
+  GUEST_REQUESTS_PATTERNS,
+  CreateGuestRequestDto,
+  GuestRequestDto,
+  UpdateGuestRequestDto,
+  RequestPriority,
+  RequestStatus,
+} from '@app/contracts/guest-requests-service';
 import { GUEST_REQUESTS_SERVICE_CLIENT } from '../constants';
 
 @Injectable()

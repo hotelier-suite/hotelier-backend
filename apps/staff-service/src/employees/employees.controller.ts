@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { EMPLOYEES_PATTERNS } from '@app/contracts/staff-service/employees/employees.patterns';
-import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
-import { CreateEmployeeDto } from '@app/contracts/staff-service/employees/dto/create-employee.dto';
-import { UpdateEmployeeDto } from '@app/contracts/staff-service/employees/dto/update-employee.dto';
-import { DepartmentStatsDto } from '@app/contracts/staff-service/employees/dto/department-stats.dto';
-import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
+import {
+  EMPLOYEES_PATTERNS,
+  EmployeeDto,
+  CreateEmployeeDto,
+  UpdateEmployeeDto,
+  DepartmentStatsDto,
+  Department,
+} from '@app/contracts/staff-service';
 import { EmployeesService } from './employees.service';
 
 @Controller()

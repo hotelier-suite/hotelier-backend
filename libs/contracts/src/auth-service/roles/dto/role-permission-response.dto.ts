@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber, ValidateNested } from 'class-validator';
-import { PermissionResponseDto } from '../../permissions/dto/permission-response.dto';
+import { PermissionResponseDto } from '../../permissions';
 
 export class RolePermissionResponseDto {
   @ApiProperty({

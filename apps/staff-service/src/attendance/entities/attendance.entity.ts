@@ -17,8 +17,8 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { AttendanceStatus } from '@app/contracts/staff-service';
+import { Employee } from '../../employees';
 
 @Entity('attendance')
 export class Attendance {

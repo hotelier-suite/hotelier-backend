@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThanOrEqual } from 'typeorm';
-import { Event } from './entities/event.entity';
-import { EventBooking } from './entities/event-booking.entity';
-import { Venue } from '../venues/entities/venue.entity';
+import { Event, EventBooking } from './entities';
+import { Venue } from '../venues';
 import {
   EventDto,
   CreateEventDto,
@@ -11,8 +10,8 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
-} from '@app/contracts/events-service/events/dto';
-import { VenueDto } from '@app/contracts/events-service/venues/dto';
+  VenueDto,
+} from '@app/contracts/events-service';
 
 @Injectable()
 export class EventsService {

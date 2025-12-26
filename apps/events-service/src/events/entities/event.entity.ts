@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { EventStatus } from '@app/contracts/events-service/events/enums/event-status.enum';
+import { EventStatus } from '@app/contracts/events-service';
 
 @Entity('events')
 export class Event {

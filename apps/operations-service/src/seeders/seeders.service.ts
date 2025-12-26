@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { HousekeepingSeeder } from '../housekeeping/seeders/housekeeping.seeder';
-import { MaintenanceSeeder } from '../maintenance/seeders/maintenance.seeder';
+import { HousekeepingSeeder } from '../housekeeping';
+import { MaintenanceSeeder } from '../maintenance';
 
 @Injectable()
 export class SeedersService {

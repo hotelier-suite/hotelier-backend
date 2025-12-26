@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { BILLING_SERVICE_CLIENT } from '../constants';
-import { INVOICES_PATTERNS } from '@app/contracts/billing-service/invoices/invoices.patterns';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
 import {
+  INVOICES_PATTERNS,
   InvoiceDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
-} from '@app/contracts/billing-service/invoices/dto';
+  InvoiceStatus,
+  PaymentMethod,
+} from '@app/contracts/billing-service';
 
 @Injectable()
 export class InvoicesService {

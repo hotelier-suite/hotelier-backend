@@ -2,11 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { BOOKING_SERVICE_CLIENT } from '../constants';
-import { ROOMS_PATTERNS } from '@app/contracts/booking-service/rooms/rooms.patterns';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { CreateRoomDto } from '@app/contracts/booking-service/rooms/dto/create-room.dto';
-import { UpdateRoomDto } from '@app/contracts/booking-service/rooms/dto/update-room.dto';
-import { SetRoomAvailabilityDto } from '@app/contracts/booking-service/rooms/dto/set-room-availability.dto';
+import {
+  ROOMS_PATTERNS,
+  RoomDto,
+  CreateRoomDto,
+  UpdateRoomDto,
+  SetRoomAvailabilityDto,
+} from '@app/contracts/booking-service';
 
 @Injectable()
 export class RoomsService {

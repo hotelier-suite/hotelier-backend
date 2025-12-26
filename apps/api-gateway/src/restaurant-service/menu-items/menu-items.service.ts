@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { RESTAURANT_SERVICE_CLIENT } from '../constants';
-import { MENU_ITEMS_PATTERNS } from '@app/contracts/restaurant-service/menu-items/menu-items.patterns';
 import {
+  MENU_ITEMS_PATTERNS,
   MenuItemDto,
   CreateMenuItemDto,
   UpdateMenuItemDto,
-} from '@app/contracts/restaurant-service/menu-items/dto';
+} from '@app/contracts/restaurant-service';
 
 @Injectable()
 export class MenuItemsService {

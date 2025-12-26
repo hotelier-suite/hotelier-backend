@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MaintenanceStatus } from '@app/contracts/operations-service/maintenance/enums/maintenance-status.enum';
-import { MaintenancePriority } from '@app/contracts/operations-service/maintenance/enums/maintenance-priority.enum';
-import { MaintenanceType } from '@app/contracts/operations-service/maintenance/enums/maintenance-type.enum';
+import {
+  MaintenanceStatus,
+  MaintenancePriority,
+  MaintenanceType,
+} from '@app/contracts/operations-service';
 
 @Entity('general_maintenance_requests')
 export class GeneralMaintenanceRequest {

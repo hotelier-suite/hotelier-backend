@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthDatabaseModule } from './database/database.module';
-import { AuthModule } from './auth/auth.module';
-import { SeedersModule } from './seeders/seeders.module';
-import { UsersModule } from './users/users.module';
-import { RolesModule } from './roles/roles.module';
-import { PermissionsModule } from './permissions/permissions.module';
+import { AuthDatabaseModule } from './database';
+import { AuthModule } from './auth';
+import { SeedersModule } from './seeders';
+import { UsersModule } from './users';
+import { RolesModule } from './roles';
+import { PermissionsModule } from './permissions';
 
 @Module({
   imports: [

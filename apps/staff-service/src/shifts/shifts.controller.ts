@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SHIFTS_PATTERNS } from '@app/contracts/staff-service/shifts/shifts.patterns';
-import { ShiftDto } from '@app/contracts/staff-service/shifts/dto/shift.dto';
-import { CreateShiftDto } from '@app/contracts/staff-service/shifts/dto/create-shift.dto';
-import { UpdateShiftDto } from '@app/contracts/staff-service/shifts/dto/update-shift.dto';
-import { ShiftStatus } from '@app/contracts/staff-service/shifts/enums/shift-status.enum';
+import {
+  SHIFTS_PATTERNS,
+  ShiftDto,
+  CreateShiftDto,
+  UpdateShiftDto,
+  ShiftStatus,
+} from '@app/contracts/staff-service';
 import { ShiftsService } from './shifts.service';
 
 @Controller()

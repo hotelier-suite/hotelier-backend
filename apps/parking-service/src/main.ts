@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { ParkingServiceModule } from './parking-service.module';
-import { SeedersService } from './seeders/seeders.service';
+import { SeedersService } from './seeders';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(ParkingServiceModule, {

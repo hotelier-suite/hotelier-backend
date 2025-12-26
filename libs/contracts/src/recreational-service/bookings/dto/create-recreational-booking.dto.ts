@@ -12,7 +12,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { BookingPriority } from '../enums/booking-priority.enum';
+import { BookingPriority } from '..';
 
 export class CreateRecreationalBookingDto {
   @ApiProperty({

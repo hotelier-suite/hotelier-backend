@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { EMPLOYEE_REQUESTS_PATTERNS } from '@app/contracts/staff-service/employee-requests/employee-requests.patterns';
-import { EmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/employee-request.dto';
-import { CreateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/create-employee-request.dto';
-import { UpdateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/update-employee-request.dto';
-import { RequestStatus } from '@app/contracts/staff-service/employee-requests/enums/request-status.enum';
-import { RequestType } from '@app/contracts/staff-service/employee-requests/enums/request-type.enum';
+import {
+  EMPLOYEE_REQUESTS_PATTERNS,
+  EmployeeRequestDto,
+  CreateEmployeeRequestDto,
+  UpdateEmployeeRequestDto,
+  RequestStatus,
+  RequestType,
+} from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
 @Injectable()

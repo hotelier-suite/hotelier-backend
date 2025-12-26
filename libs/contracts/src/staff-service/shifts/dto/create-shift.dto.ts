@@ -9,8 +9,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { ShiftStatus } from '../enums/shift-status.enum';
-import { ShiftType } from '../enums/shift-type.enum';
+import { ShiftStatus, ShiftType } from '..';
 
 export class CreateShiftDto {
   @ApiProperty({ type: String, example: '2024-01-15' })

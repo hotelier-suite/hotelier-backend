@@ -12,10 +12,9 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import type { GuestDto } from '../../guests/dto/guest.dto';
-import type { RoomDto } from '../../rooms/dto/room.dto';
-import { BookingChannel } from '../enums/booking-channel.enum';
-import { ReservationStatus } from '../enums/reservation-status.enum';
+import type { GuestDto } from '../../guests';
+import type { RoomDto } from '../../rooms';
+import { BookingChannel, ReservationStatus } from '..';
 
 export class ReservationDto {
   @ApiProperty({ example: 1 })

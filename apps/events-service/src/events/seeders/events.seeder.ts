@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Event } from '../entities/event.entity';
-import { EventStatus } from '@app/contracts/events-service/events/enums/event-status.enum';
+import { Event } from '../entities';
+import { EventStatus } from '@app/contracts/events-service';
 
 @Injectable()
 export class EventsSeeder {

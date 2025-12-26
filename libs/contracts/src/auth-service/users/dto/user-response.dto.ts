@@ -10,7 +10,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { LoyaltyLevel } from '../enums/loyalty-level.enum';
+import { LoyaltyLevel } from '..';
 import { UserRoleAssignmentDto } from './user-role-assignment.dto';
 
 export class UserResponseDto {

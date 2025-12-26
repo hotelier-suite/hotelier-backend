@@ -2,39 +2,29 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { CleaningTask } from './entities/cleaning-task.entity';
-import { CleaningAssignment } from './entities/cleaning-assignment.entity';
-import { MaintenanceReport } from './entities/maintenance-report.entity';
-import { MaintenanceRequest } from './entities/maintenance-request.entity';
+import { CleaningTask } from './entities';
+import { CleaningAssignment } from './entities';
+import { MaintenanceReport } from './entities';
+import { MaintenanceRequest } from './entities';
 import {
   CleaningTaskDto,
   CreateCleaningTaskDto,
   UpdateCleaningTaskDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import {
   CleaningAssignmentDto,
   CreateCleaningAssignmentDto,
   UpdateCleaningAssignmentDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import {
   MaintenanceReportDto,
   CreateMaintenanceReportDto,
   UpdateMaintenanceReportDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import {
   HousekeepingMaintenanceRequestDto,
   CreateHousekeepingMaintenanceRequestDto,
   UpdateHousekeepingMaintenanceRequestDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import {
   HousekeepingStatisticsDto,
   CleaningPerformanceDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import {
   CleaningStatus,
   HousekeepingMaintenanceStatus,
   TaskPriority,
-} from '@app/contracts/operations-service/housekeeping/enums';
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class HousekeepingService {

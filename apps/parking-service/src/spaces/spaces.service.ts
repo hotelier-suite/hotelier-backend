@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
-import { ParkingSpace } from './entities/parking-space.entity';
-import { ParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/parking-space.dto';
-import { CreateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/create-parking-space.dto';
-import { UpdateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/update-parking-space.dto';
-import { SpaceStatus } from '@app/contracts/parking-service/spaces/enums/space-status.enum';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
+import { ParkingSpace } from './entities';
+import {
+  ParkingSpaceDto,
+  CreateParkingSpaceDto,
+  UpdateParkingSpaceDto,
+  SpaceStatus,
+  SpaceType,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class SpacesService {

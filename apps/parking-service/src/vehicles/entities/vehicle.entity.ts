@@ -19,11 +19,13 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { VehicleType } from '@app/contracts/parking-service/vehicles/enums/vehicle-type.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
-import { ParkingIncident } from '../../incidents/entities/parking-incident.entity';
+import {
+  VehicleType,
+  GuestType,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
+import { ParkingSpace } from '../../spaces';
+import { ParkingIncident } from '../../incidents';
 
 @Entity('vehicles')
 export class Vehicle {

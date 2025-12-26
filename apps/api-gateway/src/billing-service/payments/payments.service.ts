@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { BILLING_SERVICE_CLIENT } from '../constants';
-import { PAYMENTS_PATTERNS } from '@app/contracts/billing-service/payments/payments.patterns';
 import {
+  PAYMENTS_PATTERNS,
   PaymentDto,
   CreatePaymentDto,
-} from '@app/contracts/billing-service/payments/dto';
+} from '@app/contracts/billing-service';
 
 @Injectable()
 export class PaymentsService {

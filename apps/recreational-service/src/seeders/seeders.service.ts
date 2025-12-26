@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { RecreationalFacilitiesSeeder } from './domains/recreational-facilities.seeder';
-import { RecreationalBookingsSeeder } from './domains/recreational-bookings.seeder';
+import {
+  RecreationalFacilitiesSeeder,
+  RecreationalBookingsSeeder,
+} from './domains';
 
 @Injectable()
 export class SeedersService {

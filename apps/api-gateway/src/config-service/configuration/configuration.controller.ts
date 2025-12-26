@@ -1,9 +1,11 @@
 import { Controller, Get, Put, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
+import {
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 import { Observable } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
 

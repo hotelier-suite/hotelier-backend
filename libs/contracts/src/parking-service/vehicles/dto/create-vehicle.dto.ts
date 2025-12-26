@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { GuestType } from '../enums/guest-type.enum';
-import { VehicleType } from '../enums/vehicle-type.enum';
+import { GuestType, VehicleType } from '..';
 
 export class CreateVehicleDto {
   @ApiProperty({ example: 'ABC-123' })

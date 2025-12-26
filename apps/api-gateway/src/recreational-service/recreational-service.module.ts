@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RECREATIONAL_SERVICE_CLIENT } from './constants';
-import { FacilitiesModule } from './facilities/facilities.module';
-import { BookingsModule } from './bookings/bookings.module';
-import { AvailabilityModule } from './availability/availability.module';
+import { FacilitiesModule } from './facilities';
+import { BookingsModule } from './bookings';
+import { AvailabilityModule } from './availability';
 
 @Global()
 @Module({

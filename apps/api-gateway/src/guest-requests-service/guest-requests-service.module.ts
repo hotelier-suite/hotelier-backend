@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GUEST_REQUESTS_SERVICE_CLIENT } from './constants';
-import { GuestRequestsModule } from './guest-requests/guest-requests.module';
+import { GuestRequestsModule } from './guest-requests';
 
 @Global()
 @Module({

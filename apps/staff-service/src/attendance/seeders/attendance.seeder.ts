@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Attendance } from '../entities/attendance.entity';
-import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { Attendance } from '../entities';
+import { AttendanceStatus } from '@app/contracts/staff-service';
+import { Employee } from '../../employees';
 
 @Injectable()
 export class AttendanceSeeder {

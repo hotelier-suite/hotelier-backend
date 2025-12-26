@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateCleaningAssignmentDto } from './create-cleaning-assignment.dto';
-import { CleaningStatus } from '../enums/cleaning-status.enum';
+import { CleaningStatus } from '../enums';
 
 export class UpdateCleaningAssignmentDto extends PartialType(
   CreateCleaningAssignmentDto,

@@ -11,12 +11,14 @@ import {
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { AttendanceService } from './attendance.service';
-import { AttendanceDto } from '@app/contracts/staff-service/attendance/dto/attendance.dto';
-import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
-import { UpdateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/update-attendance.dto';
-import { CreateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/create-attendance.dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  AttendanceDto,
+  AttendanceStatus,
+  UpdateAttendanceDto,
+  CreateAttendanceDto,
+} from '@app/contracts/staff-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('attendance')
 @Controller('attendance')

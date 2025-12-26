@@ -1,15 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { EVENTS_PATTERNS } from '@app/contracts/events-service/events/events.patterns';
+import { EventsService } from './events.service';
 import {
+  EVENTS_PATTERNS,
   EventDto,
   CreateEventDto,
   UpdateEventDto,
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
-} from '@app/contracts/events-service/events/dto';
-import { EventsService } from './events.service';
+} from '@app/contracts/events-service';
 
 @Controller()
 export class EventsController {

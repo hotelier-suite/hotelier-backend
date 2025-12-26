@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString, Length, Min } from 'class-validator';
-import { SpaceType } from '../enums/space-type.enum';
+import { SpaceType } from '..';
 
 export class CreateParkingSpaceDto {
   @ApiProperty({ example: 'G-001' })

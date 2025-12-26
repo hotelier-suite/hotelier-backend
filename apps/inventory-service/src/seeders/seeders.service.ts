@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { SuppliersSeeder } from '../suppliers/seeders/suppliers.seeder';
-import { ItemsSeeder } from '../items/seeders/items.seeder';
-import { MovementsSeeder } from '../movements/seeders/movements.seeder';
+import { SuppliersSeeder } from '../suppliers';
+import { ItemsSeeder } from '../items';
+import { MovementsSeeder } from '../movements';
 
 @Injectable()
 export class SeedersService {

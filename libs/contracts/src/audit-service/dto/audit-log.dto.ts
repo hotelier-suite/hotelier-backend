@@ -9,8 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { AuditAction } from '../enums/audit-action.enum';
-import { AuditResource } from '../enums/audit-resource.enum';
+import { AuditAction, AuditResource } from '..';
 
 export class AuditLogDto {
   @ApiProperty({

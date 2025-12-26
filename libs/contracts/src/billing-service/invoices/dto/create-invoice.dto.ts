@@ -10,8 +10,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { InvoiceStatus } from '../enums/invoice-status.enum';
-import { PaymentMethod } from '../../payments/enums/payment-method.enum';
+import { InvoiceStatus } from '..';
+import { PaymentMethod } from '../../payments';
 
 export class CreateInvoiceDto {
   @ApiProperty({

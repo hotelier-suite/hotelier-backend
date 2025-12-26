@@ -10,8 +10,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { CleaningStatus } from '../enums/cleaning-status.enum';
-import { TaskPriority } from '../enums/task-priority.enum';
+import { CleaningStatus, TaskPriority } from '..';
 
 export class CleaningTaskDto {
   @ApiProperty({

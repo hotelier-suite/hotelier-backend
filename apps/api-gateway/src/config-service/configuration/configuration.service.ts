@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { CONFIGURATION_PATTERNS } from '@app/contracts/config-service/configuration/configuration.patterns';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import {
+  CONFIGURATION_PATTERNS,
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 import { CONFIG_SERVICE_CLIENT } from '../constants';
 
 @Injectable()

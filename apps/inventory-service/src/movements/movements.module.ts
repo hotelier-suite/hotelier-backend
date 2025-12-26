@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryMovement } from './entities/inventory-movement.entity';
-import { InventoryItem } from '../items/entities/inventory-item.entity';
+import { InventoryMovement } from './entities';
+import { InventoryItem } from '../items';
 import { MovementsController } from './movements.controller';
 import { MovementsService } from './movements.service';
 

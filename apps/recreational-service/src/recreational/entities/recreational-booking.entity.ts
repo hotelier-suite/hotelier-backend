@@ -7,8 +7,10 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { RecreationalBookingStatus } from '@app/contracts/recreational-service/bookings/enums/booking-status.enum';
-import { BookingPriority } from '@app/contracts/recreational-service/bookings/enums/booking-priority.enum';
+import {
+  RecreationalBookingStatus,
+  BookingPriority,
+} from '@app/contracts/recreational-service';
 import { RecreationalFacility } from './recreational-facility.entity';
 
 @Entity('recreational_bookings')

@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { FacilityType } from '@app/contracts/recreational-service/facilities/enums/facility-type.enum';
-import { FacilityStatus } from '@app/contracts/recreational-service/facilities/enums/facility-status.enum';
+import {
+  FacilityType,
+  FacilityStatus,
+} from '@app/contracts/recreational-service';
 import { RecreationalBooking } from './recreational-booking.entity';
 
 @Entity('recreational_facilities')

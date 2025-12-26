@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CleaningTask } from '../entities/cleaning-task.entity';
-import { CleaningAssignment } from '../entities/cleaning-assignment.entity';
-import { MaintenanceReport } from '../entities/maintenance-report.entity';
-import { MaintenanceRequest } from '../entities/maintenance-request.entity';
+import {
+  CleaningTask,
+  CleaningAssignment,
+  MaintenanceReport,
+  MaintenanceRequest,
+} from '../entities';
 import { HousekeepingSeeder } from './housekeeping.seeder';
 
 @Module({

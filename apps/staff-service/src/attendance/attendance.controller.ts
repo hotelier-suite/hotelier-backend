@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ATTENDANCE_PATTERNS } from '@app/contracts/staff-service/attendance/attendance.patterns';
-import { AttendanceDto } from '@app/contracts/staff-service/attendance/dto/attendance.dto';
-import { CreateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/create-attendance.dto';
-import { UpdateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/update-attendance.dto';
-import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
 import { AttendanceService } from './attendance.service';
+import {
+  ATTENDANCE_PATTERNS,
+  AttendanceDto,
+  CreateAttendanceDto,
+  UpdateAttendanceDto,
+  AttendanceStatus,
+} from '@app/contracts/staff-service';
 
 @Controller()
 export class AttendanceController {

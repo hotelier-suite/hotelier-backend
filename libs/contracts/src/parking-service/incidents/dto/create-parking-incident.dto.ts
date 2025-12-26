@@ -7,8 +7,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { IncidentType } from '../enums/incident-type.enum';
+import { TaskPriority } from '@app/contracts/common';
+import { IncidentType } from '..';
 
 export class CreateParkingIncidentDto {
   @ApiProperty({ enum: IncidentType, example: IncidentType.VEHICLE_DAMAGE })

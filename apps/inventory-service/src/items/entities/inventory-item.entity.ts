@@ -19,10 +19,12 @@ import {
   Length,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
-import { Supplier } from '../../suppliers/entities/supplier.entity';
-import { InventoryMovement } from '../../movements/entities/inventory-movement.entity';
+import {
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
+import { Supplier } from '../../suppliers';
+import { InventoryMovement } from '../../movements';
 
 @Entity('inventory')
 export class InventoryItem {

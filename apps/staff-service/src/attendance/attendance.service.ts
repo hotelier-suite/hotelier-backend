@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { AttendanceDto } from '@app/contracts/staff-service/attendance/dto/attendance.dto';
-import { CreateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/create-attendance.dto';
-import { UpdateAttendanceDto } from '@app/contracts/staff-service/attendance/dto/update-attendance.dto';
-import { AttendanceStatus } from '@app/contracts/staff-service/attendance/enums/attendance-status.enum';
-import { Attendance } from './entities/attendance.entity';
-import { Employee } from '../employees/entities/employee.entity';
+import {
+  AttendanceDto,
+  CreateAttendanceDto,
+  UpdateAttendanceDto,
+  AttendanceStatus,
+} from '@app/contracts/staff-service';
+import { Attendance } from './entities';
+import { Employee } from '../employees';
 
 @Injectable()
 export class AttendanceService {

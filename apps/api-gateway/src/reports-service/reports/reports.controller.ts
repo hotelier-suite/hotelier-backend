@@ -21,8 +21,8 @@ import {
 } from '@nestjs/swagger';
 import { Observable, map } from 'rxjs';
 import { ReportsService } from './reports.service';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import {
   ReportDto,
   CreateReportDto,
@@ -30,9 +30,9 @@ import {
   FinancialSummaryDto,
   OccupancyDataDto,
   MonthlyRevenueDto,
-} from '@app/contracts/reports-service/reports/dto';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
+  ReportType,
+  ReportStatus,
+} from '@app/contracts/reports-service';
 import * as PDFDocument from 'pdfkit';
 
 @ApiTags('reports')

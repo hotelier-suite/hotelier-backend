@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedersService } from './seeders.service';
-import { MenuItemsSeeder } from './domains/menu-items.seeder';
-import { RoomServiceOrdersSeeder } from './domains/room-service-orders.seeder';
-import { BeverageInventorySeeder } from './domains/beverage-inventory.seeder';
-import { MenuItem } from '../restaurant/entities/menu-item.entity';
-import { RoomServiceOrder } from '../restaurant/entities/room-service-order.entity';
-import { BeverageInventory } from '../restaurant/entities/beverage-inventory.entity';
+import {
+  MenuItemsSeeder,
+  RoomServiceOrdersSeeder,
+  BeverageInventorySeeder,
+} from './domains';
+import { MenuItem, RoomServiceOrder, BeverageInventory } from '../restaurant';
 
 @Module({
   imports: [

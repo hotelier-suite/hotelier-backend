@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InventoryMovement } from '../entities/inventory-movement.entity';
-import { InventoryItem } from '../../items/entities/inventory-item.entity';
-import { MovementType } from '@app/contracts/inventory-service/movements/enums/movement-type.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
+import { InventoryMovement } from '../entities';
+import { InventoryItem } from '../../items';
+import {
+  MovementType,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
 
 type MovementSeedData = {
   type: MovementType;

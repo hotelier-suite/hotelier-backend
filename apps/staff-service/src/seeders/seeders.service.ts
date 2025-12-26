@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { EmployeesSeeder } from '../employees/seeders/employees.seeder';
-import { ShiftsSeeder } from '../shifts/seeders/shifts.seeder';
-import { AttendanceSeeder } from '../attendance/seeders/attendance.seeder';
-import { EmployeeRequestsSeeder } from '../employee-requests/seeders/employee-requests.seeder';
+import { EmployeesSeeder } from '../employees';
+import { ShiftsSeeder } from '../shifts';
+import { AttendanceSeeder } from '../attendance';
+import { EmployeeRequestsSeeder } from '../employee-requests';
 
 @Injectable()
 export class SeedersService {

@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HousekeepingController } from './housekeeping.controller';
 import { HousekeepingService } from './housekeeping.service';
-import { CleaningTask } from './entities/cleaning-task.entity';
-import { CleaningAssignment } from './entities/cleaning-assignment.entity';
-import { MaintenanceReport } from './entities/maintenance-report.entity';
-import { MaintenanceRequest } from './entities/maintenance-request.entity';
+import { CleaningTask } from './entities';
+import { CleaningAssignment } from './entities';
+import { MaintenanceReport } from './entities';
+import { MaintenanceRequest } from './entities';
 
 @Module({
   imports: [

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GeneralMaintenanceRequest } from '../entities/general-maintenance-request.entity';
+import { GeneralMaintenanceRequest } from '../entities';
 import { MaintenanceSeeder } from './maintenance.seeder';
 
 @Module({

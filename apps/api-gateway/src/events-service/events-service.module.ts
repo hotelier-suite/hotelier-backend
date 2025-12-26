@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EVENTS_SERVICE_CLIENT } from './constants';
-import { EventsModule } from './events/events.module';
-import { VenuesModule } from './venues/venues.module';
+import { EventsModule } from './events';
+import { VenuesModule } from './venues';
 
 @Global()
 @Module({

@@ -11,7 +11,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RoomServiceStatus } from '../enums/room-service-status.enum';
+import { RoomServiceStatus } from '..';
 
 export class RoomServiceOrderDto {
   @ApiProperty({

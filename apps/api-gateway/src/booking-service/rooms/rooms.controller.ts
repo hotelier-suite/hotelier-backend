@@ -18,11 +18,13 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { RoomsService } from './rooms.service';
-import { CreateRoomDto } from '@app/contracts/booking-service/rooms/dto/create-room.dto';
-import { UpdateRoomDto } from '@app/contracts/booking-service/rooms/dto/update-room.dto';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateRoomDto,
+  UpdateRoomDto,
+  RoomDto,
+} from '@app/contracts/booking-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('rooms')
 @Controller('rooms')

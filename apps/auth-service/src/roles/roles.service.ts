@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
-import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { Role } from './entities/role.entity';
-import { RolePermission } from './entities/role-permission.entity';
-import { UserRole } from '../users/entities/user-role.entity';
+import {
+  CreateRoleDto,
+  UpdateRoleDto,
+  RoleResponseDto,
+} from '@app/contracts/auth-service';
+import { Role, RolePermission } from './entities';
+import { UserRole } from '../users';
 
 @Injectable()
 export class RolesService {

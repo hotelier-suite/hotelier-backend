@@ -17,13 +17,15 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { EmployeeRequestsService } from './employee-requests.service';
-import { EmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/employee-request.dto';
-import { CreateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/create-employee-request.dto';
-import { UpdateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/update-employee-request.dto';
-import { RequestType } from '@app/contracts/staff-service/employee-requests/enums/request-type.enum';
-import { RequestStatus } from '@app/contracts/staff-service/employee-requests/enums/request-status.enum';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  EmployeeRequestDto,
+  CreateEmployeeRequestDto,
+  UpdateEmployeeRequestDto,
+  RequestType,
+  RequestStatus,
+} from '@app/contracts/staff-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('permissions')
 @Controller('permissions')

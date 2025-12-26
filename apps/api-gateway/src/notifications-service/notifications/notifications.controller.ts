@@ -17,11 +17,11 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { NotificationsService } from './notifications.service';
-import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
-import { CurrentUserId } from '../../common/decorators/current-user-id.decorator';
+import { NotificationDto } from '@app/contracts/notifications-service';
+import { CurrentUserId } from '../../common';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('notifications')
 @ApiBearerAuth()

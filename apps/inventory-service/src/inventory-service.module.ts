@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { ItemsModule } from './items/items.module';
-import { MovementsModule } from './movements/movements.module';
-import { SuppliersModule } from './suppliers/suppliers.module';
-import { SeedersModule } from './seeders/seeders.module';
-import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
+import { DatabaseModule } from './database';
+import { ItemsModule } from './items';
+import { MovementsModule } from './movements';
+import { SuppliersModule } from './suppliers';
+import { SeedersModule } from './seeders';
+import { NotificationsServiceModule } from './notifications-service';
 
 @Module({
   imports: [

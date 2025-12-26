@@ -1,26 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThan } from 'typeorm';
-import { Invoice } from './entities/invoice.entity';
-import { InvoiceItem } from './entities/invoice-item.entity';
-import { Payment } from './entities/payment.entity';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
-import { PaymentStatus } from '@app/contracts/billing-service/payments/enums/payment-status.enum';
+import { Invoice, InvoiceItem, Payment } from './entities';
 import {
+  InvoiceStatus,
+  PaymentMethod,
+  PaymentStatus,
   InvoiceDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
-} from '@app/contracts/billing-service/invoices/dto';
-import {
   PaymentDto,
   CreatePaymentDto,
-} from '@app/contracts/billing-service/payments/dto';
-import {
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
   MonthlyReportResponseDto,
-} from '@app/contracts/billing-service/statistics/dto';
+} from '@app/contracts/billing-service';
 
 interface InvoiceTotalResultInterface {
   total: string;

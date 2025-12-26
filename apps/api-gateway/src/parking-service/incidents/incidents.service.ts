@@ -2,14 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { PARKING_SERVICE_CLIENT } from '../constants';
-import { INCIDENTS_PATTERNS } from '@app/contracts/parking-service/incidents/incidents.patterns';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import { TaskPriority } from '@app/contracts/common';
+import {
+  CreateParkingIncidentDto,
+  IncidentStatus,
+  IncidentType,
+  INCIDENTS_PATTERNS,
+  ParkingIncidentDto,
+  ResolveIncidentRequestDto,
+  UpdateParkingIncidentDto,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class IncidentsService {

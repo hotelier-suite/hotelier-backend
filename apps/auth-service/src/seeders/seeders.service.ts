@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PermissionsSeeder } from './domains/permissions.seeder';
-import { RolesSeeder } from './domains/roles.seeder';
-import { UsersSeeder } from './domains/users.seeder';
+import { PermissionsSeeder, RolesSeeder, UsersSeeder } from './domains';
 
 @Injectable()
 export class SeedersService {

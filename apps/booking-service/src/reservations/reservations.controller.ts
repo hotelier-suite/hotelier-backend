@@ -1,13 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { RESERVATIONS_PATTERNS } from '@app/contracts/booking-service/reservations/reservations.patterns';
-import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
-import { CreateReservationDto } from '@app/contracts/booking-service/reservations/dto/create-reservation.dto';
-import { UpdateReservationDto } from '@app/contracts/booking-service/reservations/dto/update-reservation.dto';
-import { GetAvailabilityDto } from '@app/contracts/booking-service/reservations/dto/get-availability.dto';
-import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/reservations/dto/checkout-reservation-response.dto';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
 import { ReservationsService } from './reservations.service';
+import {
+  RESERVATIONS_PATTERNS,
+  ReservationDto,
+  CreateReservationDto,
+  UpdateReservationDto,
+  GetAvailabilityDto,
+  CheckoutReservationResponseDto,
+  RoomDto,
+} from '@app/contracts/booking-service';
 
 @Controller()
 export class ReservationsController {

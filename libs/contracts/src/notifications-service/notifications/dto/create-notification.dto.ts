@@ -7,7 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { NotificationType } from '../enums/notification-type.enum';
+import { NotificationType } from '..';
 
 export class CreateNotificationDto {
   @ApiProperty({

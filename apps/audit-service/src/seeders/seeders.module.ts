@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedersService } from './seeders.service';
-import { AuditLogsSeeder } from './domains/audit-logs.seeder';
-import { AuditLog } from '../audit/entities/audit-log.entity';
+import { AuditLogsSeeder } from './domains';
+import { AuditLog } from '../audit';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AuditLog])],

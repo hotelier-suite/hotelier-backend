@@ -2,10 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { INVENTORY_SERVICE_CLIENT } from '../constants';
-import { SUPPLIERS_PATTERNS } from '@app/contracts/inventory-service/suppliers/suppliers.patterns';
-import { SupplierResponseDto } from '@app/contracts/inventory-service/suppliers/dto/supplier-response.dto';
-import { CreateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/create-supplier.dto';
-import { UpdateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/update-supplier.dto';
+import {
+  SUPPLIERS_PATTERNS,
+  SupplierResponseDto,
+  CreateSupplierDto,
+  UpdateSupplierDto,
+} from '@app/contracts/inventory-service';
 
 @Injectable()
 export class SuppliersService {

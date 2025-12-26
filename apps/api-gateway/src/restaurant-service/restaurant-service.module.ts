@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RESTAURANT_SERVICE_CLIENT } from './constants';
-import { MenuItemsModule } from './menu-items/menu-items.module';
-import { RoomServiceOrdersModule } from './room-service-orders/room-service-orders.module';
-import { BeverageInventoryModule } from './beverage-inventory/beverage-inventory.module';
+import { MenuItemsModule } from './menu-items';
+import { RoomServiceOrdersModule } from './room-service-orders';
+import { BeverageInventoryModule } from './beverage-inventory';
 
 @Global()
 @Module({

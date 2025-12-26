@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
-import { DashboardWidget } from './entities/dashboard-widget.entity';
+import { DashboardWidget } from './entities';
 
 @Module({
   imports: [
@@ -13,7 +13,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'BOOKING_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'booking_queue',
           queueOptions: { durable: true },
         },
@@ -22,7 +24,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'BILLING_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'billing_queue',
           queueOptions: { durable: true },
         },
@@ -31,7 +35,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'OPERATIONS_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'operations_queue',
           queueOptions: { durable: true },
         },
@@ -40,7 +46,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'GUEST_REQUESTS_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'guest_requests_queue',
           queueOptions: { durable: true },
         },
@@ -49,7 +57,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'STAFF_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'staff_queue',
           queueOptions: { durable: true },
         },
@@ -58,7 +68,9 @@ import { DashboardWidget } from './entities/dashboard-widget.entity';
         name: 'AUTH_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
           queue: 'auth_queue',
           queueOptions: { durable: true },
         },

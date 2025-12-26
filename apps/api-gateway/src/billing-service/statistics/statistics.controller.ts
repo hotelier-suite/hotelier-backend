@@ -10,7 +10,7 @@ import { StatisticsService } from './statistics.service';
 import {
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
-} from '@app/contracts/billing-service/statistics/dto';
+} from '@app/contracts/billing-service';
 
 @ApiTags('billing')
 @Controller('billing')

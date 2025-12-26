@@ -16,12 +16,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { CreateShiftDto } from '@app/contracts/staff-service/shifts/dto/create-shift.dto';
-import { ShiftDto } from '@app/contracts/staff-service/shifts/dto/shift.dto';
-import { UpdateShiftDto } from '@app/contracts/staff-service/shifts/dto/update-shift.dto';
-import { ShiftStatus } from '@app/contracts/staff-service/shifts/enums/shift-status.enum';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateShiftDto,
+  ShiftDto,
+  UpdateShiftDto,
+  ShiftStatus,
+} from '@app/contracts/staff-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 import { ShiftsService } from './shifts.service';
 
 @ApiTags('shifts')

@@ -8,7 +8,7 @@ import {
   IsEnum,
   IsDate,
 } from 'class-validator';
-import { LoyaltyLevel } from '../../users/enums/loyalty-level.enum';
+import { LoyaltyLevel } from '../../users';
 
 export class ProfileResponseDto {
   @ApiProperty({

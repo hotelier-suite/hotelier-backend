@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AuthModule } from './auth/auth.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { RolesModule } from './roles/roles.module';
-import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth';
+import { PermissionsModule } from './permissions';
+import { RolesModule } from './roles';
+import { UsersModule } from './users';
 import { AUTH_SERVICE_CLIENT } from './constants';
 
 @Global()

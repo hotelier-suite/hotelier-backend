@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { Role } from './role.entity';
-import { SystemPermission } from '../../permissions/entities/system-permission.entity';
+import { SystemPermission } from '../../permissions';
 
 @Entity('role_permissions')
 @Index(['roleId', 'permissionId'], { unique: true })

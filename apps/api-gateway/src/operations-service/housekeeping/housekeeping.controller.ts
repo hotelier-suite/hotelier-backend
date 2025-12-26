@@ -35,7 +35,7 @@ import {
   UpdateHousekeepingMaintenanceRequestDto,
   HousekeepingStatisticsDto,
   CleaningPerformanceDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
+} from '@app/contracts/operations-service';
 
 @ApiTags('Housekeeping')
 @Controller('housekeeping')

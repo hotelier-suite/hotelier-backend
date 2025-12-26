@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RoomType } from '@app/contracts/booking-service/rooms/enums/room-type.enum';
-import { Room } from '../entities/room.entity';
+import { RoomType } from '@app/contracts/booking-service';
+import { Room } from '../entities';
 
 @Injectable()
 export class RoomsSeeder {

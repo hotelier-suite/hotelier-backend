@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Configuration } from '../configuration/entities/configuration.entity';
-import { ConfigCategory } from '../configuration/enums/config-category.enum';
+import { Configuration, ConfigCategory } from '../configuration';
 
 @Injectable()
 export class SeedersService {

@@ -16,10 +16,9 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
-import { SpaceStatus } from '@app/contracts/parking-service/spaces/enums/space-status.enum';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
-import { ParkingIncident } from '../../incidents/entities/parking-incident.entity';
+import { SpaceType, SpaceStatus } from '@app/contracts/parking-service';
+import { Vehicle } from '../../vehicles';
+import { ParkingIncident } from '../../incidents';
 
 @Entity('parking_spaces')
 export class ParkingSpace {

@@ -16,7 +16,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RoomType } from '@app/contracts/booking-service/rooms/enums/room-type.enum';
+import { RoomType } from '@app/contracts/booking-service';
 
 @Entity('rooms')
 export class Room {

@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { HousekeepingMaintenanceType } from '@app/contracts/operations-service/housekeeping/enums/maintenance-type.enum';
-import { HousekeepingMaintenanceStatus } from '@app/contracts/operations-service/housekeeping/enums/maintenance-status.enum';
-import { TaskPriority } from '@app/contracts/operations-service/housekeeping/enums/task-priority.enum';
+import {
+  HousekeepingMaintenanceType,
+  HousekeepingMaintenanceStatus,
+  TaskPriority,
+} from '@app/contracts/operations-service';
 
 @Entity('housekeeping_maintenance_requests')
 export class MaintenanceRequest {

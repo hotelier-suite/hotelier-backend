@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { InventoryMovement } from './entities/inventory-movement.entity';
-import { InventoryItem } from '../items/entities/inventory-item.entity';
-import { InventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/inventory-movement.dto';
-import { CreateInventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/create-inventory-movement.dto';
-import { MovementType } from '@app/contracts/inventory-service/movements/enums/movement-type.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
+import { InventoryMovement } from './entities';
+import { InventoryItem } from '../items';
+import {
+  InventoryMovementDto,
+  CreateInventoryMovementDto,
+  MovementType,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
 
 @Injectable()
 export class MovementsService {

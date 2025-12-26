@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { VehiclesSeeder } from '../vehicles/seeders/vehicles.seeder';
-import { ParkingSpacesSeeder } from '../spaces/seeders/parking-spaces.seeder';
-import { ParkingIncidentsSeeder } from '../incidents/seeders/parking-incidents.seeder';
+import { VehiclesSeeder } from '../vehicles';
+import { ParkingSpacesSeeder } from '../spaces';
+import { ParkingIncidentsSeeder } from '../incidents';
 
 @Injectable()
 export class SeedersService {

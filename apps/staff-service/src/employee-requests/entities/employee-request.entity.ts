@@ -17,9 +17,8 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RequestType } from '@app/contracts/staff-service/employee-requests/enums/request-type.enum';
-import { RequestStatus } from '@app/contracts/staff-service/employee-requests/enums/request-status.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { RequestType, RequestStatus } from '@app/contracts/staff-service';
+import { Employee } from '../../employees';
 
 @Entity('employee_requests')
 export class EmployeeRequest {

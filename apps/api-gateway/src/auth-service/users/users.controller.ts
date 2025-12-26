@@ -23,16 +23,18 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '@app/contracts/auth-service/users/dto/create-user.dto';
-import { UpdateUserDto } from '@app/contracts/auth-service/users/dto/update-user.dto';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { UserRoleIdsDto } from '@app/contracts/auth-service/users/dto/user-role-ids.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import type { JwtUser } from '@app/contracts/auth-service/tokens/interfaces/jwt-user.interface';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserResponseDto,
+  UserRoleIdsDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+  JwtUser,
+} from '@app/contracts/auth-service';
+import { CurrentUser } from '../../common';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 import { Observable } from 'rxjs';
 
 @ApiTags('users')

@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Invoice } from '../../billing/entities/invoice.entity';
-import { InvoiceItem } from '../../billing/entities/invoice-item.entity';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
+import { Invoice, InvoiceItem } from '../../billing';
+import { InvoiceStatus, PaymentMethod } from '@app/contracts/billing-service';
 
 @Injectable()
 export class InvoicesSeeder {

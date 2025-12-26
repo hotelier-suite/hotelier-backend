@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SeedersService } from './seeders.service';
-import { VenuesSeedersModule } from '../venues/seeders/seeders.module';
-import { EventsSeedersModule } from '../events/seeders/seeders.module';
+import { VenuesSeedersModule } from '../venues';
+import { EventsSeedersModule } from '../events';
 
 @Module({
   imports: [VenuesSeedersModule, EventsSeedersModule],

@@ -19,14 +19,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { ItemsService } from './items.service';
-import { InventoryItemDto } from '@app/contracts/inventory-service/items/dto/inventory-item.dto';
-import { CreateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/create-inventory-item.dto';
-import { UpdateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/update-inventory-item.dto';
-import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
+import {
+  InventoryItemDto,
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
 
 @ApiTags('inventory')
 @Controller('inventory/items')

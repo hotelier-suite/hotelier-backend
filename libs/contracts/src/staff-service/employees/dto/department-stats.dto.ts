@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, Min } from 'class-validator';
-import { Department } from '../enums/department.enum';
+import { Department } from '..';
 
 export class DepartmentStatsDto {
   @ApiProperty({

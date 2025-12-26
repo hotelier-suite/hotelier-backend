@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RestaurantController } from './restaurant.controller';
 import { RestaurantService } from './restaurant.service';
-import { MenuItem } from './entities/menu-item.entity';
-import { RoomServiceOrder } from './entities/room-service-order.entity';
-import { BeverageInventory } from './entities/beverage-inventory.entity';
+import { MenuItem, RoomServiceOrder, BeverageInventory } from './entities';
 
 @Module({
   imports: [

@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AnalyticsService } from './analytics.service';
-import { ANALYTICS_PATTERNS } from '@app/contracts/reports-service/analytics.patterns';
-import { AnalyticsMetric } from '@app/contracts/reports-service/analytics/enums/analytics-metric.enum';
 import {
+  ANALYTICS_PATTERNS,
+  AnalyticsMetric,
   AnalyticsDataDto,
   CreateAnalyticsDataDto,
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
-} from '@app/contracts/reports-service/analytics/dto';
+} from '@app/contracts/reports-service';
 
 @Controller()
 export class AnalyticsController {

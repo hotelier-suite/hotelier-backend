@@ -21,10 +21,12 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ReservationStatus } from '@app/contracts/booking-service/reservations/enums/reservation-status.enum';
-import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
-import { Guest } from '../../guests/entities/guest.entity';
-import { Room } from '../../rooms/entities/room.entity';
+import {
+  ReservationStatus,
+  BookingChannel,
+} from '@app/contracts/booking-service';
+import { Guest } from '../../guests';
+import { Room } from '../../rooms';
 
 @Entity('reservations')
 export class Reservation {

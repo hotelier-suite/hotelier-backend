@@ -16,9 +16,8 @@ import {
   Length,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ShiftType } from '@app/contracts/staff-service/shifts/enums/shift-type.enum';
-import { ShiftStatus } from '@app/contracts/staff-service/shifts/enums/shift-status.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { ShiftType, ShiftStatus } from '@app/contracts/staff-service';
+import { Employee } from '../../employees';
 
 @Entity('shifts')
 export class Shift {

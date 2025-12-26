@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PARKING_SERVICE_CLIENT } from './constants';
-import { VehiclesModule } from './vehicles/vehicles.module';
-import { SpacesModule } from './spaces/spaces.module';
-import { IncidentsModule } from './incidents/incidents.module';
+import { VehiclesModule } from './vehicles';
+import { SpacesModule } from './spaces';
+import { IncidentsModule } from './incidents';
 
 @Global()
 @Module({

@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecreationalController } from './recreational.controller';
 import { RecreationalService } from './recreational.service';
-import { RecreationalFacility } from './entities/recreational-facility.entity';
-import { RecreationalBooking } from './entities/recreational-booking.entity';
+import { RecreationalFacility, RecreationalBooking } from './entities';
 
 @Module({
   imports: [

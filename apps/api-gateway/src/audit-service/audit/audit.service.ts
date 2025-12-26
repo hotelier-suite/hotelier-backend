@@ -2,14 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { AUDIT_SERVICE_CLIENT } from '../constants';
-import { AUDIT_PATTERNS } from '@app/contracts/audit-service/audit.patterns';
 import {
+  AUDIT_PATTERNS,
   AuditLogDto,
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-} from '@app/contracts/audit-service/dto';
-import { AuditResource, AuditAction } from '@app/contracts/audit-service/enums';
+  AuditResource,
+  AuditAction,
+} from '@app/contracts/audit-service';
 
 export interface AuditLogParams {
   userId: number;

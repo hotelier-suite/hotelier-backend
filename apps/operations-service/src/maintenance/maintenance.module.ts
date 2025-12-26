@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MaintenanceController } from './maintenance.controller';
 import { MaintenanceService } from './maintenance.service';
-import { GeneralMaintenanceRequest } from './entities/general-maintenance-request.entity';
+import { GeneralMaintenanceRequest } from './entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([GeneralMaintenanceRequest])],

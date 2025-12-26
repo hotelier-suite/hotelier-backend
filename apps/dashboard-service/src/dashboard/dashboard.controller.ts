@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DashboardService } from './dashboard.service';
-import { WIDGETS_PATTERNS } from '@app/contracts/dashboard-service/widgets/widgets.patterns';
-import { STATISTICS_PATTERNS } from '@app/contracts/dashboard-service/statistics/statistics.patterns';
 import {
+  WIDGETS_PATTERNS,
+  STATISTICS_PATTERNS,
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
@@ -20,7 +20,9 @@ export class DashboardController {
 
   // Widget patterns
   @MessagePattern(WIDGETS_PATTERNS.CREATE)
-  createWidget(@Payload() data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
+  createWidget(
+    @Payload() data: CreateDashboardWidgetDto,
+  ): Promise<DashboardWidgetDto> {
     return this.dashboardService.createWidget(data);
   }
 

@@ -11,9 +11,9 @@ import {
   RecentActivityDto,
   RevenueDataDto,
 } from '@app/contracts/dashboard-service';
-import { CurrentUserId } from '../../common/decorators/current-user-id.decorator';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { CurrentUserId } from '../../common';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { Observable } from 'rxjs';
 
 @ApiTags('dashboard')

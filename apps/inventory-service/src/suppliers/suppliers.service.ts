@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Supplier } from './entities/supplier.entity';
-import { SupplierResponseDto } from '@app/contracts/inventory-service/suppliers/dto/supplier-response.dto';
-import { CreateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/create-supplier.dto';
-import { UpdateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/update-supplier.dto';
+import { Supplier } from './entities';
+import {
+  SupplierResponseDto,
+  CreateSupplierDto,
+  UpdateSupplierDto,
+} from '@app/contracts/inventory-service';
 
 @Injectable()
 export class SuppliersService {

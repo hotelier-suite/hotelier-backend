@@ -5,8 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { DecimalTransformer } from '../../database/transformers/decimal.transformer';
-import { BeverageStatus } from '@app/contracts/restaurant-service/beverage-inventory/enums/beverage-status.enum';
+import { DecimalTransformer } from '../../database';
+import { BeverageStatus } from '@app/contracts/restaurant-service';
 
 @Entity('beverage_inventory')
 export class BeverageInventory {

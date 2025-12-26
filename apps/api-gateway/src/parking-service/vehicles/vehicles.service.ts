@@ -2,12 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { PARKING_SERVICE_CLIENT } from '../constants';
-import { VEHICLES_PATTERNS } from '@app/contracts/parking-service/vehicles/vehicles.patterns';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
+import {
+  VEHICLES_PATTERNS,
+  VehicleDto,
+  CreateVehicleDto,
+  UpdateVehicleDto,
+  VehicleStatus,
+  GuestType,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class VehiclesService {

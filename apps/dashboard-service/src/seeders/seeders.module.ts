@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedersService } from './seeders.service';
-import { WidgetsSeeder } from './domains/widgets.seeder';
-import { DashboardWidget } from '../dashboard/entities/dashboard-widget.entity';
+import { WidgetsSeeder } from './domains';
+import { DashboardWidget } from '../dashboard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([DashboardWidget])],

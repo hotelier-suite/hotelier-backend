@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Guest } from '../../guests/entities/guest.entity';
-import { Room } from '../../rooms/entities/room.entity';
-import { Reservation } from '../entities/reservation.entity';
+import { Guest } from '../../guests';
+import { Room } from '../../rooms';
+import { Reservation } from '../entities';
 import { ReservationsSeeder } from './reservations.seeder';
 
 @Module({

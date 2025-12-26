@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { PaymentMethod } from '../../payments/enums/payment-method.enum';
+import { PaymentMethod } from '../../payments';
 
 export class MarkAsPaidRequestDto {
   @ApiProperty({

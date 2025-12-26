@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { InventoryItem } from './entities/inventory-item.entity';
-import { InventoryItemDto } from '@app/contracts/inventory-service/items/dto/inventory-item.dto';
-import { CreateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/create-inventory-item.dto';
-import { UpdateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/update-inventory-item.dto';
-import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
-import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+import { InventoryItem } from './entities';
+import {
+  InventoryItemDto,
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
+import { NotificationType } from '@app/contracts/notifications-service';
+import { NotificationsService } from '../notifications-service';
 
 @Injectable()
 export class ItemsService {

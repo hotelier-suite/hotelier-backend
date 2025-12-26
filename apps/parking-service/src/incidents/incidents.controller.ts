@@ -1,14 +1,16 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { INCIDENTS_PATTERNS } from '@app/contracts/parking-service/incidents/incidents.patterns';
 import { IncidentsService } from './incidents.service';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import {
+  INCIDENTS_PATTERNS,
+  ParkingIncidentDto,
+  CreateParkingIncidentDto,
+  UpdateParkingIncidentDto,
+  ResolveIncidentRequestDto,
+  IncidentStatus,
+  IncidentType,
+} from '@app/contracts/parking-service';
+import { TaskPriority } from '@app/contracts/common';
 
 @Controller()
 export class IncidentsController {

@@ -22,7 +22,7 @@ import {
   GeneralMaintenanceRequestDto,
   CreateGeneralMaintenanceRequestDto,
   UpdateGeneralMaintenanceRequestDto,
-} from '@app/contracts/operations-service/maintenance/dto';
+} from '@app/contracts/operations-service';
 
 @ApiTags('Maintenance')
 @Controller('maintenance')

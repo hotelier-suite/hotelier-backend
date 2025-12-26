@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ParkingIncident } from '../entities/parking-incident.entity';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import { ParkingIncident } from '../entities';
+import { Vehicle } from '../../vehicles';
+import { ParkingSpace } from '../../spaces';
+import { IncidentType, IncidentStatus } from '@app/contracts/parking-service';
+import { TaskPriority } from '@app/contracts/common';
 
 @Injectable()
 export class ParkingIncidentsSeeder {

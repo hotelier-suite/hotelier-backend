@@ -7,7 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { TaskPriority } from '../enums/task-priority.enum';
+import { TaskPriority } from '..';
 
 export class CreateCleaningTaskDto {
   @ApiProperty({ description: 'Room number to be cleaned', example: '101' })

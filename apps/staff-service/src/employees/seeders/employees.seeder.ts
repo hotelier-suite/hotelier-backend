@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Employee } from '../entities/employee.entity';
-import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
-import { StaffStatus } from '@app/contracts/staff-service/employees/enums/staff-status.enum';
+import { Employee } from '../entities';
+import { Department, StaffStatus } from '@app/contracts/staff-service';
 
 @Injectable()
 export class EmployeesSeeder {

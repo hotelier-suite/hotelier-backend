@@ -17,12 +17,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { SuppliersService } from './suppliers.service';
-import { SupplierResponseDto } from '@app/contracts/inventory-service/suppliers/dto/supplier-response.dto';
-import { CreateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/create-supplier.dto';
-import { UpdateSupplierDto } from '@app/contracts/inventory-service/suppliers/dto/update-supplier.dto';
+import {
+  SupplierResponseDto,
+  CreateSupplierDto,
+  UpdateSupplierDto,
+} from '@app/contracts/inventory-service';
 
 @ApiTags('inventory')
 @Controller('inventory/suppliers')

@@ -8,7 +8,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RequestType } from '../enums/request-type.enum';
+import { RequestType } from '..';
 
 export class CreateEmployeeRequestDto {
   @ApiProperty({

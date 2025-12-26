@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { User } from '../users/entities/user.entity';
-import { UserRole } from '../users/entities/user-role.entity';
+import {
+  PermissionResponseDto,
+  RoleResponseDto,
+} from '@app/contracts/auth-service';
+import { User, UserRole } from '../users';
 
 @Injectable()
 export class AccessControlService {

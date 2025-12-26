@@ -39,7 +39,7 @@ export class WidgetsSeeder {
         userId: 1,
       },
       {
-        title: 'Today\'s Check-ins',
+        title: "Today's Check-ins",
         type: 'stat',
         configuration: { dataSource: 'checkIns', color: 'green' },
         data: null,

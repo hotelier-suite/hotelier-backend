@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { AnalyticsData } from './entities/analytics-data.entity';
-import { AnalyticsMetric } from '@app/contracts/reports-service/analytics/enums/analytics-metric.enum';
+import { AnalyticsData } from './entities';
 import {
+  AnalyticsMetric,
   CreateAnalyticsDataDto,
   UpdateAnalyticsDataDto,
   AnalyticsDataDto,
@@ -12,7 +12,7 @@ import {
   DistinctMetricResultDto,
   AverageMetricResultDto,
   TotalMetricResultDto,
-} from '@app/contracts/reports-service/analytics/dto';
+} from '@app/contracts/reports-service';
 
 @Injectable()
 export class AnalyticsService {

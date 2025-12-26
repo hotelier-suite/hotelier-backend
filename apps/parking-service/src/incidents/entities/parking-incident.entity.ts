@@ -18,11 +18,10 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
+import { IncidentType, IncidentStatus } from '@app/contracts/parking-service';
+import { TaskPriority } from '@app/contracts/common';
+import { Vehicle } from '../../vehicles';
+import { ParkingSpace } from '../../spaces';
 
 @Entity('parking_incidents')
 export class ParkingIncident {

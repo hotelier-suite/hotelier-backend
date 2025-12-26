@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { STAFF_SERVICE_CLIENT } from './constants';
-import { EmployeesModule } from './employees/employees.module';
-import { ShiftsModule } from './shifts/shifts.module';
-import { AttendanceModule } from './attendance/attendance.module';
-import { EmployeeRequestsModule } from './employee-requests/employee-requests.module';
+import { EmployeesModule } from './employees';
+import { ShiftsModule } from './shifts';
+import { AttendanceModule } from './attendance';
+import { EmployeeRequestsModule } from './employee-requests';
 
 @Global()
 @Module({

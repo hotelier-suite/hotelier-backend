@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { REPORTS_SERVICE_CLIENT } from '../constants';
-import { ANALYTICS_PATTERNS } from '@app/contracts/reports-service/analytics.patterns';
-import { AnalyticsMetric } from '@app/contracts/reports-service/analytics/enums/analytics-metric.enum';
 import {
+  ANALYTICS_PATTERNS,
   AnalyticsDataDto,
+  AnalyticsMetric,
   CreateAnalyticsDataDto,
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
-} from '@app/contracts/reports-service/analytics/dto';
+} from '@app/contracts/reports-service';
 
 @Injectable()
 export class AnalyticsService {

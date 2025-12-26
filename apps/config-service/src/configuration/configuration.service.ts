@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Configuration } from './entities/configuration.entity';
-import { ConfigCategory } from './enums/config-category.enum';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import { Configuration } from './entities';
+import { ConfigCategory } from './enums';
+import {
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 
 @Injectable()
 export class ConfigurationService {

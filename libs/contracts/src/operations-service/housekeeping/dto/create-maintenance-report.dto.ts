@@ -7,8 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { HousekeepingMaintenanceType } from '../enums/maintenance-type.enum';
-import { TaskPriority } from '../enums/task-priority.enum';
+import { HousekeepingMaintenanceType, TaskPriority } from '..';
 
 export class CreateMaintenanceReportDto {
   @ApiProperty({

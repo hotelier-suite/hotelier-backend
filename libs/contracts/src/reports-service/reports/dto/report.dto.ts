@@ -9,8 +9,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { ReportType } from '../enums/report-type.enum';
-import { ReportStatus } from '../enums/report-status.enum';
+import { ReportType } from '../enums';
+import { ReportStatus } from '../enums';
 import { ReportParametersDto } from './report-parameters.dto';
 
 export class ReportDto {

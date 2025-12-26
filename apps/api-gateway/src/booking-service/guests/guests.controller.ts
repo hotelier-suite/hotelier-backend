@@ -19,11 +19,13 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { GuestsService } from './guests.service';
-import { CreateGuestDto } from '@app/contracts/booking-service/guests/dto/create-guest.dto';
-import { UpdateGuestDto } from '@app/contracts/booking-service/guests/dto/update-guest.dto';
-import { GuestDto } from '@app/contracts/booking-service/guests/dto/guest.dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateGuestDto,
+  UpdateGuestDto,
+  GuestDto,
+} from '@app/contracts/booking-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('guests')
 @ApiBearerAuth()

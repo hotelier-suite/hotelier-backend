@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { of, lastValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DashboardWidget } from './entities/dashboard-widget.entity';
+import { DashboardWidget } from './entities';
 import {
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
@@ -15,15 +15,21 @@ import {
   RecentActivityDto,
   TopPerformingRoomDto,
 } from '@app/contracts/dashboard-service';
-import { ROOMS_PATTERNS } from '@app/contracts/booking-service/rooms/rooms.patterns';
-import { RESERVATIONS_PATTERNS } from '@app/contracts/booking-service/reservations/reservations.patterns';
-import { STATISTICS_PATTERNS as BILLING_STATISTICS_PATTERNS } from '@app/contracts/billing-service/statistics/statistics.patterns';
-import { INVOICES_PATTERNS } from '@app/contracts/billing-service/invoices/invoices.patterns';
-import { HOUSEKEEPING_PATTERNS } from '@app/contracts/operations-service/housekeeping/housekeeping.patterns';
-import { GUEST_REQUESTS_PATTERNS } from '@app/contracts/guest-requests-service/guest-requests/guest-requests.patterns';
-import { EMPLOYEES_PATTERNS } from '@app/contracts/staff-service/employees/employees.patterns';
-import { AUTH_PATTERNS } from '@app/contracts/auth-service/auth/auth.patterns';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import {
+  ROOMS_PATTERNS,
+  RESERVATIONS_PATTERNS,
+} from '@app/contracts/booking-service';
+import {
+  STATISTICS_PATTERNS,
+  INVOICES_PATTERNS,
+} from '@app/contracts/billing-service';
+import { HOUSEKEEPING_PATTERNS } from '@app/contracts/operations-service';
+import {
+  GUEST_REQUESTS_PATTERNS,
+  RequestStatus,
+} from '@app/contracts/guest-requests-service';
+import { EMPLOYEES_PATTERNS } from '@app/contracts/staff-service';
+import { AUTH_PATTERNS } from '@app/contracts/auth-service';
 
 @Injectable()
 export class DashboardService {
@@ -45,7 +51,9 @@ export class DashboardService {
   ) {}
 
   // Widget CRUD operations
-  async createWidget(data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
+  async createWidget(
+    data: CreateDashboardWidgetDto,
+  ): Promise<DashboardWidgetDto> {
     const widget = this.widgetRepository.create(data);
     return this.widgetRepository.save(widget);
   }
@@ -65,7 +73,10 @@ export class DashboardService {
     return widget;
   }
 
-  async updateWidget(id: number, data: UpdateDashboardWidgetDto): Promise<DashboardWidgetDto> {
+  async updateWidget(
+    id: number,
+    data: UpdateDashboardWidgetDto,
+  ): Promise<DashboardWidgetDto> {
     await this.widgetRepository.update(id, data);
     return this.findOneWidget(id);
   }
@@ -87,9 +98,9 @@ export class DashboardService {
   async getDashboardStats(userId: number): Promise<DashboardStatsDto> {
     // Validate user first using GET_PROFILE pattern
     const user = await lastValueFrom(
-      this.authClient.send(AUTH_PATTERNS.GET_PROFILE, userId).pipe(
-        catchError(() => of(null)),
-      ),
+      this.authClient
+        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .pipe(catchError(() => of(null))),
     );
 
     if (!user) {
@@ -106,23 +117,35 @@ export class DashboardService {
     const dayEnd = new Date(today);
     dayEnd.setHours(23, 59, 59, 999);
 
-    const [rooms, reservations, financialSummary, departmentStats, pendingRequests] = await Promise.all([
+    const [
+      rooms,
+      reservations,
+      financialSummary,
+      departmentStats,
+      pendingRequests,
+    ] = await Promise.all([
       lastValueFrom(
-        this.bookingClient.send(ROOMS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
+        this.bookingClient
+          .send(ROOMS_PATTERNS.FIND_ALL, {})
+          .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
-        this.bookingClient.send(RESERVATIONS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
+        this.bookingClient
+          .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+          .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
         this.billingClient
-          .send(BILLING_STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
+          .send(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
           })
           .pipe(catchError(() => of({ totalRevenue: 0 }))),
       ),
       lastValueFrom(
-        this.staffClient.send(EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS, {}).pipe(catchError(() => of([]))),
+        this.staffClient
+          .send(EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS, {})
+          .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
         this.guestRequestsClient
@@ -145,7 +168,10 @@ export class DashboardService {
     }).length;
 
     const activeStaff = Array.isArray(departmentStats)
-      ? departmentStats.reduce((sum: number, s: any) => sum + (s.activeCount ?? 0), 0)
+      ? departmentStats.reduce(
+          (sum: number, s: any) => sum + (s.activeCount ?? 0),
+          0,
+        )
       : 0;
 
     return {
@@ -155,7 +181,8 @@ export class DashboardService {
       totalRevenue: financialSummary.totalRevenue || 0,
       todayCheckIns,
       todayCheckOuts,
-      pendingRequests: typeof pendingRequests === 'number' ? pendingRequests : 0,
+      pendingRequests:
+        typeof pendingRequests === 'number' ? pendingRequests : 0,
       activeStaff,
     };
   }
@@ -163,10 +190,14 @@ export class DashboardService {
   async getOccupancyData(): Promise<OccupancyDataDto[]> {
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
-        this.bookingClient.send(ROOMS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
+        this.bookingClient
+          .send(ROOMS_PATTERNS.FIND_ALL, {})
+          .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
-        this.bookingClient.send(RESERVATIONS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
+        this.bookingClient
+          .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+          .pipe(catchError(() => of([]))),
       ),
     ]);
 
@@ -199,7 +230,10 @@ export class DashboardService {
         return checkIn <= dayEnd && checkOut > dayStart;
       }).length;
 
-      const occupancy = Math.max(0, Math.min(100, Math.round((overlapping / totalRooms) * 100)));
+      const occupancy = Math.max(
+        0,
+        Math.min(100, Math.round((overlapping / totalRooms) * 100)),
+      );
       results.push({ date: d.toISOString().split('T')[0], occupancy });
     }
     return results;
@@ -207,7 +241,9 @@ export class DashboardService {
 
   async getRevenueData(userId: number): Promise<RevenueDataDto[]> {
     const user = await lastValueFrom(
-      this.authClient.send(AUTH_PATTERNS.GET_PROFILE, userId).pipe(catchError(() => of(null))),
+      this.authClient
+        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .pipe(catchError(() => of(null))),
     );
 
     if (!user) {
@@ -247,7 +283,9 @@ export class DashboardService {
     startDate.setDate(endDate.getDate() - 30);
 
     const reservations = await lastValueFrom(
-      this.bookingClient.send(RESERVATIONS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
+      this.bookingClient
+        .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+        .pipe(catchError(() => of([]))),
     );
 
     const recentReservations = reservations.filter((r: any) => {
@@ -267,7 +305,10 @@ export class DashboardService {
       .map(([room, v]) => ({
         room,
         revenue: Math.round(v.revenue * 100) / 100,
-        occupancy: Math.max(0, Math.min(100, Math.round((v.nights / 30) * 100))),
+        occupancy: Math.max(
+          0,
+          Math.min(100, Math.round((v.nights / 30) * 100)),
+        ),
       }))
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
@@ -275,33 +316,47 @@ export class DashboardService {
 
   async getRecentActivities(userId: number): Promise<RecentActivityDto[]> {
     const user = await lastValueFrom(
-      this.authClient.send(AUTH_PATTERNS.GET_PROFILE, userId).pipe(catchError(() => of(null))),
+      this.authClient
+        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .pipe(catchError(() => of(null))),
     );
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const [reservations, invoices, assignments, guestRequests] = await Promise.all([
-      lastValueFrom(
-        this.bookingClient.send(RESERVATIONS_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
-      ),
-      lastValueFrom(
-        this.billingClient.send(INVOICES_PATTERNS.FIND_ALL, {}).pipe(catchError(() => of([]))),
-      ),
-      lastValueFrom(
-        this.operationsClient.send(HOUSEKEEPING_PATTERNS.FIND_ALL_ASSIGNMENTS, {}).pipe(catchError(() => of([]))),
-      ),
-      lastValueFrom(
-        this.guestRequestsClient.send(GUEST_REQUESTS_PATTERNS.FIND_RECENT, 5).pipe(catchError(() => of([]))),
-      ),
-    ]);
+    const [reservations, invoices, assignments, guestRequests] =
+      await Promise.all([
+        lastValueFrom(
+          this.bookingClient
+            .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+            .pipe(catchError(() => of([]))),
+        ),
+        lastValueFrom(
+          this.billingClient
+            .send(INVOICES_PATTERNS.FIND_ALL, {})
+            .pipe(catchError(() => of([]))),
+        ),
+        lastValueFrom(
+          this.operationsClient
+            .send(HOUSEKEEPING_PATTERNS.FIND_ALL_ASSIGNMENTS, {})
+            .pipe(catchError(() => of([]))),
+        ),
+        lastValueFrom(
+          this.guestRequestsClient
+            .send(GUEST_REQUESTS_PATTERNS.FIND_RECENT, 5)
+            .pipe(catchError(() => of([]))),
+        ),
+      ]);
 
     const activities: RecentActivityDto[] = [];
 
     // Recent reservations
     const recentReservations = [...reservations]
-      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
       .slice(0, 5);
 
     recentReservations.forEach((r: any) =>
@@ -314,7 +369,10 @@ export class DashboardService {
 
     // Recent invoices
     const recentInvoices = [...invoices]
-      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
       .slice(0, 5);
 
     recentInvoices.forEach((inv: any) =>
@@ -338,7 +396,9 @@ export class DashboardService {
       activities.push({
         type: 'maintenance',
         description: `Cleaning assignment ${a.id} ${a.completedAt ? 'completed' : 'in progress'}`,
-        timestamp: a.completedAt ? new Date(a.completedAt) : new Date(a.assignedDate),
+        timestamp: a.completedAt
+          ? new Date(a.completedAt)
+          : new Date(a.assignedDate),
       }),
     );
 

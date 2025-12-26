@@ -9,9 +9,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import type { EmployeeDto } from '../../employees/dto/employee.dto';
-import { ShiftStatus } from '../enums/shift-status.enum';
-import { ShiftType } from '../enums/shift-type.enum';
+import type { EmployeeDto } from '../../employees';
+import { ShiftStatus, ShiftType } from '..';
 
 export class ShiftDto {
   @ApiProperty({ example: 1 })

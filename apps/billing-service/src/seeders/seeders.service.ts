@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InvoicesSeeder } from './domains/invoices.seeder';
-import { PaymentsSeeder } from './domains/payments.seeder';
+import { InvoicesSeeder, PaymentsSeeder } from './domains';
 
 @Injectable()
 export class SeedersService {

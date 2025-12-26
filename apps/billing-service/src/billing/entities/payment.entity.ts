@@ -7,8 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
-import { PaymentStatus } from '@app/contracts/billing-service/payments/enums/payment-status.enum';
+import { PaymentMethod, PaymentStatus } from '@app/contracts/billing-service';
 import { Invoice } from './invoice.entity';
 
 @Entity('payments')

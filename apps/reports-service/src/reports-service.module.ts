@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { ReportsModule } from './reports/reports.module';
-import { AnalyticsModule } from './analytics/analytics.module';
-import { SeedersModule } from './seeders/seeders.module';
+import { DatabaseModule } from './database';
+import { ReportsModule } from './reports';
+import { AnalyticsModule } from './analytics';
+import { SeedersModule } from './seeders';
 
 @Module({
   imports: [

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
-import { ReservationStatus } from '@app/contracts/booking-service/reservations/enums/reservation-status.enum';
-import { Guest } from '../../guests/entities/guest.entity';
-import { Room } from '../../rooms/entities/room.entity';
-import { Reservation } from '../entities/reservation.entity';
+import {
+  BookingChannel,
+  ReservationStatus,
+} from '@app/contracts/booking-service';
+import { Guest } from '../../guests';
+import { Room } from '../../rooms';
+import { Reservation } from '../entities';
 
 @Injectable()
 export class ReservationsSeeder {

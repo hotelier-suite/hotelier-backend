@@ -1,12 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { VEHICLES_PATTERNS } from '@app/contracts/parking-service/vehicles/vehicles.patterns';
 import { VehiclesService } from './vehicles.service';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
+import {
+  VEHICLES_PATTERNS,
+  VehicleDto,
+  CreateVehicleDto,
+  UpdateVehicleDto,
+  GuestType,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
 
 @Controller()
 export class VehiclesController {

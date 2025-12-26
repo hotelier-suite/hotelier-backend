@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
-import { Vehicle } from './entities/vehicle.entity';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
+import { Vehicle } from './entities';
+import {
+  VehicleDto,
+  CreateVehicleDto,
+  UpdateVehicleDto,
+  GuestType,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class VehiclesService {

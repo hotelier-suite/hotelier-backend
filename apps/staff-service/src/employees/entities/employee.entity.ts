@@ -13,8 +13,7 @@ import {
   Min,
   Length,
 } from 'class-validator';
-import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
-import { StaffStatus } from '@app/contracts/staff-service/employees/enums/staff-status.enum';
+import { Department, StaffStatus } from '@app/contracts/staff-service';
 
 @Entity('employees')
 export class Employee {

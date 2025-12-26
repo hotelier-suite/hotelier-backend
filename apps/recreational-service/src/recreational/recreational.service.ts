@@ -6,29 +6,24 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, And, Not } from 'typeorm';
-import { RecreationalFacility } from './entities/recreational-facility.entity';
-import { RecreationalBooking } from './entities/recreational-booking.entity';
-import { NotificationsService } from '../notifications-service/notifications.service';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import { RecreationalFacility, RecreationalBooking } from './entities';
+import { NotificationsService } from '../notifications-service';
+import { NotificationType } from '@app/contracts/notifications-service';
 import {
   CreateRecreationalFacilityDto,
   UpdateRecreationalFacilityDto,
   RecreationalFacilityDto,
   FacilityAvailabilityDto,
   TimeSlotDto,
-} from '@app/contracts/recreational-service/facilities/dto';
-import {
+  FacilityType,
+  FacilityStatus,
   CreateRecreationalBookingDto,
   UpdateRecreationalBookingDto,
   RecreationalBookingDto,
   BookingStatisticsDto,
   FacilityUsageStatsDto,
-} from '@app/contracts/recreational-service/bookings/dto';
-import {
-  FacilityType,
-  FacilityStatus,
-} from '@app/contracts/recreational-service/facilities/enums';
-import { RecreationalBookingStatus } from '@app/contracts/recreational-service/bookings/enums';
+  RecreationalBookingStatus,
+} from '@app/contracts/recreational-service';
 
 @Injectable()
 export class RecreationalService {

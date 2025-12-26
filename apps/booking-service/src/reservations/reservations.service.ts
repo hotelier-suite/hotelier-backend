@@ -2,19 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, LessThan, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
-import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
-import { CreateReservationDto } from '@app/contracts/booking-service/reservations/dto/create-reservation.dto';
-import { UpdateReservationDto } from '@app/contracts/booking-service/reservations/dto/update-reservation.dto';
-import { GetAvailabilityDto } from '@app/contracts/booking-service/reservations/dto/get-availability.dto';
-import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/reservations/dto/checkout-reservation-response.dto';
-import { ReservationStatus } from '@app/contracts/booking-service/reservations/enums/reservation-status.enum';
-import { BookingChannel } from '@app/contracts/booking-service/reservations/enums/booking-channel.enum';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
-import { Reservation } from './entities/reservation.entity';
-import { Room } from '../rooms/entities/room.entity';
-import { Guest } from '../guests/entities/guest.entity';
-import { NotificationsService } from '../notifications-service/notifications/notifications.service';
+import {
+  ReservationDto,
+  CreateReservationDto,
+  UpdateReservationDto,
+  GetAvailabilityDto,
+  CheckoutReservationResponseDto,
+  ReservationStatus,
+  BookingChannel,
+  RoomDto,
+} from '@app/contracts/booking-service';
+import { NotificationType } from '@app/contracts/notifications-service';
+import { Reservation } from './entities';
+import { Room } from '../rooms';
+import { Guest } from '../guests';
+import { NotificationsService } from '../notifications-service';
 
 @Injectable()
 export class ReservationsService {

@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateRecreationalFacilityDto } from './create-recreational-facility.dto';
 import { IsEnum, IsOptional } from 'class-validator';
-import { FacilityStatus } from '../enums/facility-status.enum';
+import { FacilityStatus } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateRecreationalFacilityDto extends PartialType(

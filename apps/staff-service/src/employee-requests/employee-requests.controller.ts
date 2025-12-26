@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { EMPLOYEE_REQUESTS_PATTERNS } from '@app/contracts/staff-service/employee-requests/employee-requests.patterns';
-import { EmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/employee-request.dto';
-import { CreateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/create-employee-request.dto';
-import { UpdateEmployeeRequestDto } from '@app/contracts/staff-service/employee-requests/dto/update-employee-request.dto';
-import { RequestStatus } from '@app/contracts/staff-service/employee-requests/enums/request-status.enum';
-import { RequestType } from '@app/contracts/staff-service/employee-requests/enums/request-type.enum';
+import {
+  EMPLOYEE_REQUESTS_PATTERNS,
+  EmployeeRequestDto,
+  CreateEmployeeRequestDto,
+  UpdateEmployeeRequestDto,
+  RequestStatus,
+  RequestType,
+} from '@app/contracts/staff-service';
 import { EmployeeRequestsService } from './employee-requests.service';
 
 @Controller()

@@ -15,9 +15,11 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RequestType } from '@app/contracts/guest-requests-service/guest-requests/enums/request-type.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
+import {
+  RequestType,
+  RequestStatus,
+  RequestPriority,
+} from '@app/contracts/guest-requests-service';
 
 @Entity('guest_requests')
 export class GuestRequest {

@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { User } from './entities/user.entity';
-import { Role } from '../roles/entities/role.entity';
-import { UserRole } from '../users/entities/user-role.entity';
-import { AccessControlService } from '../access-control/access-control.service';
+import {
+  UserResponseDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+} from '@app/contracts/auth-service';
+import { User } from './entities';
+import { Role } from '../roles';
+import { UserRole } from './entities';
+import { AccessControlService } from '../access-control';
 
 @Injectable()
 export class UsersService {

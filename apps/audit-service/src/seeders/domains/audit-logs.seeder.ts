@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AuditLog } from '../../audit/entities/audit-log.entity';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 
 @Injectable()
 export class AuditLogsSeeder {

@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DASHBOARD_SERVICE_CLIENT } from './constants';
-import { DashboardModule } from './dashboard/dashboard.module';
+import { DashboardModule } from './dashboard';
 
 @Global()
 @Module({

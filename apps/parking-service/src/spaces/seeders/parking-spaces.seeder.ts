@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ParkingSpace } from '../entities/parking-space.entity';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
-import { SpaceStatus } from '@app/contracts/parking-service/spaces/enums/space-status.enum';
+import { ParkingSpace } from '../entities';
+import { SpaceType, SpaceStatus } from '@app/contracts/parking-service';
 
 @Injectable()
 export class ParkingSpacesSeeder {

@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
-import { SystemPermission } from './entities/system-permission.entity';
-import { RolePermission } from '../roles/entities/role-permission.entity';
+import {
+  CreatePermissionDto,
+  PermissionResponseDto,
+  UpdatePermissionDto,
+} from '@app/contracts/auth-service';
+import { SystemPermission } from './entities';
+import { RolePermission } from '../roles';
 
 @Injectable()
 export class PermissionsService {

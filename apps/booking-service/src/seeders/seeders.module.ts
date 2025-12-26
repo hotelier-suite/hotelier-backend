@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { SeedersService } from './seeders.service';
-import { GuestsSeedersModule } from '../guests/seeders/seeders.module';
-import { ReservationsSeedersModule } from '../reservations/seeders/seeders.module';
-import { RoomsSeedersModule } from '../rooms/seeders/seeders.module';
+import { GuestsSeedersModule } from '../guests';
+import { ReservationsSeedersModule } from '../reservations';
+import { RoomsSeedersModule } from '../rooms';
 
 @Module({
   imports: [RoomsSeedersModule, GuestsSeedersModule, ReservationsSeedersModule],

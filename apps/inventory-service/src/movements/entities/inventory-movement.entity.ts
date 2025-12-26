@@ -16,8 +16,8 @@ import {
   Min,
   Length,
 } from 'class-validator';
-import { MovementType } from '@app/contracts/inventory-service/movements/enums/movement-type.enum';
-import { InventoryItem } from '../../items/entities/inventory-item.entity';
+import { MovementType } from '@app/contracts/inventory-service';
+import { InventoryItem } from '../../items';
 
 @Entity('inventory_movements')
 export class InventoryMovement {

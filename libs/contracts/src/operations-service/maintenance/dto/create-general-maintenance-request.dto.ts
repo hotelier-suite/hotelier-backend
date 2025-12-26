@@ -10,8 +10,7 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { MaintenancePriority } from '../enums/maintenance-priority.enum';
-import { MaintenanceType } from '../enums/maintenance-type.enum';
+import { MaintenancePriority, MaintenanceType } from '..';
 
 export class CreateGeneralMaintenanceRequestDto {
   @ApiProperty({

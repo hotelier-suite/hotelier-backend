@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
-import { GuestDto } from '@app/contracts/booking-service/guests/dto/guest.dto';
-import { CreateGuestDto } from '@app/contracts/booking-service/guests/dto/create-guest.dto';
-import { UpdateGuestDto } from '@app/contracts/booking-service/guests/dto/update-guest.dto';
-import { ListGuestsQueryDto } from '@app/contracts/booking-service/guests/dto/list-guests-query.dto';
-import { Guest } from './entities/guest.entity';
+import {
+  GuestDto,
+  CreateGuestDto,
+  UpdateGuestDto,
+  ListGuestsQueryDto,
+} from '@app/contracts/booking-service';
+import { Guest } from './entities';
 
 @Injectable()
 export class GuestsService {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BeverageInventory } from '../../restaurant/entities/beverage-inventory.entity';
-import { BeverageStatus } from '@app/contracts/restaurant-service/beverage-inventory/enums/beverage-status.enum';
+import { BeverageInventory } from '../../restaurant';
+import { BeverageStatus } from '@app/contracts/restaurant-service';
 
 @Injectable()
 export class BeverageInventorySeeder {

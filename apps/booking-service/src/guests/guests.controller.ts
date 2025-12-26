@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { GUESTS_PATTERNS } from '@app/contracts/booking-service/guests/guests.patterns';
-import { GuestDto } from '@app/contracts/booking-service/guests/dto/guest.dto';
-import { CreateGuestDto } from '@app/contracts/booking-service/guests/dto/create-guest.dto';
-import { UpdateGuestDto } from '@app/contracts/booking-service/guests/dto/update-guest.dto';
-import { ListGuestsQueryDto } from '@app/contracts/booking-service/guests/dto/list-guests-query.dto';
 import { GuestsService } from './guests.service';
+import {
+  GUESTS_PATTERNS,
+  GuestDto,
+  CreateGuestDto,
+  UpdateGuestDto,
+  ListGuestsQueryDto,
+} from '@app/contracts/booking-service';
 
 @Controller()
 export class GuestsController {

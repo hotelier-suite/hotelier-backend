@@ -1,8 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUDIT_SERVICE_CLIENT } from './constants';
-import { AuditModule } from './audit/audit.module';
-import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
+import { AuditModule, AuditLogInterceptor } from './audit';
 
 @Global()
 @Module({

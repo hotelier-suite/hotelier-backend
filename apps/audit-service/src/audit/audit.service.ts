@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { AuditLog } from './entities/audit-log.entity';
+import { AuditLog } from './entities';
 import {
   AuditLogDto,
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-} from '@app/contracts/audit-service/dto';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+  AuditResource,
+} from '@app/contracts/audit-service';
 
 // Query result interfaces
 interface ActionSummaryResult {

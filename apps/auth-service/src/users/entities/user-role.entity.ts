@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Role } from '../../roles/entities/role.entity';
+import { Role } from '../../roles';
 
 @Entity('user_roles')
 @Index(['userId', 'roleId'], { unique: true })

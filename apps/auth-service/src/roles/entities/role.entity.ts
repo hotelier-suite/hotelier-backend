@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
-import type { UserRole } from '../../users/entities/user-role.entity';
+import type { UserRole } from '../../users';
 import type { RolePermission } from './role-permission.entity';
 
 @Entity('roles')

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Role } from '../roles/entities/role.entity';
-import { UserRole } from '../users/entities/user-role.entity';
+import { User, UserRole } from './entities';
+import { Role } from '../roles';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { AccessControlModule } from '../access-control/access-control.module';
+import { AccessControlModule } from '../access-control';
 
 @Module({
   imports: [

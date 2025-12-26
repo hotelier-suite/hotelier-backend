@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
-import { ReportParametersDto } from '@app/contracts/reports-service/reports/dto/report-parameters.dto';
+import {
+  ReportType,
+  ReportStatus,
+  ReportParametersDto,
+} from '@app/contracts/reports-service';
 
 @Entity('reports')
 export class Report {

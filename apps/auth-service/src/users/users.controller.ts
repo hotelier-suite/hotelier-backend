@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { USERS_PATTERNS } from '@app/contracts/auth-service/users/users.patterns';
 import { UsersService } from './users.service';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { User } from './entities/user.entity';
+import {
+  USERS_PATTERNS,
+  UserResponseDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+} from '@app/contracts/auth-service';
+import { User } from './entities';
 
 @Controller()
 export class UsersController {

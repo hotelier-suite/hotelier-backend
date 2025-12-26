@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CleaningTask } from '../entities/cleaning-task.entity';
-import { CleaningAssignment } from '../entities/cleaning-assignment.entity';
-import { MaintenanceReport } from '../entities/maintenance-report.entity';
-import { MaintenanceRequest } from '../entities/maintenance-request.entity';
-import { CleaningStatus } from '@app/contracts/operations-service/housekeeping/enums/cleaning-status.enum';
-import { TaskPriority } from '@app/contracts/operations-service/housekeeping/enums/task-priority.enum';
-import { HousekeepingMaintenanceType } from '@app/contracts/operations-service/housekeeping/enums/maintenance-type.enum';
-import { HousekeepingMaintenanceStatus } from '@app/contracts/operations-service/housekeeping/enums/maintenance-status.enum';
+import {
+  CleaningTask,
+  CleaningAssignment,
+  MaintenanceReport,
+  MaintenanceRequest,
+} from '../entities';
+import {
+  CleaningStatus,
+  TaskPriority,
+  HousekeepingMaintenanceType,
+  HousekeepingMaintenanceStatus,
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class HousekeepingSeeder {

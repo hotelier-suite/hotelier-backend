@@ -18,16 +18,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
+import { TaskPriority } from '@app/contracts/common';
 import { IncidentsService } from './incidents.service';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import {
+  CreateParkingIncidentDto,
+  IncidentStatus,
+  IncidentType,
+  ParkingIncidentDto,
+  ResolveIncidentRequestDto,
+  UpdateParkingIncidentDto,
+} from '@app/contracts/parking-service';
 
 @ApiTags('parking')
 @Controller('parking/incidents')

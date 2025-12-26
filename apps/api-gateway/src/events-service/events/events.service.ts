@@ -2,15 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { EVENTS_SERVICE_CLIENT } from '../constants';
-import { EVENTS_PATTERNS } from '@app/contracts/events-service/events/events.patterns';
 import {
+  EVENTS_PATTERNS,
   EventDto,
   CreateEventDto,
   UpdateEventDto,
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
-} from '@app/contracts/events-service/events/dto';
+} from '@app/contracts/events-service';
 
 @Injectable()
 export class EventsService {

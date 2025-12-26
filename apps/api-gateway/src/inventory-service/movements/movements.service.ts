@@ -2,9 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { INVENTORY_SERVICE_CLIENT } from '../constants';
-import { INVENTORY_MOVEMENTS_PATTERNS } from '@app/contracts/inventory-service/movements/movements.patterns';
-import { InventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/inventory-movement.dto';
-import { CreateInventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/create-inventory-movement.dto';
+import {
+  INVENTORY_MOVEMENTS_PATTERNS,
+  InventoryMovementDto,
+  CreateInventoryMovementDto,
+} from '@app/contracts/inventory-service';
 
 @Injectable()
 export class MovementsService {

@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
-import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
-import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { GuestRequest } from './entities/guest-request.entity';
+import {
+  CreateGuestRequestDto,
+  GuestRequestDto,
+  UpdateGuestRequestDto,
+  RequestPriority,
+  RequestStatus,
+} from '@app/contracts/guest-requests-service';
+import { GuestRequest } from './entities';
 
 @Injectable()
 export class GuestRequestsService {

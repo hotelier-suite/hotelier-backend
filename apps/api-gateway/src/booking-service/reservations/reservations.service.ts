@@ -3,24 +3,32 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Observable, lastValueFrom, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BOOKING_SERVICE_CLIENT } from '../constants';
-import { BILLING_SERVICE_CLIENT } from '../../billing-service/constants';
-import { RESTAURANT_SERVICE_CLIENT } from '../../restaurant-service/constants';
-import { EVENTS_SERVICE_CLIENT } from '../../events-service/constants';
-import { RESERVATIONS_PATTERNS } from '@app/contracts/booking-service/reservations/reservations.patterns';
-import { INVOICES_PATTERNS } from '@app/contracts/billing-service/invoices/invoices.patterns';
-import { ROOM_SERVICE_ORDERS_PATTERNS } from '@app/contracts/restaurant-service/room-service-orders/room-service-orders.patterns';
-import { EVENTS_PATTERNS } from '@app/contracts/events-service/events/events.patterns';
-import { ReservationDto } from '@app/contracts/booking-service/reservations/dto/reservation.dto';
-import { CreateReservationDto } from '@app/contracts/booking-service/reservations/dto/create-reservation.dto';
-import { UpdateReservationDto } from '@app/contracts/booking-service/reservations/dto/update-reservation.dto';
-import { GetAvailabilityDto } from '@app/contracts/booking-service/reservations/dto/get-availability.dto';
-import { CheckoutReservationResponseDto } from '@app/contracts/booking-service/reservations/dto/checkout-reservation-response.dto';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { ReservationStatus } from '@app/contracts/booking-service/reservations/enums/reservation-status.enum';
-import { InvoiceDto } from '@app/contracts/billing-service/invoices/dto/invoice.dto';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { RoomServiceOrderDto } from '@app/contracts/restaurant-service/room-service-orders/dto/room-service-order.dto';
-import { EventBookingDto } from '@app/contracts/events-service/events/dto/event-booking.dto';
+import { BILLING_SERVICE_CLIENT } from '../../billing-service';
+import { RESTAURANT_SERVICE_CLIENT } from '../../restaurant-service';
+import { EVENTS_SERVICE_CLIENT } from '../../events-service';
+import {
+  RESERVATIONS_PATTERNS,
+  ReservationDto,
+  CreateReservationDto,
+  UpdateReservationDto,
+  GetAvailabilityDto,
+  CheckoutReservationResponseDto,
+  ReservationStatus,
+  RoomDto,
+} from '@app/contracts/booking-service';
+import {
+  INVOICES_PATTERNS,
+  InvoiceDto,
+  InvoiceStatus,
+} from '@app/contracts/billing-service';
+import {
+  ROOM_SERVICE_ORDERS_PATTERNS,
+  RoomServiceOrderDto,
+} from '@app/contracts/restaurant-service';
+import {
+  EVENTS_PATTERNS,
+  EventBookingDto,
+} from '@app/contracts/events-service';
 
 @Injectable()
 export class ReservationsService {

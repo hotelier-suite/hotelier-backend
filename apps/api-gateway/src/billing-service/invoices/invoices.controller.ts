@@ -26,10 +26,10 @@ import {
   CreateInvoiceDto,
   UpdateInvoiceDto,
   MarkAsPaidRequestDto,
-} from '@app/contracts/billing-service/invoices/dto';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+  InvoiceStatus,
+} from '@app/contracts/billing-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 import * as PDFDocument from 'pdfkit';
 
 @ApiTags('billing')

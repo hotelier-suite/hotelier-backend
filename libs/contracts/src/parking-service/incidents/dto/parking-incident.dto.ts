@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { IncidentStatus } from '../enums/incident-status.enum';
-import { IncidentType } from '../enums/incident-type.enum';
-import type { VehicleDto } from '../../vehicles/dto/vehicle.dto';
-import type { ParkingSpaceDto } from '../../spaces/dto/parking-space.dto';
+import { TaskPriority } from '@app/contracts/common';
+import { IncidentStatus, IncidentType } from '..';
+import type { VehicleDto } from '../../vehicles';
+import type { ParkingSpaceDto } from '../../spaces';
 
 export class ParkingIncidentDto {
   @ApiProperty({ example: 1 })

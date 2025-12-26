@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { INVENTORY_SERVICE_CLIENT } from './constants';
-import { ItemsModule } from './items/items.module';
-import { SuppliersModule } from './suppliers/suppliers.module';
-import { MovementsModule } from './movements/movements.module';
+import { ItemsModule } from './items';
+import { SuppliersModule } from './suppliers';
+import { MovementsModule } from './movements';
 
 @Global()
 @Module({

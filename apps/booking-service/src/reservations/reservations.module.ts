@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Guest } from '../guests/entities/guest.entity';
-import { Room } from '../rooms/entities/room.entity';
+import { Guest } from '../guests';
+import { Room } from '../rooms';
 import { ReservationsController } from './reservations.controller';
-import { Reservation } from './entities/reservation.entity';
+import { Reservation } from './entities';
 import { ReservationsService } from './reservations.service';
 
 @Module({

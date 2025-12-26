@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { OPERATIONS_SERVICE_CLIENT } from '../constants';
-import { MAINTENANCE_PATTERNS } from '@app/contracts/operations-service/maintenance/maintenance.patterns';
 import {
+  MAINTENANCE_PATTERNS,
   GeneralMaintenanceRequestDto,
   CreateGeneralMaintenanceRequestDto,
   UpdateGeneralMaintenanceRequestDto,
-} from '@app/contracts/operations-service/maintenance/dto';
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class MaintenanceService {

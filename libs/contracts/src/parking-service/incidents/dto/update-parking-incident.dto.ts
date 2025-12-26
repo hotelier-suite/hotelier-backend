@@ -2,7 +2,7 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateParkingIncidentDto } from './create-parking-incident.dto';
-import { IncidentStatus } from '../enums/incident-status.enum';
+import { IncidentStatus } from '../enums';
 
 export class UpdateParkingIncidentDto extends PartialType(
   CreateParkingIncidentDto,

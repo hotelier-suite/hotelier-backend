@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { PERMISSIONS_PATTERNS } from '@app/contracts/auth-service/permissions/permissions.patterns';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
 import { PermissionsService } from './permissions.service';
+import {
+  PERMISSIONS_PATTERNS,
+  CreatePermissionDto,
+  PermissionResponseDto,
+  UpdatePermissionDto,
+} from '@app/contracts/auth-service';
 
 @Controller()
 export class PermissionsController {

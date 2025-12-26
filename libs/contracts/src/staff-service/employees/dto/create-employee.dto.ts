@@ -7,8 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Department } from '../enums/department.enum';
-import { StaffStatus } from '../enums/staff-status.enum';
+import { Department, StaffStatus } from '..';
 
 export class CreateEmployeeDto {
   @ApiProperty({ example: 'EMP001' })

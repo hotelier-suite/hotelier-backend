@@ -9,8 +9,8 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import type { EmployeeDto } from '../../employees/dto/employee.dto';
-import { AttendanceStatus } from '../enums/attendance-status.enum';
+import type { EmployeeDto } from '../../employees';
+import { AttendanceStatus } from '..';
 
 export class AttendanceDto {
   @ApiProperty({ example: 1 })

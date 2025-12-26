@@ -2,17 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { REPORTS_SERVICE_CLIENT } from '../constants';
-import { REPORTS_PATTERNS } from '@app/contracts/reports-service/reports.patterns';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
 import {
+  REPORTS_PATTERNS,
   ReportDto,
   CreateReportDto,
   UpdateReportDto,
+  ReportType,
+  ReportStatus,
   FinancialSummaryDto,
   OccupancyDataDto,
   MonthlyRevenueDto,
-} from '@app/contracts/reports-service/reports/dto';
+} from '@app/contracts/reports-service';
 
 @Injectable()
 export class ReportsService {

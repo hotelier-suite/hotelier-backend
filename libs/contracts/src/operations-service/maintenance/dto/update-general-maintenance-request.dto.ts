@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateGeneralMaintenanceRequestDto } from './create-general-maintenance-request.dto';
-import { MaintenanceStatus } from '../enums/maintenance-status.enum';
+import { MaintenanceStatus } from '../enums';
 
 export class UpdateGeneralMaintenanceRequestDto extends PartialType(
   CreateGeneralMaintenanceRequestDto,

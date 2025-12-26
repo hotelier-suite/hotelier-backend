@@ -1,11 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { SPACES_PATTERNS } from '@app/contracts/parking-service/spaces/spaces.patterns';
 import { SpacesService } from './spaces.service';
-import { ParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/parking-space.dto';
-import { CreateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/create-parking-space.dto';
-import { UpdateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/update-parking-space.dto';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
+import {
+  SPACES_PATTERNS,
+  ParkingSpaceDto,
+  CreateParkingSpaceDto,
+  UpdateParkingSpaceDto,
+  SpaceType,
+} from '@app/contracts/parking-service';
 
 @Controller()
 export class SpacesController {

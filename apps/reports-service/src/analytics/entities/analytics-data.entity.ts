@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AnalyticsMetric } from '@app/contracts/reports-service/analytics/enums/analytics-metric.enum';
+import { AnalyticsMetric } from '@app/contracts/reports-service';
 
 @Entity('analytics_data')
 export class AnalyticsData {

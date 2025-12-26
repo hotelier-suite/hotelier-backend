@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Shift } from '../entities/shift.entity';
-import { ShiftType } from '@app/contracts/staff-service/shifts/enums/shift-type.enum';
-import { ShiftStatus } from '@app/contracts/staff-service/shifts/enums/shift-status.enum';
-import { Employee } from '../../employees/entities/employee.entity';
+import { Shift } from '../entities';
+import { ShiftType, ShiftStatus } from '@app/contracts/staff-service';
+import { Employee } from '../../employees';
 
 @Injectable()
 export class ShiftsSeeder {

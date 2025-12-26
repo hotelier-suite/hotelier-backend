@@ -7,8 +7,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { EventStatus } from '@app/contracts/events-service/events/enums/event-status.enum';
-import { Venue } from '../../venues/entities/venue.entity';
+import { EventStatus } from '@app/contracts/events-service';
+import { Venue } from '../../venues';
 
 @Entity('event_bookings')
 export class EventBooking {

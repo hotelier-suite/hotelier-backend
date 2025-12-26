@@ -10,7 +10,7 @@ import {
   IsInt,
   Min,
 } from 'class-validator';
-import { AnalyticsMetric } from '../enums/analytics-metric.enum';
+import { AnalyticsMetric } from '..';
 
 export class AnalyticsDataDto {
   @ApiProperty({

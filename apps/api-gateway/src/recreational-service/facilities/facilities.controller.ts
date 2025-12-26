@@ -21,14 +21,14 @@ import {
 import { Observable } from 'rxjs';
 import { FacilitiesService } from './facilities.service';
 import {
-  RecreationalFacilityDto,
   CreateRecreationalFacilityDto,
-  UpdateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-} from '@app/contracts/recreational-service/facilities/dto';
-import { FacilityType } from '@app/contracts/recreational-service/facilities/enums';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+  FacilityType,
+  RecreationalFacilityDto,
+  UpdateRecreationalFacilityDto,
+} from '@app/contracts/recreational-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('recreational')
 @Controller('recreational/facilities')

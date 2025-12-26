@@ -10,7 +10,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { BeverageStatus } from '../enums/beverage-status.enum';
+import { BeverageStatus } from '..';
 
 export class BeverageInventoryDto {
   @ApiProperty({

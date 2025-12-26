@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { ShiftDto } from '@app/contracts/staff-service/shifts/dto/shift.dto';
-import { CreateShiftDto } from '@app/contracts/staff-service/shifts/dto/create-shift.dto';
-import { UpdateShiftDto } from '@app/contracts/staff-service/shifts/dto/update-shift.dto';
-import { ShiftStatus } from '@app/contracts/staff-service/shifts/enums/shift-status.enum';
-import { Shift } from './entities/shift.entity';
-import { Employee } from '../employees/entities/employee.entity';
-import { NotificationsService } from '../notifications-service/notifications/notifications.service';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import {
+  ShiftDto,
+  CreateShiftDto,
+  UpdateShiftDto,
+  ShiftStatus,
+} from '@app/contracts/staff-service';
+import { Shift } from './entities';
+import { Employee } from '../employees';
+import { NotificationsService } from '../notifications-service';
+import { NotificationType } from '@app/contracts/notifications-service';
 
 @Injectable()
 export class ShiftsService {

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { VenuesSeeder } from '../venues/seeders/venues.seeder';
-import { EventsSeeder } from '../events/seeders/events.seeder';
-import { EventBookingsSeeder } from '../events/seeders/event-bookings.seeder';
+import { VenuesSeeder } from '../venues';
+import { EventsSeeder, EventBookingsSeeder } from '../events';
 
 @Injectable()
 export class SeedersService {

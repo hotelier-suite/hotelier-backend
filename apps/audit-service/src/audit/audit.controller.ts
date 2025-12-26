@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuditService } from './audit.service';
-import { AUDIT_PATTERNS } from '@app/contracts/audit-service/audit.patterns';
 import {
+  AUDIT_PATTERNS,
   AuditLogDto,
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-} from '@app/contracts/audit-service/dto';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+  AuditResource,
+} from '@app/contracts/audit-service';
 
 @Controller()
 export class AuditController {

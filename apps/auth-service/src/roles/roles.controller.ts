@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ROLES_PATTERNS } from '@app/contracts/auth-service/roles/roles.patterns';
-import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
-import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
 import { RolesService } from './roles.service';
+import {
+  ROLES_PATTERNS,
+  CreateRoleDto,
+  UpdateRoleDto,
+  RoleResponseDto,
+} from '@app/contracts/auth-service';
 
 @Controller()
 export class RolesController {

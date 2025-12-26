@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RoomDto } from '@app/contracts/booking-service/rooms/dto/room.dto';
-import { CreateRoomDto } from '@app/contracts/booking-service/rooms/dto/create-room.dto';
-import { UpdateRoomDto } from '@app/contracts/booking-service/rooms/dto/update-room.dto';
-import { Room } from './entities/room.entity';
+import {
+  RoomDto,
+  CreateRoomDto,
+  UpdateRoomDto,
+} from '@app/contracts/booking-service';
+import { Room } from './entities';
 
 @Injectable()
 export class RoomsService {

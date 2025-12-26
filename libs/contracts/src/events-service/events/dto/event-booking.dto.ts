@@ -11,8 +11,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { EventStatus } from '../enums/event-status.enum';
-import { VenueDto } from '../../venues/dto/venue.dto';
+import { EventStatus } from '..';
+import { VenueDto } from '../../venues';
 
 export class EventBookingDto {
   @ApiProperty({ description: 'Event booking unique identifier', example: 1 })

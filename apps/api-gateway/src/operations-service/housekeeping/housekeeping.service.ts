@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { OPERATIONS_SERVICE_CLIENT } from '../constants';
-import { HOUSEKEEPING_PATTERNS } from '@app/contracts/operations-service/housekeeping/housekeeping.patterns';
 import {
+  HOUSEKEEPING_PATTERNS,
   CleaningTaskDto,
   CreateCleaningTaskDto,
   UpdateCleaningTaskDto,
@@ -18,7 +18,7 @@ import {
   UpdateHousekeepingMaintenanceRequestDto,
   HousekeepingStatisticsDto,
   CleaningPerformanceDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class HousekeepingService {

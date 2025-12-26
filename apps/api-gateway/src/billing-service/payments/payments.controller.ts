@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { PaymentsService } from './payments.service';
-import { PaymentDto } from '@app/contracts/billing-service/payments/dto';
+import { PaymentDto } from '@app/contracts/billing-service';
 
 @ApiTags('billing')
 @Controller('billing/payments')

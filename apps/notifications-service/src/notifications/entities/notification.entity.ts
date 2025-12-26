@@ -6,7 +6,7 @@ import {
   Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
+import { NotificationType } from '@app/contracts/notifications-service';
 
 @Entity('notifications')
 export class Notification {

@@ -1,12 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { INVENTORY_ITEMS_PATTERNS } from '@app/contracts/inventory-service/items/items.patterns';
-import { InventoryItemDto } from '@app/contracts/inventory-service/items/dto/inventory-item.dto';
-import { CreateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/create-inventory-item.dto';
-import { UpdateInventoryItemDto } from '@app/contracts/inventory-service/items/dto/update-inventory-item.dto';
-import { InventoryCategory } from '@app/contracts/inventory-service/items/enums/inventory-category.enum';
-import { InventoryStatus } from '@app/contracts/inventory-service/items/enums/inventory-status.enum';
 import { ItemsService } from './items.service';
+import {
+  INVENTORY_ITEMS_PATTERNS,
+  InventoryItemDto,
+  CreateInventoryItemDto,
+  UpdateInventoryItemDto,
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
 
 @Controller()
 export class ItemsController {

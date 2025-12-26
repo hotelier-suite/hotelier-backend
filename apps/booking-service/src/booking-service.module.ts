@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { GuestsModule } from './guests/guests.module';
-import { SeedersModule } from './seeders/seeders.module';
-import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
-import { ReservationsModule } from './reservations/reservations.module';
-import { RoomsModule } from './rooms/rooms.module';
+import { DatabaseModule } from './database';
+import { GuestsModule } from './guests';
+import { SeedersModule } from './seeders';
+import { NotificationsServiceModule } from './notifications-service';
+import { ReservationsModule } from './reservations';
+import { RoomsModule } from './rooms';
 
 @Module({
   imports: [

@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { MenuItemsSeeder } from './domains/menu-items.seeder';
-import { RoomServiceOrdersSeeder } from './domains/room-service-orders.seeder';
-import { BeverageInventorySeeder } from './domains/beverage-inventory.seeder';
+import {
+  MenuItemsSeeder,
+  RoomServiceOrdersSeeder,
+  BeverageInventorySeeder,
+} from './domains';
 
 @Injectable()
 export class SeedersService {

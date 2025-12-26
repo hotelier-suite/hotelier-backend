@@ -9,7 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { AttendanceStatus } from '../enums/attendance-status.enum';
+import { AttendanceStatus } from '..';
 
 export class CreateAttendanceDto {
   @ApiProperty({ type: String, example: '2024-01-15' })

@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SpaceStatus } from '../enums/space-status.enum';
-import { SpaceType } from '../enums/space-type.enum';
-import type { VehicleDto } from '../../vehicles/dto/vehicle.dto';
-import type { ParkingIncidentDto } from '../../incidents/dto/parking-incident.dto';
+import { SpaceStatus, SpaceType } from '..';
+import type { VehicleDto } from '../../vehicles';
+import type { ParkingIncidentDto } from '../../incidents';
 
 export class ParkingSpaceDto {
   @ApiProperty({ example: 1 })

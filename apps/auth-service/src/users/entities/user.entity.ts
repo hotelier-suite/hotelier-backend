@@ -16,7 +16,7 @@ import {
   Min,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import { LoyaltyLevel } from '@app/contracts/auth-service/users/enums/loyalty-level.enum';
+import { LoyaltyLevel } from '@app/contracts/auth-service';
 import type { UserRole } from './user-role.entity';
 
 @Entity('users')

@@ -25,7 +25,7 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
-} from '@app/contracts/events-service/events/dto';
+} from '@app/contracts/events-service';
 
 @ApiTags('events')
 @Controller('events')

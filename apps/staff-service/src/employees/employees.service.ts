@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Employee } from './entities/employee.entity';
-import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
-import { CreateEmployeeDto } from '@app/contracts/staff-service/employees/dto/create-employee.dto';
-import { UpdateEmployeeDto } from '@app/contracts/staff-service/employees/dto/update-employee.dto';
-import { DepartmentStatsDto } from '@app/contracts/staff-service/employees/dto/department-stats.dto';
-import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
-import { StaffStatus } from '@app/contracts/staff-service/employees/enums/staff-status.enum';
+import { Employee } from './entities';
+import {
+  EmployeeDto,
+  CreateEmployeeDto,
+  UpdateEmployeeDto,
+  DepartmentStatsDto,
+  Department,
+  StaffStatus,
+} from '@app/contracts/staff-service';
 
 @Injectable()
 export class EmployeesService {

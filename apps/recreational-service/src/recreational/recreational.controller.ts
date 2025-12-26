@@ -1,21 +1,19 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { RecreationalService } from './recreational.service';
-import { RECREATIONAL_FACILITIES_PATTERNS } from '@app/contracts/recreational-service/facilities/facilities.patterns';
-import { RECREATIONAL_BOOKINGS_PATTERNS } from '@app/contracts/recreational-service/bookings/bookings.patterns';
 import {
+  RECREATIONAL_FACILITIES_PATTERNS,
   RecreationalFacilityDto,
   CreateRecreationalFacilityDto,
   UpdateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-} from '@app/contracts/recreational-service/facilities/dto';
-import { FacilityType } from '@app/contracts/recreational-service/facilities/enums';
-import {
+  FacilityType,
+  RECREATIONAL_BOOKINGS_PATTERNS,
   RecreationalBookingDto,
   CreateRecreationalBookingDto,
   UpdateRecreationalBookingDto,
   BookingStatisticsDto,
-} from '@app/contracts/recreational-service/bookings/dto';
+} from '@app/contracts/recreational-service';
 
 @Controller()
 export class RecreationalController {

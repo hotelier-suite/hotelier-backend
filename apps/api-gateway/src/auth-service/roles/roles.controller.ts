@@ -18,13 +18,15 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
-import { PermissionIdsDto } from '@app/contracts/auth-service/roles/dto/permission-ids.dto';
-import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
+import {
+  PermissionIdsDto,
+  CreateRoleDto,
+  RoleResponseDto,
+  UpdateRoleDto,
+} from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('roles')
 @Controller('roles')

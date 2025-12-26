@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 import { CreateRoomServiceOrderDto } from './create-room-service-order.dto';
-import { RoomServiceStatus } from '../enums/room-service-status.enum';
+import { RoomServiceStatus } from '../enums';
 
 export class UpdateRoomServiceOrderDto extends PartialType(
   CreateRoomServiceOrderDto,

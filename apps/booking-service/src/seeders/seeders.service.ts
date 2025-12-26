@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { GuestsSeeder } from '../guests/seeders/guests.seeder';
-import { ReservationsSeeder } from '../reservations/seeders/reservations.seeder';
-import { RoomsSeeder } from '../rooms/seeders/rooms.seeder';
+import { GuestsSeeder } from '../guests';
+import { ReservationsSeeder } from '../reservations';
+import { RoomsSeeder } from '../rooms';
 
 @Injectable()
 export class SeedersService {

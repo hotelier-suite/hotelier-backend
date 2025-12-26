@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EventBooking } from '../entities/event-booking.entity';
-import { Venue } from '../../venues/entities/venue.entity';
-import { EventStatus } from '@app/contracts/events-service/events/enums/event-status.enum';
+import { EventBooking } from '../entities';
+import { Venue } from '../../venues';
+import { EventStatus } from '@app/contracts/events-service';
 
 @Injectable()
 export class EventBookingsSeeder {

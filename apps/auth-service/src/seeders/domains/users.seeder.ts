@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from '../../users/entities/user.entity';
-import { Role } from '../../roles/entities/role.entity';
-import { UserRole } from '../../users/entities/user-role.entity';
-import { LoyaltyLevel } from '@app/contracts/auth-service/users/enums/loyalty-level.enum';
+import { User, UserRole } from '../../users';
+import { Role } from '../../roles';
+import { LoyaltyLevel } from '@app/contracts/auth-service';
 
 @Injectable()
 export class UsersSeeder {

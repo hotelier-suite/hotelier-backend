@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
-import { User } from '../users/entities/user.entity';
+import { TokenResponseDto } from '@app/contracts/auth-service';
+import { User } from '../users';
 
 @Injectable()
 export class TokensService {

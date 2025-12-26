@@ -6,8 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
+import { InvoiceStatus, PaymentMethod } from '@app/contracts/billing-service';
 import { InvoiceItem } from './invoice-item.entity';
 import { Payment } from './payment.entity';
 

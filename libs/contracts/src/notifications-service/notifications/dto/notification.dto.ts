@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { NotificationType } from '../enums/notification-type.enum';
+import { NotificationType } from '..';
 
 export class NotificationDto {
   @ApiProperty({ example: 1 })

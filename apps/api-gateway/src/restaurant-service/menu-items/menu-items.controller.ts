@@ -22,9 +22,9 @@ import {
   MenuItemDto,
   CreateMenuItemDto,
   UpdateMenuItemDto,
-} from '@app/contracts/restaurant-service/menu-items/dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+} from '@app/contracts/restaurant-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('restaurant')
 @Controller('restaurant/menu-items')

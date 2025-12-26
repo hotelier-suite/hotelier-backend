@@ -1,9 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { INVENTORY_MOVEMENTS_PATTERNS } from '@app/contracts/inventory-service/movements/movements.patterns';
-import { InventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/inventory-movement.dto';
-import { CreateInventoryMovementDto } from '@app/contracts/inventory-service/movements/dto/create-inventory-movement.dto';
 import { MovementsService } from './movements.service';
+import {
+  INVENTORY_MOVEMENTS_PATTERNS,
+  InventoryMovementDto,
+  CreateInventoryMovementDto,
+} from '@app/contracts/inventory-service';
 
 @Controller()
 export class MovementsController {

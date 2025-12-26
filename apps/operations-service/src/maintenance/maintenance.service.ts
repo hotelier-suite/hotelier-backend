@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GeneralMaintenanceRequest } from './entities/general-maintenance-request.entity';
+import { GeneralMaintenanceRequest } from './entities';
 import {
   GeneralMaintenanceRequestDto,
   CreateGeneralMaintenanceRequestDto,
   UpdateGeneralMaintenanceRequestDto,
-} from '@app/contracts/operations-service/maintenance/dto';
-import { MaintenanceStatus } from '@app/contracts/operations-service/maintenance/enums/maintenance-status.enum';
+  MaintenanceStatus,
+} from '@app/contracts/operations-service';
 
 @Injectable()
 export class MaintenanceService {

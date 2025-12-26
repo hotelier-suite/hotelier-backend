@@ -21,9 +21,9 @@ import {
   RoomServiceOrderDto,
   CreateRoomServiceOrderDto,
   UpdateRoomServiceOrderDto,
-} from '@app/contracts/restaurant-service/room-service-orders/dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+} from '@app/contracts/restaurant-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('restaurant')
 @Controller('restaurant/room-service-orders')

@@ -1,17 +1,17 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ReportsService } from './reports.service';
-import { REPORTS_PATTERNS } from '@app/contracts/reports-service/reports.patterns';
 import {
+  REPORTS_PATTERNS,
   ReportDto,
   CreateReportDto,
   UpdateReportDto,
   FinancialSummaryDto,
   OccupancyDataDto,
   MonthlyRevenueDto,
-} from '@app/contracts/reports-service/reports/dto';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
+  ReportType,
+  ReportStatus,
+} from '@app/contracts/reports-service';
 
 @Controller()
 export class ReportsController {

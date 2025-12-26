@@ -3,16 +3,17 @@ import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from '@app/contracts/auth-service/auth/dto/register.dto';
-import { AuthResponseDto } from '@app/contracts/auth-service/auth/dto/auth-response.dto';
-import { LoginDto } from '@app/contracts/auth-service/auth/dto/login.dto';
-import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
-import { LogoutResponseDto } from '@app/contracts/auth-service/auth/dto/logout-response.dto';
-import { ProfileResponseDto } from '@app/contracts/auth-service/auth/dto/profile-response.dto';
-import { User } from '../users/entities/user.entity';
-import { TokensService } from '../tokens/tokens.service';
-import { UsersService } from '../users/users.service';
-import { AccessControlService } from '../access-control/access-control.service';
+import {
+  RegisterDto,
+  AuthResponseDto,
+  LoginDto,
+  LogoutResponseDto,
+  ProfileResponseDto,
+  TokenResponseDto,
+} from '@app/contracts/auth-service';
+import { User, UsersService } from '../users';
+import { TokensService } from '../tokens';
+import { AccessControlService } from '../access-control';
 
 @Injectable()
 export class AuthService {

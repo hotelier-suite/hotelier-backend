@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ParkingSpacesSeeder } from './parking-spaces.seeder';
-import { ParkingSpace } from '../entities/parking-space.entity';
+import { ParkingSpace } from '../entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ParkingSpace])],

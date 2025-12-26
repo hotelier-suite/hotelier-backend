@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedersService } from './seeders.service';
-import { Configuration } from '../configuration/entities/configuration.entity';
+import { Configuration } from '../configuration';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Configuration])],

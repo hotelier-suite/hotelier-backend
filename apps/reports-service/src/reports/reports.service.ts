@@ -1,15 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
-import { Report } from './entities/report.entity';
-import { CreateReportDto } from '@app/contracts/reports-service/reports/dto/create-report.dto';
-import { UpdateReportDto } from '@app/contracts/reports-service/reports/dto/update-report.dto';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
-import { ReportDto } from '@app/contracts/reports-service/reports/dto/report.dto';
-import { FinancialSummaryDto } from '@app/contracts/reports-service/reports/dto/financial-summary.dto';
-import { OccupancyDataDto } from '@app/contracts/reports-service/reports/dto/occupancy-data.dto';
-import { MonthlyRevenueDto } from '@app/contracts/reports-service/reports/dto/monthly-revenue.dto';
+import { Report } from './entities';
+import {
+  CreateReportDto,
+  UpdateReportDto,
+  ReportType,
+  ReportStatus,
+  ReportDto,
+  FinancialSummaryDto,
+  OccupancyDataDto,
+  MonthlyRevenueDto,
+} from '@app/contracts/reports-service';
 
 @Injectable()
 export class ReportsService {
@@ -136,12 +138,14 @@ export class ReportsService {
   }
 
   async getFinancialSummary(
-    startDate: Date,
-    endDate: Date,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _startDate: Date,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _endDate: Date,
   ): Promise<FinancialSummaryDto> {
     // This would typically gather data from billing-service
     // For now, return mock data structure
-    return {
+    return Promise.resolve({
       revenue: {
         room: 0,
         restaurant: 0,
@@ -152,24 +156,27 @@ export class ReportsService {
       expenses: 0,
       grossProfit: 0,
       profitMargin: 0,
-    };
+    });
   }
 
-  async getOccupancyByMonthYear(
-    year: number,
-    month?: number,
+  getOccupancyByMonthYear(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _year: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _month?: number,
   ): Promise<OccupancyDataDto[]> {
     // This would typically gather data from booking-service
     // For now, return empty array
-    return [];
+    return Promise.resolve([]);
   }
 
-  async getMonthlyRevenueComparison(
-    year: number,
+  getMonthlyRevenueComparison(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _year: number,
   ): Promise<MonthlyRevenueDto[]> {
     // This would typically gather data from billing-service
     // For now, return empty array
-    return [];
+    return Promise.resolve([]);
   }
 
   async generateFinancialReportPdfData(

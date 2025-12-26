@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployeeRequest } from '../entities/employee-request.entity';
-import { Employee } from '../../employees/entities/employee.entity';
+import { EmployeeRequest } from '../entities';
+import { Employee } from '../../employees';
 import { EmployeeRequestsSeeder } from './employee-requests.seeder';
 
 @Module({

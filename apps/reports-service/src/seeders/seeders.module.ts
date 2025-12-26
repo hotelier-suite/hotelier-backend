@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedersService } from './seeders.service';
-import { ReportsSeeder } from './domains/reports.seeder';
-import { AnalyticsSeeder } from './domains/analytics.seeder';
-import { Report } from '../reports/entities/report.entity';
-import { AnalyticsData } from '../analytics/entities/analytics-data.entity';
+import { ReportsSeeder, AnalyticsSeeder } from './domains';
+import { Report } from '../reports';
+import { AnalyticsData } from '../analytics';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Report, AnalyticsData])],

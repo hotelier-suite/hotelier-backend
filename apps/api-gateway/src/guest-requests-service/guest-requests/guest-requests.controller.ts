@@ -19,13 +19,15 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { GuestRequestsService } from './guest-requests.service';
-import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
-import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
-import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateGuestRequestDto,
+  GuestRequestDto,
+  UpdateGuestRequestDto,
+  RequestPriority,
+  RequestStatus,
+} from '@app/contracts/guest-requests-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('guest-requests')
 @Controller('guest-requests')

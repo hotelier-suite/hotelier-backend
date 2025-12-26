@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsOptional, IsBoolean, IsObject, Min } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsObject,
+  Min,
+} from 'class-validator';
 
 export class DashboardWidgetDto {
   @ApiProperty({

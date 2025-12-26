@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { REPORTS_SERVICE_CLIENT } from './constants';
-import { ReportsModule } from './reports/reports.module';
-import { AnalyticsModule } from './analytics/analytics.module';
+import { ReportsModule } from './reports';
+import { AnalyticsModule } from './analytics';
 
 @Global()
 @Module({

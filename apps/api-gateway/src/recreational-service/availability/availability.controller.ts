@@ -7,10 +7,10 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { FacilitiesService } from '../facilities/facilities.service';
-import { FacilityAvailabilityDto } from '@app/contracts/recreational-service/facilities/dto';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { FacilitiesService } from '../facilities';
+import { FacilityAvailabilityDto } from '@app/contracts/recreational-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
 @ApiTags('recreational')
 @Controller('recreational/availability')

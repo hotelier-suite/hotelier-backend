@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateHousekeepingMaintenanceRequestDto } from './create-maintenance-request.dto';
-import { HousekeepingMaintenanceStatus } from '../enums/maintenance-status.enum';
+import { HousekeepingMaintenanceStatus } from '../enums';
 
 export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(
   CreateHousekeepingMaintenanceRequestDto,

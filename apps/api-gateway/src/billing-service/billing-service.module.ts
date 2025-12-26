@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BILLING_SERVICE_CLIENT } from './constants';
-import { InvoicesModule } from './invoices/invoices.module';
-import { PaymentsModule } from './payments/payments.module';
-import { StatisticsModule } from './statistics/statistics.module';
+import { InvoicesModule } from './invoices';
+import { PaymentsModule } from './payments';
+import { StatisticsModule } from './statistics';
 
 @Global()
 @Module({

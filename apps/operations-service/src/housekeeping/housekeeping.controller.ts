@@ -1,7 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { HOUSEKEEPING_PATTERNS } from '@app/contracts/operations-service/housekeeping/housekeeping.patterns';
+import { HousekeepingService } from './housekeeping.service';
 import {
+  HOUSEKEEPING_PATTERNS,
   CleaningTaskDto,
   CreateCleaningTaskDto,
   UpdateCleaningTaskDto,
@@ -16,8 +17,7 @@ import {
   UpdateHousekeepingMaintenanceRequestDto,
   HousekeepingStatisticsDto,
   CleaningPerformanceDto,
-} from '@app/contracts/operations-service/housekeeping/dto';
-import { HousekeepingService } from './housekeeping.service';
+} from '@app/contracts/operations-service';
 
 @Controller()
 export class HousekeepingController {

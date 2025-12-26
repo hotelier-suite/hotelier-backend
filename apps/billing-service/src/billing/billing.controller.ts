@@ -1,25 +1,21 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { BillingService } from './billing.service';
-import { INVOICES_PATTERNS } from '@app/contracts/billing-service/invoices/invoices.patterns';
-import { PAYMENTS_PATTERNS } from '@app/contracts/billing-service/payments/payments.patterns';
-import { STATISTICS_PATTERNS } from '@app/contracts/billing-service/statistics/statistics.patterns';
 import {
+  INVOICES_PATTERNS,
   InvoiceDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
-} from '@app/contracts/billing-service/invoices/dto';
-import { InvoiceStatus } from '@app/contracts/billing-service/invoices/enums/invoice-status.enum';
-import { PaymentMethod } from '@app/contracts/billing-service/payments/enums/payment-method.enum';
-import {
+  InvoiceStatus,
+  PAYMENTS_PATTERNS,
+  PaymentMethod,
   PaymentDto,
   CreatePaymentDto,
-} from '@app/contracts/billing-service/payments/dto';
-import {
+  STATISTICS_PATTERNS,
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
   MonthlyReportResponseDto,
-} from '@app/contracts/billing-service/statistics/dto';
+} from '@app/contracts/billing-service';
 
 @Controller()
 export class BillingController {

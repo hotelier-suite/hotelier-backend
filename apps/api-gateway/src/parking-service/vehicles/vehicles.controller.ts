@@ -18,14 +18,16 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { VehiclesService } from './vehicles.service';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
+import {
+  CreateVehicleDto,
+  GuestType,
+  UpdateVehicleDto,
+  VehicleDto,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
 
 @ApiTags('parking')
 @Controller('parking/vehicles')

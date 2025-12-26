@@ -18,7 +18,7 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Reservation } from '../../reservations/entities/reservation.entity';
+import { Reservation } from '../../reservations';
 
 @Entity('guests')
 export class Guest {

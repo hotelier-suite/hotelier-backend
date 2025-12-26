@@ -16,7 +16,7 @@ import {
   Max,
   Length,
 } from 'class-validator';
-import { InventoryItem } from '../../items/entities/inventory-item.entity';
+import { InventoryItem } from '../../items';
 
 @Entity('suppliers')
 export class Supplier {

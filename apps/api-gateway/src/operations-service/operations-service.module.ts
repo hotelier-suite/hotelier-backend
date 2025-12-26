@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OPERATIONS_SERVICE_CLIENT } from './constants';
-import { HousekeepingModule } from './housekeeping/housekeeping.module';
-import { MaintenanceModule } from './maintenance/maintenance.module';
+import { HousekeepingModule } from './housekeeping';
+import { MaintenanceModule } from './maintenance';
 
 @Global()
 @Module({

@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Venue } from './entities/venue.entity';
+import { Venue } from './entities';
 import {
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
-} from '@app/contracts/events-service/venues/dto';
+} from '@app/contracts/events-service';
 
 @Injectable()
 export class VenuesService {

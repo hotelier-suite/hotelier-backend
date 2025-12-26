@@ -7,7 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { MovementType } from '../enums/movement-type.enum';
+import { MovementType } from '..';
 
 export class CreateInventoryMovementDto {
   @ApiProperty({ enum: MovementType, example: MovementType.IN })

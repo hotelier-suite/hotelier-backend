@@ -1,26 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MenuItem } from './entities/menu-item.entity';
-import { RoomServiceOrder } from './entities/room-service-order.entity';
-import { BeverageInventory } from './entities/beverage-inventory.entity';
+import { MenuItem, RoomServiceOrder, BeverageInventory } from './entities';
 import {
   MenuItemDto,
   CreateMenuItemDto,
   UpdateMenuItemDto,
-} from '@app/contracts/restaurant-service/menu-items/dto';
-import {
   RoomServiceOrderDto,
   CreateRoomServiceOrderDto,
   UpdateRoomServiceOrderDto,
-} from '@app/contracts/restaurant-service/room-service-orders/dto';
-import { RoomServiceStatus } from '@app/contracts/restaurant-service/room-service-orders/enums/room-service-status.enum';
-import {
+  RoomServiceStatus,
   BeverageInventoryDto,
   CreateBeverageItemDto,
   UpdateBeverageItemDto,
-} from '@app/contracts/restaurant-service/beverage-inventory/dto';
-import { BeverageStatus } from '@app/contracts/restaurant-service/beverage-inventory/enums/beverage-status.enum';
+  BeverageStatus,
+} from '@app/contracts/restaurant-service';
 
 @Injectable()
 export class RestaurantService {

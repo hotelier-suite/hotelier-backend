@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 
 export interface AuditLogOptions {
   action?: AuditAction;

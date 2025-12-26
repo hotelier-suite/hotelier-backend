@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Report } from '../../reports/entities/report.entity';
-import { ReportType } from '@app/contracts/reports-service/reports/enums/report-type.enum';
-import { ReportStatus } from '@app/contracts/reports-service/reports/enums/report-status.enum';
+import { Report } from '../../reports';
+import { ReportType, ReportStatus } from '@app/contracts/reports-service';
 
 @Injectable()
 export class ReportsSeeder {

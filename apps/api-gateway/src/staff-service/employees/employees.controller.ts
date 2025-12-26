@@ -18,13 +18,15 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { CreateEmployeeDto } from '@app/contracts/staff-service/employees/dto/create-employee.dto';
-import { DepartmentStatsDto } from '@app/contracts/staff-service/employees/dto/department-stats.dto';
-import { EmployeeDto } from '@app/contracts/staff-service/employees/dto/employee.dto';
-import { UpdateEmployeeDto } from '@app/contracts/staff-service/employees/dto/update-employee.dto';
-import { Department } from '@app/contracts/staff-service/employees/enums/department.enum';
-import { AuditLog } from '../../audit-service/audit/decorators/audit-log.decorator';
-import { AuditAction, AuditResource } from '@app/contracts/audit-service/enums';
+import {
+  CreateEmployeeDto,
+  DepartmentStatsDto,
+  EmployeeDto,
+  UpdateEmployeeDto,
+  Department,
+} from '@app/contracts/staff-service';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 import { EmployeesService } from './employees.service';
 
 @ApiTags('employees')

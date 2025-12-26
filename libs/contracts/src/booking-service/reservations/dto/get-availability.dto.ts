@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsInt, IsOptional, Min } from 'class-validator';
-import { RoomType } from '../../rooms/enums/room-type.enum';
+import { RoomType } from '../../rooms';
 
 export class GetAvailabilityDto {
   @ApiProperty({ example: '2025-09-20' })
