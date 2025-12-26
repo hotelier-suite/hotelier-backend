@@ -8,6 +8,7 @@ import {
   AuditLogQueryDto,
   AuditStatisticsDto,
   AuditResource,
+  AuditAction,
 } from '@app/contracts/audit-service';
 
 // Query result interfaces
@@ -162,7 +163,7 @@ export class AuditService {
 
   async findByAction(action: string): Promise<AuditLogDto[]> {
     const logs = await this.auditLogRepository.find({
-      where: { action: action as any },
+      where: { action: action as AuditAction },
       order: { createdAt: 'DESC' },
     });
     return logs.map((log) => this.toAuditLogDto(log));

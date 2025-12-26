@@ -19,7 +19,7 @@ import {
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { InvoicesService } from './invoices.service';
 import {
   InvoiceDto,

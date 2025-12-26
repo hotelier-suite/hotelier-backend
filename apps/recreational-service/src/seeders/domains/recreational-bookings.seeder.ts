@@ -7,6 +7,30 @@ import {
   BookingPriority,
 } from '@app/contracts/recreational-service';
 
+/**
+ * Interface for recreational booking input data used during seeding.
+ * Compatible with DeepPartial<RecreationalBooking>.
+ */
+interface RecreationalBookingInput {
+  guestName: string;
+  guestEmail: string;
+  guestPhone: string;
+  roomNumber: string;
+  bookingDate: Date;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  participants: number;
+  totalCost: number;
+  status: RecreationalBookingStatus;
+  priority: BookingPriority;
+  specialRequests?: string;
+  staffNotes?: string;
+  actualCheckIn?: Date;
+  actualCheckOut?: Date;
+  facilityId: number;
+}
+
 @Injectable()
 export class RecreationalBookingsSeeder {
   constructor(
@@ -31,7 +55,7 @@ export class RecreationalBookingsSeeder {
 
     // Create bookings for the next 30 days
     const today = new Date();
-    const bookings: any[] = [];
+    const bookings: RecreationalBookingInput[] = [];
 
     // Sample guest data
     const guests = [

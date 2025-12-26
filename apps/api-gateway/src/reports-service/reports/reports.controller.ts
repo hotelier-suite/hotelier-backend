@@ -19,7 +19,7 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ReportsService } from './reports.service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';

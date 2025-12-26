@@ -18,17 +18,28 @@ import {
 import {
   ROOMS_PATTERNS,
   RESERVATIONS_PATTERNS,
+  RoomDto,
+  ReservationDto,
 } from '@app/contracts/booking-service';
 import {
   STATISTICS_PATTERNS,
   INVOICES_PATTERNS,
+  FinancialSummaryResponseDto,
+  InvoiceDto,
 } from '@app/contracts/billing-service';
-import { HOUSEKEEPING_PATTERNS } from '@app/contracts/operations-service';
+import {
+  HOUSEKEEPING_PATTERNS,
+  CleaningAssignmentDto,
+} from '@app/contracts/operations-service';
 import {
   GUEST_REQUESTS_PATTERNS,
   RequestStatus,
+  GuestRequestDto,
 } from '@app/contracts/guest-requests-service';
-import { EMPLOYEES_PATTERNS } from '@app/contracts/staff-service';
+import {
+  EMPLOYEES_PATTERNS,
+  DepartmentStatsDto,
+} from '@app/contracts/staff-service';
 import { AUTH_PATTERNS } from '@app/contracts/auth-service';
 
 @Injectable()
@@ -99,7 +110,7 @@ export class DashboardService {
     // Validate user first using GET_PROFILE pattern
     const user = await lastValueFrom(
       this.authClient
-        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .send<{ id: number } | null, number>(AUTH_PATTERNS.GET_PROFILE, userId)
         .pipe(catchError(() => of(null))),
     );
 
@@ -126,17 +137,23 @@ export class DashboardService {
     ] = await Promise.all([
       lastValueFrom(
         this.bookingClient
-          .send(ROOMS_PATTERNS.FIND_ALL, {})
+          .send<RoomDto[], Record<string, never>>(ROOMS_PATTERNS.FIND_ALL, {})
           .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
         this.bookingClient
-          .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+          .send<
+            ReservationDto[],
+            Record<string, never>
+          >(RESERVATIONS_PATTERNS.FIND_ALL, {})
           .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
         this.billingClient
-          .send(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
+          .send<
+            FinancialSummaryResponseDto,
+            { startDate: string; endDate: string }
+          >(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
           })
@@ -144,32 +161,38 @@ export class DashboardService {
       ),
       lastValueFrom(
         this.staffClient
-          .send(EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS, {})
-          .pipe(catchError(() => of([]))),
+          .send<
+            DepartmentStatsDto[],
+            Record<string, never>
+          >(EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS, {})
+          .pipe(catchError(() => of([] as DepartmentStatsDto[]))),
       ),
       lastValueFrom(
         this.guestRequestsClient
-          .send(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS, RequestStatus.PENDING)
+          .send<
+            number,
+            RequestStatus
+          >(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS, RequestStatus.PENDING)
           .pipe(catchError(() => of(0))),
       ),
     ]);
 
     const totalRooms = rooms.length;
-    const availableRooms = rooms.filter((r: any) => r.isAvailable).length;
+    const availableRooms = rooms.filter((r: RoomDto) => r.isAvailable).length;
 
-    const todayCheckIns = reservations.filter((r: any) => {
+    const todayCheckIns = reservations.filter((r: ReservationDto) => {
       const checkIn = new Date(r.checkInDate);
       return checkIn >= dayStart && checkIn <= dayEnd;
     }).length;
 
-    const todayCheckOuts = reservations.filter((r: any) => {
+    const todayCheckOuts = reservations.filter((r: ReservationDto) => {
       const checkOut = new Date(r.checkOutDate);
       return checkOut >= dayStart && checkOut <= dayEnd;
     }).length;
 
     const activeStaff = Array.isArray(departmentStats)
       ? departmentStats.reduce(
-          (sum: number, s: any) => sum + (s.activeCount ?? 0),
+          (sum: number, s: DepartmentStatsDto) => sum + (s.activeCount ?? 0),
           0,
         )
       : 0;
@@ -191,12 +214,15 @@ export class DashboardService {
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
         this.bookingClient
-          .send(ROOMS_PATTERNS.FIND_ALL, {})
+          .send<RoomDto[], Record<string, never>>(ROOMS_PATTERNS.FIND_ALL, {})
           .pipe(catchError(() => of([]))),
       ),
       lastValueFrom(
         this.bookingClient
-          .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+          .send<
+            ReservationDto[],
+            Record<string, never>
+          >(RESERVATIONS_PATTERNS.FIND_ALL, {})
           .pipe(catchError(() => of([]))),
       ),
     ]);
@@ -224,7 +250,7 @@ export class DashboardService {
       const dayEnd = new Date(d);
       dayEnd.setHours(23, 59, 59, 999);
 
-      const overlapping = reservations.filter((r: any) => {
+      const overlapping = reservations.filter((r: ReservationDto) => {
         const checkIn = new Date(r.checkInDate);
         const checkOut = new Date(r.checkOutDate);
         return checkIn <= dayEnd && checkOut > dayStart;
@@ -242,7 +268,7 @@ export class DashboardService {
   async getRevenueData(userId: number): Promise<RevenueDataDto[]> {
     const user = await lastValueFrom(
       this.authClient
-        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .send<{ id: number } | null, number>(AUTH_PATTERNS.GET_PROFILE, userId)
         .pipe(catchError(() => of(null))),
     );
 
@@ -256,10 +282,13 @@ export class DashboardService {
 
     const invoices = await lastValueFrom(
       this.billingClient
-        .send(INVOICES_PATTERNS.FIND_BY_DATE_RANGE, {
-          startDate: start.toISOString(),
-          endDate: today.toISOString(),
-        })
+        .send<InvoiceDto[], { startDate: string; endDate: string }>(
+          INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
+          {
+            startDate: start.toISOString(),
+            endDate: today.toISOString(),
+          },
+        )
         .pipe(catchError(() => of([]))),
     );
 
@@ -284,11 +313,14 @@ export class DashboardService {
 
     const reservations = await lastValueFrom(
       this.bookingClient
-        .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
-        .pipe(catchError(() => of([]))),
+        .send<
+          ReservationDto[],
+          Record<string, never>
+        >(RESERVATIONS_PATTERNS.FIND_ALL, {})
+        .pipe(catchError(() => of([] as ReservationDto[]))),
     );
 
-    const recentReservations = reservations.filter((r: any) => {
+    const recentReservations = reservations.filter((r) => {
       const createdAt = new Date(r.createdAt);
       return createdAt >= startDate && createdAt <= endDate;
     });
@@ -317,7 +349,7 @@ export class DashboardService {
   async getRecentActivities(userId: number): Promise<RecentActivityDto[]> {
     const user = await lastValueFrom(
       this.authClient
-        .send(AUTH_PATTERNS.GET_PROFILE, userId)
+        .send<{ id: number } | null, number>(AUTH_PATTERNS.GET_PROFILE, userId)
         .pipe(catchError(() => of(null))),
     );
 
@@ -329,22 +361,34 @@ export class DashboardService {
       await Promise.all([
         lastValueFrom(
           this.bookingClient
-            .send(RESERVATIONS_PATTERNS.FIND_ALL, {})
+            .send<
+              ReservationDto[],
+              Record<string, never>
+            >(RESERVATIONS_PATTERNS.FIND_ALL, {})
             .pipe(catchError(() => of([]))),
         ),
         lastValueFrom(
           this.billingClient
-            .send(INVOICES_PATTERNS.FIND_ALL, {})
+            .send<
+              InvoiceDto[],
+              Record<string, never>
+            >(INVOICES_PATTERNS.FIND_ALL, {})
             .pipe(catchError(() => of([]))),
         ),
         lastValueFrom(
           this.operationsClient
-            .send(HOUSEKEEPING_PATTERNS.FIND_ALL_ASSIGNMENTS, {})
+            .send<
+              CleaningAssignmentDto[],
+              Record<string, never>
+            >(HOUSEKEEPING_PATTERNS.FIND_ALL_ASSIGNMENTS, {})
             .pipe(catchError(() => of([]))),
         ),
         lastValueFrom(
           this.guestRequestsClient
-            .send(GUEST_REQUESTS_PATTERNS.FIND_RECENT, 5)
+            .send<
+              GuestRequestDto[],
+              number
+            >(GUEST_REQUESTS_PATTERNS.FIND_RECENT, 5)
             .pipe(catchError(() => of([]))),
         ),
       ]);
@@ -354,12 +398,12 @@ export class DashboardService {
     // Recent reservations
     const recentReservations = [...reservations]
       .sort(
-        (a: any, b: any) =>
+        (a: ReservationDto, b: ReservationDto) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       )
       .slice(0, 5);
 
-    recentReservations.forEach((r: any) =>
+    recentReservations.forEach((r: ReservationDto) =>
       activities.push({
         type: 'booking',
         description: `Reservation for room ${r.roomId} - ${r.guestName}`,
@@ -370,12 +414,12 @@ export class DashboardService {
     // Recent invoices
     const recentInvoices = [...invoices]
       .sort(
-        (a: any, b: any) =>
+        (a: InvoiceDto, b: InvoiceDto) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       )
       .slice(0, 5);
 
-    recentInvoices.forEach((inv: any) =>
+    recentInvoices.forEach((inv: InvoiceDto) =>
       activities.push({
         type: 'payment',
         description: `Invoice #${inv.number} created`,
@@ -385,14 +429,14 @@ export class DashboardService {
 
     // Recent assignments
     const recentAssignments = [...assignments]
-      .sort((a: any, b: any) => {
+      .sort((a: CleaningAssignmentDto, b: CleaningAssignmentDto) => {
         const aTime = a.completedAt ? new Date(a.completedAt).getTime() : 0;
         const bTime = b.completedAt ? new Date(b.completedAt).getTime() : 0;
         return bTime - aTime;
       })
       .slice(0, 5);
 
-    recentAssignments.forEach((a: any) =>
+    recentAssignments.forEach((a: CleaningAssignmentDto) =>
       activities.push({
         type: 'maintenance',
         description: `Cleaning assignment ${a.id} ${a.completedAt ? 'completed' : 'in progress'}`,
@@ -403,7 +447,7 @@ export class DashboardService {
     );
 
     // Recent guest requests
-    guestRequests.forEach((gr: any) =>
+    guestRequests.forEach((gr: GuestRequestDto) =>
       activities.push({
         type: 'request',
         description: `Guest request ${gr.type} in room ${gr.room}`,
