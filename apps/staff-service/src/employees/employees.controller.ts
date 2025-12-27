@@ -15,23 +15,15 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @MessagePattern(EMPLOYEES_PATTERNS.FIND_ALL)
-  findAll(): Promise<EmployeeDto[]> {
-    return this.employeesService.findAll();
+  findAll(
+    @Payload() filters: { department?: Department },
+  ): Promise<EmployeeDto[]> {
+    return this.employeesService.findAll(filters.department);
   }
 
   @MessagePattern(EMPLOYEES_PATTERNS.FIND_BY_ID)
   findOne(@Payload() id: number): Promise<EmployeeDto> {
     return this.employeesService.findOne(id);
-  }
-
-  @MessagePattern(EMPLOYEES_PATTERNS.FIND_BY_DEPARTMENT)
-  findByDepartment(@Payload() department: Department): Promise<EmployeeDto[]> {
-    return this.employeesService.findByDepartment(department);
-  }
-
-  @MessagePattern(EMPLOYEES_PATTERNS.FIND_HOUSEKEEPING)
-  findHousekeeping(): Promise<EmployeeDto[]> {
-    return this.employeesService.findHousekeeping();
   }
 
   @MessagePattern(EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS)

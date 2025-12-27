@@ -6,8 +6,5 @@ export const INVOICES_PATTERNS = {
   DELETE: 'invoices.delete',
   MARK_AS_PAID: 'invoices.markAsPaid',
   DOWNLOAD: 'invoices.download',
-  FIND_BY_STATUS: 'invoices.findByStatus',
-  FIND_BY_DATE_RANGE: 'invoices.findByDateRange',
-  FIND_OVERDUE: 'invoices.findOverdue',
   FIND_BY_CUSTOMER: 'invoices.findByCustomer',
 } as const;

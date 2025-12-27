@@ -69,8 +69,12 @@ export class VehiclesService {
     incidents: true,
   };
 
-  findAll(): Promise<VehicleDto[]> {
+  findAll(
+    status?: VehicleStatus,
+    guestType?: GuestType,
+  ): Promise<VehicleDto[]> {
     return this.vehicleRepository.find({
+      where: { status, guestType },
       select: this.vehicleReadSelect,
       relations: this.vehicleReadRelations,
       order: { createdAt: 'DESC' },
@@ -109,24 +113,6 @@ export class VehiclesService {
     }
 
     return vehicle;
-  }
-
-  findByStatus(status: VehicleStatus): Promise<VehicleDto[]> {
-    return this.vehicleRepository.find({
-      where: { status },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByGuestType(guestType: GuestType): Promise<VehicleDto[]> {
-    return this.vehicleRepository.find({
-      where: { guestType },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-      order: { createdAt: 'DESC' },
-    });
   }
 
   async create(data: CreateVehicleDto): Promise<VehicleDto> {

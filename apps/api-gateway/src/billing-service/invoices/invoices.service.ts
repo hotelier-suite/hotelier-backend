@@ -18,11 +18,15 @@ export class InvoicesService {
     private readonly billingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<InvoiceDto[]> {
-    return this.billingClient.send<InvoiceDto[], Record<string, never>>(
-      INVOICES_PATTERNS.FIND_ALL,
-      {},
-    );
+  findAll(
+    status?: InvoiceStatus,
+    startDate?: Date,
+    endDate?: Date,
+  ): Observable<InvoiceDto[]> {
+    return this.billingClient.send<
+      InvoiceDto[],
+      { status?: InvoiceStatus; startDate?: Date; endDate?: Date }
+    >(INVOICES_PATTERNS.FIND_ALL, { status, startDate, endDate });
   }
 
   findOne(id: number): Observable<InvoiceDto> {
@@ -50,30 +54,6 @@ export class InvoicesService {
     return this.billingClient.send<InvoiceDto, number>(
       INVOICES_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  findByStatus(status: InvoiceStatus): Observable<InvoiceDto[]> {
-    return this.billingClient.send<InvoiceDto[], InvoiceStatus>(
-      INVOICES_PATTERNS.FIND_BY_STATUS,
-      status,
-    );
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Observable<InvoiceDto[]> {
-    return this.billingClient.send<
-      InvoiceDto[],
-      { startDate: Date; endDate: Date }
-    >(INVOICES_PATTERNS.FIND_BY_DATE_RANGE, {
-      startDate,
-      endDate,
-    });
-  }
-
-  findOverdue(): Observable<InvoiceDto[]> {
-    return this.billingClient.send<InvoiceDto[], Record<string, never>>(
-      INVOICES_PATTERNS.FIND_OVERDUE,
-      {},
     );
   }
 

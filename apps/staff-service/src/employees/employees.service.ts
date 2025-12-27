@@ -47,13 +47,7 @@ export class EmployeesService {
     return loaded;
   }
 
-  findAll(): Promise<EmployeeDto[]> {
-    return this.employeeRepository.find({
-      order: { name: 'ASC' },
-    });
-  }
-
-  findByDepartment(department: Department): Promise<EmployeeDto[]> {
+  findAll(department?: Department): Promise<EmployeeDto[]> {
     return this.employeeRepository.find({
       where: { department },
       order: { name: 'ASC' },
@@ -105,10 +99,6 @@ export class EmployeesService {
 
     await this.employeeRepository.remove(employee);
     return employee;
-  }
-
-  findHousekeeping(): Promise<EmployeeDto[]> {
-    return this.findByDepartment(Department.HOUSEKEEPING);
   }
 
   async getDepartmentStats(): Promise<DepartmentStatsDto[]> {

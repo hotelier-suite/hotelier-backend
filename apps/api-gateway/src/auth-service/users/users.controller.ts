@@ -43,6 +43,53 @@ import { Observable } from 'rxjs';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('profile/me')
+  @ApiOperation({
+    summary: 'Get Own Profile',
+    description: "Get the current user's profile information.",
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile retrieved successfully',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  getMyProfile(@CurrentUser() user: JwtUser): Observable<UserResponseDto> {
+    return this.usersService.findOne(user.id);
+  }
+
+  @Patch('profile/me')
+  @ApiOperation({
+    summary: 'Update Own Profile',
+    description: "Update the current user's profile information.",
+  })
+  @ApiBody({
+    description: 'User profile update data',
+    type: UpdateUserDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Profile updated successfully',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+  })
+  updateMyProfile(
+    @CurrentUser() user: JwtUser,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Observable<UserResponseDto> {
+    return this.usersService.update(user.id, updateUserDto);
+  }
+
   @Get()
   @ApiOperation({
     summary: 'Get All Users',
@@ -64,39 +111,6 @@ export class UsersController {
   })
   findAll(): Observable<UserResponseDto[]> {
     return this.usersService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Get User by ID',
-    description:
-      'Retrieve a specific user by ID with roles (without sensitive data).',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Unique identifier of the user',
-    type: 'number',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'User retrieved successfully',
-    type: UserResponseDto,
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - authentication required',
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Insufficient permissions',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
-  findOne(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
-    return this.usersService.findOne(id);
   }
 
   @Post()
@@ -136,6 +150,39 @@ export class UsersController {
   })
   create(@Body() createUserDto: CreateUserDto): Observable<UserResponseDto> {
     return this.usersService.create(createUserDto);
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get User by ID',
+    description:
+      'Retrieve a specific user by ID with roles (without sensitive data).',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Unique identifier of the user',
+    type: 'number',
+    example: 1,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User retrieved successfully',
+    type: UserResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
@@ -448,52 +495,5 @@ export class UsersController {
     @Param('userId', ParseIntPipe) userId: number,
   ): Observable<PermissionResponseDto[]> {
     return this.usersService.getUserPermissions(userId);
-  }
-
-  @Get('profile/me')
-  @ApiOperation({
-    summary: 'Get Own Profile',
-    description: "Get the current user's profile information.",
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Profile retrieved successfully',
-    type: UserResponseDto,
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized',
-  })
-  getMyProfile(@CurrentUser() user: JwtUser): Observable<UserResponseDto> {
-    return this.usersService.findOne(user.id);
-  }
-
-  @Patch('profile/me')
-  @ApiOperation({
-    summary: 'Update Own Profile',
-    description: "Update the current user's profile information.",
-  })
-  @ApiBody({
-    description: 'User profile update data',
-    type: UpdateUserDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Profile updated successfully',
-    type: UserResponseDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input data',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized',
-  })
-  updateMyProfile(
-    @CurrentUser() user: JwtUser,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Observable<UserResponseDto> {
-    return this.usersService.update(user.id, updateUserDto);
   }
 }

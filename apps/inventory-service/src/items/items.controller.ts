@@ -15,27 +15,14 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
   @MessagePattern(INVENTORY_ITEMS_PATTERNS.GET_ALL)
-  findAll(): Promise<InventoryItemDto[]> {
-    return this.itemsService.findAll();
-  }
-
-  @MessagePattern(INVENTORY_ITEMS_PATTERNS.GET_BY_CATEGORY)
-  findByCategory(
-    @Payload() category: InventoryCategory,
+  findAll(
+    @Payload()
+    filters: {
+      category?: InventoryCategory;
+      status?: InventoryStatus;
+    },
   ): Promise<InventoryItemDto[]> {
-    return this.itemsService.findByCategory(category);
-  }
-
-  @MessagePattern(INVENTORY_ITEMS_PATTERNS.GET_BY_STATUS)
-  findByStatus(
-    @Payload() status: InventoryStatus,
-  ): Promise<InventoryItemDto[]> {
-    return this.itemsService.findByStatus(status);
-  }
-
-  @MessagePattern(INVENTORY_ITEMS_PATTERNS.GET_LOW_STOCK)
-  findLowStock(): Promise<InventoryItemDto[]> {
-    return this.itemsService.findLowStock();
+    return this.itemsService.findAll(filters.category, filters.status);
   }
 
   @MessagePattern(INVENTORY_ITEMS_PATTERNS.CREATE)

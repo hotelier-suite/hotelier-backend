@@ -18,25 +18,14 @@ export class VehiclesService {
     private readonly parkingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<VehicleDto[]> {
-    return this.parkingClient.send<VehicleDto[], Record<string, never>>(
-      VEHICLES_PATTERNS.GET_ALL,
-      {},
-    );
-  }
-
-  findByStatus(status: VehicleStatus): Observable<VehicleDto[]> {
-    return this.parkingClient.send<VehicleDto[], VehicleStatus>(
-      VEHICLES_PATTERNS.GET_BY_STATUS,
-      status,
-    );
-  }
-
-  findByGuestType(guestType: GuestType): Observable<VehicleDto[]> {
-    return this.parkingClient.send<VehicleDto[], GuestType>(
-      VEHICLES_PATTERNS.GET_BY_GUEST_TYPE,
-      guestType,
-    );
+  findAll(
+    status?: VehicleStatus,
+    guestType?: GuestType,
+  ): Observable<VehicleDto[]> {
+    return this.parkingClient.send<
+      VehicleDto[],
+      { status?: VehicleStatus; guestType?: GuestType }
+    >(VEHICLES_PATTERNS.GET_ALL, { status, guestType });
   }
 
   findOne(id: number): Observable<VehicleDto> {

@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Repository,
   Between,
-  LessThan,
   FindOptionsSelect,
   FindOptionsRelations,
 } from 'typeorm';
@@ -60,8 +59,17 @@ export class InvoicesService {
     invoiceItems: true,
   };
 
-  findAll(): Promise<InvoiceDto[]> {
+  findAll(
+    status?: InvoiceStatus,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<InvoiceDto[]> {
     return this.invoiceRepository.find({
+      where: {
+        status,
+        createdAt:
+          startDate && endDate ? Between(startDate, endDate) : undefined,
+      },
       select: this.invoiceReadSelect,
       relations: this.invoiceReadRelations,
       order: { createdAt: 'DESC' },
@@ -139,39 +147,6 @@ export class InvoicesService {
 
     await this.invoiceRepository.remove(invoice);
     return invoice;
-  }
-
-  findByStatus(status: InvoiceStatus): Promise<InvoiceDto[]> {
-    return this.invoiceRepository.find({
-      where: { status },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
-      order: { dueDate: 'ASC' },
-    });
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Promise<InvoiceDto[]> {
-    return this.invoiceRepository.find({
-      where: {
-        createdAt: Between(startDate, endDate),
-      },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findOverdue(): Promise<InvoiceDto[]> {
-    const now = new Date();
-    return this.invoiceRepository.find({
-      where: {
-        status: InvoiceStatus.PENDING,
-        dueDate: LessThan(now),
-      },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
-      order: { dueDate: 'ASC' },
-    });
   }
 
   findByCustomer(userId: number): Promise<InvoiceDto[]> {

@@ -18,24 +18,10 @@ export class EmployeesService {
     private readonly staffClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<EmployeeDto[]> {
-    return this.staffClient.send<EmployeeDto[], Record<string, never>>(
+  findAll(department?: Department): Observable<EmployeeDto[]> {
+    return this.staffClient.send<EmployeeDto[], { department?: Department }>(
       EMPLOYEES_PATTERNS.FIND_ALL,
-      {},
-    );
-  }
-
-  findByDepartment(department: Department): Observable<EmployeeDto[]> {
-    return this.staffClient.send<EmployeeDto[], Department>(
-      EMPLOYEES_PATTERNS.FIND_BY_DEPARTMENT,
-      department,
-    );
-  }
-
-  findHousekeeping(): Observable<EmployeeDto[]> {
-    return this.staffClient.send<EmployeeDto[], Record<string, never>>(
-      EMPLOYEES_PATTERNS.FIND_HOUSEKEEPING,
-      {},
+      { department },
     );
   }
 

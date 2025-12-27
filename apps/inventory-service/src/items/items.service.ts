@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InventoryItem } from './entities';
 import {
   InventoryItemDto,
@@ -21,34 +21,13 @@ export class ItemsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  findAll(): Promise<InventoryItemDto[]> {
+  findAll(
+    category?: InventoryCategory,
+    status?: InventoryStatus,
+  ): Promise<InventoryItemDto[]> {
     return this.inventoryRepository.find({
+      where: { category, status },
       order: { name: 'ASC' },
-    });
-  }
-
-  findByCategory(category: InventoryCategory): Promise<InventoryItemDto[]> {
-    return this.inventoryRepository.find({
-      where: { category },
-      order: { name: 'ASC' },
-    });
-  }
-
-  findByStatus(status: InventoryStatus): Promise<InventoryItemDto[]> {
-    return this.inventoryRepository.find({
-      where: { status },
-      order: { name: 'ASC' },
-    });
-  }
-
-  findLowStock(): Promise<InventoryItemDto[]> {
-    return this.inventoryRepository.find({
-      where: {
-        status: In([InventoryStatus.LOW_STOCK, InventoryStatus.OUT_OF_STOCK]),
-      },
-      order: {
-        updatedAt: 'DESC',
-      },
     });
   }
 

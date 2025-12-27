@@ -15,8 +15,19 @@ export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
   @MessagePattern(INVOICES_PATTERNS.FIND_ALL)
-  findAll(): Promise<InvoiceDto[]> {
-    return this.invoicesService.findAll();
+  findAll(
+    @Payload()
+    filters: {
+      status?: InvoiceStatus;
+      startDate?: Date;
+      endDate?: Date;
+    },
+  ): Promise<InvoiceDto[]> {
+    return this.invoicesService.findAll(
+      filters.status,
+      filters.startDate,
+      filters.endDate,
+    );
   }
 
   @MessagePattern(INVOICES_PATTERNS.FIND_ONE)
@@ -39,26 +50,6 @@ export class InvoicesController {
   @MessagePattern(INVOICES_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<InvoiceDto> {
     return this.invoicesService.remove(id);
-  }
-
-  @MessagePattern(INVOICES_PATTERNS.FIND_BY_STATUS)
-  findByStatus(@Payload() status: InvoiceStatus): Promise<InvoiceDto[]> {
-    return this.invoicesService.findByStatus(status);
-  }
-
-  @MessagePattern(INVOICES_PATTERNS.FIND_BY_DATE_RANGE)
-  findByDateRange(
-    @Payload() payload: { startDate: Date; endDate: Date },
-  ): Promise<InvoiceDto[]> {
-    return this.invoicesService.findByDateRange(
-      payload.startDate,
-      payload.endDate,
-    );
-  }
-
-  @MessagePattern(INVOICES_PATTERNS.FIND_OVERDUE)
-  findOverdue(): Promise<InvoiceDto[]> {
-    return this.invoicesService.findOverdue();
   }
 
   @MessagePattern(INVOICES_PATTERNS.FIND_BY_CUSTOMER)

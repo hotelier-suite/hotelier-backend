@@ -1,8 +1,6 @@
 export const EMPLOYEES_PATTERNS = {
   FIND_ALL: 'staff.employees.findAll',
   FIND_BY_ID: 'staff.employees.findById',
-  FIND_BY_DEPARTMENT: 'staff.employees.findByDepartment',
-  FIND_HOUSEKEEPING: 'staff.employees.findHousekeeping',
   GET_DEPARTMENT_STATS: 'staff.employees.getDepartmentStats',
   CREATE: 'staff.employees.create',
   UPDATE: 'staff.employees.update',

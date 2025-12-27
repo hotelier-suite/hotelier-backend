@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -39,55 +40,26 @@ export class VehiclesController {
   @ApiOperation({
     summary: 'Get All Vehicles',
     description:
-      'Retrieve all registered vehicles in the parking system with their current status and assigned space information.',
-  })
-  @ApiResponse({ status: 200, type: [VehicleDto] })
-  findAll(): Observable<VehicleDto[]> {
-    return this.vehiclesService.findAll();
-  }
-
-  @Get('by-status')
-  @ApiOperation({
-    summary: 'Get Vehicles by Status',
-    description:
-      'Retrieve all vehicles filtered by their current parking status (e.g., parked, checked out).',
+      'Retrieve all registered vehicles in the parking system with their current status and assigned space information. Optionally filter by status or guest type.',
   })
   @ApiQuery({
     name: 'status',
     enum: VehicleStatus,
+    required: false,
     description: 'Filter vehicles by their current parking status',
-  })
-  @ApiResponse({ status: 200, type: [VehicleDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid status value provided',
-  })
-  findByStatus(
-    @Query('status') status: VehicleStatus,
-  ): Observable<VehicleDto[]> {
-    return this.vehiclesService.findByStatus(status);
-  }
-
-  @Get('by-guest-type')
-  @ApiOperation({
-    summary: 'Get Vehicles by Guest Type',
-    description:
-      'Retrieve all vehicles filtered by the type of guest who owns them (e.g., hotel guest, visitor, staff).',
   })
   @ApiQuery({
     name: 'guestType',
     enum: GuestType,
+    required: false,
     description: 'Filter vehicles by the type of guest',
   })
   @ApiResponse({ status: 200, type: [VehicleDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid guest type value provided',
-  })
-  findByGuestType(
-    @Query('guestType') guestType: GuestType,
+  findAll(
+    @Query('status') status?: VehicleStatus,
+    @Query('guestType') guestType?: GuestType,
   ): Observable<VehicleDto[]> {
-    return this.vehiclesService.findByGuestType(guestType);
+    return this.vehiclesService.findAll(status, guestType);
   }
 
   @Get(':id')
@@ -186,7 +158,7 @@ export class VehiclesController {
     return this.vehiclesService.update(id, body);
   }
 
-  @Put(':id/checkout')
+  @Patch(':id/checkout')
   @ApiOperation({
     summary: 'Check Out Vehicle',
     description:

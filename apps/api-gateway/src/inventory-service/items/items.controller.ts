@@ -7,12 +7,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -38,48 +40,21 @@ export class ItemsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Inventory Items',
-    description: 'Retrieve all inventory items.',
+    description:
+      'Retrieve all inventory items. Optionally filter by category and/or status.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Inventory items retrieved successfully',
-    type: [InventoryItemDto],
-  })
-  findAll(): Observable<InventoryItemDto[]> {
-    return this.itemsService.findAll();
-  }
-
-  @Get('by-category/:category')
-  @ApiOperation({
-    summary: 'Get Inventory Items by Category',
-    description: 'Retrieve inventory items filtered by category.',
-  })
-  @ApiParam({
+  @ApiQuery({
     name: 'category',
     enum: InventoryCategory,
-    description: 'Inventory category to filter by',
+    required: false,
+    description: 'Filter by inventory category',
     example: InventoryCategory.CLEANING_SUPPLIES,
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Inventory items retrieved successfully',
-    type: [InventoryItemDto],
-  })
-  findByCategory(
-    @Param('category') category: InventoryCategory,
-  ): Observable<InventoryItemDto[]> {
-    return this.itemsService.findByCategory(category);
-  }
-
-  @Get('by-status/:status')
-  @ApiOperation({
-    summary: 'Get Inventory Items by Status',
-    description: 'Retrieve inventory items filtered by status.',
-  })
-  @ApiParam({
+  @ApiQuery({
     name: 'status',
     enum: InventoryStatus,
-    description: 'Inventory status to filter by',
+    required: false,
+    description: 'Filter by inventory status',
     example: InventoryStatus.LOW_STOCK,
   })
   @ApiResponse({
@@ -87,24 +62,11 @@ export class ItemsController {
     description: 'Inventory items retrieved successfully',
     type: [InventoryItemDto],
   })
-  findByStatus(
-    @Param('status') status: InventoryStatus,
+  findAll(
+    @Query('category') category?: InventoryCategory,
+    @Query('status') status?: InventoryStatus,
   ): Observable<InventoryItemDto[]> {
-    return this.itemsService.findByStatus(status);
-  }
-
-  @Get('low-stock')
-  @ApiOperation({
-    summary: 'Get Low Stock Items',
-    description: 'Retrieve all inventory items that are running low on stock.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Low stock items retrieved successfully',
-    type: [InventoryItemDto],
-  })
-  findLowStock(): Observable<InventoryItemDto[]> {
-    return this.itemsService.findLowStock();
+    return this.itemsService.findAll(category, status);
   }
 
   @Post()
