@@ -94,7 +94,7 @@ export class UsersService {
     await this.userRepository.update(userId, { lastLogin: new Date() });
   }
 
-  findAllUsers(): Promise<UserResponseDto[]> {
+  findAll(): Promise<UserResponseDto[]> {
     return this.userRepository.find({
       select: this.userReadSelect,
       relations: this.userReadRelations,
@@ -102,7 +102,7 @@ export class UsersService {
     });
   }
 
-  async findUserById(id: number): Promise<UserResponseDto> {
+  async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: this.userReadSelect,
@@ -119,7 +119,7 @@ export class UsersService {
     return user;
   }
 
-  async createUser(data: Partial<User>): Promise<UserResponseDto> {
+  async create(data: Partial<User>): Promise<UserResponseDto> {
     const user = await this.userRepository.save(data);
 
     const loaded = await this.userRepository.findOne({
@@ -138,7 +138,7 @@ export class UsersService {
     return loaded;
   }
 
-  async updateUser(id: number, data: Partial<User>): Promise<UserResponseDto> {
+  async update(id: number, data: Partial<User>): Promise<UserResponseDto> {
     const existing = await this.userRepository.findOne({
       where: { id },
       relations: { userRoles: { role: true } },
@@ -169,7 +169,7 @@ export class UsersService {
     return updated;
   }
 
-  async deleteUser(id: number): Promise<UserResponseDto> {
+  async remove(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
       select: this.userReadSelect,
@@ -187,7 +187,7 @@ export class UsersService {
     return user;
   }
 
-  async activateUser(id: number): Promise<UserResponseDto> {
+  async activate(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: { userRoles: { role: true } },
@@ -218,7 +218,7 @@ export class UsersService {
     return updated;
   }
 
-  async deactivateUser(id: number): Promise<UserResponseDto> {
+  async deactivate(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: { userRoles: { role: true } },

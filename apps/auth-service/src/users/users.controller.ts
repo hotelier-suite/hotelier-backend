@@ -14,44 +14,44 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @MessagePattern(USERS_PATTERNS.FIND_ALL)
-  findAllUsers(): Promise<UserResponseDto[]> {
-    return this.usersService.findAllUsers();
+  findAll(): Promise<UserResponseDto[]> {
+    return this.usersService.findAll();
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_BY_ID)
-  findUserById(@Payload() id: number): Promise<UserResponseDto> {
-    return this.usersService.findUserById(id);
+  findOne(@Payload() id: number): Promise<UserResponseDto> {
+    return this.usersService.findOne(id);
   }
 
   @MessagePattern(USERS_PATTERNS.CREATE)
-  createUser(@Payload() data: Partial<User>): Promise<UserResponseDto> {
-    return this.usersService.createUser(data);
+  create(@Payload() data: Partial<User>): Promise<UserResponseDto> {
+    return this.usersService.create(data);
   }
 
   @MessagePattern(USERS_PATTERNS.UPDATE)
-  updateUser(
+  update(
     @Payload()
     payload: {
       id: number;
       data: Partial<User>;
     },
   ): Promise<UserResponseDto> {
-    return this.usersService.updateUser(payload.id, payload.data);
+    return this.usersService.update(payload.id, payload.data);
   }
 
   @MessagePattern(USERS_PATTERNS.DELETE)
-  deleteUser(@Payload() id: number): Promise<UserResponseDto> {
-    return this.usersService.deleteUser(id);
+  remove(@Payload() id: number): Promise<UserResponseDto> {
+    return this.usersService.remove(id);
   }
 
   @MessagePattern(USERS_PATTERNS.ACTIVATE)
-  activateUser(@Payload() id: number): Promise<UserResponseDto> {
-    return this.usersService.activateUser(id);
+  activate(@Payload() id: number): Promise<UserResponseDto> {
+    return this.usersService.activate(id);
   }
 
   @MessagePattern(USERS_PATTERNS.DEACTIVATE)
-  deactivateUser(@Payload() id: number): Promise<UserResponseDto> {
-    return this.usersService.deactivateUser(id);
+  deactivate(@Payload() id: number): Promise<UserResponseDto> {
+    return this.usersService.deactivate(id);
   }
 
   @MessagePattern(USERS_PATTERNS.ASSIGN_ROLES)

@@ -21,7 +21,7 @@ export class RolesService {
     private readonly userRoleRepository: Repository<UserRole>,
   ) {}
 
-  async createRole(data: CreateRoleDto): Promise<RoleResponseDto> {
+  async create(data: CreateRoleDto): Promise<RoleResponseDto> {
     try {
       const role = await this.roleRepository.save(data);
 
@@ -58,7 +58,7 @@ export class RolesService {
     }
   }
 
-  async findAllRoles(): Promise<RoleResponseDto[]> {
+  async findAll(): Promise<RoleResponseDto[]> {
     const roles = await this.roleRepository.find({
       relations: { permissions: { permission: true } },
       order: { name: 'ASC' },
@@ -67,7 +67,7 @@ export class RolesService {
     return roles;
   }
 
-  async findRoleById(id: number): Promise<RoleResponseDto> {
+  async findOne(id: number): Promise<RoleResponseDto> {
     const role = await this.roleRepository.findOne({
       where: { id },
       relations: { permissions: { permission: true } },
@@ -80,7 +80,7 @@ export class RolesService {
     return role;
   }
 
-  async findRoleByName(name: string): Promise<RoleResponseDto> {
+  async findByName(name: string): Promise<RoleResponseDto> {
     const role = await this.roleRepository.findOne({
       where: { name },
       relations: { permissions: { permission: true } },
@@ -93,7 +93,7 @@ export class RolesService {
     return role;
   }
 
-  async updateRole(id: number, data: UpdateRoleDto): Promise<RoleResponseDto> {
+  async update(id: number, data: UpdateRoleDto): Promise<RoleResponseDto> {
     const existing = await this.roleRepository.findOne({
       where: { id },
       relations: { permissions: { permission: true } },
@@ -135,7 +135,7 @@ export class RolesService {
     }
   }
 
-  async deleteRole(id: number): Promise<RoleResponseDto> {
+  async remove(id: number): Promise<RoleResponseDto> {
     const role = await this.roleRepository.findOne({
       where: { id },
       relations: { permissions: { permission: true } },

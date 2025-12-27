@@ -13,15 +13,13 @@ export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @MessagePattern(PERMISSIONS_PATTERNS.CREATE)
-  createPermission(
-    @Payload() dto: CreatePermissionDto,
-  ): Promise<PermissionResponseDto> {
-    return this.permissionsService.createPermission(dto);
+  create(@Payload() dto: CreatePermissionDto): Promise<PermissionResponseDto> {
+    return this.permissionsService.create(dto);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.FIND_ALL)
-  findAllPermissions(): Promise<PermissionResponseDto[]> {
-    return this.permissionsService.findAllPermissions();
+  findAll(): Promise<PermissionResponseDto[]> {
+    return this.permissionsService.findAll();
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.BY_RESOURCE)
@@ -30,14 +28,14 @@ export class PermissionsController {
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.UPDATE)
-  updatePermission(
+  update(
     @Payload() payload: { id: number; data: UpdatePermissionDto },
   ): Promise<PermissionResponseDto> {
-    return this.permissionsService.updatePermission(payload.id, payload.data);
+    return this.permissionsService.update(payload.id, payload.data);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.DELETE)
-  deletePermission(@Payload() id: number): Promise<PermissionResponseDto> {
-    return this.permissionsService.deletePermission(id);
+  remove(@Payload() id: number): Promise<PermissionResponseDto> {
+    return this.permissionsService.remove(id);
   }
 }

@@ -19,9 +19,7 @@ export class PermissionsService {
     private readonly rolePermissionRepository: Repository<RolePermission>,
   ) {}
 
-  async createPermission(
-    data: CreatePermissionDto,
-  ): Promise<PermissionResponseDto> {
+  async create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
     try {
       const permission = await this.permissionRepository.save(data);
       return permission;
@@ -45,7 +43,7 @@ export class PermissionsService {
     }
   }
 
-  async findAllPermissions(): Promise<PermissionResponseDto[]> {
+  async findAll(): Promise<PermissionResponseDto[]> {
     const permissions = await this.permissionRepository.find({
       order: { resource: 'ASC', action: 'ASC' },
     });
@@ -56,7 +54,7 @@ export class PermissionsService {
   async getPermissionsByResource(): Promise<
     Record<string, PermissionResponseDto[]>
   > {
-    const permissions = await this.findAllPermissions();
+    const permissions = await this.findAll();
     const grouped: Record<string, PermissionResponseDto[]> = {};
 
     for (const permission of permissions) {
@@ -69,7 +67,7 @@ export class PermissionsService {
     return grouped;
   }
 
-  async updatePermission(
+  async update(
     id: number,
     data: UpdatePermissionDto,
   ): Promise<PermissionResponseDto> {
@@ -118,7 +116,7 @@ export class PermissionsService {
     }
   }
 
-  async deletePermission(id: number): Promise<PermissionResponseDto> {
+  async remove(id: number): Promise<PermissionResponseDto> {
     const permission = await this.permissionRepository.findOne({
       where: { id },
     });
