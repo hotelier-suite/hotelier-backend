@@ -28,7 +28,7 @@ export class StatisticsController {
     description: 'Billing statistics retrieved successfully',
     type: FinancialSummaryResponseDto,
   })
-  getYearToDateBillingStatistics(): Observable<FinancialSummaryResponseDto> {
+  getYearToDateFinancialSummary(): Observable<FinancialSummaryResponseDto> {
     return this.statisticsService.getYearToDateFinancialSummary();
   }
 

@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   HttpCode,
@@ -132,7 +133,7 @@ export class AuthController {
     return this.authService.refreshTokens(sub, refreshToken ?? '');
   }
 
-  @Post('me')
+  @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Get User Profile',
@@ -151,6 +152,6 @@ export class AuthController {
   getProfile(
     @CurrentUser() user: JwtUser,
   ): Observable<ProfileResponseDto | null> {
-    return this.authService.validateUser(user.id);
+    return this.authService.getProfile(user.id);
   }
 }

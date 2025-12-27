@@ -49,7 +49,7 @@ export class AuthService {
     >(AUTH_PATTERNS.REFRESH_TOKENS, { userId, refreshToken });
   }
 
-  validateUser(userId: number): Observable<ProfileResponseDto | null> {
+  getProfile(userId: number): Observable<ProfileResponseDto | null> {
     return this.authClient.send<ProfileResponseDto | null, number>(
       AUTH_PATTERNS.GET_PROFILE,
       userId,
