@@ -9,37 +9,57 @@ import {
 } from 'class-validator';
 
 export class CreateGuestDto {
-  @ApiProperty({ example: 'John Smith' })
+  @ApiProperty({ description: 'Full name of the guest', example: 'John Smith' })
   @IsString()
   @Transform(({ value }: { value: string }) => value?.trim())
   name: string;
 
-  @ApiProperty({ example: 'john.smith@example.com' })
+  @ApiProperty({
+    description: 'Email address of the guest',
+    example: 'john.smith@example.com',
+  })
   @IsEmail()
   @Transform(({ value }: { value: string }) => value?.toLowerCase().trim())
   email: string;
 
-  @ApiProperty({ required: false, example: '+1234567890' })
+  @ApiProperty({
+    description: 'Phone number of the guest',
+    required: false,
+    example: '+1234567890',
+  })
   @IsOptional()
   @IsString()
   phone?: string;
 
-  @ApiProperty({ required: false, example: 'ABC123456' })
+  @ApiProperty({
+    description: 'Identity document number (passport, ID card, etc.)',
+    required: false,
+    example: 'ABC123456',
+  })
   @IsOptional()
   @IsString()
   document?: string;
 
-  @ApiProperty({ required: false, example: '123 Main St, New York, NY' })
+  @ApiProperty({
+    description: 'Home address of the guest',
+    required: false,
+    example: '123 Main St, New York, NY',
+  })
   @IsOptional()
   @IsString()
   address?: string;
 
-  @ApiProperty({ required: false, example: 'American' })
+  @ApiProperty({
+    description: 'Nationality of the guest',
+    required: false,
+    example: 'American',
+  })
   @IsOptional()
   @IsString()
   nationality?: string;
 
   @ApiProperty({
+    description: 'Date of birth of the guest',
     required: false,
     type: String,
     format: 'date',
@@ -50,12 +70,19 @@ export class CreateGuestDto {
   @Type(() => Date)
   birthDate?: Date;
 
-  @ApiProperty({ required: false, example: 'Non-smoking room, high floor' })
+  @ApiProperty({
+    description: 'Guest preferences and special requests',
+    required: false,
+    example: 'Non-smoking room, high floor',
+  })
   @IsOptional()
   @IsString()
   preferences?: string;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({
+    description: 'Whether the guest has VIP status',
+    example: false,
+  })
   @IsBoolean()
   vip: boolean;
 }

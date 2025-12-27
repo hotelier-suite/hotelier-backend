@@ -3,6 +3,7 @@ import { IsString, Length } from 'class-validator';
 
 export class ResolveIncidentRequestDto {
   @ApiProperty({
+    description: 'Resolution details describing how the incident was resolved',
     example: 'Incident documented, vehicle owner notified, insurance contacted',
   })
   @IsString()
