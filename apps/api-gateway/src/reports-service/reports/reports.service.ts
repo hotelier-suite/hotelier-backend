@@ -12,6 +12,7 @@ import {
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
+  FinancialReportPdfDto,
 } from '@app/contracts/reports-service';
 
 @Injectable()
@@ -162,24 +163,12 @@ export class ReportsService {
     );
   }
 
-  generateFinancialReportPdfData(
+  generateFinancialReportPdf(
     year: number,
     month?: number,
-  ): Observable<{
-    financialSummary: FinancialSummaryDto;
-    occupancyData: ReportOccupancyDataDto[];
-    monthlyRevenue: MonthlyRevenueDto[];
-    year: number;
-    month?: number;
-  }> {
+  ): Observable<FinancialReportPdfDto> {
     return this.reportsClient.send<
-      {
-        financialSummary: FinancialSummaryDto;
-        occupancyData: ReportOccupancyDataDto[];
-        monthlyRevenue: MonthlyRevenueDto[];
-        year: number;
-        month?: number;
-      },
+      FinancialReportPdfDto,
       { year: number; month?: number }
     >(REPORTS_PATTERNS.GENERATE_FINANCIAL_REPORT_PDF, { year, month });
   }

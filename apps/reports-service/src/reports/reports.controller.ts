@@ -11,6 +11,7 @@ import {
   MonthlyRevenueDto,
   ReportType,
   ReportStatus,
+  FinancialReportPdfDto,
 } from '@app/contracts/reports-service';
 
 @Controller()
@@ -147,16 +148,10 @@ export class ReportsController {
   }
 
   @MessagePattern(REPORTS_PATTERNS.GENERATE_FINANCIAL_REPORT_PDF)
-  generateFinancialReportPdfData(
+  generateFinancialReportPdf(
     @Payload() payload: { year: number; month?: number },
-  ): Promise<{
-    financialSummary: FinancialSummaryDto;
-    occupancyData: ReportOccupancyDataDto[];
-    monthlyRevenue: MonthlyRevenueDto[];
-    year: number;
-    month?: number;
-  }> {
-    return this.reportsService.generateFinancialReportPdfData(
+  ): Promise<FinancialReportPdfDto> {
+    return this.reportsService.generateFinancialReportPdf(
       payload.year,
       payload.month,
     );

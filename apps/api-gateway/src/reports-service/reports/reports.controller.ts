@@ -21,6 +21,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ReportsService } from './reports.service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -34,7 +35,6 @@ import {
   ReportType,
   ReportStatus,
 } from '@app/contracts/reports-service';
-import * as PDFDocument from 'pdfkit';
 
 @ApiTags('reports')
 @Controller('reports')
@@ -57,12 +57,12 @@ export class ReportsController {
     return this.reportsService.findAll();
   }
 
-  @Get('by-type')
+  @Get('by-type/:type')
   @ApiOperation({
     summary: 'Get Reports by Type',
     description: 'Retrieve reports filtered by type.',
   })
-  @ApiQuery({
+  @ApiParam({
     name: 'type',
     enum: ReportType,
     description: 'Report type to filter by',
@@ -72,16 +72,16 @@ export class ReportsController {
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  findByType(@Query('type') type: ReportType): Observable<ReportDto[]> {
+  findByType(@Param('type') type: ReportType): Observable<ReportDto[]> {
     return this.reportsService.findByType(type);
   }
 
-  @Get('by-status')
+  @Get('by-status/:status')
   @ApiOperation({
     summary: 'Get Reports by Status',
     description: 'Retrieve reports filtered by status.',
   })
-  @ApiQuery({
+  @ApiParam({
     name: 'status',
     enum: ReportStatus,
     description: 'Report status to filter by',
@@ -91,7 +91,7 @@ export class ReportsController {
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  findByStatus(@Query('status') status: ReportStatus): Observable<ReportDto[]> {
+  findByStatus(@Param('status') status: ReportStatus): Observable<ReportDto[]> {
     return this.reportsService.findByStatus(status);
   }
 
@@ -226,145 +226,19 @@ export class ReportsController {
     status: 200,
     description: 'PDF report generated successfully',
   })
-  async downloadFinancialReport(
+  downloadFinancialReport(
     @Query('year', ParseIntPipe) year: number,
     @Query('month', new ParseIntPipe({ optional: true })) month?: number,
-  ): Promise<StreamableFile> {
-    return new Promise((resolve, reject) => {
-      this.reportsService
-        .generateFinancialReportPdfData(year, month)
-        .subscribe({
-          next: (data) => {
-            const doc = new PDFDocument({ margin: 50 });
-            const chunks: Buffer[] = [];
-
-            doc.on('data', (chunk: Buffer) => chunks.push(chunk));
-
-            doc.on('end', () => {
-              const result = Buffer.concat(chunks);
-              const file = new StreamableFile(result, {
-                type: 'application/pdf',
-                disposition: `attachment; filename="financial-report-${data.year}${data.month ? `-${data.month}` : ''}.pdf"`,
-              });
-              resolve(file);
-            });
-
-            doc.on('error', reject);
-
-            doc
-              .fontSize(24)
-              .font('Helvetica-Bold')
-              .text('Hotelier Suite', { align: 'center' });
-            doc
-              .fontSize(18)
-              .text('Financial and Occupancy Report', { align: 'center' });
-            doc.moveDown();
-            doc
-              .fontSize(12)
-              .font('Helvetica')
-              .text(
-                `Period: ${data.month ? `${this.getMonthName(data.month)} ${data.year}` : `Year ${data.year}`}`,
-                { align: 'center' },
-              );
-            doc.text(
-              `Generation date: ${new Date().toLocaleDateString('en')}`,
-              { align: 'center' },
-            );
-            doc.moveDown(2);
-
-            doc.fontSize(16).font('Helvetica-Bold').text('Financial Summary');
-            doc.moveDown();
-
-            const summaryData = [
-              ['Concept', 'Amount'],
-              [
-                'Total Revenue',
-                `${data.financialSummary.revenue.total.toLocaleString()}`,
-              ],
-              [
-                '  - Rooms',
-                `${data.financialSummary.revenue.room.toLocaleString()}`,
-              ],
-              [
-                '  - Restaurant',
-                `${data.financialSummary.revenue.restaurant.toLocaleString()}`,
-              ],
-              [
-                '  - Additional Services',
-                `${data.financialSummary.revenue.services.toLocaleString()}`,
-              ],
-              [
-                '  - Events',
-                `${data.financialSummary.revenue.events.toLocaleString()}`,
-              ],
-              [
-                'Expenses',
-                `-${data.financialSummary.expenses.toLocaleString()}`,
-              ],
-              [
-                'Gross Profit',
-                `${data.financialSummary.grossProfit.toLocaleString()}`,
-              ],
-              [
-                'Profit Margin',
-                `${data.financialSummary.profitMargin.toFixed(1)}%`,
-              ],
-            ];
-
-            this.drawTable(doc, summaryData);
-            doc.moveDown(2);
-
-            if (data.occupancyData.length > 0) {
-              doc.fontSize(16).font('Helvetica-Bold').text('Occupancy Data');
-              doc.moveDown();
-
-              const avgOccupancy =
-                data.occupancyData.reduce(
-                  (sum, item) => sum + item.occupancyPercentage,
-                  0,
-                ) / data.occupancyData.length;
-              const totalOccupancyRevenue = data.occupancyData.reduce(
-                (sum, item) => sum + item.totalRevenue,
-                0,
-              );
-
-              doc
-                .fontSize(12)
-                .font('Helvetica')
-                .text(`Average Occupancy: ${avgOccupancy.toFixed(1)}%`)
-                .text(
-                  `Occupancy Revenue: ${totalOccupancyRevenue.toLocaleString()}`,
-                )
-                .text(`Days with Data: ${data.occupancyData.length}`);
-              doc.moveDown();
-            }
-
-            if (!data.month && data.monthlyRevenue.length > 0) {
-              doc.addPage();
-              doc
-                .fontSize(16)
-                .font('Helvetica-Bold')
-                .text('Monthly Revenue Comparison');
-              doc.moveDown();
-
-              const monthlyTableData = [
-                ['Month', 'Revenue', 'Expenses', 'Profit'],
-                ...data.monthlyRevenue.map((item) => [
-                  item.month,
-                  `${item.revenue.toLocaleString()}`,
-                  `${item.expenses.toLocaleString()}`,
-                  `${item.profit.toLocaleString()}`,
-                ]),
-              ];
-
-              this.drawTable(doc, monthlyTableData);
-            }
-
-            doc.end();
-          },
-          error: reject,
-        });
-    });
+  ): Observable<StreamableFile> {
+    return this.reportsService.generateFinancialReportPdf(year, month).pipe(
+      map(
+        (result) =>
+          new StreamableFile(Buffer.from(result.buffer), {
+            type: 'application/pdf',
+            disposition: `attachment; filename="${result.filename}"`,
+          }),
+      ),
+    );
   }
 
   @Get(':id')
@@ -552,7 +426,7 @@ export class ReportsController {
     return this.reportsService.update(id, updateReportDto);
   }
 
-  @Put(':id/status')
+  @Put(':id/status/:status')
   @ApiOperation({
     summary: 'Update Report Status',
     description: 'Update the status of a specific report.',
@@ -563,7 +437,7 @@ export class ReportsController {
     example: 1,
     type: Number,
   })
-  @ApiQuery({
+  @ApiParam({
     name: 'status',
     enum: ReportStatus,
     description: 'New status for the report',
@@ -579,7 +453,7 @@ export class ReportsController {
   })
   updateStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Query('status') status: ReportStatus,
+    @Param('status') status: ReportStatus,
   ): Observable<ReportDto> {
     return this.reportsService.updateStatus(id, status);
   }
@@ -606,56 +480,5 @@ export class ReportsController {
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<ReportDto> {
     return this.reportsService.remove(id);
-  }
-
-  private drawTable(doc: PDFKit.PDFDocument, data: string[][]) {
-    const startX = 50;
-    let startY = doc.y;
-    const columnWidth = 250;
-    const rowHeight = 20;
-
-    doc.font('Helvetica-Bold').fontSize(11);
-    data[0].forEach((header, index) => {
-      doc.text(header, startX + index * columnWidth, startY, {
-        width: columnWidth,
-      });
-    });
-
-    startY += rowHeight;
-    doc
-      .moveTo(startX, startY)
-      .lineTo(startX + columnWidth * data[0].length, startY)
-      .stroke();
-    startY += 5;
-
-    doc.font('Helvetica').fontSize(10);
-    for (let i = 1; i < data.length; i++) {
-      data[i].forEach((cell, index) => {
-        doc.text(cell, startX + index * columnWidth, startY, {
-          width: columnWidth,
-        });
-      });
-      startY += rowHeight;
-    }
-
-    doc.y = startY;
-  }
-
-  private getMonthName(month: number): string {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[month - 1];
   }
 }

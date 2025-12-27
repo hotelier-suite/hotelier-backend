@@ -8,6 +8,7 @@ export * from './daily-revenue.dto';
 export * from './revenue-report-data.dto';
 export * from './revenue-breakdown.dto';
 export * from './financial-summary.dto';
+export * from './financial-report-pdf.dto';
 export * from './monthly-revenue.dto';
 export * from './occupancy-data.dto';
 export * from './staff-report-data.dto';

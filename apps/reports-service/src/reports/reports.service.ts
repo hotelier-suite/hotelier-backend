@@ -13,6 +13,7 @@ import {
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
+  FinancialReportPdfDto,
 } from '@app/contracts/reports-service';
 import {
   BILLING_STATISTICS_PATTERNS,
@@ -27,6 +28,7 @@ import {
   RoomDto,
   ReservationStatus,
 } from '@app/contracts/booking-service';
+import * as PDFDocument from 'pdfkit';
 
 @Injectable()
 export class ReportsService {
@@ -753,16 +755,10 @@ export class ReportsService {
     }, 0);
   }
 
-  async generateFinancialReportPdfData(
+  async generateFinancialReportPdf(
     year: number,
     month?: number,
-  ): Promise<{
-    financialSummary: FinancialSummaryDto;
-    occupancyData: ReportOccupancyDataDto[];
-    monthlyRevenue: MonthlyRevenueDto[];
-    year: number;
-    month?: number;
-  }> {
+  ): Promise<FinancialReportPdfDto> {
     const startDate = month
       ? new Date(year, month - 1, 1)
       : new Date(year, 0, 1);
@@ -770,16 +766,183 @@ export class ReportsService {
       ? new Date(year, month, 0, 23, 59, 59)
       : new Date(year, 11, 31, 23, 59, 59);
 
-    const financialSummary = await this.getFinancialSummary(startDate, endDate);
-    const occupancyData = await this.getOccupancyByMonthYear(year, month);
-    const monthlyRevenue = await this.getMonthlyRevenueComparison(year);
+    const [financialSummary, occupancyData, monthlyRevenue] = await Promise.all(
+      [
+        this.getFinancialSummary(startDate, endDate),
+        this.getOccupancyByMonthYear(year, month),
+        this.getMonthlyRevenueComparison(year),
+      ],
+    );
 
-    return {
+    const buffer = await this.buildPdfDocument(
       financialSummary,
       occupancyData,
       monthlyRevenue,
       year,
       month,
-    };
+    );
+
+    const filename = `financial-report-${year}${month ? `-${month}` : ''}.pdf`;
+
+    return { buffer, filename };
+  }
+
+  private buildPdfDocument(
+    financialSummary: FinancialSummaryDto,
+    occupancyData: ReportOccupancyDataDto[],
+    monthlyRevenue: MonthlyRevenueDto[],
+    year: number,
+    month?: number,
+  ): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({ margin: 50 });
+      const chunks: Buffer[] = [];
+
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+
+      doc
+        .fontSize(24)
+        .font('Helvetica-Bold')
+        .text('Hotelier Suite', { align: 'center' });
+      doc
+        .fontSize(18)
+        .text('Financial and Occupancy Report', { align: 'center' });
+      doc.moveDown();
+
+      const periodText = month
+        ? `${this.getMonthName(month)} ${year}`
+        : `Year ${year}`;
+      doc
+        .fontSize(12)
+        .font('Helvetica')
+        .text(`Period: ${periodText}`, { align: 'center' });
+      doc.text(`Generation date: ${new Date().toLocaleDateString('en')}`, {
+        align: 'center',
+      });
+      doc.moveDown(2);
+
+      doc.fontSize(16).font('Helvetica-Bold').text('Financial Summary');
+      doc.moveDown();
+
+      const summaryData = [
+        ['Concept', 'Amount'],
+        ['Total Revenue', `${financialSummary.revenue.total.toLocaleString()}`],
+        ['  - Rooms', `${financialSummary.revenue.room.toLocaleString()}`],
+        [
+          '  - Restaurant',
+          `${financialSummary.revenue.restaurant.toLocaleString()}`,
+        ],
+        [
+          '  - Additional Services',
+          `${financialSummary.revenue.services.toLocaleString()}`,
+        ],
+        ['  - Events', `${financialSummary.revenue.events.toLocaleString()}`],
+        ['Expenses', `-${financialSummary.expenses.toLocaleString()}`],
+        ['Gross Profit', `${financialSummary.grossProfit.toLocaleString()}`],
+        ['Profit Margin', `${financialSummary.profitMargin.toFixed(1)}%`],
+      ];
+
+      this.drawTable(doc, summaryData);
+      doc.moveDown(2);
+
+      if (occupancyData.length > 0) {
+        doc.fontSize(16).font('Helvetica-Bold').text('Occupancy Data');
+        doc.moveDown();
+
+        const avgOccupancy =
+          occupancyData.reduce(
+            (sum, item) => sum + item.occupancyPercentage,
+            0,
+          ) / occupancyData.length;
+        const totalOccupancyRevenue = occupancyData.reduce(
+          (sum, item) => sum + item.totalRevenue,
+          0,
+        );
+
+        doc
+          .fontSize(12)
+          .font('Helvetica')
+          .text(`Average Occupancy: ${avgOccupancy.toFixed(1)}%`)
+          .text(`Occupancy Revenue: ${totalOccupancyRevenue.toLocaleString()}`)
+          .text(`Days with Data: ${occupancyData.length}`);
+        doc.moveDown();
+      }
+
+      if (!month && monthlyRevenue.length > 0) {
+        doc.addPage();
+        doc
+          .fontSize(16)
+          .font('Helvetica-Bold')
+          .text('Monthly Revenue Comparison');
+        doc.moveDown();
+
+        const monthlyTableData = [
+          ['Month', 'Revenue', 'Expenses', 'Profit'],
+          ...monthlyRevenue.map((item) => [
+            item.month,
+            `${item.revenue.toLocaleString()}`,
+            `${item.expenses.toLocaleString()}`,
+            `${item.profit.toLocaleString()}`,
+          ]),
+        ];
+
+        this.drawTable(doc, monthlyTableData);
+      }
+
+      doc.end();
+    });
+  }
+
+  private drawTable(doc: PDFKit.PDFDocument, data: string[][]) {
+    const startX = 50;
+    let startY = doc.y;
+    const columnWidth = 250;
+    const rowHeight = 20;
+
+    doc.font('Helvetica-Bold').fontSize(11);
+    data[0].forEach((header, index) => {
+      doc.text(header, startX + index * columnWidth, startY, {
+        width: columnWidth,
+      });
+    });
+
+    startY += rowHeight;
+    doc
+      .moveTo(startX, startY)
+      .lineTo(startX + columnWidth * data[0].length, startY)
+      .stroke();
+    startY += 5;
+
+    doc.font('Helvetica').fontSize(10);
+    for (let i = 1; i < data.length; i++) {
+      data[i].forEach((cell, index) => {
+        doc.text(cell, startX + index * columnWidth, startY, {
+          width: columnWidth,
+        });
+      });
+      startY += rowHeight;
+    }
+
+    doc.y = startY;
+  }
+
+  private getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }
