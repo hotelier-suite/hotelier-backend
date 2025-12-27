@@ -165,7 +165,6 @@ export class ReportsService {
     startDate: Date,
     endDate: Date,
   ): Promise<FinancialSummaryDto> {
-    // Query billing service for financial summary
     const [financialSummary, invoices] = await Promise.all([
       lastValueFrom(
         this.billingClient
@@ -208,21 +207,16 @@ export class ReportsService {
       ),
     ]);
 
-    // Categorize revenue from invoices
     const revenueByCategory = this.categorizeRevenue(invoices);
 
-    // Calculate total revenue as sum of categories
     const totalRevenue =
       revenueByCategory.room +
       revenueByCategory.restaurant +
       revenueByCategory.services +
       revenueByCategory.events;
 
-    // Use paid amount as a proxy for expenses calculation (simplified)
-    // In a real scenario, expenses would come from a separate service
     const expenses = financialSummary.pendingAmount || 0;
 
-    // Calculate gross profit and profit margin
     const grossProfit = totalRevenue - expenses;
     const profitMargin =
       totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
@@ -270,7 +264,6 @@ export class ReportsService {
         } else if (this.isEventsCategory(description)) {
           categories.events += amount;
         } else {
-          // Default to services for uncategorized items
           categories.services += amount;
         }
       }
@@ -327,7 +320,6 @@ export class ReportsService {
     year: number,
     month?: number,
   ): Promise<ReportOccupancyDataDto[]> {
-    // Query booking-service for rooms and reservations
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
         this.bookingClient
@@ -374,19 +366,16 @@ export class ReportsService {
 
     const totalRooms = rooms.length;
 
-    // If no rooms, return empty occupancy data
     if (totalRooms === 0) {
       return this.generateEmptyOccupancyData(year, month);
     }
 
-    // Filter reservations by year and optional month
     const filteredReservations = this.filterReservationsByPeriod(
       reservations,
       year,
       month,
     );
 
-    // Calculate occupancy data for each period
     return this.calculateOccupancyData(
       filteredReservations,
       totalRooms,
@@ -442,7 +431,6 @@ export class ReportsService {
     ];
 
     return reservations.filter((reservation) => {
-      // Only include valid reservation statuses
       if (!validStatuses.includes(reservation.status)) {
         return false;
       }
@@ -450,21 +438,17 @@ export class ReportsService {
       const checkIn = new Date(reservation.checkInDate);
       const checkOut = new Date(reservation.checkOutDate);
 
-      // Define the period boundaries
       let periodStart: Date;
       let periodEnd: Date;
 
       if (month) {
-        // Specific month
         periodStart = new Date(year, month - 1, 1);
         periodEnd = new Date(year, month, 0, 23, 59, 59, 999);
       } else {
-        // Entire year
         periodStart = new Date(year, 0, 1);
         periodEnd = new Date(year, 11, 31, 23, 59, 59, 999);
       }
 
-      // Check if reservation overlaps with the period
       return checkIn <= periodEnd && checkOut > periodStart;
     });
   }
@@ -479,7 +463,6 @@ export class ReportsService {
     month?: number,
   ): ReportOccupancyDataDto[] {
     if (month) {
-      // Calculate daily occupancy for the specific month
       return this.calculateDailyOccupancy(
         reservations,
         totalRooms,
@@ -487,7 +470,6 @@ export class ReportsService {
         month,
       );
     } else {
-      // Calculate monthly occupancy for the entire year
       return this.calculateMonthlyOccupancy(reservations, totalRooms, year);
     }
   }
@@ -601,14 +583,12 @@ export class ReportsService {
     dayStart: Date,
     dayEnd: Date,
   ): number {
-    // Use a Set to count unique rooms occupied on this day
     const occupiedRoomIds = new Set<number>();
 
     for (const reservation of reservations) {
       const checkIn = new Date(reservation.checkInDate);
       const checkOut = new Date(reservation.checkOutDate);
 
-      // Check if reservation overlaps with this day
       if (checkIn <= dayEnd && checkOut > dayStart) {
         occupiedRoomIds.add(reservation.roomId);
       }
@@ -631,13 +611,10 @@ export class ReportsService {
       const checkIn = new Date(reservation.checkInDate);
       const checkOut = new Date(reservation.checkOutDate);
 
-      // Check if reservation overlaps with this month
       if (checkIn <= monthEnd && checkOut > monthStart) {
-        // Calculate the overlap period
         const overlapStart = checkIn > monthStart ? checkIn : monthStart;
         const overlapEnd = checkOut < monthEnd ? checkOut : monthEnd;
 
-        // Calculate nights in this month
         const nights = Math.ceil(
           (overlapEnd.getTime() - overlapStart.getTime()) /
             (1000 * 60 * 60 * 24),
@@ -663,9 +640,7 @@ export class ReportsService {
       const checkIn = new Date(reservation.checkInDate);
       const checkOut = new Date(reservation.checkOutDate);
 
-      // Check if reservation overlaps with this day
       if (checkIn <= dayEnd && checkOut > dayStart) {
-        // Calculate daily rate from total amount and nights
         const nights = reservation.nights || 1;
         const dailyRate = (reservation.totalAmount || 0) / nights;
         totalRevenue += dailyRate;
@@ -689,19 +664,15 @@ export class ReportsService {
       const checkIn = new Date(reservation.checkInDate);
       const checkOut = new Date(reservation.checkOutDate);
 
-      // Check if reservation overlaps with this month
       if (checkIn <= monthEnd && checkOut > monthStart) {
-        // Calculate the overlap period
         const overlapStart = checkIn > monthStart ? checkIn : monthStart;
         const overlapEnd = checkOut < monthEnd ? checkOut : monthEnd;
 
-        // Calculate nights in this month
         const nightsInMonth = Math.ceil(
           (overlapEnd.getTime() - overlapStart.getTime()) /
             (1000 * 60 * 60 * 24),
         );
 
-        // Calculate proportional revenue
         const totalNights = reservation.nights || 1;
         const dailyRate = (reservation.totalAmount || 0) / totalNights;
         totalRevenue += dailyRate * Math.max(0, nightsInMonth);
@@ -714,11 +685,9 @@ export class ReportsService {
   async getMonthlyRevenueComparison(
     year: number,
   ): Promise<MonthlyRevenueDto[]> {
-    // Define date range for the entire year
     const startDate = new Date(year, 0, 1);
     const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
 
-    // Query billing-service for invoices within the year
     const invoices = await lastValueFrom(
       this.billingClient
         .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
@@ -745,7 +714,6 @@ export class ReportsService {
         ),
     );
 
-    // Aggregate invoices by month
     return this.aggregateInvoicesByMonth(invoices, year);
   }
 
@@ -772,18 +740,15 @@ export class ReportsService {
       'Dec',
     ];
 
-    // Initialize monthly data with zeros
     const monthlyData: Map<number, { revenue: number; expenses: number }> =
       new Map();
     for (let i = 0; i < 12; i++) {
       monthlyData.set(i, { revenue: 0, expenses: 0 });
     }
 
-    // Group invoices by month and calculate totals
     for (const invoice of invoices) {
       const invoiceDate = new Date(invoice.createdAt);
 
-      // Only process invoices from the specified year
       if (invoiceDate.getFullYear() !== year) {
         continue;
       }
@@ -791,18 +756,14 @@ export class ReportsService {
       const monthIndex = invoiceDate.getMonth();
       const currentData = monthlyData.get(monthIndex)!;
 
-      // Calculate revenue from invoice items
       const invoiceRevenue = this.calculateInvoiceRevenue(invoice);
 
-      // Use taxes as a proxy for expenses (simplified model)
-      // In a real scenario, expenses would come from a separate data source
       const invoiceExpenses = Number(invoice.taxes) || 0;
 
       currentData.revenue += invoiceRevenue;
       currentData.expenses += invoiceExpenses;
     }
 
-    // Convert to MonthlyRevenueDto array
     return monthNames.map((monthName, index) => {
       const data = monthlyData.get(index)!;
       const revenue = Math.round(data.revenue * 100) / 100;
@@ -823,7 +784,6 @@ export class ReportsService {
    */
   private calculateInvoiceRevenue(invoice: InvoiceDto): number {
     if (!invoice.invoiceItems || invoice.invoiceItems.length === 0) {
-      // Fall back to total amount if no items
       return Number(invoice.total) || 0;
     }
 

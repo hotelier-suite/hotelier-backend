@@ -5,3 +5,4 @@ export * from './user-role-assignment.dto';
 export * from './user-role-ids.dto';
 export * from './user-role.dto';
 export * from './user-roles-payload.dto';
+export * from './user-summary.dto';

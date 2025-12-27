@@ -123,7 +123,7 @@ export class InvoicesService {
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<InvoiceDto> {
+  async remove(id: number): Promise<InvoiceDto> {
     const invoice = await this.invoiceRepository.findOne({
       where: { id },
       select: this.invoiceReadSelect,

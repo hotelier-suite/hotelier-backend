@@ -9,7 +9,13 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { AttendanceService } from './attendance.service';
 import {
@@ -17,6 +23,8 @@ import {
   AttendanceStatus,
   UpdateAttendanceDto,
   CreateAttendanceDto,
+  CheckInDto,
+  CheckOutDto,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -178,6 +186,10 @@ export class AttendanceController {
     summary: 'Create Attendance Record',
     description: 'Create a new attendance record for an employee.',
   })
+  @ApiBody({
+    description: 'Attendance record data',
+    type: CreateAttendanceDto,
+  })
   @ApiResponse({
     status: 201,
     description: 'Attendance record created successfully',
@@ -207,6 +219,10 @@ export class AttendanceController {
     name: 'id',
     description: 'Attendance record ID',
     example: 1,
+  })
+  @ApiBody({
+    description: 'Attendance record update data',
+    type: UpdateAttendanceDto,
   })
   @ApiResponse({
     status: 200,
@@ -273,6 +289,10 @@ export class AttendanceController {
     description: 'Employee ID',
     example: 123,
   })
+  @ApiBody({
+    description: 'Check-in time data',
+    type: CheckInDto,
+  })
   @ApiResponse({
     status: 201,
     description: 'Employee checked in successfully',
@@ -284,7 +304,7 @@ export class AttendanceController {
   })
   checkIn(
     @Param('employeeId', ParseIntPipe) employeeId: number,
-    @Body() checkInData: { time: string },
+    @Body() checkInData: CheckInDto,
   ): Observable<AttendanceDto> {
     return this.attendanceService.checkIn(employeeId, checkInData.time);
   }
@@ -306,6 +326,10 @@ export class AttendanceController {
     description: 'Employee ID',
     example: 123,
   })
+  @ApiBody({
+    description: 'Check-out time data',
+    type: CheckOutDto,
+  })
   @ApiResponse({
     status: 201,
     description: 'Employee checked out successfully',
@@ -317,7 +341,7 @@ export class AttendanceController {
   })
   checkOut(
     @Param('employeeId', ParseIntPipe) employeeId: number,
-    @Body() checkOutData: { time: string },
+    @Body() checkOutData: CheckOutDto,
   ): Observable<AttendanceDto> {
     return this.attendanceService.checkOut(employeeId, checkOutData.time);
   }

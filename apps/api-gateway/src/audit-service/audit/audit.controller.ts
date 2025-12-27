@@ -27,7 +27,8 @@ import {
   AuditStatisticsDto,
   AuditResource,
   AuditAction,
-  AuditLogWithUser,
+  PaginatedAuditLogDto,
+  AuditLogWithUserDto,
 } from '@app/contracts/audit-service';
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE_CLIENT } from '../../auth-service';
@@ -130,36 +131,20 @@ export class AuditController {
   @ApiResponse({
     status: 200,
     description: 'Audit logs retrieved successfully',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/AuditLogDto' },
-        },
-        total: {
-          type: 'number',
-          description: 'Total number of audit logs',
-        },
-      },
-    },
+    type: PaginatedAuditLogDto,
   })
-  findAll(
-    @Query() query: AuditLogQueryDto,
-  ): Observable<{ data: AuditLogWithUser[]; total: number }> {
+  findAll(@Query() query: AuditLogQueryDto): Observable<PaginatedAuditLogDto> {
     return this.auditService.findAll(query).pipe(
       switchMap((result) => {
-        // Get unique user IDs
         const userIds = [...new Set(result.data.map((log) => log.userId))];
 
         if (userIds.length === 0) {
           return of({
-            data: result.data as AuditLogWithUser[],
+            data: result.data as AuditLogWithUserDto[],
             total: result.total,
           });
         }
 
-        // Fetch all users in parallel
         const userRequests$ = userIds.map((userId) =>
           this.authClient
             .send<UserResponseDto, number>(USERS_PATTERNS.FIND_BY_ID, userId)
@@ -168,7 +153,6 @@ export class AuditController {
 
         return forkJoin(userRequests$).pipe(
           map((users) => {
-            // Create a map of userId to user data
             const userMap = new Map<
               number,
               { id: number; name: string; email: string }
@@ -183,11 +167,12 @@ export class AuditController {
               }
             });
 
-            // Enrich logs with user data
-            const enrichedData: AuditLogWithUser[] = result.data.map((log) => ({
-              ...log,
-              user: userMap.get(log.userId),
-            }));
+            const enrichedData: AuditLogWithUserDto[] = result.data.map(
+              (log) => ({
+                ...log,
+                user: userMap.get(log.userId),
+              }),
+            );
 
             return { data: enrichedData, total: result.total };
           }),

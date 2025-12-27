@@ -75,8 +75,8 @@ export class VenuesController {
     description: 'Available venues retrieved successfully',
     type: [VenueDto],
   })
-  getAvailableVenues(): Observable<VenueDto[]> {
-    return this.venuesService.getAvailableVenues();
+  findAvailable(): Observable<VenueDto[]> {
+    return this.venuesService.findAvailable();
   }
 
   @Get(':id')
@@ -155,6 +155,6 @@ export class VenuesController {
     description: 'Venue not found',
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<VenueDto> {
-    return this.venuesService.delete(id);
+    return this.venuesService.remove(id);
   }
 }

@@ -39,7 +39,7 @@ export class BookingsController {
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.DELETE)
   delete(@Payload() id: number): Promise<RecreationalBookingDto> {
-    return this.bookingsService.delete(id);
+    return this.bookingsService.remove(id);
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.CANCEL)

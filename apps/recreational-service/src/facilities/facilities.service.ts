@@ -146,7 +146,7 @@ export class FacilitiesService {
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<RecreationalFacilityDto> {
+  async remove(id: number): Promise<RecreationalFacilityDto> {
     const facility = await this.facilityRepository.findOne({
       where: { id },
       select: this.facilityReadSelect,

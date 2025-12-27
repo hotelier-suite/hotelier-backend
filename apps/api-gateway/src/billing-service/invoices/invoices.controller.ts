@@ -55,9 +55,7 @@ export class InvoicesController {
     description: 'Invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  getInvoices(
-    @Query('status') status?: InvoiceStatus,
-  ): Observable<InvoiceDto[]> {
+  findAll(@Query('status') status?: InvoiceStatus): Observable<InvoiceDto[]> {
     if (status) {
       return this.invoicesService.findByStatus(status);
     }
@@ -74,7 +72,7 @@ export class InvoicesController {
     description: 'Overdue invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  getOverdueInvoices(): Observable<InvoiceDto[]> {
+  findOverdue(): Observable<InvoiceDto[]> {
     return this.invoicesService.findOverdue();
   }
 
@@ -98,7 +96,7 @@ export class InvoicesController {
     description: 'Invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  getInvoicesByDateRange(
+  findByDateRange(
     @Query('startDate', ParseDatePipe) startDate: Date,
     @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<InvoiceDto[]> {
@@ -125,9 +123,7 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  getInvoiceById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<InvoiceDto> {
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<InvoiceDto> {
     return this.invoicesService.findOne(id);
   }
 
@@ -155,7 +151,7 @@ export class InvoicesController {
     status: 400,
     description: 'Invalid input data',
   })
-  createInvoice(@Body() invoiceData: CreateInvoiceDto): Observable<InvoiceDto> {
+  create(@Body() invoiceData: CreateInvoiceDto): Observable<InvoiceDto> {
     return this.invoicesService.create(invoiceData);
   }
 
@@ -190,7 +186,7 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  updateInvoice(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateData: UpdateInvoiceDto,
   ): Observable<InvoiceDto> {
@@ -228,7 +224,7 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  markInvoiceAsPaid(
+  markAsPaid(
     @Param('id', ParseIntPipe) id: number,
     @Body() paymentData: MarkAsPaidRequestDto,
   ): Observable<InvoiceDto> {
@@ -260,8 +256,8 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  deleteInvoice(@Param('id', ParseIntPipe) id: number): Observable<InvoiceDto> {
-    return this.invoicesService.delete(id);
+  remove(@Param('id', ParseIntPipe) id: number): Observable<InvoiceDto> {
+    return this.invoicesService.remove(id);
   }
 
   @Get(':id/download')
@@ -283,7 +279,7 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  async downloadInvoice(
+  async download(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<StreamableFile> {
     return new Promise((resolve, reject) => {
@@ -305,23 +301,19 @@ export class InvoicesController {
 
           doc.on('error', reject);
 
-          // Header
           doc.fontSize(20).text('HOTELIER', { align: 'center' });
           doc.fontSize(16).text('INVOICE', { align: 'center' });
           doc.moveDown();
 
-          // Invoice details
           doc.fontSize(12);
           doc.text(`Invoice Number: ${invoice.number}`);
           doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`);
           doc.text(`Status: ${invoice.status}`);
           doc.moveDown();
 
-          // Guest details
           doc.text(`Customer: ${invoice.guestName}`);
           doc.moveDown();
 
-          // Items
           doc.text('DETAILS', { align: 'left' });
           doc.moveDown(0.5);
           invoice.invoiceItems?.forEach((item) => {
@@ -333,18 +325,15 @@ export class InvoicesController {
           });
           doc.moveDown();
 
-          // Totals
           doc.fontSize(14);
           doc.text(`Subtotal: ${Number(invoice.subtotal).toFixed(2)}`);
           doc.text(`Tax: ${Number(invoice.taxes).toFixed(2)}`);
           doc.text(`Total: ${Number(invoice.total).toFixed(2)}`);
 
-          // Footer
           doc.moveDown(2);
           doc.fontSize(10);
           doc.text('Thank you for your preference', { align: 'center' });
 
-          // Finish
           doc.end();
         },
         error: reject,

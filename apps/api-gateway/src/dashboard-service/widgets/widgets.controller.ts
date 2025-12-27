@@ -145,10 +145,10 @@ export class WidgetsController {
     status: 404,
     description: 'Widget not found',
   })
-  delete(
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<DashboardWidgetDto> {
-    return this.widgetsService.delete(id);
+    return this.widgetsService.remove(id);
   }
 
   @Get('user/:userId')

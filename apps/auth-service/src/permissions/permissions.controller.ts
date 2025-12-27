@@ -23,8 +23,8 @@ export class PermissionsController {
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.BY_RESOURCE)
-  getPermissionsByResource(): Promise<Record<string, PermissionResponseDto[]>> {
-    return this.permissionsService.getPermissionsByResource();
+  findByResource(): Promise<Record<string, PermissionResponseDto[]>> {
+    return this.permissionsService.findByResource();
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.UPDATE)

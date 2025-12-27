@@ -212,7 +212,7 @@ export class BookingsService {
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<RecreationalBookingDto> {
+  async remove(id: number): Promise<RecreationalBookingDto> {
     const booking = await this.findOne(id);
     await this.bookingRepository.delete(id);
     return booking;

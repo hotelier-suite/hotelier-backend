@@ -84,7 +84,7 @@ export class VenuesService {
     return this.findOne(id);
   }
 
-  async delete(id: number): Promise<VenueDto> {
+  async remove(id: number): Promise<VenueDto> {
     const venue = await this.venueRepository.findOne({
       where: { id },
       select: this.venueReadSelect,
@@ -101,7 +101,7 @@ export class VenuesService {
     return venue;
   }
 
-  getAvailableVenues(): Promise<VenueDto[]> {
+  findAvailable(): Promise<VenueDto[]> {
     return this.venueRepository.find({
       where: { available: true },
       select: this.venueReadSelect,

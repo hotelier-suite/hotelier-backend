@@ -47,16 +47,14 @@ export class GuestRequestsService {
     );
   }
 
-  getRequestsByPriority(
-    priority: RequestPriority,
-  ): Observable<GuestRequestDto[]> {
+  findByPriority(priority: RequestPriority): Observable<GuestRequestDto[]> {
     return this.guestRequestsClient.send<GuestRequestDto[], RequestPriority>(
       GUEST_REQUESTS_PATTERNS.FIND_BY_PRIORITY,
       priority,
     );
   }
 
-  getPendingRequests(): Observable<GuestRequestDto[]> {
+  findPending(): Observable<GuestRequestDto[]> {
     return this.findByStatus(GuestRequestStatus.PENDING).pipe(
       map((requests) =>
         requests.sort((a, b) => {
@@ -80,10 +78,6 @@ export class GuestRequestsService {
       GUEST_REQUESTS_PATTERNS.DELETE,
       id,
     );
-  }
-
-  delete(id: number): Observable<GuestRequestDto> {
-    return this.remove(id);
   }
 
   markAsCompleted(id: number): Observable<GuestRequestDto> {

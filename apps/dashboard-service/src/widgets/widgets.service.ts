@@ -48,7 +48,7 @@ export class WidgetsService {
     return this.widgetRepository.save(widget as DashboardWidget);
   }
 
-  async delete(id: number): Promise<DashboardWidgetDto> {
+  async remove(id: number): Promise<DashboardWidgetDto> {
     const widget = await this.findOne(id);
     await this.widgetRepository.remove(widget as DashboardWidget);
     return { ...widget, id };

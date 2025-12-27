@@ -54,7 +54,6 @@ export class StatisticsService {
   ) {}
 
   async getStats(userId: number): Promise<DashboardStatsDto> {
-    // Validate user first using GET_PROFILE pattern
     const user = await lastValueFrom(
       this.authClient
         .send<{ id: number } | null, number>(AUTH_PATTERNS.GET_PROFILE, userId)
@@ -346,7 +345,6 @@ export class StatisticsService {
 
     const activities: RecentActivityDto[] = [];
 
-    // Recent reservations
     const recentReservations = [...reservations]
       .sort(
         (a: ReservationDto, b: ReservationDto) =>
@@ -362,7 +360,6 @@ export class StatisticsService {
       }),
     );
 
-    // Recent invoices
     const recentInvoices = [...invoices]
       .sort(
         (a: InvoiceDto, b: InvoiceDto) =>
@@ -378,7 +375,6 @@ export class StatisticsService {
       }),
     );
 
-    // Recent assignments
     const recentAssignments = [...assignments]
       .sort((a: CleaningAssignmentDto, b: CleaningAssignmentDto) => {
         const aTime = a.completedAt ? new Date(a.completedAt).getTime() : 0;
@@ -397,7 +393,6 @@ export class StatisticsService {
       }),
     );
 
-    // Recent guest requests
     guestRequests.forEach((gr: GuestRequestDto) =>
       activities.push({
         type: 'request',

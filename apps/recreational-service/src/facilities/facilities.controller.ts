@@ -40,7 +40,7 @@ export class FacilitiesController {
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.DELETE)
   delete(@Payload() id: number): Promise<RecreationalFacilityDto> {
-    return this.facilitiesService.delete(id);
+    return this.facilitiesService.remove(id);
   }
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.FIND_AVAILABLE)

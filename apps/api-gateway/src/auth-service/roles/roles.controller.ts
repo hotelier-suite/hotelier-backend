@@ -34,20 +34,25 @@ import { AuditResource } from '@app/contracts/audit-service';
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
-  // Role Management Endpoints
   @Post()
   @ApiOperation({
     summary: 'Create Role',
-    description: 'Create a new role in the system.',
+    description:
+      'Create a new role in the system with the specified name and description.',
   })
   @ApiBody({
-    description: 'Role creation data',
+    description: 'Role creation data including name and optional description',
     type: CreateRoleDto,
   })
   @ApiResponse({
     status: 201,
     description: 'Role created successfully',
     type: RoleResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Invalid request data - validation failed or duplicate role name',
   })
   create(@Body() createRoleDto: CreateRoleDto): Observable<RoleResponseDto> {
     return this.rolesService.create(createRoleDto);
@@ -56,7 +61,8 @@ export class RolesController {
   @Get()
   @ApiOperation({
     summary: 'Get All Roles',
-    description: 'Retrieve all roles in the system.',
+    description:
+      'Retrieve all roles in the system with their associated permissions.',
   })
   @ApiResponse({
     status: 200,
@@ -70,11 +76,12 @@ export class RolesController {
   @Get('name/:name')
   @ApiOperation({
     summary: 'Get Role by Name',
-    description: 'Retrieve a specific role by its name.',
+    description:
+      'Retrieve a specific role by its unique name with associated permissions.',
   })
   @ApiParam({
     name: 'name',
-    description: 'Role name',
+    description: 'Unique name of the role',
     type: 'string',
     example: 'admin',
   })
@@ -94,11 +101,12 @@ export class RolesController {
   @Get(':id')
   @ApiOperation({
     summary: 'Get Role by ID',
-    description: 'Retrieve a specific role by its ID.',
+    description:
+      'Retrieve a specific role by its unique identifier with associated permissions.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Role ID',
+    description: 'Unique identifier of the role',
     type: 'number',
     example: 1,
   })
@@ -118,22 +126,28 @@ export class RolesController {
   @Put(':id')
   @ApiOperation({
     summary: 'Update Role',
-    description: 'Update an existing role.',
+    description:
+      'Update an existing role with the provided data. Only provided fields will be updated.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Role ID',
+    description: 'Unique identifier of the role to update',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'Role update data',
+    description:
+      'Role update data - only include fields that need to be changed',
     type: UpdateRoleDto,
   })
   @ApiResponse({
     status: 200,
     description: 'Role updated successfully',
     type: RoleResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
   })
   @ApiResponse({
     status: 404,
@@ -149,11 +163,12 @@ export class RolesController {
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete Role',
-    description: 'Delete a role from the system.',
+    description:
+      'Permanently delete a role from the system. Users with this role will lose associated permissions.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Role ID',
+    description: 'Unique identifier of the role to delete',
     type: 'number',
     example: 1,
   })
@@ -170,20 +185,20 @@ export class RolesController {
     return this.rolesService.remove(id);
   }
 
-  // Permission Assignment to Roles
   @Put(':id/permissions')
   @ApiOperation({
     summary: 'Assign Permissions to Role',
-    description: 'Assign multiple permissions to a specific role.',
+    description:
+      'Assign multiple permissions to a specific role. This replaces any existing permission assignments.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Role ID',
+    description: 'Unique identifier of the role to assign permissions to',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'Permission IDs to assign',
+    description: 'Array of permission IDs to assign to the role',
     type: PermissionIdsDto,
   })
   @ApiResponse({
@@ -191,10 +206,15 @@ export class RolesController {
     description: 'Permissions assigned successfully',
   })
   @ApiResponse({
-    status: 404,
-    description: 'Role not found',
+    status: 400,
+    description:
+      'Invalid request data - permissionIds must be an array of valid integers',
   })
-  assignPermissionsToRole(
+  @ApiResponse({
+    status: 404,
+    description: 'Role or permission not found',
+  })
+  assignPermissions(
     @Param('id', ParseIntPipe) roleId: number,
     @Body() body: PermissionIdsDto,
   ): Observable<void> {
@@ -204,17 +224,18 @@ export class RolesController {
   @Delete(':roleId/permissions/:permissionId')
   @ApiOperation({
     summary: 'Remove Permission from Role',
-    description: 'Remove a specific permission from a role.',
+    description:
+      'Remove a specific permission from a role. Users with this role will lose this permission.',
   })
   @ApiParam({
     name: 'roleId',
-    description: 'Role ID',
+    description: 'Unique identifier of the role',
     type: 'number',
     example: 1,
   })
   @ApiParam({
     name: 'permissionId',
-    description: 'Permission ID',
+    description: 'Unique identifier of the permission to remove',
     type: 'number',
     example: 1,
   })
@@ -227,7 +248,7 @@ export class RolesController {
     description: 'Role or permission not found',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  removePermissionFromRole(
+  removePermissions(
     @Param('roleId', ParseIntPipe) roleId: number,
     @Param('permissionId', ParseIntPipe) permissionId: number,
   ): Observable<void> {

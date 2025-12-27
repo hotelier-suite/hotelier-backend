@@ -26,7 +26,7 @@ export class PaymentsController {
     description: 'Payments retrieved successfully',
     type: [PaymentDto],
   })
-  getPayments(): Observable<PaymentDto[]> {
+  findAll(): Observable<PaymentDto[]> {
     return this.paymentsService.findAll();
   }
 
@@ -50,9 +50,7 @@ export class PaymentsController {
     status: 404,
     description: 'Payment not found',
   })
-  getPaymentById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<PaymentDto> {
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<PaymentDto> {
     return this.paymentsService.findOne(id);
   }
 
@@ -72,7 +70,11 @@ export class PaymentsController {
     description: 'Payments retrieved successfully',
     type: [PaymentDto],
   })
-  getPaymentsByInvoice(
+  @ApiResponse({
+    status: 404,
+    description: 'Invoice not found',
+  })
+  findByInvoice(
     @Param('invoiceId', ParseIntPipe) invoiceId: number,
   ): Observable<PaymentDto[]> {
     return this.paymentsService.findByInvoice(invoiceId);

@@ -44,7 +44,7 @@ export class CleaningTasksService {
     >(CLEANING_TASKS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<CleaningTaskDto> {
+  remove(id: number): Observable<CleaningTaskDto> {
     return this.operationsClient.send<CleaningTaskDto, number>(
       CLEANING_TASKS_PATTERNS.DELETE,
       id,

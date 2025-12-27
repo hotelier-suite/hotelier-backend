@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DashboardWidget } from '../../dashboard/entities/dashboard-widget.entity';
+import { DashboardWidget } from '../../widgets';
 
 @Injectable()
 export class WidgetsSeeder {

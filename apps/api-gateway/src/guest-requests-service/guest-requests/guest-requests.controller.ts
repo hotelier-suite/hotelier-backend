@@ -94,8 +94,8 @@ export class GuestRequestsController {
     description: 'Pending requests retrieved successfully',
     type: [GuestRequestDto],
   })
-  getPendingRequests(): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.getPendingRequests();
+  findPending(): Observable<GuestRequestDto[]> {
+    return this.guestRequestsService.findPending();
   }
 
   @Get('priority/:priority')
@@ -114,10 +114,10 @@ export class GuestRequestsController {
     description: 'Requests by priority retrieved successfully',
     type: [GuestRequestDto],
   })
-  getRequestsByPriority(
+  findByPriority(
     @Param('priority') priority: RequestPriority,
   ): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.getRequestsByPriority(priority);
+    return this.guestRequestsService.findByPriority(priority);
   }
 
   @Get(':id')

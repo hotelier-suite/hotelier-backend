@@ -101,8 +101,8 @@ export class EmployeesController {
     description: 'Housekeeping employees retrieved successfully',
     type: [EmployeeDto],
   })
-  getHousekeepingEmployees(): Observable<EmployeeDto[]> {
-    return this.employeesService.getHousekeepingEmployees();
+  findHousekeeping(): Observable<EmployeeDto[]> {
+    return this.employeesService.findHousekeeping();
   }
 
   @Get('stats/departments')

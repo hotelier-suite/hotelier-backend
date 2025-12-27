@@ -44,11 +44,11 @@ export class VenuesService {
     >(VENUES_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<VenueDto> {
+  remove(id: number): Observable<VenueDto> {
     return this.eventsClient.send<VenueDto, number>(VENUES_PATTERNS.DELETE, id);
   }
 
-  getAvailableVenues(): Observable<VenueDto[]> {
+  findAvailable(): Observable<VenueDto[]> {
     return this.eventsClient.send<VenueDto[], Record<string, never>>(
       VENUES_PATTERNS.GET_AVAILABLE,
       {},

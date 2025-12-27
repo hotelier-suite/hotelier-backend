@@ -47,7 +47,7 @@ export class WidgetsService {
     >(WIDGETS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<DashboardWidgetDto> {
+  remove(id: number): Observable<DashboardWidgetDto> {
     return this.dashboardClient.send<DashboardWidgetDto, number>(
       WIDGETS_PATTERNS.DELETE,
       id,

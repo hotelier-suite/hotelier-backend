@@ -42,7 +42,11 @@ export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @Get('current')
-  @ApiOperation({ summary: 'Get current guests with active reservations' })
+  @ApiOperation({
+    summary: 'Get current guests with active reservations',
+    description:
+      'Retrieve all reservations for guests currently checked in at the hotel.',
+  })
   @ApiResponse({ status: 200, type: [ReservationDto] })
   findCurrent(): Observable<ReservationDto[]> {
     return this.reservationsService.findCurrent();
@@ -177,7 +181,11 @@ export class ReservationsController {
   }
 
   @Get('mine')
-  @ApiOperation({ summary: 'Get My Reservations' })
+  @ApiOperation({
+    summary: 'Get My Reservations',
+    description:
+      'Retrieve all reservations for the currently authenticated user.',
+  })
   @ApiResponse({ status: 200, type: [ReservationDto] })
   findMine(
     @Req() req: Request & { user?: { id?: number } },

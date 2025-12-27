@@ -15,10 +15,10 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @MessagePattern(NOTIFICATIONS_PATTERNS.LIST_FOR_USER)
-  listForUser(
+  findForUser(
     @Payload() payload: ListNotificationsPayloadDto,
   ): Promise<NotificationDto[]> {
-    return this.notificationsService.listForUser(
+    return this.notificationsService.findForUser(
       payload?.userId,
       payload?.includeRead ?? false,
     );

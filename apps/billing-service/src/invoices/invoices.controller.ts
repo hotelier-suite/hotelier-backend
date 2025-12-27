@@ -38,7 +38,7 @@ export class InvoicesController {
 
   @MessagePattern(INVOICES_PATTERNS.DELETE)
   delete(@Payload() id: number): Promise<InvoiceDto> {
-    return this.invoicesService.delete(id);
+    return this.invoicesService.remove(id);
   }
 
   @MessagePattern(INVOICES_PATTERNS.FIND_BY_STATUS)

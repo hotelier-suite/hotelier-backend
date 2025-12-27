@@ -40,7 +40,6 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with default 'guest' role if no role specified
     const user = await this.userRepository.save({
       email,
       password: hashedPassword,
@@ -48,7 +47,6 @@ export class AuthService {
       phone,
     });
 
-    // Assign role to user
     const defaultRoleId = await this.usersService.getDefaultRole(roleId);
     await this.usersService.assignSingleRoleToUser(
       user.id,
@@ -56,7 +54,6 @@ export class AuthService {
       'system',
     );
 
-    // Reload user with relations
     const userWithRoles = await this.accessControlService.getUserWithRoles(
       user.id,
     );
@@ -70,7 +67,6 @@ export class AuthService {
     const tokens = await this.tokensService.getTokens(user.id, user.email);
     await this.tokensService.updateRefreshToken(user.id, tokens.refreshToken);
 
-    // Extract roles in the expected format
     const roles = userWithRoles.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,
@@ -120,15 +116,12 @@ export class AuthService {
     const tokens = await this.tokensService.getTokens(user.id, user.email);
     await this.tokensService.updateRefreshToken(user.id, tokens.refreshToken);
 
-    // Update last login
     await this.usersService.updateLastLogin(user.id);
 
-    // Get flattened permissions
     const permissions = await this.accessControlService.getUserPermissions(
       user.id,
     );
 
-    // Extract roles in the expected format
     const roles = user.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,
@@ -187,12 +180,10 @@ export class AuthService {
       return null;
     }
 
-    // Get flattened permissions
     const permissions = await this.accessControlService.getUserPermissions(
       user.id,
     );
 
-    // Extract roles in the expected format
     const roles = user.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,

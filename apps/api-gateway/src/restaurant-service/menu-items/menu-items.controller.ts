@@ -144,7 +144,7 @@ export class MenuItemsController {
     status: 404,
     description: 'Menu item not found',
   })
-  delete(@Param('id', ParseIntPipe) id: number): Observable<MenuItemDto> {
-    return this.menuItemsService.delete(id);
+  remove(@Param('id', ParseIntPipe) id: number): Observable<MenuItemDto> {
+    return this.menuItemsService.remove(id);
   }
 }

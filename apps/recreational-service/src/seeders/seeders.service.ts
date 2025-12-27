@@ -14,11 +14,9 @@ export class SeedersService {
   async seed() {
     console.log('🌱 Starting seeding of Recreational Service...');
 
-    // Seed facilities first
     await this.recreationalFacilitiesSeeder.seed();
     console.log('✅ Recreational facilities seeded');
 
-    // Then seed bookings
     await this.recreationalBookingsSeeder.seed();
     console.log('✅ Recreational bookings seeded');
 

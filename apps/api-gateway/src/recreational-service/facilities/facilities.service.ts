@@ -51,7 +51,7 @@ export class FacilitiesService {
     >(RECREATIONAL_FACILITIES_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<RecreationalFacilityDto> {
+  remove(id: number): Observable<RecreationalFacilityDto> {
     return this.recreationalClient.send<RecreationalFacilityDto, number>(
       RECREATIONAL_FACILITIES_PATTERNS.DELETE,
       id,

@@ -35,7 +35,6 @@ export class SeedersService {
   }
 
   async seed(): Promise<void> {
-    // Hotel defaults
     await this.setIfMissing(
       ConfigCategory.HOTEL,
       'PROPERTY_NAME',
@@ -85,7 +84,6 @@ export class SeedersService {
       'Default timezone',
     );
 
-    // System defaults
     await this.setIfMissing(
       ConfigCategory.SYSTEM,
       'SYSTEM_NAME',
@@ -136,7 +134,6 @@ export class SeedersService {
       'Allowed file types',
     );
 
-    // Integrations defaults (disabled by default)
     await this.setIfMissing(
       ConfigCategory.INTEGRATION,
       'STRIPE.ENABLED',

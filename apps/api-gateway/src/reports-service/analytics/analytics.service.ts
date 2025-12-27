@@ -49,7 +49,7 @@ export class AnalyticsService {
     >(ANALYTICS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<AnalyticsDataDto> {
+  remove(id: number): Observable<AnalyticsDataDto> {
     return this.reportsClient.send<AnalyticsDataDto, number>(
       ANALYTICS_PATTERNS.DELETE,
       id,

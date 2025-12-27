@@ -12,7 +12,6 @@ export class SeedersService {
   async seed() {
     console.log('🌱 Starting Auth module seeding...');
 
-    // Order matters: permissions first, then roles, then users
     await this.permissionsSeeder.seed();
     console.log('✅ Permissions seeded');
 

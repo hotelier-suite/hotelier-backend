@@ -49,7 +49,7 @@ export class ReportsService {
     >(REPORTS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<ReportDto> {
+  remove(id: number): Observable<ReportDto> {
     return this.reportsClient.send<ReportDto, number>(
       REPORTS_PATTERNS.DELETE,
       id,

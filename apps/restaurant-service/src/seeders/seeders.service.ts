@@ -14,7 +14,6 @@ export class SeedersService {
   ) {}
 
   async seed() {
-    // Order matters: menu items and beverages first, then orders
     await this.menuItemsSeeder.seed();
     await this.beverageInventorySeeder.seed();
     await this.roomServiceOrdersSeeder.seed();

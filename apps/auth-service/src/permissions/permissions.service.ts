@@ -51,9 +51,7 @@ export class PermissionsService {
     return permissions;
   }
 
-  async getPermissionsByResource(): Promise<
-    Record<string, PermissionResponseDto[]>
-  > {
+  async findByResource(): Promise<Record<string, PermissionResponseDto[]>> {
     const permissions = await this.findAll();
     const grouped: Record<string, PermissionResponseDto[]> = {};
 

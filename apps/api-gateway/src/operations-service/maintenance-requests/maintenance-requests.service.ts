@@ -49,7 +49,7 @@ export class MaintenanceRequestsService {
     >(MAINTENANCE_REQUESTS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<HousekeepingMaintenanceRequestDto> {
+  remove(id: number): Observable<HousekeepingMaintenanceRequestDto> {
     return this.operationsClient.send<
       HousekeepingMaintenanceRequestDto,
       number

@@ -56,6 +56,10 @@ export class UsersController {
     type: [UserResponseDto],
   })
   @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
   })
@@ -71,7 +75,7 @@ export class UsersController {
   })
   @ApiParam({
     name: 'id',
-    description: 'User ID',
+    description: 'Unique identifier of the user',
     type: 'number',
     example: 1,
   })
@@ -81,12 +85,16 @@ export class UsersController {
     type: UserResponseDto,
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found',
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
     return this.usersService.findOne(id);
@@ -101,10 +109,12 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'Create User',
-    description: 'Create a new user account.',
+    description:
+      'Create a new user account with the provided credentials and profile information.',
   })
   @ApiBody({
-    description: 'User creation data',
+    description:
+      'User creation data including username, email, password, and optional profile fields',
     type: CreateUserDto,
   })
   @ApiResponse({
@@ -114,7 +124,12 @@ export class UsersController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid request data',
+    description:
+      'Invalid request data - validation failed or duplicate username/email',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
@@ -134,16 +149,18 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'Update User',
-    description: 'Update an existing user account.',
+    description:
+      'Update an existing user account with the provided data. Only provided fields will be updated.',
   })
   @ApiParam({
     name: 'id',
-    description: 'User ID',
+    description: 'Unique identifier of the user to update',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'User update data',
+    description:
+      'User update data - only include fields that need to be changed',
     type: UpdateUserDto,
   })
   @ApiResponse({
@@ -152,12 +169,20 @@ export class UsersController {
     type: UserResponseDto,
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found',
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -175,11 +200,12 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'Delete User',
-    description: 'Delete a user account from the system.',
+    description:
+      'Permanently delete a user account from the system. This action cannot be undone.',
   })
   @ApiParam({
     name: 'id',
-    description: 'User ID',
+    description: 'Unique identifier of the user to delete',
     type: 'number',
     example: 1,
   })
@@ -189,12 +215,16 @@ export class UsersController {
     type: UserResponseDto,
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found',
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
     return this.usersService.remove(id);
@@ -210,11 +240,12 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'Activate User',
-    description: 'Activate a user account.',
+    description:
+      'Activate a user account, allowing the user to log in and access the system.',
   })
   @ApiParam({
     name: 'id',
-    description: 'User ID',
+    description: 'Unique identifier of the user to activate',
     type: 'number',
     example: 1,
   })
@@ -223,12 +254,16 @@ export class UsersController {
     description: 'User activated successfully',
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found',
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   activate(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
     return this.usersService.activate(id);
@@ -244,11 +279,12 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'Deactivate User',
-    description: 'Deactivate a user account.',
+    description:
+      'Deactivate a user account, preventing the user from logging in until reactivated.',
   })
   @ApiParam({
     name: 'id',
-    description: 'User ID',
+    description: 'Unique identifier of the user to deactivate',
     type: 'number',
     example: 1,
   })
@@ -257,12 +293,16 @@ export class UsersController {
     description: 'User deactivated successfully',
   })
   @ApiResponse({
-    status: 404,
-    description: 'User not found',
+    status: 401,
+    description: 'Unauthorized - authentication required',
   })
   @ApiResponse({
     status: 403,
     description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   deactivate(
     @Param('id', ParseIntPipe) id: number,
@@ -273,16 +313,17 @@ export class UsersController {
   @Put(':userId/roles')
   @ApiOperation({
     summary: 'Assign Roles to User',
-    description: 'Assign multiple roles to a specific user.',
+    description:
+      'Assign multiple roles to a specific user. This replaces any existing role assignments.',
   })
   @ApiParam({
     name: 'userId',
-    description: 'User ID',
+    description: 'Unique identifier of the user to assign roles to',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'Role IDs to assign',
+    description: 'Array of role IDs to assign to the user',
     type: UserRoleIdsDto,
   })
   @ApiResponse({
@@ -291,7 +332,16 @@ export class UsersController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid request - roleIds must be an array of valid integers',
+    description:
+      'Invalid request - roleIds must be an array of valid positive integers',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User or role not found',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   assignRolesToUser(
@@ -318,17 +368,18 @@ export class UsersController {
   @Delete(':userId/roles/:roleId')
   @ApiOperation({
     summary: 'Remove Role from User',
-    description: 'Remove a specific role from a user.',
+    description:
+      'Remove a specific role from a user. The user will lose all permissions associated with this role.',
   })
   @ApiParam({
     name: 'userId',
-    description: 'User ID',
+    description: 'Unique identifier of the user',
     type: 'number',
     example: 1,
   })
   @ApiParam({
     name: 'roleId',
-    description: 'Role ID',
+    description: 'Unique identifier of the role to remove',
     type: 'number',
     example: 1,
   })
@@ -336,8 +387,16 @@ export class UsersController {
     status: 204,
     description: 'Role removed successfully',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User or role not found',
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeRoleFromUser(
+  removeRolesFromUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('roleId', ParseIntPipe) roleId: number,
   ): Observable<void> {
@@ -347,11 +406,12 @@ export class UsersController {
   @Get(':userId/roles')
   @ApiOperation({
     summary: 'Get User Roles',
-    description: 'Retrieve all roles assigned to a specific user.',
+    description:
+      'Retrieve all roles assigned to a specific user, including role details and associated permissions.',
   })
   @ApiParam({
     name: 'userId',
-    description: 'User ID',
+    description: 'Unique identifier of the user',
     type: 'number',
     example: 1,
   })
@@ -359,6 +419,14 @@ export class UsersController {
     status: 200,
     description: 'User roles retrieved successfully',
     type: [RoleResponseDto],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   getUserRoles(
     @Param('userId', ParseIntPipe) userId: number,
@@ -370,11 +438,11 @@ export class UsersController {
   @ApiOperation({
     summary: 'Get User Permissions',
     description:
-      'Retrieve all permissions for a specific user (through their roles).',
+      'Retrieve all permissions for a specific user aggregated from all their assigned roles.',
   })
   @ApiParam({
     name: 'userId',
-    description: 'User ID',
+    description: 'Unique identifier of the user',
     type: 'number',
     example: 1,
   })
@@ -382,6 +450,14 @@ export class UsersController {
     status: 200,
     description: 'User permissions retrieved successfully',
     type: [PermissionResponseDto],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - authentication required',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
   })
   getUserPermissions(
     @Param('userId', ParseIntPipe) userId: number,

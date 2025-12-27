@@ -50,7 +50,7 @@ export class BookingsService {
     >(RECREATIONAL_BOOKINGS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<RecreationalBookingDto> {
+  remove(id: number): Observable<RecreationalBookingDto> {
     return this.recreationalClient.send<RecreationalBookingDto, number>(
       RECREATIONAL_BOOKINGS_PATTERNS.DELETE,
       id,

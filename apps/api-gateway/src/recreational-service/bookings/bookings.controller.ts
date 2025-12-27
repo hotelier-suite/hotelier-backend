@@ -49,13 +49,19 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid booking data or facility not available',
+    description:
+      'Invalid booking data - validation failed or facility not available at requested time',
   })
   @ApiResponse({
     status: 409,
-    description: 'Time slot already booked',
+    description:
+      'Time slot conflict - the requested time slot is already booked',
   })
-  @ApiBody({ type: CreateRecreationalBookingDto })
+  @ApiBody({
+    type: CreateRecreationalBookingDto,
+    description:
+      'Booking creation data including facility ID, guest information, date, and time slot',
+  })
   create(
     @Body() createBookingDto: CreateRecreationalBookingDto,
   ): Observable<RecreationalBookingDto> {
@@ -76,25 +82,32 @@ export class BookingsController {
     name: 'date',
     required: false,
     type: String,
-    description: 'Filter bookings by date (YYYY-MM-DD)',
+    description:
+      'Filter bookings by specific date in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-28',
   })
   @ApiQuery({
     name: 'facilityId',
     required: false,
     type: Number,
-    description: 'Filter bookings by facility ID',
+    description: 'Filter bookings by recreational facility ID',
+    example: 1,
   })
   @ApiQuery({
     name: 'startDate',
     required: false,
     type: String,
-    description: 'Filter bookings from start date (YYYY-MM-DD)',
+    description:
+      'Filter bookings from this start date in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-01',
   })
   @ApiQuery({
     name: 'endDate',
     required: false,
     type: String,
-    description: 'Filter bookings until end date (YYYY-MM-DD)',
+    description:
+      'Filter bookings until this end date in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-31',
   })
   findAll(
     @Query('date', new ParseDatePipe({ optional: true })) date?: Date,
@@ -131,13 +144,17 @@ export class BookingsController {
     name: 'startDate',
     required: true,
     type: String,
-    description: 'Start date for statistics (YYYY-MM-DD)',
+    description:
+      'Start date for statistics period in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-01',
   })
   @ApiQuery({
     name: 'endDate',
     required: true,
     type: String,
-    description: 'End date for statistics (YYYY-MM-DD)',
+    description:
+      'End date for statistics period in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-31',
   })
   getStatistics(
     @Query('startDate', ParseDatePipe) startDate: Date,
@@ -158,12 +175,13 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking',
     type: Number,
+    example: 1,
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -183,18 +201,24 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid update data or new time not available',
+    description:
+      'Invalid update data - validation failed or new time slot not available',
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking to update',
     type: Number,
+    example: 1,
   })
-  @ApiBody({ type: UpdateRecreationalBookingDto })
+  @ApiBody({
+    type: UpdateRecreationalBookingDto,
+    description:
+      'Booking update data including time slot, status, or guest information changes',
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBookingDto: UpdateRecreationalBookingDto,
@@ -214,17 +238,18 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking to delete',
     type: Number,
+    example: 1,
   })
-  delete(
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<RecreationalBookingDto> {
-    return this.bookingsService.delete(id);
+    return this.bookingsService.remove(id);
   }
 
   @Patch(':id/cancel')
@@ -239,22 +264,25 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Cannot cancel completed booking',
+    description:
+      'Cannot cancel booking - booking is already completed or cancelled',
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking to cancel',
     type: Number,
+    example: 1,
   })
   @ApiQuery({
     name: 'reason',
     required: false,
     type: String,
-    description: 'Cancellation reason',
+    description: 'Optional reason for cancelling the booking',
+    example: 'Guest requested cancellation',
   })
   cancel(
     @Param('id', ParseIntPipe) id: number,
@@ -275,16 +303,17 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Only confirmed bookings can be checked in',
+    description: 'Cannot check in - only confirmed bookings can be checked in',
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking to check in',
     type: Number,
+    example: 1,
   })
   checkIn(
     @Param('id', ParseIntPipe) id: number,
@@ -304,16 +333,18 @@ export class BookingsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Only checked-in bookings can be checked out',
+    description:
+      'Cannot check out - only checked-in bookings can be checked out',
   })
   @ApiResponse({
     status: 404,
-    description: 'Booking not found',
+    description: 'Booking not found - no booking exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Booking ID',
+    description: 'Unique identifier of the recreational booking to check out',
     type: Number,
+    example: 1,
   })
   checkOut(
     @Param('id', ParseIntPipe) id: number,

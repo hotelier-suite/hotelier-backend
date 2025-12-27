@@ -24,6 +24,7 @@ import {
   UpdateEmployeeRequestDto,
   EmployeeRequestType,
   EmployeeRequestStatus,
+  ApproveRequestDto,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -234,15 +235,7 @@ export class EmployeeRequestsController {
   })
   @ApiBody({
     description: 'Approver information',
-    schema: {
-      type: 'object',
-      properties: {
-        approvedBy: {
-          type: 'string',
-          example: 'Manager Smith',
-        },
-      },
-    },
+    type: ApproveRequestDto,
   })
   @ApiResponse({
     status: 200,
@@ -251,7 +244,7 @@ export class EmployeeRequestsController {
   })
   approve(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: { approvedBy: string },
+    @Body() body: ApproveRequestDto,
   ): Observable<EmployeeRequestDto> {
     return this.employeeRequestsService.approve(id, body.approvedBy);
   }

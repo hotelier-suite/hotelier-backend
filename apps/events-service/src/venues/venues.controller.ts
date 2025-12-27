@@ -36,11 +36,11 @@ export class VenuesController {
 
   @MessagePattern(VENUES_PATTERNS.DELETE)
   delete(@Payload() id: number): Promise<VenueDto> {
-    return this.venuesService.delete(id);
+    return this.venuesService.remove(id);
   }
 
   @MessagePattern(VENUES_PATTERNS.GET_AVAILABLE)
   getAvailable(): Promise<VenueDto[]> {
-    return this.venuesService.getAvailableVenues();
+    return this.venuesService.findAvailable();
   }
 }

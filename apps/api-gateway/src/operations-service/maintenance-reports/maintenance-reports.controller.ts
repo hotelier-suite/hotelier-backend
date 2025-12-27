@@ -32,7 +32,11 @@ export class MaintenanceReportsController {
     private readonly maintenanceReportsService: MaintenanceReportsService,
   ) {}
 
-  @ApiOperation({ summary: 'Get all maintenance reports' })
+  @ApiOperation({
+    summary: 'Get all maintenance reports',
+    description:
+      'Retrieve all maintenance reports in the housekeeping system. Returns a list of reports documenting maintenance issues found during room inspections or cleaning.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved maintenance reports',
@@ -43,16 +47,25 @@ export class MaintenanceReportsController {
     return this.maintenanceReportsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get maintenance report by ID' })
+  @ApiOperation({
+    summary: 'Get maintenance report by ID',
+    description:
+      'Retrieve a specific maintenance report by its unique identifier. Returns detailed information about the reported issue including room, description, and status.',
+  })
   @ApiParam({
     name: 'id',
     type: 'number',
-    description: 'ID of the maintenance report',
+    description: 'Unique identifier of the maintenance report',
+    example: 1,
   })
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved the maintenance report',
     type: MaintenanceReportDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance report not found with the specified ID',
   })
   @Get(':id')
   findOne(
@@ -61,12 +74,24 @@ export class MaintenanceReportsController {
     return this.maintenanceReportsService.findOne(id);
   }
 
-  @ApiOperation({ summary: 'Create a new maintenance report' })
-  @ApiBody({ type: CreateMaintenanceReportDto })
+  @ApiOperation({
+    summary: 'Create a new maintenance report',
+    description:
+      'Create a new maintenance report to document an issue found during housekeeping activities. Reports are typically created by housekeeping staff when they discover maintenance problems in rooms.',
+  })
+  @ApiBody({
+    type: CreateMaintenanceReportDto,
+    description:
+      'Maintenance report data including room, issue description, and severity',
+  })
   @ApiResponse({
     status: 201,
     description: 'Maintenance report created successfully',
     type: MaintenanceReportDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
   })
   @Post()
   create(
@@ -75,17 +100,33 @@ export class MaintenanceReportsController {
     return this.maintenanceReportsService.create(data);
   }
 
-  @ApiOperation({ summary: 'Update a maintenance report' })
+  @ApiOperation({
+    summary: 'Update a maintenance report',
+    description:
+      'Update an existing maintenance report with new information. Can be used to update the status, add notes, or modify the issue description.',
+  })
   @ApiParam({
     name: 'id',
     type: 'number',
-    description: 'ID of the maintenance report to update',
+    description: 'Unique identifier of the maintenance report to update',
+    example: 1,
   })
-  @ApiBody({ type: UpdateMaintenanceReportDto })
+  @ApiBody({
+    type: UpdateMaintenanceReportDto,
+    description: 'Updated maintenance report data',
+  })
   @ApiResponse({
     status: 200,
     description: 'Maintenance report updated successfully',
     type: MaintenanceReportDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance report not found with the specified ID',
   })
   @Put(':id')
   update(
@@ -95,21 +136,30 @@ export class MaintenanceReportsController {
     return this.maintenanceReportsService.update(id, data);
   }
 
-  @ApiOperation({ summary: 'Delete a maintenance report' })
+  @ApiOperation({
+    summary: 'Delete a maintenance report',
+    description:
+      'Delete a maintenance report by its unique identifier. This removes the report from the system permanently.',
+  })
   @ApiParam({
     name: 'id',
     type: 'number',
-    description: 'ID of the maintenance report to delete',
+    description: 'Unique identifier of the maintenance report to delete',
+    example: 1,
   })
   @ApiResponse({
     status: 200,
     description: 'Maintenance report deleted successfully',
     type: MaintenanceReportDto,
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Maintenance report not found with the specified ID',
+  })
   @Delete(':id')
-  delete(
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<MaintenanceReportDto> {
-    return this.maintenanceReportsService.delete(id);
+    return this.maintenanceReportsService.remove(id);
   }
 }

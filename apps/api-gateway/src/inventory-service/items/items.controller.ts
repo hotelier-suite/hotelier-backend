@@ -116,6 +116,7 @@ export class ItemsController {
     name: 'id',
     description: 'Inventory item ID',
     type: 'number',
+    example: 1,
   })
   @ApiBody({
     description: 'Inventory item update data',
@@ -142,6 +143,7 @@ export class ItemsController {
     name: 'id',
     description: 'Inventory item ID',
     type: 'number',
+    example: 1,
   })
   @ApiResponse({
     status: 200,

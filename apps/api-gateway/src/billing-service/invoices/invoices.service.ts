@@ -46,7 +46,7 @@ export class InvoicesService {
     >(INVOICES_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<InvoiceDto> {
+  remove(id: number): Observable<InvoiceDto> {
     return this.billingClient.send<InvoiceDto, number>(
       INVOICES_PATTERNS.DELETE,
       id,

@@ -40,7 +40,7 @@ export class NotificationsService {
       );
   }
 
-  listForUser(
+  findForUser(
     userId?: number,
     includeRead = false,
   ): Observable<NotificationDto[]> {

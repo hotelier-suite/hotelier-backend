@@ -79,7 +79,7 @@ export class AnalyticsService {
     }) as Promise<AnalyticsDataDto>;
   }
 
-  async getMetricsByType(
+  async findByType(
     metric: AnalyticsMetric,
     startDate: Date,
     endDate: Date,
@@ -93,7 +93,7 @@ export class AnalyticsService {
     }) as Promise<AnalyticsDataDto[]>;
   }
 
-  async getMetricsByDateRange(
+  async findByDateRange(
     startDate: Date,
     endDate: Date,
   ): Promise<AnalyticsDataDto[]> {
@@ -166,7 +166,7 @@ export class AnalyticsService {
     const endDate = new Date();
     const startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
 
-    return this.getMetricsByType(metric, startDate, endDate);
+    return this.findByType(metric, startDate, endDate);
   }
 
   async getDashboardSummary(): Promise<DashboardSummaryResponseDto> {
@@ -206,7 +206,7 @@ export class AnalyticsService {
     const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ?? new Date();
 
-    return this.getMetricsByType(AnalyticsMetric.OCCUPANCY_RATE, start, end);
+    return this.findByType(AnalyticsMetric.OCCUPANCY_RATE, start, end);
   }
 
   async getRevenueData(
@@ -216,14 +216,14 @@ export class AnalyticsService {
     const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ?? new Date();
 
-    return this.getMetricsByType(AnalyticsMetric.REVENUE_PER_ROOM, start, end);
+    return this.findByType(AnalyticsMetric.REVENUE_PER_ROOM, start, end);
   }
 
   async getGuestTypeData(): Promise<AnalyticsDataDto[]> {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const now = new Date();
 
-    return this.getMetricsByDateRange(thirtyDaysAgo, now);
+    return this.findByDateRange(thirtyDaysAgo, now);
   }
 
   async getSatisfactionData(
@@ -233,10 +233,6 @@ export class AnalyticsService {
     const start = startDate ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ?? new Date();
 
-    return this.getMetricsByType(
-      AnalyticsMetric.CUSTOMER_SATISFACTION,
-      start,
-      end,
-    );
+    return this.findByType(AnalyticsMetric.CUSTOMER_SATISFACTION, start, end);
   }
 }

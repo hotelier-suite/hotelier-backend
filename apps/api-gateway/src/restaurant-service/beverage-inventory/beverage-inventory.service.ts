@@ -54,7 +54,7 @@ export class BeverageInventoryService {
     >(BEVERAGE_INVENTORY_PATTERNS.UPDATE_STOCK, { id, stock });
   }
 
-  delete(id: number): Observable<BeverageInventoryDto> {
+  remove(id: number): Observable<BeverageInventoryDto> {
     return this.restaurantClient.send<BeverageInventoryDto, number>(
       BEVERAGE_INVENTORY_PATTERNS.DELETE,
       id,

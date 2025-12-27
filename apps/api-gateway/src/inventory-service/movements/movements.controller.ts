@@ -25,7 +25,8 @@ export class MovementsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Inventory Movements',
-    description: 'Retrieve all inventory movements with inventory details.',
+    description:
+      'Retrieve all inventory movements with inventory details. Returns a list of all stock movements including incoming, outgoing, and adjustment transactions.',
   })
   @ApiResponse({
     status: 200,
@@ -39,7 +40,8 @@ export class MovementsController {
   @Post()
   @ApiOperation({
     summary: 'Create Inventory Movement',
-    description: 'Create a new inventory movement (in/out/adjustment).',
+    description:
+      'Create a new inventory movement (in/out/adjustment). Records stock changes for tracking purposes and updates the inventory item quantity accordingly.',
   })
   @ApiBody({
     description: 'Inventory movement creation data',
@@ -49,6 +51,14 @@ export class MovementsController {
     status: 201,
     description: 'Inventory movement created successfully',
     type: InventoryMovementDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Inventory item not found',
   })
   create(
     @Body() data: CreateInventoryMovementDto,

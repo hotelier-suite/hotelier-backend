@@ -72,7 +72,7 @@ export class ReportsController {
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  getReportsByType(@Query('type') type: ReportType): Observable<ReportDto[]> {
+  findByType(@Query('type') type: ReportType): Observable<ReportDto[]> {
     return this.reportsService.findByType(type);
   }
 
@@ -91,9 +91,7 @@ export class ReportsController {
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  getReportsByStatus(
-    @Query('status') status: ReportStatus,
-  ): Observable<ReportDto[]> {
+  findByStatus(@Query('status') status: ReportStatus): Observable<ReportDto[]> {
     return this.reportsService.findByStatus(status);
   }
 
@@ -117,7 +115,7 @@ export class ReportsController {
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  getReportsByDateRange(
+  findByDateRange(
     @Query('startDate', ParseDatePipe) startDate: Date,
     @Query('endDate', ParseDatePipe) endDate: Date,
   ): Observable<ReportDto[]> {
@@ -253,7 +251,6 @@ export class ReportsController {
 
             doc.on('error', reject);
 
-            // Header
             doc
               .fontSize(24)
               .font('Helvetica-Bold')
@@ -275,7 +272,6 @@ export class ReportsController {
             );
             doc.moveDown(2);
 
-            // Financial Summary Section
             doc.fontSize(16).font('Helvetica-Bold').text('Financial Summary');
             doc.moveDown();
 
@@ -318,7 +314,6 @@ export class ReportsController {
             this.drawTable(doc, summaryData);
             doc.moveDown(2);
 
-            // Occupancy Section
             if (data.occupancyData.length > 0) {
               doc.fontSize(16).font('Helvetica-Bold').text('Occupancy Data');
               doc.moveDown();
@@ -344,7 +339,6 @@ export class ReportsController {
               doc.moveDown();
             }
 
-            // Monthly Revenue Comparison Section
             if (!data.month && data.monthlyRevenue.length > 0) {
               doc.addPage();
               doc
@@ -611,7 +605,7 @@ export class ReportsController {
     description: 'Report not found',
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<ReportDto> {
-    return this.reportsService.delete(id);
+    return this.reportsService.remove(id);
   }
 
   private drawTable(doc: PDFKit.PDFDocument, data: string[][]) {

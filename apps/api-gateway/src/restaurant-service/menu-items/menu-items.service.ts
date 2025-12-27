@@ -44,7 +44,7 @@ export class MenuItemsService {
     >(MENU_ITEMS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<MenuItemDto> {
+  remove(id: number): Observable<MenuItemDto> {
     return this.restaurantClient.send<MenuItemDto, number>(
       MENU_ITEMS_PATTERNS.DELETE,
       id,

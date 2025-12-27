@@ -19,7 +19,11 @@ import {
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
-  @ApiOperation({ summary: 'Get housekeeping statistics' })
+  @ApiOperation({
+    summary: 'Get housekeeping statistics',
+    description:
+      'Retrieve overall housekeeping statistics including room cleaning status, task completion rates, and staff performance metrics. Provides a high-level overview of housekeeping operations.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved housekeeping statistics',
@@ -30,12 +34,18 @@ export class StatisticsController {
     return this.statisticsService.getStatistics();
   }
 
-  @ApiOperation({ summary: 'Get cleaning performance' })
+  @ApiOperation({
+    summary: 'Get cleaning performance',
+    description:
+      'Retrieve cleaning performance metrics for housekeeping staff. Can be filtered by employee to get individual performance data, or retrieve aggregate performance across all staff.',
+  })
   @ApiQuery({
     name: 'employeeId',
     type: 'number',
     required: false,
-    description: 'Optional employee ID to filter by',
+    description:
+      'Filter performance data by a specific employee ID. If not provided, returns aggregate performance for all staff.',
+    example: 1,
   })
   @ApiResponse({
     status: 200,

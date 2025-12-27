@@ -54,7 +54,6 @@ export class MaintenanceService {
   ): Promise<GeneralMaintenanceRequestDto> {
     const existing = await this.findOne(id);
 
-    // Auto-set timestamps based on status changes
     if (data.status === MaintenanceStatus.IN_PROGRESS && !existing.startedAt) {
       data.startedAt = new Date();
     }

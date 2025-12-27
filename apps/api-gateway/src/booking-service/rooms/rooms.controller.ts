@@ -41,10 +41,12 @@ export class RoomsController {
   })
   @ApiOperation({
     summary: 'Create Room',
-    description: 'Create a new room in the hotel system.',
+    description:
+      'Create a new room in the hotel system with room number, type, floor, and pricing information. The room will be available for reservations once created.',
   })
   @ApiBody({
-    description: 'Room creation data',
+    description:
+      'Room creation data including room number, type, floor, capacity, and base price',
     type: CreateRoomDto,
   })
   @ApiResponse({
@@ -54,7 +56,7 @@ export class RoomsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid request data',
+    description: 'Invalid request data - validation failed',
   })
   create(@Body() createRoomDto: CreateRoomDto): Observable<RoomDto> {
     return this.roomsService.create(createRoomDto);
@@ -63,7 +65,8 @@ export class RoomsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Rooms',
-    description: 'Retrieve all rooms sorted by room number.',
+    description:
+      'Retrieve all rooms in the hotel sorted by room number. Returns room details including type, status, floor, capacity, and current availability.',
   })
   @ApiResponse({
     status: 200,
@@ -77,11 +80,12 @@ export class RoomsController {
   @Get(':id')
   @ApiOperation({
     summary: 'Get Room by ID',
-    description: 'Retrieve a specific room by its ID.',
+    description:
+      'Retrieve a specific room by its unique identifier. Returns complete room information including type, status, amenities, and pricing.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Room ID',
+    description: 'Unique identifier of the room',
     type: 'number',
     example: 1,
   })
@@ -108,22 +112,27 @@ export class RoomsController {
   })
   @ApiOperation({
     summary: 'Update Room',
-    description: 'Update an existing room (availability, price, etc.).',
+    description:
+      'Update an existing room with new information such as availability status, pricing, or amenities. Only provided fields will be updated.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Room ID',
+    description: 'Unique identifier of the room to update',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'Room update data',
+    description: 'Room data to update including status, price, or amenities',
     type: UpdateRoomDto,
   })
   @ApiResponse({
     status: 200,
     description: 'Room updated successfully',
     type: RoomDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
   })
   @ApiResponse({
     status: 404,
@@ -145,11 +154,12 @@ export class RoomsController {
   })
   @ApiOperation({
     summary: 'Delete Room',
-    description: 'Delete a room from the system.',
+    description:
+      'Remove a room from the hotel system. This action may be restricted if the room has active or future reservations.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Room ID',
+    description: 'Unique identifier of the room to delete',
     type: 'number',
     example: 1,
   })

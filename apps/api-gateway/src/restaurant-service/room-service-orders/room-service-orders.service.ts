@@ -47,7 +47,7 @@ export class RoomServiceOrdersService {
     >(ROOM_SERVICE_ORDERS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<RoomServiceOrderDto> {
+  remove(id: number): Observable<RoomServiceOrderDto> {
     return this.restaurantClient.send<RoomServiceOrderDto, number>(
       ROOM_SERVICE_ORDERS_PATTERNS.DELETE,
       id,

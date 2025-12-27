@@ -32,7 +32,7 @@ export class EmployeesService {
     );
   }
 
-  getHousekeepingEmployees(): Observable<EmployeeDto[]> {
+  findHousekeeping(): Observable<EmployeeDto[]> {
     return this.staffClient.send<EmployeeDto[], Record<string, never>>(
       EMPLOYEES_PATTERNS.FIND_HOUSEKEEPING,
       {},

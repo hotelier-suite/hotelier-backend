@@ -47,7 +47,7 @@ export class MaintenanceReportsService {
     >(MAINTENANCE_REPORTS_PATTERNS.UPDATE, { id, data });
   }
 
-  delete(id: number): Observable<MaintenanceReportDto> {
+  remove(id: number): Observable<MaintenanceReportDto> {
     return this.operationsClient.send<MaintenanceReportDto, number>(
       MAINTENANCE_REPORTS_PATTERNS.DELETE,
       id,

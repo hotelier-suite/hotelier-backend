@@ -51,9 +51,13 @@ export class FacilitiesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid input data',
+    description: 'Invalid input data - validation failed for facility details',
   })
-  @ApiBody({ type: CreateRecreationalFacilityDto })
+  @ApiBody({
+    type: CreateRecreationalFacilityDto,
+    description:
+      'Recreational facility creation data including name, type, capacity, and operating hours',
+  })
   create(
     @Body() createFacilityDto: CreateRecreationalFacilityDto,
   ): Observable<RecreationalFacilityDto> {
@@ -109,12 +113,14 @@ export class FacilitiesController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Facility not found',
+    description:
+      'Facility not found - no facility exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Facility ID',
+    description: 'Unique identifier of the recreational facility',
     type: Number,
+    example: 1,
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
@@ -133,15 +139,25 @@ export class FacilitiesController {
     type: RecreationalFacilityDto,
   })
   @ApiResponse({
+    status: 400,
+    description: 'Invalid input data - validation failed for facility update',
+  })
+  @ApiResponse({
     status: 404,
-    description: 'Facility not found',
+    description:
+      'Facility not found - no facility exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Facility ID',
+    description: 'Unique identifier of the recreational facility to update',
     type: Number,
+    example: 1,
   })
-  @ApiBody({ type: UpdateRecreationalFacilityDto })
+  @ApiBody({
+    type: UpdateRecreationalFacilityDto,
+    description:
+      'Facility update data including name, status, capacity, or operating hours',
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFacilityDto: UpdateRecreationalFacilityDto,
@@ -161,21 +177,24 @@ export class FacilitiesController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Cannot delete facility with active bookings',
+    description:
+      'Cannot delete facility with active bookings - cancel or complete existing bookings first',
   })
   @ApiResponse({
     status: 404,
-    description: 'Facility not found',
+    description:
+      'Facility not found - no facility exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Facility ID',
+    description: 'Unique identifier of the recreational facility to delete',
     type: Number,
+    example: 1,
   })
-  delete(
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<RecreationalFacilityDto> {
-    return this.facilitiesService.delete(id);
+    return this.facilitiesService.remove(id);
   }
 
   @Get('availability')
@@ -193,13 +212,15 @@ export class FacilitiesController {
     required: false,
     type: String,
     description:
-      'Comma-separated facility IDs (e.g., "1,2,3"). If not provided, returns all facilities.',
+      'Comma-separated facility IDs to check availability for. If not provided, returns availability for all facilities.',
+    example: '1,2,3',
   })
   @ApiQuery({
     name: 'date',
     required: true,
     type: String,
-    description: 'Date to check availability (YYYY-MM-DD)',
+    description: 'Date to check availability in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-28',
   })
   getMultipleAvailability(
     @Query(
@@ -224,18 +245,21 @@ export class FacilitiesController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Facility not found',
+    description:
+      'Facility not found - no facility exists with the specified ID',
   })
   @ApiParam({
     name: 'id',
-    description: 'Facility ID',
+    description: 'Unique identifier of the recreational facility',
     type: Number,
+    example: 1,
   })
   @ApiQuery({
     name: 'date',
     required: true,
     type: String,
-    description: 'Date to check availability (YYYY-MM-DD)',
+    description: 'Date to check availability in ISO 8601 format (YYYY-MM-DD)',
+    example: '2024-12-28',
   })
   getAvailability(
     @Param('id', ParseIntPipe) id: number,

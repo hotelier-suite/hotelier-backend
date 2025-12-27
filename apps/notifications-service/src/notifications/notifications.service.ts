@@ -28,7 +28,7 @@ export class NotificationsService {
     return this.notificationsRepository.save(notification);
   }
 
-  async listForUser(
+  async findForUser(
     userId?: number | null,
     includeRead = false,
   ): Promise<NotificationDto[]> {

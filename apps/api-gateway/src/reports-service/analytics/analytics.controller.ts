@@ -133,7 +133,7 @@ export class AnalyticsController {
     description: 'Analytics data not found',
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<AnalyticsDataDto> {
-    return this.analyticsService.delete(id);
+    return this.analyticsService.remove(id);
   }
 
   @Get('dashboard-summary')
