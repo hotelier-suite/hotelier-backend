@@ -5,6 +5,6 @@ export const INVOICES_PATTERNS = {
   UPDATE: 'invoices.update',
   DELETE: 'invoices.delete',
   MARK_AS_PAID: 'invoices.markAsPaid',
-  DOWNLOAD: 'invoices.download',
   FIND_BY_CUSTOMER: 'invoices.findByCustomer',
+  GENERATE_PDF: 'invoices.generatePdf',
 } as const;

@@ -4,6 +4,7 @@ import { InvoicesService } from './invoices.service';
 import {
   INVOICES_PATTERNS,
   InvoiceDto,
+  InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
   InvoiceStatus,
@@ -64,8 +65,8 @@ export class InvoicesController {
     return this.invoicesService.markAsPaid(payload.id, payload.paymentMethod);
   }
 
-  @MessagePattern(INVOICES_PATTERNS.DOWNLOAD)
-  download(@Payload() id: number): Promise<InvoiceDto> {
-    return this.invoicesService.download(id);
+  @MessagePattern(INVOICES_PATTERNS.GENERATE_PDF)
+  generatePdf(@Payload() id: number): Promise<InvoicePdfDto> {
+    return this.invoicesService.generatePdf(id);
   }
 }

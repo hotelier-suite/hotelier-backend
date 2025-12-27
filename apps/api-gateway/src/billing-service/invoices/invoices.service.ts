@@ -5,6 +5,7 @@ import { BILLING_SERVICE_CLIENT } from '../constants';
 import {
   INVOICES_PATTERNS,
   InvoiceDto,
+  InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
   InvoiceStatus,
@@ -74,9 +75,9 @@ export class InvoicesService {
     >(INVOICES_PATTERNS.MARK_AS_PAID, { id, paymentMethod });
   }
 
-  download(id: number): Observable<InvoiceDto> {
-    return this.billingClient.send<InvoiceDto, number>(
-      INVOICES_PATTERNS.DOWNLOAD,
+  generatePdf(id: number): Observable<InvoicePdfDto> {
+    return this.billingClient.send<InvoicePdfDto, number>(
+      INVOICES_PATTERNS.GENERATE_PDF,
       id,
     );
   }

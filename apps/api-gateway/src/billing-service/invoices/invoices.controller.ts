@@ -22,6 +22,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { InvoicesService } from './invoices.service';
 import {
   InvoiceDto,
@@ -32,7 +33,6 @@ import {
 } from '@app/contracts/billing-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
-import * as PDFDocument from 'pdfkit';
 
 @ApiTags('billing')
 @Controller('billing/invoices')
@@ -254,65 +254,15 @@ export class InvoicesController {
     status: 404,
     description: 'Invoice not found',
   })
-  async download(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<StreamableFile> {
-    return new Promise((resolve, reject) => {
-      this.invoicesService.download(id).subscribe({
-        next: (invoice) => {
-          const doc = new PDFDocument();
-          const chunks: Buffer[] = [];
-
-          doc.on('data', (chunk: Buffer) => chunks.push(chunk));
-
-          doc.on('end', () => {
-            const result = Buffer.concat(chunks);
-            const file = new StreamableFile(result, {
-              type: 'application/pdf',
-              disposition: `attachment; filename="invoice-${invoice.number}.pdf"`,
-            });
-            resolve(file);
-          });
-
-          doc.on('error', reject);
-
-          doc.fontSize(20).text('HOTELIER', { align: 'center' });
-          doc.fontSize(16).text('INVOICE', { align: 'center' });
-          doc.moveDown();
-
-          doc.fontSize(12);
-          doc.text(`Invoice Number: ${invoice.number}`);
-          doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`);
-          doc.text(`Status: ${invoice.status}`);
-          doc.moveDown();
-
-          doc.text(`Customer: ${invoice.guestName}`);
-          doc.moveDown();
-
-          doc.text('DETAILS', { align: 'left' });
-          doc.moveDown(0.5);
-          invoice.invoiceItems?.forEach((item) => {
-            const itemTotal =
-              Number(item.quantity || 0) * Number(item.price || 0);
-            doc.text(
-              `${item.description} x ${item.quantity} = ${itemTotal.toFixed(2)}`,
-            );
-          });
-          doc.moveDown();
-
-          doc.fontSize(14);
-          doc.text(`Subtotal: ${Number(invoice.subtotal).toFixed(2)}`);
-          doc.text(`Tax: ${Number(invoice.taxes).toFixed(2)}`);
-          doc.text(`Total: ${Number(invoice.total).toFixed(2)}`);
-
-          doc.moveDown(2);
-          doc.fontSize(10);
-          doc.text('Thank you for your preference', { align: 'center' });
-
-          doc.end();
-        },
-        error: reject,
-      });
-    });
+  download(@Param('id', ParseIntPipe) id: number): Observable<StreamableFile> {
+    return this.invoicesService.generatePdf(id).pipe(
+      map(
+        (result) =>
+          new StreamableFile(Buffer.from(result.buffer), {
+            type: 'application/pdf',
+            disposition: `attachment; filename="${result.filename}"`,
+          }),
+      ),
+    );
   }
 }

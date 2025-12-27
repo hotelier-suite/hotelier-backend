@@ -14,9 +14,11 @@ import {
   PaymentMethod,
   PaymentStatus,
   InvoiceDto,
+  InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
 } from '@app/contracts/billing-service';
+import * as PDFDocument from 'pdfkit';
 
 @Injectable()
 export class InvoicesService {
@@ -192,7 +194,55 @@ export class InvoicesService {
     return this.findOne(id);
   }
 
-  download(id: number): Promise<InvoiceDto> {
-    return this.findOne(id);
+  async generatePdf(id: number): Promise<InvoicePdfDto> {
+    const invoice = await this.findOne(id);
+    const buffer = await this.buildInvoicePdf(invoice);
+    const filename = `invoice-${invoice.number}.pdf`;
+    return { buffer, filename };
+  }
+
+  private buildInvoicePdf(invoice: InvoiceDto): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument();
+      const chunks: Buffer[] = [];
+
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk));
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+
+      doc.fontSize(20).text('HOTELIER', { align: 'center' });
+      doc.fontSize(16).text('INVOICE', { align: 'center' });
+      doc.moveDown();
+
+      doc.fontSize(12);
+      doc.text(`Invoice Number: ${invoice.number}`);
+      doc.text(`Date: ${new Date(invoice.createdAt).toLocaleDateString()}`);
+      doc.text(`Status: ${invoice.status}`);
+      doc.moveDown();
+
+      doc.text(`Customer: ${invoice.guestName}`);
+      doc.moveDown();
+
+      doc.text('DETAILS', { align: 'left' });
+      doc.moveDown(0.5);
+      invoice.invoiceItems?.forEach((item) => {
+        const itemTotal = Number(item.quantity || 0) * Number(item.price || 0);
+        doc.text(
+          `${item.description} x ${item.quantity} = ${itemTotal.toFixed(2)}`,
+        );
+      });
+      doc.moveDown();
+
+      doc.fontSize(14);
+      doc.text(`Subtotal: ${Number(invoice.subtotal).toFixed(2)}`);
+      doc.text(`Tax: ${Number(invoice.taxes).toFixed(2)}`);
+      doc.text(`Total: ${Number(invoice.total).toFixed(2)}`);
+
+      doc.moveDown(2);
+      doc.fontSize(10);
+      doc.text('Thank you for your preference', { align: 'center' });
+
+      doc.end();
+    });
   }
 }
