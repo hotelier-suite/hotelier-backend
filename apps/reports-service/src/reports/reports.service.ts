@@ -44,13 +44,13 @@ export class ReportsService {
       ...data,
       status: data.status || ReportStatus.PENDING,
     });
-    return this.reportRepository.save(report) as Promise<ReportDto>;
+    return this.reportRepository.save(report);
   }
 
   async findAll(): Promise<ReportDto[]> {
     return this.reportRepository.find({
       order: { createdAt: 'DESC' },
-    }) as Promise<ReportDto[]>;
+    });
   }
 
   async findOne(id: number): Promise<ReportDto> {
@@ -63,21 +63,21 @@ export class ReportsService {
         message: `Report with id ${id} not found`,
       });
     }
-    return report as ReportDto;
+    return report;
   }
 
   async findByType(type: ReportType): Promise<ReportDto[]> {
     return this.reportRepository.find({
       where: { type },
       order: { createdAt: 'DESC' },
-    }) as Promise<ReportDto[]>;
+    });
   }
 
   async findByStatus(status: ReportStatus): Promise<ReportDto[]> {
     return this.reportRepository.find({
       where: { status },
       order: { createdAt: 'DESC' },
-    }) as Promise<ReportDto[]>;
+    });
   }
 
   async findByDateRange(startDate: Date, endDate: Date): Promise<ReportDto[]> {
@@ -86,7 +86,7 @@ export class ReportsService {
         createdAt: Between(startDate, endDate),
       },
       order: { createdAt: 'DESC' },
-    }) as Promise<ReportDto[]>;
+    });
   }
 
   async updateStatus(id: number, status: ReportStatus): Promise<ReportDto> {

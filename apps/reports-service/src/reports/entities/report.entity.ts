@@ -9,6 +9,7 @@ import {
   ReportType,
   ReportStatus,
   ReportParametersDto,
+  ReportData,
 } from '@app/contracts/reports-service';
 
 @Entity('reports')
@@ -42,7 +43,7 @@ export class Report {
   parameters?: ReportParametersDto;
 
   @Column('json', { nullable: true })
-  data?: object;
+  data?: ReportData;
 
   @Column({ nullable: true })
   filePath?: string;
