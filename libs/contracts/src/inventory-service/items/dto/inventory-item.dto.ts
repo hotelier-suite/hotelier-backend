@@ -13,62 +13,102 @@ import {
 import { InventoryCategory, InventoryStatus } from '..';
 
 export class InventoryItemDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the inventory item',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ example: 'Bed Sheets - White Cotton' })
+  @ApiProperty({
+    description: 'Name of the inventory item',
+    example: 'Bed Sheets - White Cotton',
+  })
   @IsString()
   @Length(1, 100)
   name: string;
 
-  @ApiProperty({ enum: InventoryCategory, example: InventoryCategory.LINENS })
+  @ApiProperty({
+    description: 'Category classification of the inventory item',
+    enum: InventoryCategory,
+    example: InventoryCategory.LINENS,
+  })
   @IsEnum(InventoryCategory)
   category: InventoryCategory;
 
-  @ApiProperty({ example: 100, minimum: 0 })
+  @ApiProperty({
+    description: 'Current quantity of the item in stock',
+    example: 100,
+    minimum: 0,
+  })
   @IsNumber()
   @Min(0)
   currentStock: number;
 
-  @ApiProperty({ example: 20, minimum: 0 })
+  @ApiProperty({
+    description: 'Minimum stock level before reorder is triggered',
+    example: 20,
+    minimum: 0,
+  })
   @IsNumber()
   @Min(0)
   minimumStock: number;
 
-  @ApiProperty({ example: 200, minimum: 1 })
+  @ApiProperty({
+    description: 'Maximum stock capacity for this item',
+    example: 200,
+    minimum: 1,
+  })
   @IsNumber()
   @Min(1)
   maximumStock: number;
 
-  @ApiProperty({ example: 'pieces' })
+  @ApiProperty({
+    description: 'Unit of measurement for the item',
+    example: 'pieces',
+  })
   @IsString()
   @Length(1, 20)
   unit: string;
 
-  @ApiProperty({ example: 25.5, minimum: 0 })
+  @ApiProperty({
+    description: 'Cost per unit of the item',
+    example: 25.5,
+    minimum: 0,
+  })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   unitCost: number;
 
-  @ApiProperty({ example: 'Linen Supply Co' })
+  @ApiProperty({
+    description: 'Name of the supplier providing this item',
+    example: 'Linen Supply Co',
+  })
   @IsString()
   @Length(1, 100)
   supplier: string;
 
-  @ApiProperty({ required: false, example: 1 })
+  @ApiProperty({
+    description: 'ID of the supplier associated with this item',
+    required: false,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   supplierId?: number;
 
-  @ApiProperty({ example: 'Storage Room A' })
+  @ApiProperty({
+    description: 'Storage location of the item within the facility',
+    example: 'Storage Room A',
+  })
   @IsString()
   @Length(1, 100)
   location: string;
 
   @ApiProperty({
+    description: 'Date when the item was last purchased',
     required: false,
     type: String,
     format: 'date',
@@ -79,16 +119,28 @@ export class InventoryItemDto {
   @Type(() => Date)
   lastPurchaseDate?: Date;
 
-  @ApiProperty({ enum: InventoryStatus, example: InventoryStatus.AVAILABLE })
+  @ApiProperty({
+    description: 'Current availability status of the inventory item',
+    enum: InventoryStatus,
+    example: InventoryStatus.AVAILABLE,
+  })
   @IsEnum(InventoryStatus)
   status: InventoryStatus;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the inventory item was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the inventory item was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

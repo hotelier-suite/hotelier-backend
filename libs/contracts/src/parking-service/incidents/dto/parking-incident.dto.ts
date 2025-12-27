@@ -14,74 +14,127 @@ import type { VehicleDto } from '../../vehicles';
 import type { ParkingSpaceDto } from '../../spaces';
 
 export class ParkingIncidentDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the parking incident',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ enum: IncidentType, example: IncidentType.VEHICLE_DAMAGE })
+  @ApiProperty({
+    description: 'Type of parking incident',
+    enum: IncidentType,
+    example: IncidentType.VEHICLE_DAMAGE,
+  })
   @IsEnum(IncidentType)
   type: IncidentType;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Detailed description of the parking incident',
+    example: 'Vehicle scratched while parking',
+  })
   @IsString()
   description: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the incident was reported',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   reportDate: Date;
 
-  @ApiProperty({ enum: IncidentStatus, example: IncidentStatus.PENDING })
+  @ApiProperty({
+    description: 'Current status of the incident',
+    enum: IncidentStatus,
+    example: IncidentStatus.PENDING,
+  })
   @IsEnum(IncidentStatus)
   status: IncidentStatus;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Name of the person responsible for handling the incident',
+    example: 'John Smith',
+  })
   @IsString()
   responsible: string;
 
-  @ApiProperty({ enum: TaskPriority, example: TaskPriority.NORMAL })
+  @ApiProperty({
+    description: 'Priority level of the incident',
+    enum: TaskPriority,
+    example: TaskPriority.NORMAL,
+  })
   @IsEnum(TaskPriority)
   priority: TaskPriority;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Description of how the incident was resolved',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   resolution?: string;
 
-  @ApiProperty({ required: false, type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the incident was resolved',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   resolvedAt?: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the incident record was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the incident record was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'ID of the vehicle involved in the incident',
+    required: false,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   vehicleId?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'ID of the parking space where the incident occurred',
+    required: false,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   spaceId?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Vehicle details involved in the incident',
+    required: false,
+  })
   @IsOptional()
   vehicle?: VehicleDto;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Parking space details where the incident occurred',
+    required: false,
+  })
   @IsOptional()
   space?: ParkingSpaceDto;
 }

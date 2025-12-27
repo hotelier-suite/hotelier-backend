@@ -14,67 +14,108 @@ import type { EmployeeDto } from '../../employees';
 import { EmployeeRequestStatus, EmployeeRequestType } from '..';
 
 export class EmployeeRequestDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the employee request',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
   @ApiProperty({
+    description: 'Type of employee request (vacation, sick leave, etc.)',
     enum: EmployeeRequestType,
     example: EmployeeRequestType.VACATION,
   })
   @IsEnum(EmployeeRequestType)
   type: EmployeeRequestType;
 
-  @ApiProperty({ example: 'Family vacation' })
+  @ApiProperty({
+    description: 'Reason or justification for the request',
+    example: 'Family vacation',
+  })
   @IsString()
   @Length(1, 500)
   reason: string;
 
-  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
+  @ApiProperty({
+    description: 'Start date of the requested leave period',
+    type: String,
+    format: 'date',
+    example: '2024-01-15',
+  })
   @IsDate()
   @Type(() => Date)
   startDate: Date;
 
-  @ApiProperty({ type: String, format: 'date', example: '2024-01-20' })
+  @ApiProperty({
+    description: 'End date of the requested leave period',
+    type: String,
+    format: 'date',
+    example: '2024-01-20',
+  })
   @IsDate()
   @Type(() => Date)
   endDate: Date;
 
-  @ApiProperty({ example: 5, minimum: 1 })
+  @ApiProperty({
+    description: 'Total number of days requested',
+    example: 5,
+    minimum: 1,
+  })
   @IsNumber()
   @Min(1)
   days: number;
 
   @ApiProperty({
+    description: 'Current status of the request',
     enum: EmployeeRequestStatus,
     example: EmployeeRequestStatus.PENDING,
   })
   @IsEnum(EmployeeRequestStatus)
   status: EmployeeRequestStatus;
 
-  @ApiProperty({ required: false, example: 'Manager Smith' })
+  @ApiProperty({
+    description: 'Name of the manager who approved or rejected the request',
+    required: false,
+    example: 'Manager Smith',
+  })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   approvedBy?: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the request was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the request was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;
 
-  @ApiProperty({ example: 1, minimum: 1 })
+  @ApiProperty({
+    description: 'ID of the employee who submitted the request',
+    example: 1,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   employeeId: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Related employee details',
+    required: false,
+  })
   @IsOptional()
   employee?: EmployeeDto;
 }

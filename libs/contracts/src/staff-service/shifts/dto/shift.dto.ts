@@ -14,64 +14,109 @@ import type { EmployeeDto } from '../../employees';
 import { ShiftStatus, ShiftType } from '..';
 
 export class ShiftDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ description: 'Unique identifier for the shift', example: 1 })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
+  @ApiProperty({
+    description: 'Date of the shift',
+    type: String,
+    format: 'date',
+    example: '2024-01-15',
+  })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ example: '08:00', format: 'time' })
+  @ApiProperty({
+    description: 'Shift start time in 24-hour format',
+    example: '08:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   startTime: string;
 
-  @ApiProperty({ example: '16:00', format: 'time' })
+  @ApiProperty({
+    description: 'Shift end time in 24-hour format',
+    example: '16:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   endTime: string;
 
-  @ApiProperty({ enum: ShiftType, example: ShiftType.MORNING })
+  @ApiProperty({
+    description: 'Type of shift (morning, afternoon, night, etc.)',
+    enum: ShiftType,
+    example: ShiftType.MORNING,
+  })
   @IsEnum(ShiftType)
   type: ShiftType;
 
-  @ApiProperty({ enum: ShiftStatus, example: ShiftStatus.SCHEDULED })
+  @ApiProperty({
+    description: 'Current status of the shift',
+    enum: ShiftStatus,
+    example: ShiftStatus.SCHEDULED,
+  })
   @IsEnum(ShiftStatus)
   status: ShiftStatus;
 
-  @ApiProperty({ example: 'Front Desk Agent' })
+  @ApiProperty({
+    description: 'Job position or role for this shift',
+    example: 'Front Desk Agent',
+  })
   @IsString()
   @Length(1, 100)
   position: string;
 
-  @ApiProperty({ example: 'Reception' })
+  @ApiProperty({
+    description: 'Department where the shift takes place',
+    example: 'Reception',
+  })
   @IsString()
   @Length(1, 100)
   department: string;
 
-  @ApiProperty({ required: false, example: 'Training new employee' })
+  @ApiProperty({
+    description: 'Additional notes or comments about the shift',
+    required: false,
+    example: 'Training new employee',
+  })
   @IsOptional()
   @IsString()
   @Length(1, 500)
   notes?: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the shift record was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the shift record was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'ID of the employee assigned to this shift',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   employeeId: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Related employee details',
+    required: false,
+  })
   @IsOptional()
   employee?: EmployeeDto;
 }

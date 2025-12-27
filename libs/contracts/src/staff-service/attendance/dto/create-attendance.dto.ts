@@ -13,22 +13,38 @@ import {
 import { AttendanceStatus } from '..';
 
 export class CreateAttendanceDto {
-  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
+  @ApiProperty({
+    description: 'Date of the attendance record',
+    type: String,
+    format: 'date',
+    example: '2024-01-15',
+  })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ required: false, example: '09:00', format: 'time' })
+  @ApiProperty({
+    description: 'Check-in time in 24-hour format',
+    required: false,
+    example: '09:00',
+    format: 'time',
+  })
   @IsOptional()
   @IsMilitaryTime()
   checkIn?: string;
 
-  @ApiProperty({ required: false, example: '17:30', format: 'time' })
+  @ApiProperty({
+    description: 'Check-out time in 24-hour format',
+    required: false,
+    example: '17:30',
+    format: 'time',
+  })
   @IsOptional()
   @IsMilitaryTime()
   checkOut?: string;
 
   @ApiProperty({
+    description: 'Current attendance status of the employee',
     required: false,
     enum: AttendanceStatus,
     example: AttendanceStatus.PRESENT,
@@ -37,24 +53,42 @@ export class CreateAttendanceDto {
   @IsEnum(AttendanceStatus)
   status?: AttendanceStatus;
 
-  @ApiProperty({ required: false, example: 'Late due to traffic' })
+  @ApiProperty({
+    description: 'Additional notes or comments about the attendance',
+    required: false,
+    example: 'Late due to traffic',
+  })
   @IsOptional()
   @IsString()
   notes?: string;
 
-  @ApiProperty({ required: false, example: 8.5, minimum: 0 })
+  @ApiProperty({
+    description: 'Total hours worked for the day',
+    required: false,
+    example: 8.5,
+    minimum: 0,
+  })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   hoursWorked?: number;
 
-  @ApiProperty({ required: false, example: 1.5, minimum: 0 })
+  @ApiProperty({
+    description: 'Overtime hours worked beyond regular shift',
+    required: false,
+    example: 1.5,
+    minimum: 0,
+  })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   overtimeHours?: number;
 
-  @ApiProperty({ example: 1, minimum: 1 })
+  @ApiProperty({
+    description: 'ID of the employee this attendance record belongs to',
+    example: 1,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   employeeId: number;

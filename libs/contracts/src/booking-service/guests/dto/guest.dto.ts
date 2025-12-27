@@ -11,40 +11,66 @@ import {
 } from 'class-validator';
 
 export class GuestDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the guest',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ example: 'John Smith' })
+  @ApiProperty({
+    description: 'Full name of the guest',
+    example: 'John Smith',
+  })
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 'john.smith@example.com' })
+  @ApiProperty({
+    description: 'Email address of the guest for communication',
+    example: 'john.smith@example.com',
+  })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ required: false, example: '+1234567890' })
+  @ApiProperty({
+    description: 'Phone number of the guest for contact purposes',
+    required: false,
+    example: '+1234567890',
+  })
   @IsOptional()
   @IsString()
   phone?: string;
 
-  @ApiProperty({ required: false, example: 'ABC123456' })
+  @ApiProperty({
+    description: 'Identification document number (passport, ID card, etc.)',
+    required: false,
+    example: 'ABC123456',
+  })
   @IsOptional()
   @IsString()
   document?: string;
 
-  @ApiProperty({ required: false, example: '123 Main St, New York, NY' })
+  @ApiProperty({
+    description: 'Residential address of the guest',
+    required: false,
+    example: '123 Main St, New York, NY',
+  })
   @IsOptional()
   @IsString()
   address?: string;
 
-  @ApiProperty({ required: false, example: 'American' })
+  @ApiProperty({
+    description: 'Nationality of the guest',
+    required: false,
+    example: 'American',
+  })
   @IsOptional()
   @IsString()
   nationality?: string;
 
   @ApiProperty({
+    description: 'Date of birth of the guest',
     required: false,
     type: String,
     format: 'date',
@@ -55,21 +81,36 @@ export class GuestDto {
   @Type(() => Date)
   birthDate?: Date;
 
-  @ApiProperty({ required: false, example: 'Non-smoking room, high floor' })
+  @ApiProperty({
+    description: 'Special preferences or requests from the guest',
+    required: false,
+    example: 'Non-smoking room, high floor',
+  })
   @IsOptional()
   @IsString()
   preferences?: string;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({
+    description: 'Whether the guest has VIP status',
+    example: false,
+  })
   @IsBoolean()
   vip: boolean;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the guest record was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the guest record was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

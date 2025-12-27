@@ -4,21 +4,32 @@ import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
 
 export class CreateGuestRequestDto {
-  @ApiProperty({ example: '301' })
+  @ApiProperty({
+    description: 'Room number where the guest is staying',
+    example: '301',
+  })
   @IsString()
   @Length(1, 20)
   room: string;
 
-  @ApiProperty({ example: 'Sarah Johnson' })
+  @ApiProperty({
+    description: 'Full name of the guest making the request',
+    example: 'Sarah Johnson',
+  })
   @IsString()
   @Length(1, 100)
   guestName: string;
 
-  @ApiProperty({ enum: GuestRequestType, example: GuestRequestType.TOWELS })
+  @ApiProperty({
+    description: 'Category of the guest request',
+    enum: GuestRequestType,
+    example: GuestRequestType.TOWELS,
+  })
   @IsEnum(GuestRequestType)
   type: GuestRequestType;
 
   @ApiProperty({
+    description: 'Detailed description of the guest request',
     example: 'Please provide extra bath towels and pool towels for family of 4',
   })
   @IsString()
@@ -26,6 +37,7 @@ export class CreateGuestRequestDto {
   description: string;
 
   @ApiProperty({
+    description: 'Current status of the guest request',
     required: false,
     enum: GuestRequestStatus,
     example: GuestRequestStatus.PENDING,
@@ -35,6 +47,7 @@ export class CreateGuestRequestDto {
   status?: GuestRequestStatus;
 
   @ApiProperty({
+    description: 'Priority level of the guest request',
     required: false,
     enum: RequestPriority,
     example: RequestPriority.MEDIUM,
@@ -43,19 +56,31 @@ export class CreateGuestRequestDto {
   @IsEnum(RequestPriority)
   priority?: RequestPriority;
 
-  @ApiProperty({ required: false, type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Requested time for the service to be delivered',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   time?: Date;
 
-  @ApiProperty({ required: false, example: 'Mary Williams' })
+  @ApiProperty({
+    description: 'Name of the staff member assigned to handle the request',
+    required: false,
+    example: 'Mary Williams',
+  })
   @IsOptional()
   @IsString()
   @Length(1, 100)
   assignedTo?: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Additional notes or comments about the request',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @Length(0, 1000)

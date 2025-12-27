@@ -11,30 +11,45 @@ import { Type } from 'class-transformer';
 import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
 
 export class GuestRequestDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the guest request',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ example: '301' })
+  @ApiProperty({
+    description: 'Room number where the guest is staying',
+    example: '301',
+  })
   @IsString()
   room: string;
 
-  @ApiProperty({ example: 'Sarah Johnson' })
+  @ApiProperty({
+    description: 'Full name of the guest making the request',
+    example: 'Sarah Johnson',
+  })
   @IsString()
   guestName: string;
 
-  @ApiProperty({ enum: GuestRequestType, example: GuestRequestType.TOWELS })
+  @ApiProperty({
+    description: 'Category of the guest request',
+    enum: GuestRequestType,
+    example: GuestRequestType.TOWELS,
+  })
   @IsEnum(GuestRequestType)
   type: GuestRequestType;
 
   @ApiProperty({
+    description: 'Detailed description of the guest request',
     example: 'Please provide extra bath towels and pool towels for family of 4',
   })
   @IsString()
   description: string;
 
   @ApiProperty({
+    description: 'Current status of the guest request',
     required: false,
     enum: GuestRequestStatus,
     example: GuestRequestStatus.PENDING,
@@ -44,6 +59,7 @@ export class GuestRequestDto {
   status?: GuestRequestStatus;
 
   @ApiProperty({
+    description: 'Priority level of the guest request',
     required: false,
     enum: RequestPriority,
     example: RequestPriority.MEDIUM,
@@ -52,34 +68,59 @@ export class GuestRequestDto {
   @IsEnum(RequestPriority)
   priority?: RequestPriority;
 
-  @ApiProperty({ required: false, type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Requested time for the service to be delivered',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   time?: Date;
 
-  @ApiProperty({ required: false, type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the request was completed',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   completedAt?: Date;
 
-  @ApiProperty({ required: false, example: 'Mary Williams' })
+  @ApiProperty({
+    description: 'Name of the staff member assigned to handle the request',
+    required: false,
+    example: 'Mary Williams',
+  })
   @IsOptional()
   @IsString()
   assignedTo?: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Additional notes or comments about the request',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   notes?: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the guest request was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the guest request was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

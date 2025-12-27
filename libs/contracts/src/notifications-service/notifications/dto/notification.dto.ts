@@ -12,45 +12,81 @@ import { Type } from 'class-transformer';
 import { NotificationType } from '..';
 
 export class NotificationDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the notification',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ enum: NotificationType, example: NotificationType.INFO })
+  @ApiProperty({
+    description: 'Type of notification indicating its severity level',
+    enum: NotificationType,
+    example: NotificationType.INFO,
+  })
   @IsEnum(NotificationType)
   type: NotificationType;
 
-  @ApiProperty({ example: 'Inventory out of stock' })
+  @ApiProperty({
+    description: 'Brief title summarizing the notification',
+    example: 'Inventory out of stock',
+  })
   @IsString()
   title: string;
 
-  @ApiProperty({ example: "Inventory item 'Water' is out of stock" })
+  @ApiProperty({
+    description: 'Detailed message content of the notification',
+    example: "Inventory item 'Water' is out of stock",
+  })
   @IsString()
   message: string;
 
-  @ApiProperty({ required: false, example: 1 })
+  @ApiProperty({
+    description:
+      'ID of the related entity this notification refers to (e.g., inventory item ID)',
+    required: false,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   refId?: number;
 
-  @ApiProperty({ required: false, example: 'inventory' })
+  @ApiProperty({
+    description:
+      'Type of the related entity this notification refers to (e.g., inventory, reservation)',
+    required: false,
+    example: 'inventory',
+  })
   @IsOptional()
   @IsString()
   refType?: string;
 
-  @ApiProperty({ example: false })
+  @ApiProperty({
+    description: 'Whether the notification has been read by the user',
+    example: false,
+  })
   @IsBoolean()
   isRead: boolean;
 
-  @ApiProperty({ required: false, nullable: true, example: 1 })
+  @ApiProperty({
+    description:
+      'ID of the user this notification is addressed to (null for broadcast notifications)',
+    required: false,
+    nullable: true,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   userId?: number | null;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the notification was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;

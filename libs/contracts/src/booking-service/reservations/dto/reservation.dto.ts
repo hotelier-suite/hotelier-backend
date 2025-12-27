@@ -17,26 +17,40 @@ import type { RoomDto } from '../../rooms';
 import { BookingChannel, ReservationStatus } from '..';
 
 export class ReservationDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the reservation',
+    example: 1,
+  })
   @IsInt()
   @Min(1)
   id: number;
 
-  @ApiProperty({ example: 'John Smith' })
+  @ApiProperty({
+    description: 'Full name of the guest making the reservation',
+    example: 'John Smith',
+  })
   @IsString()
   @Length(1, 100)
   guestName: string;
 
-  @ApiProperty({ example: 'john.smith@example.com' })
+  @ApiProperty({
+    description: 'Email address of the guest for communication',
+    example: 'john.smith@example.com',
+  })
   @IsEmail()
   guestEmail: string;
 
-  @ApiProperty({ required: false, example: '+1234567890' })
+  @ApiProperty({
+    description: 'Phone number of the guest for contact purposes',
+    required: false,
+    example: '+1234567890',
+  })
   @IsOptional()
   @IsString()
   guestPhone?: string;
 
   @ApiProperty({
+    description: 'Check-in date and time for the reservation',
     type: String,
     format: 'date-time',
     example: '2024-01-15T15:00:00.000Z',
@@ -46,6 +60,7 @@ export class ReservationDto {
   checkInDate: Date;
 
   @ApiProperty({
+    description: 'Check-out date and time for the reservation',
     type: String,
     format: 'date-time',
     example: '2024-01-18T11:00:00.000Z',
@@ -54,83 +69,140 @@ export class ReservationDto {
   @Type(() => Date)
   checkOutDate: Date;
 
-  @ApiProperty({ example: 3, minimum: 1 })
+  @ApiProperty({
+    description: 'Number of nights for the reservation',
+    example: 3,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   nights: number;
 
-  @ApiProperty({ example: 2, minimum: 1 })
+  @ApiProperty({
+    description: 'Number of guests included in the reservation',
+    example: 2,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   guests: number;
 
-  @ApiProperty({ example: 225.5, minimum: 0 })
+  @ApiProperty({
+    description: 'Total amount for the reservation in USD',
+    example: 225.5,
+    minimum: 0,
+  })
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   totalAmount: number;
 
-  @ApiProperty({ required: false, example: 10, minimum: 0, maximum: 100 })
+  @ApiProperty({
+    description: 'Discount percentage applied to the reservation',
+    required: false,
+    example: 10,
+    minimum: 0,
+    maximum: 100,
+  })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @Max(100)
   discountPercent?: number | null;
 
-  @ApiProperty({ required: false, example: 20.0, minimum: 0 })
+  @ApiProperty({
+    description: 'Discount amount in USD applied to the reservation',
+    required: false,
+    example: 20.0,
+    minimum: 0,
+  })
   @IsOptional()
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   discountAmount?: number | null;
 
   @ApiProperty({
+    description: 'Current status of the reservation',
     enum: ReservationStatus,
     example: ReservationStatus.CONFIRMED,
   })
   @IsEnum(ReservationStatus)
   status: ReservationStatus;
 
-  @ApiProperty({ enum: BookingChannel, example: BookingChannel.DIRECT })
+  @ApiProperty({
+    description: 'Channel through which the booking was made',
+    enum: BookingChannel,
+    example: BookingChannel.DIRECT,
+  })
   @IsEnum(BookingChannel)
   channel: BookingChannel;
 
-  @ApiProperty({ required: false, example: 'Anniversary celebration' })
+  @ApiProperty({
+    description: 'Additional notes or special requests for the reservation',
+    required: false,
+    example: 'Anniversary celebration',
+  })
   @IsOptional()
   @IsString()
   @Length(1, 1000)
   notes?: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the reservation was created',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Timestamp when the reservation was last updated',
+    type: String,
+    format: 'date-time',
+  })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;
 
-  @ApiProperty({ required: false, example: 1 })
+  @ApiProperty({
+    description: 'ID of the user who created the reservation',
+    required: false,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   userId?: number;
 
-  @ApiProperty({ example: 101 })
+  @ApiProperty({
+    description: 'ID of the room assigned to this reservation',
+    example: 101,
+  })
   @IsInt()
   @Min(1)
   roomId: number;
 
-  @ApiProperty({ required: false, example: 5 })
+  @ApiProperty({
+    description: 'ID of the guest associated with this reservation',
+    required: false,
+    example: 5,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   guestId?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Room details associated with this reservation',
+    required: false,
+  })
   @IsOptional()
   room?: RoomDto;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Guest details associated with this reservation',
+    required: false,
+  })
   @IsOptional()
   guest?: GuestDto;
 }
