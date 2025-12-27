@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EVENTS_SERVICE_CLIENT } from './constants';
 import { EventsModule } from './events';
+import { BookingsModule } from './bookings';
 import { VenuesModule } from './venues';
 
 @Global()
@@ -23,8 +24,9 @@ import { VenuesModule } from './venues';
       },
     ]),
     EventsModule,
+    BookingsModule,
     VenuesModule,
   ],
-  exports: [ClientsModule, EventsModule, VenuesModule],
+  exports: [ClientsModule, EventsModule, BookingsModule, VenuesModule],
 })
 export class EventsServiceModule {}

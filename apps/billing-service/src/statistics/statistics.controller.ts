@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { StatisticsService } from './statistics.service';
 import {
-  STATISTICS_PATTERNS,
+  BILLING_STATISTICS_PATTERNS,
   FinancialSummaryResponseDto,
   PaymentStatisticsResponseDto,
 } from '@app/contracts/billing-service';
@@ -11,12 +11,12 @@ import {
 export class StatisticsController {
   constructor(private readonly statisticsService: StatisticsService) {}
 
-  @MessagePattern(STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY)
+  @MessagePattern(BILLING_STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY)
   getYearToDateFinancialSummary(): Promise<FinancialSummaryResponseDto> {
     return this.statisticsService.getYearToDateFinancialSummary();
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.FINANCIAL_SUMMARY)
+  @MessagePattern(BILLING_STATISTICS_PATTERNS.FINANCIAL_SUMMARY)
   getFinancialSummary(
     @Payload() payload: { startDate: Date; endDate: Date },
   ): Promise<FinancialSummaryResponseDto> {
@@ -26,7 +26,7 @@ export class StatisticsController {
     );
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.PAYMENTS)
+  @MessagePattern(BILLING_STATISTICS_PATTERNS.PAYMENTS)
   getPaymentStatistics(): Promise<PaymentStatisticsResponseDto> {
     return this.statisticsService.getPaymentStatistics();
   }

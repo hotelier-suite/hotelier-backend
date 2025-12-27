@@ -6,8 +6,8 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  RequestStatus,
-  RequestType,
+  EmployeeRequestStatus,
+  EmployeeRequestType,
 } from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
@@ -39,15 +39,17 @@ export class EmployeeRequestsService {
     );
   }
 
-  findByStatus(status: RequestStatus): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], RequestStatus>(
+  findByStatus(
+    status: EmployeeRequestStatus,
+  ): Observable<EmployeeRequestDto[]> {
+    return this.staffClient.send<EmployeeRequestDto[], EmployeeRequestStatus>(
       EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_STATUS,
       status,
     );
   }
 
-  findByType(type: RequestType): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], RequestType>(
+  findByType(type: EmployeeRequestType): Observable<EmployeeRequestDto[]> {
+    return this.staffClient.send<EmployeeRequestDto[], EmployeeRequestType>(
       EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_TYPE,
       type,
     );

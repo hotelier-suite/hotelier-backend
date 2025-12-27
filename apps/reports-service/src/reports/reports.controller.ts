@@ -7,7 +7,7 @@ import {
   CreateReportDto,
   UpdateReportDto,
   FinancialSummaryDto,
-  OccupancyDataDto,
+  ReportOccupancyDataDto,
   MonthlyRevenueDto,
   ReportType,
   ReportStatus,
@@ -132,7 +132,7 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.GET_OCCUPANCY_BY_MONTH_YEAR)
   getOccupancyByMonthYear(
     @Payload() payload: { year: number; month?: number },
-  ): Promise<OccupancyDataDto[]> {
+  ): Promise<ReportOccupancyDataDto[]> {
     return this.reportsService.getOccupancyByMonthYear(
       payload.year,
       payload.month,
@@ -151,7 +151,7 @@ export class ReportsController {
     @Payload() payload: { year: number; month?: number },
   ): Promise<{
     financialSummary: FinancialSummaryDto;
-    occupancyData: OccupancyDataDto[];
+    occupancyData: ReportOccupancyDataDto[];
     monthlyRevenue: MonthlyRevenueDto[];
     year: number;
     month?: number;

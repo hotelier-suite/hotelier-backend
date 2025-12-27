@@ -16,8 +16,8 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
-  RequestType,
-  RequestStatus,
+  GuestRequestType,
+  GuestRequestStatus,
   RequestPriority,
 } from '@app/contracts/guest-requests-service';
 
@@ -38,12 +38,12 @@ export class GuestRequest {
   @Column()
   guestName: string;
 
-  @IsEnum(RequestType)
+  @IsEnum(GuestRequestType)
   @Column({
     type: 'enum',
-    enum: RequestType,
+    enum: GuestRequestType,
   })
-  type: RequestType;
+  type: GuestRequestType;
 
   @IsString()
   @Length(1, 1000)
@@ -51,13 +51,13 @@ export class GuestRequest {
   description: string;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
+  @IsEnum(GuestRequestStatus)
   @Column({
     type: 'enum',
-    enum: RequestStatus,
-    default: RequestStatus.PENDING,
+    enum: GuestRequestStatus,
+    default: GuestRequestStatus.PENDING,
   })
-  status?: RequestStatus;
+  status?: GuestRequestStatus;
 
   @IsOptional()
   @IsEnum(RequestPriority)

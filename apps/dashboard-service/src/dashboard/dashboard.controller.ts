@@ -3,12 +3,12 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DashboardService } from './dashboard.service';
 import {
   WIDGETS_PATTERNS,
-  STATISTICS_PATTERNS,
+  DASHBOARD_STATISTICS_PATTERNS,
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
   DashboardStatsDto,
-  OccupancyDataDto,
+  DashboardOccupancyDataDto,
   RevenueDataDto,
   RecentActivityDto,
   TopPerformingRoomDto,
@@ -54,27 +54,27 @@ export class DashboardController {
   }
 
   // Statistics patterns
-  @MessagePattern(STATISTICS_PATTERNS.GET_STATS)
+  @MessagePattern(DASHBOARD_STATISTICS_PATTERNS.GET_STATS)
   getDashboardStats(@Payload() userId: number): Promise<DashboardStatsDto> {
     return this.dashboardService.getDashboardStats(userId);
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.GET_OCCUPANCY)
-  getOccupancyData(): Promise<OccupancyDataDto[]> {
+  @MessagePattern(DASHBOARD_STATISTICS_PATTERNS.GET_OCCUPANCY)
+  getOccupancyData(): Promise<DashboardOccupancyDataDto[]> {
     return this.dashboardService.getOccupancyData();
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.GET_REVENUE)
+  @MessagePattern(DASHBOARD_STATISTICS_PATTERNS.GET_REVENUE)
   getRevenueData(@Payload() userId: number): Promise<RevenueDataDto[]> {
     return this.dashboardService.getRevenueData(userId);
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.GET_TOP_ROOMS)
+  @MessagePattern(DASHBOARD_STATISTICS_PATTERNS.GET_TOP_ROOMS)
   getTopPerformingRooms(): Promise<TopPerformingRoomDto[]> {
     return this.dashboardService.getTopPerformingRooms();
   }
 
-  @MessagePattern(STATISTICS_PATTERNS.GET_RECENT_ACTIVITIES)
+  @MessagePattern(DASHBOARD_STATISTICS_PATTERNS.GET_RECENT_ACTIVITIES)
   getRecentActivities(@Payload() userId: number): Promise<RecentActivityDto[]> {
     return this.dashboardService.getRecentActivities(userId);
   }

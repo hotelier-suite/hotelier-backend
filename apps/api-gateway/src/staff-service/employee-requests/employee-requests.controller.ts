@@ -22,8 +22,8 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  RequestType,
-  RequestStatus,
+  EmployeeRequestType,
+  EmployeeRequestStatus,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -105,8 +105,8 @@ export class EmployeeRequestsController {
   @ApiParam({
     name: 'status',
     description: 'Request status',
-    enum: RequestStatus,
-    example: RequestStatus.PENDING,
+    enum: EmployeeRequestStatus,
+    example: EmployeeRequestStatus.PENDING,
   })
   @ApiResponse({
     status: 200,
@@ -114,7 +114,7 @@ export class EmployeeRequestsController {
     type: [EmployeeRequestDto],
   })
   findByStatus(
-    @Param('status') status: RequestStatus,
+    @Param('status') status: EmployeeRequestStatus,
   ): Observable<EmployeeRequestDto[]> {
     return this.employeeRequestsService.findByStatus(status);
   }
@@ -127,8 +127,8 @@ export class EmployeeRequestsController {
   @ApiParam({
     name: 'type',
     description: 'Request type',
-    enum: RequestType,
-    example: RequestType.VACATION,
+    enum: EmployeeRequestType,
+    example: EmployeeRequestType.VACATION,
   })
   @ApiResponse({
     status: 200,
@@ -136,7 +136,7 @@ export class EmployeeRequestsController {
     type: [EmployeeRequestDto],
   })
   findByType(
-    @Param('type') type: RequestType,
+    @Param('type') type: EmployeeRequestType,
   ): Observable<EmployeeRequestDto[]> {
     return this.employeeRequestsService.findByType(type);
   }

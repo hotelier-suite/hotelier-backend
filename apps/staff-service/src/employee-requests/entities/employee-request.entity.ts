@@ -17,7 +17,10 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RequestType, RequestStatus } from '@app/contracts/staff-service';
+import {
+  EmployeeRequestType,
+  EmployeeRequestStatus,
+} from '@app/contracts/staff-service';
 import { Employee } from '../../employees';
 
 @Entity('employee_requests')
@@ -27,12 +30,12 @@ export class EmployeeRequest {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @IsEnum(RequestType)
+  @IsEnum(EmployeeRequestType)
   @Column({
     type: 'enum',
-    enum: RequestType,
+    enum: EmployeeRequestType,
   })
-  type: RequestType;
+  type: EmployeeRequestType;
 
   @IsString()
   @Length(1, 500)
@@ -52,13 +55,13 @@ export class EmployeeRequest {
   @Column()
   days: number;
 
-  @IsEnum(RequestStatus)
+  @IsEnum(EmployeeRequestStatus)
   @Column({
     type: 'enum',
-    enum: RequestStatus,
-    default: RequestStatus.PENDING,
+    enum: EmployeeRequestStatus,
+    default: EmployeeRequestStatus.PENDING,
   })
-  status: RequestStatus;
+  status: EmployeeRequestStatus;
 
   @IsOptional()
   @IsString()

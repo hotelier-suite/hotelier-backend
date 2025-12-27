@@ -17,7 +17,7 @@ export class CreateUserDto {
     example: 'admin@hotelier.com',
   })
   @IsEmail()
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: string }) => value?.toLowerCase().trim())
   email!: string;
 
   @ApiProperty({
@@ -32,7 +32,7 @@ export class CreateUserDto {
     example: 'System Administrator',
   })
   @IsString()
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   name!: string;
 
   @ApiProperty({

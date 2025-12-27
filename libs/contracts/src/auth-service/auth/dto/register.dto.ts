@@ -16,7 +16,7 @@ export class RegisterDto {
     example: 'john.doe@hotelier.com',
   })
   @IsEmail()
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: string }) => value?.toLowerCase().trim())
   email!: string;
 
   @ApiProperty({
@@ -45,7 +45,7 @@ export class RegisterDto {
     example: 'John Doe',
   })
   @IsString()
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   name!: string;
 
   @ApiProperty({

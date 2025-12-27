@@ -6,8 +6,8 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  RequestType,
-  RequestStatus,
+  EmployeeRequestType,
+  EmployeeRequestStatus,
 } from '@app/contracts/staff-service';
 import { EmployeeRequest } from './entities';
 import { Employee } from '../employees';
@@ -52,7 +52,7 @@ export class EmployeeRequestsService {
     });
   }
 
-  findByStatus(status: RequestStatus): Promise<EmployeeRequestDto[]> {
+  findByStatus(status: EmployeeRequestStatus): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestRepository.find({
       where: { status },
       relations: { employee: true },
@@ -60,7 +60,7 @@ export class EmployeeRequestsService {
     });
   }
 
-  findByType(type: RequestType): Promise<EmployeeRequestDto[]> {
+  findByType(type: EmployeeRequestType): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestRepository.find({
       where: { type },
       relations: { employee: true },
@@ -105,7 +105,7 @@ export class EmployeeRequestsService {
       startDate: data.startDate,
       endDate: data.endDate,
       days: data.days,
-      status: RequestStatus.PENDING,
+      status: EmployeeRequestStatus.PENDING,
     });
 
     const savedRequest = await this.employeeRequestRepository.save(request);
@@ -126,14 +126,14 @@ export class EmployeeRequestsService {
 
   approve(id: number, approvedBy: string): Promise<EmployeeRequestDto> {
     return this.update(id, {
-      status: RequestStatus.APPROVED,
+      status: EmployeeRequestStatus.APPROVED,
       approvedBy,
     });
   }
 
   reject(id: number): Promise<EmployeeRequestDto> {
     return this.update(id, {
-      status: RequestStatus.REJECTED,
+      status: EmployeeRequestStatus.REJECTED,
     });
   }
 

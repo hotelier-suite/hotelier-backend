@@ -9,7 +9,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RequestType } from '..';
+import { EmployeeRequestType } from '..';
 
 export class CreateEmployeeRequestDto {
   @ApiProperty({
@@ -22,11 +22,11 @@ export class CreateEmployeeRequestDto {
 
   @ApiProperty({
     description: 'Type of request',
-    enum: RequestType,
-    example: RequestType.VACATION,
+    enum: EmployeeRequestType,
+    example: EmployeeRequestType.VACATION,
   })
-  @IsEnum(RequestType)
-  type: RequestType;
+  @IsEnum(EmployeeRequestType)
+  type: EmployeeRequestType;
 
   @ApiProperty({
     description: 'Reason for the request',

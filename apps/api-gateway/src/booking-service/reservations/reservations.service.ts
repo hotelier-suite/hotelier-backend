@@ -26,7 +26,7 @@ import {
   RoomServiceOrderDto,
 } from '@app/contracts/restaurant-service';
 import {
-  EVENTS_PATTERNS,
+  EVENT_BOOKINGS_PATTERNS,
   EventBookingDto,
 } from '@app/contracts/events-service';
 
@@ -142,7 +142,7 @@ export class ReservationsService {
         .send<
           EventBookingDto[],
           Record<string, never>
-        >(EVENTS_PATTERNS.FIND_ALL_BOOKINGS, {})
+        >(EVENT_BOOKINGS_PATTERNS.FIND_ALL, {})
         .pipe(catchError(() => of([] as EventBookingDto[]))),
     );
 

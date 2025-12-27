@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
-import { EventBooking } from '../../events';
+import { EventBooking } from '../../bookings';
 
 @Entity('venues')
 export class Venue {

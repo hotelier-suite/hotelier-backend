@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { RequestStatus } from '..';
+import { EmployeeRequestStatus } from '..';
 
 export class UpdateEmployeeRequestDto {
   @ApiProperty({
     description: 'Status of the request',
-    enum: RequestStatus,
-    example: RequestStatus.APPROVED,
+    enum: EmployeeRequestStatus,
+    example: EmployeeRequestStatus.APPROVED,
     required: false,
   })
   @IsOptional()
-  @IsEnum(RequestStatus)
-  status?: RequestStatus;
+  @IsEnum(EmployeeRequestStatus)
+  status?: EmployeeRequestStatus;
 
   @ApiProperty({
     description: 'Name of person who approved/rejected the request',

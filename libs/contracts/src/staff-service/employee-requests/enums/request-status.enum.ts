@@ -1,4 +1,4 @@
-export enum RequestStatus {
+export enum EmployeeRequestStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',

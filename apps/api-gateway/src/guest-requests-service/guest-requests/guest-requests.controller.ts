@@ -24,7 +24,7 @@ import {
   GuestRequestDto,
   UpdateGuestRequestDto,
   RequestPriority,
-  RequestStatus,
+  GuestRequestStatus,
 } from '@app/contracts/guest-requests-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -67,7 +67,7 @@ export class GuestRequestsController {
   @ApiQuery({
     name: 'status',
     required: false,
-    enum: RequestStatus,
+    enum: GuestRequestStatus,
     description: 'Filter requests by status',
   })
   @ApiResponse({
@@ -76,7 +76,7 @@ export class GuestRequestsController {
     type: [GuestRequestDto],
   })
   findAll(
-    @Query('status') status?: RequestStatus,
+    @Query('status') status?: GuestRequestStatus,
   ): Observable<GuestRequestDto[]> {
     if (status) {
       return this.guestRequestsService.findByStatus(status);

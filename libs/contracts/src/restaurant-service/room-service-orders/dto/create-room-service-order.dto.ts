@@ -19,7 +19,7 @@ export class CreateRoomServiceOrderDto {
   })
   @IsString()
   @Length(1, 10)
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   room: string;
 
   @ApiProperty({
@@ -28,7 +28,7 @@ export class CreateRoomServiceOrderDto {
   })
   @IsString()
   @Length(1, 100)
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   guest: string;
 
   @ApiProperty({

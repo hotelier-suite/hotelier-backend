@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsSeeder } from './events.seeder';
-import { EventBookingsSeeder } from './event-bookings.seeder';
-import { Event, EventBooking } from '../entities';
-import { Venue } from '../../venues';
+import { Event } from '../entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event, EventBooking, Venue])],
-  providers: [EventsSeeder, EventBookingsSeeder],
-  exports: [EventsSeeder, EventBookingsSeeder],
+  imports: [TypeOrmModule.forFeature([Event])],
+  providers: [EventsSeeder],
+  exports: [EventsSeeder],
 })
 export class EventsSeedersModule {}

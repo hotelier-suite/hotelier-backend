@@ -8,7 +8,7 @@ import {
   GuestRequestDto,
   UpdateGuestRequestDto,
   RequestPriority,
-  RequestStatus,
+  GuestRequestStatus,
 } from '@app/contracts/guest-requests-service';
 import { GUEST_REQUESTS_SERVICE_CLIENT } from '../constants';
 
@@ -40,8 +40,8 @@ export class GuestRequestsService {
     );
   }
 
-  findByStatus(status: RequestStatus): Observable<GuestRequestDto[]> {
-    return this.guestRequestsClient.send<GuestRequestDto[], RequestStatus>(
+  findByStatus(status: GuestRequestStatus): Observable<GuestRequestDto[]> {
+    return this.guestRequestsClient.send<GuestRequestDto[], GuestRequestStatus>(
       GUEST_REQUESTS_PATTERNS.FIND_BY_STATUS,
       status,
     );
@@ -57,7 +57,7 @@ export class GuestRequestsService {
   }
 
   getPendingRequests(): Observable<GuestRequestDto[]> {
-    return this.findByStatus(RequestStatus.PENDING).pipe(
+    return this.findByStatus(GuestRequestStatus.PENDING).pipe(
       map((requests) =>
         requests.sort((a, b) => {
           const aTime = new Date(a.createdAt).getTime();
@@ -88,7 +88,7 @@ export class GuestRequestsService {
 
   markAsCompleted(id: number): Observable<GuestRequestDto> {
     return this.update(id, {
-      status: RequestStatus.COMPLETED,
+      status: GuestRequestStatus.COMPLETED,
       completedAt: new Date(),
     });
   }
@@ -96,12 +96,12 @@ export class GuestRequestsService {
   assignTo(id: number, assignedTo: string): Observable<GuestRequestDto> {
     return this.update(id, {
       assignedTo,
-      status: RequestStatus.IN_PROGRESS,
+      status: GuestRequestStatus.IN_PROGRESS,
     });
   }
 
-  countByStatus(status: RequestStatus): Observable<number> {
-    return this.guestRequestsClient.send<number, RequestStatus>(
+  countByStatus(status: GuestRequestStatus): Observable<number> {
+    return this.guestRequestsClient.send<number, GuestRequestStatus>(
       GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS,
       status,
     );

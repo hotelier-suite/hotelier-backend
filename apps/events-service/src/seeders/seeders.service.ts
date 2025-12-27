@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { VenuesSeeder } from '../venues';
-import { EventsSeeder, EventBookingsSeeder } from '../events';
+import { EventsSeeder } from '../events';
+import { BookingsSeeder } from '../bookings';
 
 @Injectable()
 export class SeedersService {
   constructor(
     private readonly venuesSeeder: VenuesSeeder,
     private readonly eventsSeeder: EventsSeeder,
-    private readonly eventBookingsSeeder: EventBookingsSeeder,
+    private readonly bookingsSeeder: BookingsSeeder,
   ) {}
 
   async seed(): Promise<void> {
@@ -19,7 +20,7 @@ export class SeedersService {
     await this.eventsSeeder.seed();
     console.log('✅ Events seeded');
 
-    await this.eventBookingsSeeder.seed();
+    await this.bookingsSeeder.seed();
     console.log('✅ Event bookings seeded');
 
     console.log('🎉 Events Service seeding completed!');

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsNumber, Max, Min } from 'class-validator';
 
-export class OccupancyDataDto {
+export class ReportOccupancyDataDto {
   @ApiProperty({ description: 'Date', type: String, example: '2024-01-15' })
   @IsDate()
   @Type(() => Date)

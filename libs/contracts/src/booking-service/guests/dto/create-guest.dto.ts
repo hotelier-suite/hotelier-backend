@@ -11,12 +11,12 @@ import {
 export class CreateGuestDto {
   @ApiProperty({ example: 'John Smith' })
   @IsString()
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   name: string;
 
   @ApiProperty({ example: 'john.smith@example.com' })
   @IsEmail()
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: string }) => value?.toLowerCase().trim())
   email: string;
 
   @ApiProperty({ required: false, example: '+1234567890' })

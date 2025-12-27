@@ -11,11 +11,11 @@ import {
   ReportStatus,
   ReportDto,
   FinancialSummaryDto,
-  OccupancyDataDto,
+  ReportOccupancyDataDto,
   MonthlyRevenueDto,
 } from '@app/contracts/reports-service';
 import {
-  STATISTICS_PATTERNS,
+  BILLING_STATISTICS_PATTERNS,
   INVOICES_PATTERNS,
   FinancialSummaryResponseDto,
   InvoiceDto,
@@ -172,7 +172,7 @@ export class ReportsService {
           .send<
             FinancialSummaryResponseDto,
             { startDate: Date; endDate: Date }
-          >(STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
+          >(BILLING_STATISTICS_PATTERNS.FINANCIAL_SUMMARY, {
             startDate,
             endDate,
           })
@@ -326,7 +326,7 @@ export class ReportsService {
   async getOccupancyByMonthYear(
     year: number,
     month?: number,
-  ): Promise<OccupancyDataDto[]> {
+  ): Promise<ReportOccupancyDataDto[]> {
     // Query booking-service for rooms and reservations
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
@@ -401,24 +401,24 @@ export class ReportsService {
   private generateEmptyOccupancyData(
     year: number,
     month?: number,
-  ): OccupancyDataDto[] {
+  ): ReportOccupancyDataDto[] {
     if (month) {
-      // Return daily data for the specific month
       const daysInMonth = new Date(year, month, 0).getDate();
       return Array.from({ length: daysInMonth }).map((_, idx) => {
         const date = new Date(year, month - 1, idx + 1);
+        date.setHours(0, 0, 0, 0);
         return {
-          date: date.toISOString().split('T')[0],
+          date,
           occupancyPercentage: 0,
           totalRevenue: 0,
         };
       });
     } else {
-      // Return monthly data for the entire year
       return Array.from({ length: 12 }).map((_, idx) => {
         const date = new Date(year, idx, 1);
+        date.setHours(0, 0, 0, 0);
         return {
-          date: date.toISOString().split('T')[0],
+          date,
           occupancyPercentage: 0,
           totalRevenue: 0,
         };
@@ -477,7 +477,7 @@ export class ReportsService {
     totalRooms: number,
     year: number,
     month?: number,
-  ): OccupancyDataDto[] {
+  ): ReportOccupancyDataDto[] {
     if (month) {
       // Calculate daily occupancy for the specific month
       return this.calculateDailyOccupancy(
@@ -500,9 +500,9 @@ export class ReportsService {
     totalRooms: number,
     year: number,
     month: number,
-  ): OccupancyDataDto[] {
+  ): ReportOccupancyDataDto[] {
     const daysInMonth = new Date(year, month, 0).getDate();
-    const results: OccupancyDataDto[] = [];
+    const results: ReportOccupancyDataDto[] = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month - 1, day);
@@ -511,14 +511,12 @@ export class ReportsService {
       const dayEnd = new Date(currentDate);
       dayEnd.setHours(23, 59, 59, 999);
 
-      // Count reservations that overlap with this day
       const occupiedRooms = this.countOccupiedRooms(
         reservations,
         dayStart,
         dayEnd,
       );
 
-      // Calculate revenue for this day
       const dailyRevenue = this.calculateDailyRevenue(
         reservations,
         dayStart,
@@ -534,7 +532,7 @@ export class ReportsService {
       );
 
       results.push({
-        date: currentDate.toISOString().split('T')[0],
+        date: dayStart,
         occupancyPercentage,
         totalRevenue: Math.round(dailyRevenue * 100) / 100,
       });
@@ -550,25 +548,23 @@ export class ReportsService {
     reservations: ReservationDto[],
     totalRooms: number,
     year: number,
-  ): OccupancyDataDto[] {
-    const results: OccupancyDataDto[] = [];
+  ): ReportOccupancyDataDto[] {
+    const results: ReportOccupancyDataDto[] = [];
 
     for (let monthIdx = 0; monthIdx < 12; monthIdx++) {
       const monthStart = new Date(year, monthIdx, 1);
+      monthStart.setHours(0, 0, 0, 0);
       const monthEnd = new Date(year, monthIdx + 1, 0, 23, 59, 59, 999);
       const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
 
-      // Calculate total room-nights available
       const totalRoomNights = totalRooms * daysInMonth;
 
-      // Calculate occupied room-nights for the month
       const occupiedRoomNights = this.calculateOccupiedRoomNights(
         reservations,
         monthStart,
         monthEnd,
       );
 
-      // Calculate revenue for this month
       const monthlyRevenue = this.calculateMonthlyRevenue(
         reservations,
         monthStart,
@@ -588,7 +584,7 @@ export class ReportsService {
           : 0;
 
       results.push({
-        date: monthStart.toISOString().split('T')[0],
+        date: monthStart,
         occupancyPercentage,
         totalRevenue: Math.round(monthlyRevenue * 100) / 100,
       });
@@ -841,7 +837,7 @@ export class ReportsService {
     month?: number,
   ): Promise<{
     financialSummary: FinancialSummaryDto;
-    occupancyData: OccupancyDataDto[];
+    occupancyData: ReportOccupancyDataDto[];
     monthlyRevenue: MonthlyRevenueDto[];
     year: number;
     month?: number;

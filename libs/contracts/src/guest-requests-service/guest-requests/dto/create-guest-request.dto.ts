@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { RequestPriority, RequestStatus, RequestType } from '..';
+import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
 
 export class CreateGuestRequestDto {
   @ApiProperty({ example: '301' })
@@ -14,9 +14,9 @@ export class CreateGuestRequestDto {
   @Length(1, 100)
   guestName: string;
 
-  @ApiProperty({ enum: RequestType, example: RequestType.TOWELS })
-  @IsEnum(RequestType)
-  type: RequestType;
+  @ApiProperty({ enum: GuestRequestType, example: GuestRequestType.TOWELS })
+  @IsEnum(GuestRequestType)
+  type: GuestRequestType;
 
   @ApiProperty({
     example: 'Please provide extra bath towels and pool towels for family of 4',
@@ -27,12 +27,12 @@ export class CreateGuestRequestDto {
 
   @ApiProperty({
     required: false,
-    enum: RequestStatus,
-    example: RequestStatus.PENDING,
+    enum: GuestRequestStatus,
+    example: GuestRequestStatus.PENDING,
   })
   @IsOptional()
-  @IsEnum(RequestStatus)
-  status?: RequestStatus;
+  @IsEnum(GuestRequestStatus)
+  status?: GuestRequestStatus;
 
   @ApiProperty({
     required: false,

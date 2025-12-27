@@ -8,7 +8,7 @@ export class LoginDto {
     example: 'admin@hotelier.com',
   })
   @IsEmail()
-  @Transform(({ value }) => value?.toLowerCase().trim())
+  @Transform(({ value }: { value: string }) => value?.toLowerCase().trim())
   email!: string;
 
   @ApiProperty({

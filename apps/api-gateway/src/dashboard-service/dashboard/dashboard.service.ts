@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { DASHBOARD_SERVICE_CLIENT } from '../constants';
 import {
   WIDGETS_PATTERNS,
-  STATISTICS_PATTERNS,
+  DASHBOARD_STATISTICS_PATTERNS,
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
   DashboardStatsDto,
-  OccupancyDataDto,
+  DashboardOccupancyDataDto,
   RevenueDataDto,
   RecentActivityDto,
   TopPerformingRoomDto,
@@ -71,21 +71,21 @@ export class DashboardService {
   // Statistics operations
   getDashboardStats(userId: number): Observable<DashboardStatsDto> {
     return this.dashboardClient.send<DashboardStatsDto, number>(
-      STATISTICS_PATTERNS.GET_STATS,
+      DASHBOARD_STATISTICS_PATTERNS.GET_STATS,
       userId,
     );
   }
 
-  getOccupancyData(): Observable<OccupancyDataDto[]> {
-    return this.dashboardClient.send<OccupancyDataDto[], Record<string, never>>(
-      STATISTICS_PATTERNS.GET_OCCUPANCY,
-      {},
-    );
+  getOccupancyData(): Observable<DashboardOccupancyDataDto[]> {
+    return this.dashboardClient.send<
+      DashboardOccupancyDataDto[],
+      Record<string, never>
+    >(DASHBOARD_STATISTICS_PATTERNS.GET_OCCUPANCY, {});
   }
 
   getRevenueData(userId: number): Observable<RevenueDataDto[]> {
     return this.dashboardClient.send<RevenueDataDto[], number>(
-      STATISTICS_PATTERNS.GET_REVENUE,
+      DASHBOARD_STATISTICS_PATTERNS.GET_REVENUE,
       userId,
     );
   }
@@ -94,12 +94,12 @@ export class DashboardService {
     return this.dashboardClient.send<
       TopPerformingRoomDto[],
       Record<string, never>
-    >(STATISTICS_PATTERNS.GET_TOP_ROOMS, {});
+    >(DASHBOARD_STATISTICS_PATTERNS.GET_TOP_ROOMS, {});
   }
 
   getRecentActivities(userId: number): Observable<RecentActivityDto[]> {
     return this.dashboardClient.send<RecentActivityDto[], number>(
-      STATISTICS_PATTERNS.GET_RECENT_ACTIVITIES,
+      DASHBOARD_STATISTICS_PATTERNS.GET_RECENT_ACTIVITIES,
       userId,
     );
   }

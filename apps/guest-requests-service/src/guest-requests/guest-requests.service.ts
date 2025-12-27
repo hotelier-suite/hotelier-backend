@@ -7,7 +7,7 @@ import {
   GuestRequestDto,
   UpdateGuestRequestDto,
   RequestPriority,
-  RequestStatus,
+  GuestRequestStatus,
 } from '@app/contracts/guest-requests-service';
 import { GuestRequest } from './entities';
 
@@ -39,7 +39,7 @@ export class GuestRequestsService {
     return request;
   }
 
-  findByStatus(status: RequestStatus): Promise<GuestRequestDto[]> {
+  findByStatus(status: GuestRequestStatus): Promise<GuestRequestDto[]> {
     return this.guestRequestRepository.find({
       where: { status },
       order: { createdAt: 'DESC' },
@@ -84,7 +84,7 @@ export class GuestRequestsService {
     return request;
   }
 
-  countByStatus(status: RequestStatus): Promise<number> {
+  countByStatus(status: GuestRequestStatus): Promise<number> {
     return this.guestRequestRepository.count({
       where: { status },
     });

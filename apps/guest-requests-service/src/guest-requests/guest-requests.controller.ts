@@ -7,7 +7,7 @@ import {
   GuestRequestDto,
   UpdateGuestRequestDto,
   RequestPriority,
-  RequestStatus,
+  GuestRequestStatus,
 } from '@app/contracts/guest-requests-service';
 
 @Controller()
@@ -25,7 +25,9 @@ export class GuestRequestsController {
   }
 
   @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_BY_STATUS)
-  findByStatus(@Payload() status: RequestStatus): Promise<GuestRequestDto[]> {
+  findByStatus(
+    @Payload() status: GuestRequestStatus,
+  ): Promise<GuestRequestDto[]> {
     return this.guestRequestsService.findByStatus(status);
   }
 
@@ -54,7 +56,7 @@ export class GuestRequestsController {
   }
 
   @MessagePattern(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS)
-  countByStatus(@Payload() status: RequestStatus): Promise<number> {
+  countByStatus(@Payload() status: GuestRequestStatus): Promise<number> {
     return this.guestRequestsService.countByStatus(status);
   }
 

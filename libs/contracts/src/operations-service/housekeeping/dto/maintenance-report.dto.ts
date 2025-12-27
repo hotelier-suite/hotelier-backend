@@ -10,11 +10,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import {
-  HousekeepingMaintenanceType,
-  HousekeepingMaintenanceStatus,
-  TaskPriority,
-} from '..';
+import { HousekeepingMaintenanceType, HousekeepingMaintenanceStatus } from '..';
+import { TaskPriority } from '@app/contracts/common';
 
 export class MaintenanceReportDto {
   @ApiProperty({

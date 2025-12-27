@@ -8,7 +8,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { TaskPriority } from '..';
+import { TaskPriority } from '@app/contracts/common';
 
 export class CreateCleaningTaskDto {
   @ApiProperty({ description: 'Room number to be cleaned', example: '101' })

@@ -1,4 +1,4 @@
-export const STATISTICS_PATTERNS = {
+export const DASHBOARD_STATISTICS_PATTERNS = {
   GET_STATS: 'dashboard.stats.get',
   GET_OCCUPANCY: 'dashboard.stats.occupancy',
   GET_REVENUE: 'dashboard.stats.revenue',

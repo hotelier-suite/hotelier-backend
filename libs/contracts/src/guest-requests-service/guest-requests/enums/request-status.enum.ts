@@ -1,4 +1,4 @@
-export enum RequestStatus {
+export enum GuestRequestStatus {
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',

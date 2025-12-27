@@ -5,8 +5,8 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  RequestStatus,
-  RequestType,
+  EmployeeRequestStatus,
+  EmployeeRequestType,
 } from '@app/contracts/staff-service';
 import { EmployeeRequestsService } from './employee-requests.service';
 
@@ -33,13 +33,15 @@ export class EmployeeRequestsController {
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_STATUS)
   findByStatus(
-    @Payload() status: RequestStatus,
+    @Payload() status: EmployeeRequestStatus,
   ): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestsService.findByStatus(status);
   }
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_TYPE)
-  findByType(@Payload() type: RequestType): Promise<EmployeeRequestDto[]> {
+  findByType(
+    @Payload() type: EmployeeRequestType,
+  ): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestsService.findByType(type);
   }
 

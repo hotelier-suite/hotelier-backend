@@ -10,7 +10,8 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { CleaningStatus, TaskPriority } from '..';
+import { CleaningStatus } from '..';
+import { TaskPriority } from '@app/contracts/common';
 
 export class CleaningTaskDto {
   @ApiProperty({

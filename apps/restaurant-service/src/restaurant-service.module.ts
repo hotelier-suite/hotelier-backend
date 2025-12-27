@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database';
-import { RestaurantModule } from './restaurant';
+import { MenuItemsModule } from './menu-items';
+import { RoomServiceOrdersModule } from './room-service-orders';
+import { BeverageInventoryModule } from './beverage-inventory';
 import { SeedersModule } from './seeders';
 
 @Module({
@@ -11,7 +13,9 @@ import { SeedersModule } from './seeders';
       envFilePath: '.env',
     }),
     DatabaseModule,
-    RestaurantModule,
+    MenuItemsModule,
+    RoomServiceOrdersModule,
+    BeverageInventoryModule,
     SeedersModule,
   ],
 })

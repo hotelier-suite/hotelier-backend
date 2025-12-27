@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import type { EmployeeDto } from '../../employees';
-import { RequestStatus, RequestType } from '..';
+import { EmployeeRequestStatus, EmployeeRequestType } from '..';
 
 export class EmployeeRequestDto {
   @ApiProperty({ example: 1 })
@@ -19,9 +19,12 @@ export class EmployeeRequestDto {
   @Min(1)
   id: number;
 
-  @ApiProperty({ enum: RequestType, example: RequestType.VACATION })
-  @IsEnum(RequestType)
-  type: RequestType;
+  @ApiProperty({
+    enum: EmployeeRequestType,
+    example: EmployeeRequestType.VACATION,
+  })
+  @IsEnum(EmployeeRequestType)
+  type: EmployeeRequestType;
 
   @ApiProperty({ example: 'Family vacation' })
   @IsString()
@@ -43,9 +46,12 @@ export class EmployeeRequestDto {
   @Min(1)
   days: number;
 
-  @ApiProperty({ enum: RequestStatus, example: RequestStatus.PENDING })
-  @IsEnum(RequestStatus)
-  status: RequestStatus;
+  @ApiProperty({
+    enum: EmployeeRequestStatus,
+    example: EmployeeRequestStatus.PENDING,
+  })
+  @IsEnum(EmployeeRequestStatus)
+  status: EmployeeRequestStatus;
 
   @ApiProperty({ required: false, example: 'Manager Smith' })
   @IsOptional()

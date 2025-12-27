@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MenuItem } from '../../restaurant';
+import { MenuItem } from '../../menu-items';
 
 @Injectable()
 export class MenuItemsSeeder {

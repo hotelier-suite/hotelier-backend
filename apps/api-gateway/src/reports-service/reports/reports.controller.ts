@@ -29,7 +29,7 @@ import {
   CreateReportDto,
   UpdateReportDto,
   FinancialSummaryDto,
-  OccupancyDataDto,
+  ReportOccupancyDataDto,
   MonthlyRevenueDto,
   ReportType,
   ReportStatus,
@@ -173,12 +173,12 @@ export class ReportsController {
   @ApiResponse({
     status: 200,
     description: 'Occupancy data retrieved successfully',
-    type: [OccupancyDataDto],
+    type: [ReportOccupancyDataDto],
   })
   getOccupancyByMonthYear(
     @Query('year', ParseIntPipe) year: number,
     @Query('month', new ParseIntPipe({ optional: true })) month?: number,
-  ): Observable<OccupancyDataDto[]> {
+  ): Observable<ReportOccupancyDataDto[]> {
     return this.reportsService.getOccupancyByMonthYear(year, month);
   }
 

@@ -1,7 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OPERATIONS_SERVICE_CLIENT } from './constants';
-import { HousekeepingModule } from './housekeeping';
+import { CleaningTasksModule } from './cleaning-tasks';
+import { CleaningAssignmentsModule } from './cleaning-assignments';
+import { MaintenanceReportsModule } from './maintenance-reports';
+import { MaintenanceRequestsModule } from './maintenance-requests/maintenance-requests.module';
+import { StatisticsModule } from './statistics';
 import { MaintenanceModule } from './maintenance';
 
 @Global()
@@ -22,9 +26,21 @@ import { MaintenanceModule } from './maintenance';
         },
       },
     ]),
-    HousekeepingModule,
+    CleaningTasksModule,
+    CleaningAssignmentsModule,
+    MaintenanceReportsModule,
+    MaintenanceRequestsModule,
+    StatisticsModule,
     MaintenanceModule,
   ],
-  exports: [ClientsModule, HousekeepingModule, MaintenanceModule],
+  exports: [
+    ClientsModule,
+    CleaningTasksModule,
+    CleaningAssignmentsModule,
+    MaintenanceReportsModule,
+    MaintenanceRequestsModule,
+    StatisticsModule,
+    MaintenanceModule,
+  ],
 })
 export class OperationsServiceModule {}

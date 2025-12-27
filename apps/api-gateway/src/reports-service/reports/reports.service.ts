@@ -10,7 +10,7 @@ import {
   ReportType,
   ReportStatus,
   FinancialSummaryDto,
-  OccupancyDataDto,
+  ReportOccupancyDataDto,
   MonthlyRevenueDto,
 } from '@app/contracts/reports-service';
 
@@ -148,9 +148,9 @@ export class ReportsService {
   getOccupancyByMonthYear(
     year: number,
     month?: number,
-  ): Observable<OccupancyDataDto[]> {
+  ): Observable<ReportOccupancyDataDto[]> {
     return this.reportsClient.send<
-      OccupancyDataDto[],
+      ReportOccupancyDataDto[],
       { year: number; month?: number }
     >(REPORTS_PATTERNS.GET_OCCUPANCY_BY_MONTH_YEAR, { year, month });
   }
@@ -167,7 +167,7 @@ export class ReportsService {
     month?: number,
   ): Observable<{
     financialSummary: FinancialSummaryDto;
-    occupancyData: OccupancyDataDto[];
+    occupancyData: ReportOccupancyDataDto[];
     monthlyRevenue: MonthlyRevenueDto[];
     year: number;
     month?: number;
@@ -175,7 +175,7 @@ export class ReportsService {
     return this.reportsClient.send<
       {
         financialSummary: FinancialSummaryDto;
-        occupancyData: OccupancyDataDto[];
+        occupancyData: ReportOccupancyDataDto[];
         monthlyRevenue: MonthlyRevenueDto[];
         year: number;
         month?: number;

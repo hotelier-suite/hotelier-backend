@@ -6,7 +6,9 @@ import {
   RoomServiceOrdersSeeder,
   BeverageInventorySeeder,
 } from './domains';
-import { MenuItem, RoomServiceOrder, BeverageInventory } from '../restaurant';
+import { MenuItem } from '../menu-items';
+import { RoomServiceOrder } from '../room-service-orders';
+import { BeverageInventory } from '../beverage-inventory';
 
 @Module({
   imports: [

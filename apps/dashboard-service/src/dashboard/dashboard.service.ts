@@ -10,7 +10,7 @@ import {
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
   DashboardStatsDto,
-  OccupancyDataDto,
+  DashboardOccupancyDataDto,
   RevenueDataDto,
   RecentActivityDto,
   TopPerformingRoomDto,
@@ -22,18 +22,18 @@ import {
   ReservationDto,
 } from '@app/contracts/booking-service';
 import {
-  STATISTICS_PATTERNS,
+  BILLING_STATISTICS_PATTERNS,
   INVOICES_PATTERNS,
   FinancialSummaryResponseDto,
   InvoiceDto,
 } from '@app/contracts/billing-service';
 import {
-  HOUSEKEEPING_PATTERNS,
+  CLEANING_ASSIGNMENTS_PATTERNS,
   CleaningAssignmentDto,
 } from '@app/contracts/operations-service';
 import {
   GUEST_REQUESTS_PATTERNS,
-  RequestStatus,
+  GuestRequestStatus,
   GuestRequestDto,
 } from '@app/contracts/guest-requests-service';
 import {
@@ -91,8 +91,9 @@ export class DashboardService {
     id: number,
     data: UpdateDashboardWidgetDto,
   ): Promise<DashboardWidgetDto> {
-    await this.widgetRepository.update(id, data);
-    return this.findOneWidget(id);
+    const widget = await this.findOneWidget(id);
+    Object.assign(widget, data);
+    return this.widgetRepository.save(widget);
   }
 
   async deleteWidget(id: number): Promise<DashboardWidgetDto> {
@@ -159,7 +160,7 @@ export class DashboardService {
           .send<
             FinancialSummaryResponseDto,
             Record<string, never>
-          >(STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY, {})
+          >(BILLING_STATISTICS_PATTERNS.YEAR_TO_DATE_SUMMARY, {})
           .pipe(catchError(() => of({ totalRevenue: 0 }))),
       ),
       lastValueFrom(
@@ -174,8 +175,8 @@ export class DashboardService {
         this.guestRequestsClient
           .send<
             number,
-            RequestStatus
-          >(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS, RequestStatus.PENDING)
+            GuestRequestStatus
+          >(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS, GuestRequestStatus.PENDING)
           .pipe(catchError(() => of(0))),
       ),
     ]);
@@ -213,7 +214,7 @@ export class DashboardService {
     };
   }
 
-  async getOccupancyData(): Promise<OccupancyDataDto[]> {
+  async getOccupancyData(): Promise<DashboardOccupancyDataDto[]> {
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
         this.bookingClient
@@ -236,7 +237,8 @@ export class DashboardService {
       return Array.from({ length: 7 }).map((_, idx) => {
         const d = new Date(today);
         d.setDate(today.getDate() - (6 - idx));
-        return { date: d.toISOString().split('T')[0], occupancy: 0 };
+        d.setHours(0, 0, 0, 0);
+        return { date: d, occupancy: 0 };
       });
     }
 
@@ -244,7 +246,7 @@ export class DashboardService {
     const start = new Date(today);
     start.setDate(today.getDate() - 6);
 
-    const results: OccupancyDataDto[] = [];
+    const results: DashboardOccupancyDataDto[] = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date(start);
       d.setDate(start.getDate() + i);
@@ -263,7 +265,7 @@ export class DashboardService {
         0,
         Math.min(100, Math.round((overlapping / totalRooms) * 100)),
       );
-      results.push({ date: d.toISOString().split('T')[0], occupancy });
+      results.push({ date: dayStart, occupancy });
     }
     return results;
   }
@@ -307,8 +309,9 @@ export class DashboardService {
     return Array.from({ length: 7 }).map((_, i) => {
       const d = new Date(start);
       d.setDate(start.getDate() + i);
+      d.setHours(0, 0, 0, 0);
       const key = d.toISOString().split('T')[0];
-      return { date: key, revenue: byDate[key] || 0 };
+      return { date: d, revenue: byDate[key] || 0 };
     });
   }
 
@@ -389,7 +392,7 @@ export class DashboardService {
             .send<
               CleaningAssignmentDto[],
               Record<string, never>
-            >(HOUSEKEEPING_PATTERNS.FIND_ALL_ASSIGNMENTS, {})
+            >(CLEANING_ASSIGNMENTS_PATTERNS.FIND_ALL, {})
             .pipe(catchError(() => of([]))),
         ),
         lastValueFrom(

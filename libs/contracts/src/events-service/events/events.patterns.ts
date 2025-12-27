@@ -1,14 +1,7 @@
 export const EVENTS_PATTERNS = {
-  CREATE: 'events.create',
   FIND_ALL: 'events.findAll',
   FIND_ONE: 'events.findOne',
+  CREATE: 'events.create',
   UPDATE: 'events.update',
   DELETE: 'events.delete',
-
-  CREATE_BOOKING: 'events.booking.create',
-  FIND_ALL_BOOKINGS: 'events.booking.findAll',
-  FIND_ONE_BOOKING: 'events.booking.findOne',
-  UPDATE_BOOKING: 'events.booking.update',
-  DELETE_BOOKING: 'events.booking.delete',
-  GET_UPCOMING_BOOKINGS: 'events.booking.upcoming',
 } as const;
