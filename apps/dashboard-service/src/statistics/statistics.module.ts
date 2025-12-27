@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { DashboardController } from './dashboard.controller';
-import { DashboardService } from './dashboard.service';
-import { DashboardWidget } from './entities';
+import { StatisticsController } from './statistics.controller';
+import { StatisticsService } from './statistics.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DashboardWidget]),
     ClientsModule.register([
       {
         name: 'BOOKING_SERVICE',
@@ -77,8 +74,8 @@ import { DashboardWidget } from './entities';
       },
     ]),
   ],
-  controllers: [DashboardController],
-  providers: [DashboardService],
-  exports: [DashboardService],
+  controllers: [StatisticsController],
+  providers: [StatisticsService],
+  exports: [StatisticsService],
 })
-export class DashboardModule {}
+export class StatisticsModule {}

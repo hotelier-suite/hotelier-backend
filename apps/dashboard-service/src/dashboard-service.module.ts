@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DatabaseModule } from './database';
-import { DashboardModule } from './dashboard';
 import { SeedersModule } from './seeders';
+import { WidgetsModule } from './widgets';
+import { StatisticsModule } from './statistics';
 
 @Module({
   imports: [
@@ -80,7 +81,8 @@ import { SeedersModule } from './seeders';
       },
     ]),
     DatabaseModule,
-    DashboardModule,
+    WidgetsModule,
+    StatisticsModule,
     SeedersModule,
   ],
   exports: [ClientsModule],

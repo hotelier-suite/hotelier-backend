@@ -1,7 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DASHBOARD_SERVICE_CLIENT } from './constants';
-import { DashboardModule } from './dashboard';
+import { WidgetsModule } from './widgets';
+import { StatisticsModule } from './statistics';
 
 @Global()
 @Module({
@@ -21,8 +22,9 @@ import { DashboardModule } from './dashboard';
         },
       },
     ]),
-    DashboardModule,
+    WidgetsModule,
+    StatisticsModule,
   ],
-  exports: [ClientsModule, DashboardModule],
+  exports: [ClientsModule, WidgetsModule, StatisticsModule],
 })
 export class DashboardServiceModule {}

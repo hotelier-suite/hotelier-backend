@@ -1,14 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { of, lastValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DashboardWidget } from './entities';
 import {
-  CreateDashboardWidgetDto,
-  UpdateDashboardWidgetDto,
-  DashboardWidgetDto,
   DashboardStatsDto,
   DashboardOccupancyDataDto,
   RevenueDataDto,
@@ -43,10 +37,8 @@ import {
 import { AUTH_PATTERNS } from '@app/contracts/auth-service';
 
 @Injectable()
-export class DashboardService {
+export class StatisticsService {
   constructor(
-    @InjectRepository(DashboardWidget)
-    private readonly widgetRepository: Repository<DashboardWidget>,
     @Inject('BOOKING_SERVICE')
     private readonly bookingClient: ClientProxy,
     @Inject('BILLING_SERVICE')
@@ -61,56 +53,7 @@ export class DashboardService {
     private readonly authClient: ClientProxy,
   ) {}
 
-  // Widget CRUD operations
-  async createWidget(
-    data: CreateDashboardWidgetDto,
-  ): Promise<DashboardWidgetDto> {
-    const widget = this.widgetRepository.create(data);
-    return this.widgetRepository.save(widget);
-  }
-
-  async findAllWidgets(): Promise<DashboardWidgetDto[]> {
-    return this.widgetRepository.find({
-      where: { visible: true },
-      order: { position: 'ASC' },
-    });
-  }
-
-  async findOneWidget(id: number): Promise<DashboardWidgetDto> {
-    const widget = await this.widgetRepository.findOne({ where: { id } });
-    if (!widget) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Widget with id ${id} not found`,
-      });
-    }
-    return widget;
-  }
-
-  async updateWidget(
-    id: number,
-    data: UpdateDashboardWidgetDto,
-  ): Promise<DashboardWidgetDto> {
-    const widget = await this.findOneWidget(id);
-    Object.assign(widget, data);
-    return this.widgetRepository.save(widget);
-  }
-
-  async deleteWidget(id: number): Promise<DashboardWidgetDto> {
-    const widget = await this.findOneWidget(id);
-    await this.widgetRepository.remove(widget as DashboardWidget);
-    return { ...widget, id };
-  }
-
-  async findWidgetsByUser(userId: number): Promise<DashboardWidgetDto[]> {
-    return this.widgetRepository.find({
-      where: { userId, visible: true },
-      order: { position: 'ASC' },
-    });
-  }
-
-  // Statistics operations
-  async getDashboardStats(userId: number): Promise<DashboardStatsDto> {
+  async getStats(userId: number): Promise<DashboardStatsDto> {
     // Validate user first using GET_PROFILE pattern
     const user = await lastValueFrom(
       this.authClient
@@ -124,10 +67,6 @@ export class DashboardService {
         message: 'User not found',
       });
     }
-
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 30);
 
     const today = new Date();
     const dayStart = new Date(today);
@@ -214,7 +153,7 @@ export class DashboardService {
     };
   }
 
-  async getOccupancyData(): Promise<DashboardOccupancyDataDto[]> {
+  async getOccupancy(): Promise<DashboardOccupancyDataDto[]> {
     const [rooms, reservations] = await Promise.all([
       lastValueFrom(
         this.bookingClient
@@ -270,7 +209,7 @@ export class DashboardService {
     return results;
   }
 
-  async getRevenueData(userId: number): Promise<RevenueDataDto[]> {
+  async getRevenue(userId: number): Promise<RevenueDataDto[]> {
     const user = await lastValueFrom(
       this.authClient
         .send<{ id: number } | null, number>(AUTH_PATTERNS.GET_PROFILE, userId)
@@ -315,7 +254,7 @@ export class DashboardService {
     });
   }
 
-  async getTopPerformingRooms(): Promise<TopPerformingRoomDto[]> {
+  async getTopRooms(): Promise<TopPerformingRoomDto[]> {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 30);
