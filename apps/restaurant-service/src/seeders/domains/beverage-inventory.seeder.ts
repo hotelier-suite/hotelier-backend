@@ -13,7 +13,6 @@ export class BeverageInventorySeeder {
 
   async seed() {
     const beverages = [
-      // Alcoholic
       {
         itemCode: 'ALC001',
         name: 'Premium Red Wine',
@@ -23,7 +22,7 @@ export class BeverageInventorySeeder {
         unit: 'bottles',
         unitCost: 25.0,
         supplier: 'Wine Distributors Ltd',
-        lastPurchase: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+        lastPurchase: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.AVAILABLE,
       },
       {
@@ -47,7 +46,7 @@ export class BeverageInventorySeeder {
         unit: 'bottles',
         unitCost: 4.5,
         supplier: 'Local Brewery',
-        lastPurchase: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        lastPurchase: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.AVAILABLE,
       },
       {
@@ -59,10 +58,9 @@ export class BeverageInventorySeeder {
         unit: 'bottles',
         unitCost: 85.0,
         supplier: 'Premium Spirits Co',
-        lastPurchase: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+        lastPurchase: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.LOW_STOCK,
       },
-      // Non-Alcoholic
       {
         itemCode: 'NAL001',
         name: 'Fresh Orange Juice',
@@ -72,7 +70,7 @@ export class BeverageInventorySeeder {
         unit: 'liters',
         unitCost: 3.5,
         supplier: 'Fresh Fruit Suppliers',
-        lastPurchase: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        lastPurchase: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.AVAILABLE,
       },
       {
@@ -84,7 +82,7 @@ export class BeverageInventorySeeder {
         unit: 'kg',
         unitCost: 18.0,
         supplier: 'Coffee Roasters Inc',
-        lastPurchase: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+        lastPurchase: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.AVAILABLE,
       },
       {
@@ -96,7 +94,7 @@ export class BeverageInventorySeeder {
         unit: 'bottles',
         unitCost: 1.5,
         supplier: 'Pure Water Co',
-        lastPurchase: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+        lastPurchase: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.AVAILABLE,
       },
       {
@@ -108,7 +106,7 @@ export class BeverageInventorySeeder {
         unit: 'cans',
         unitCost: 1.25,
         supplier: 'Beverage Distributors',
-        lastPurchase: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
+        lastPurchase: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
         status: BeverageStatus.OUT_OF_STOCK,
       },
     ];

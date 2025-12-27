@@ -11,7 +11,6 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
-  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -348,20 +347,6 @@ export class UsersController {
     @Param('userId', ParseIntPipe) userId: number,
     @Body() body: UserRoleIdsDto,
   ): Observable<void> {
-    if (!Array.isArray(body.roleIds)) {
-      throw new BadRequestException('roleIds must be an array');
-    }
-
-    const invalidIds = body.roleIds.filter(
-      (id) => id == null || !Number.isInteger(id) || id <= 0,
-    );
-
-    if (invalidIds.length > 0) {
-      throw new BadRequestException(
-        `Invalid role IDs: ${invalidIds.join(', ')}. Role IDs must be positive integers.`,
-      );
-    }
-
     return this.usersService.assignRolesToUser(userId, body.roleIds);
   }
 

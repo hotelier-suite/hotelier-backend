@@ -239,7 +239,6 @@ export class RolesSeeder {
         });
       }
 
-      // Assign permissions to role
       await this.assignPermissionsToRole(role, roleData.permissions);
     }
   }

@@ -40,7 +40,7 @@ export class ReportsController {
   }
 
   @MessagePattern(REPORTS_PATTERNS.DELETE)
-  delete(@Payload() id: number): Promise<ReportDto> {
+  remove(@Payload() id: number): Promise<ReportDto> {
     return this.reportsService.remove(id);
   }
 

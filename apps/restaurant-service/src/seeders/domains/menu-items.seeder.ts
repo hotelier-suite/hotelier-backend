@@ -12,7 +12,6 @@ export class MenuItemsSeeder {
 
   async seed() {
     const menuItems = [
-      // Appetizers
       {
         itemCode: 'APP001',
         category: 'Appetizers',
@@ -35,7 +34,6 @@ export class MenuItemsSeeder {
         ingredients: ['squid', 'flour', 'spices', 'marinara sauce'],
         allergens: ['gluten', 'seafood'],
       },
-      // Main Courses
       {
         itemCode: 'MAIN001',
         category: 'Main Courses',
@@ -75,7 +73,6 @@ export class MenuItemsSeeder {
         ],
         allergens: ['gluten', 'dairy', 'nuts'],
       },
-      // Desserts
       {
         itemCode: 'DES001',
         category: 'Desserts',
@@ -98,7 +95,6 @@ export class MenuItemsSeeder {
         ingredients: ['chocolate', 'flour', 'eggs', 'berries'],
         allergens: ['gluten', 'dairy', 'eggs'],
       },
-      // Beverages
       {
         itemCode: 'BEV001',
         category: 'Beverages',

@@ -11,7 +11,6 @@ export class SeedersService {
   async seed() {
     console.log('🌱 Starting Billing service seeding...');
 
-    // Order matters: invoices first, then payments
     await this.invoicesSeeder.seed();
     await this.paymentsSeeder.seed();
 

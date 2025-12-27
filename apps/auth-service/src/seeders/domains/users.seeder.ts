@@ -115,10 +115,8 @@ export class UsersSeeder {
         registrationDate: new Date(),
       });
 
-      // Assign roles to user
       await this.assignRolesToUser(user, userData.roles);
     } else {
-      // Update existing user with new password
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
       await this.userRepository.update(existingUser.id, {

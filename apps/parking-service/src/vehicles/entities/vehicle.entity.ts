@@ -163,7 +163,6 @@ export class Vehicle {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @ApiProperty({
     description: 'Assigned parking space',
     type: () => ParkingSpace,

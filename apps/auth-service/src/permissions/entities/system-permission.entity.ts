@@ -39,7 +39,6 @@ export class SystemPermission {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @OneToMany('RolePermission', 'permission', { cascade: true })
   roles: RolePermission[];
 }

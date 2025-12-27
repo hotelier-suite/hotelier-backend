@@ -235,10 +235,6 @@ export class ReportsService {
     };
   }
 
-  /**
-   * Categorizes invoice revenue by type based on invoice item descriptions.
-   * Categories: room, restaurant, services, events
-   */
   private categorizeRevenue(invoices: InvoiceDto[]): {
     room: number;
     restaurant: number;
@@ -384,9 +380,6 @@ export class ReportsService {
     );
   }
 
-  /**
-   * Generates empty occupancy data for the specified period
-   */
   private generateEmptyOccupancyData(
     year: number,
     month?: number,
@@ -415,10 +408,6 @@ export class ReportsService {
     }
   }
 
-  /**
-   * Filters reservations by year and optional month
-   * Only includes confirmed, checked-in, or checked-out reservations
-   */
   private filterReservationsByPeriod(
     reservations: ReservationDto[],
     year: number,
@@ -453,9 +442,6 @@ export class ReportsService {
     });
   }
 
-  /**
-   * Calculates occupancy data for each period (day or month)
-   */
   private calculateOccupancyData(
     reservations: ReservationDto[],
     totalRooms: number,
@@ -474,9 +460,6 @@ export class ReportsService {
     }
   }
 
-  /**
-   * Calculates daily occupancy for a specific month
-   */
   private calculateDailyOccupancy(
     reservations: ReservationDto[],
     totalRooms: number,
@@ -523,9 +506,6 @@ export class ReportsService {
     return results;
   }
 
-  /**
-   * Calculates monthly occupancy for an entire year
-   */
   private calculateMonthlyOccupancy(
     reservations: ReservationDto[],
     totalRooms: number,
@@ -575,9 +555,6 @@ export class ReportsService {
     return results;
   }
 
-  /**
-   * Counts the number of rooms occupied on a specific day
-   */
   private countOccupiedRooms(
     reservations: ReservationDto[],
     dayStart: Date,
@@ -597,9 +574,6 @@ export class ReportsService {
     return occupiedRoomIds.size;
   }
 
-  /**
-   * Calculates occupied room-nights for a month
-   */
   private calculateOccupiedRoomNights(
     reservations: ReservationDto[],
     monthStart: Date,
@@ -626,9 +600,6 @@ export class ReportsService {
     return totalOccupiedNights;
   }
 
-  /**
-   * Calculates daily revenue from reservations
-   */
   private calculateDailyRevenue(
     reservations: ReservationDto[],
     dayStart: Date,
@@ -650,9 +621,6 @@ export class ReportsService {
     return totalRevenue;
   }
 
-  /**
-   * Calculates monthly revenue from reservations
-   */
   private calculateMonthlyRevenue(
     reservations: ReservationDto[],
     monthStart: Date,
@@ -717,10 +685,6 @@ export class ReportsService {
     return this.aggregateInvoicesByMonth(invoices, year);
   }
 
-  /**
-   * Aggregates invoices by month and calculates revenue, expenses, and profit
-   * Returns an array of 12 MonthlyRevenueDto entries (one per month)
-   */
   private aggregateInvoicesByMonth(
     invoices: InvoiceDto[],
     year: number,
@@ -779,9 +743,6 @@ export class ReportsService {
     });
   }
 
-  /**
-   * Calculates total revenue from an invoice's items
-   */
   private calculateInvoiceRevenue(invoice: InvoiceDto): number {
     if (!invoice.invoiceItems || invoice.invoiceItems.length === 0) {
       return Number(invoice.total) || 0;

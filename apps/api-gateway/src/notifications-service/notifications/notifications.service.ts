@@ -19,7 +19,6 @@ export class NotificationsService {
     private readonly notificationsClient: ClientProxy,
   ) {}
 
-  // In-memory subject for simple real-time streaming via SSE
   private notifications$ = new Subject<MessageEvent>();
 
   create(params: CreateNotificationDto): Observable<NotificationDto> {
@@ -30,12 +29,9 @@ export class NotificationsService {
       >(NOTIFICATIONS_PATTERNS.CREATE, params)
       .pipe(
         tap((saved) => {
-          // Emit to SSE subscribers (best-effort)
           try {
             this.notifications$.next({ data: saved });
-          } catch {
-            // ignore emission errors
-          }
+          } catch {}
         }),
       );
   }
@@ -71,7 +67,6 @@ export class NotificationsService {
     >(NOTIFICATIONS_PATTERNS.MARK_ALL_READ, payload);
   }
 
-  // Expose real-time stream for SSE consumers
   stream(): Observable<MessageEvent> {
     return this.notifications$.asObservable();
   }
@@ -90,7 +85,6 @@ export class NotificationsService {
     );
   }
 
-  // Convenience helpers for system-level alerts
   createSystemAlert(
     title: string,
     message: string,

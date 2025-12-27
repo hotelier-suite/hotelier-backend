@@ -7,13 +7,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -68,27 +66,37 @@ export class EmployeesController {
   @Get()
   @ApiOperation({
     summary: 'Get All Employees',
-    description: 'Retrieve all employees, optionally filtered by department.',
-  })
-  @ApiQuery({
-    name: 'department',
-    required: false,
-    enum: Department,
-    description: 'Filter employees by department',
+    description: 'Retrieve all employees.',
   })
   @ApiResponse({
     status: 200,
     description: 'Employees retrieved successfully',
     type: [EmployeeDto],
   })
-  findAll(
-    @Query('department') department?: Department,
-  ): Observable<EmployeeDto[]> {
-    if (department) {
-      return this.employeesService.findByDepartment(department);
-    }
-
+  findAll(): Observable<EmployeeDto[]> {
     return this.employeesService.findAll();
+  }
+
+  @Get('by-department/:department')
+  @ApiOperation({
+    summary: 'Get Employees by Department',
+    description: 'Retrieve employees filtered by department.',
+  })
+  @ApiParam({
+    name: 'department',
+    enum: Department,
+    description: 'Department to filter employees by',
+    example: Department.HOUSEKEEPING,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Employees retrieved successfully',
+    type: [EmployeeDto],
+  })
+  findByDepartment(
+    @Param('department') department: Department,
+  ): Observable<EmployeeDto[]> {
+    return this.employeesService.findByDepartment(department);
   }
 
   @Get('housekeeping')

@@ -39,7 +39,7 @@ export class FacilitiesController {
   }
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.DELETE)
-  delete(@Payload() id: number): Promise<RecreationalFacilityDto> {
+  remove(@Payload() id: number): Promise<RecreationalFacilityDto> {
     return this.facilitiesService.remove(id);
   }
 

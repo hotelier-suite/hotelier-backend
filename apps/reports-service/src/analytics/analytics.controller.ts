@@ -37,7 +37,7 @@ export class AnalyticsController {
   }
 
   @MessagePattern(ANALYTICS_PATTERNS.DELETE)
-  delete(@Payload() id: number): Promise<AnalyticsDataDto> {
+  remove(@Payload() id: number): Promise<AnalyticsDataDto> {
     return this.analyticsService.remove(id);
   }
 
@@ -90,7 +90,7 @@ export class AnalyticsController {
       endDate: Date;
     },
   ): Promise<number> {
-    return this.analyticsService.getTotalMetric(
+    return this.analyticsService.getMetricTotals(
       payload.metric,
       payload.startDate,
       payload.endDate,
@@ -106,7 +106,7 @@ export class AnalyticsController {
       endDate: Date;
     },
   ): Promise<number> {
-    return this.analyticsService.getAverageMetric(
+    return this.analyticsService.getMetricAverages(
       payload.metric,
       payload.startDate,
       payload.endDate,

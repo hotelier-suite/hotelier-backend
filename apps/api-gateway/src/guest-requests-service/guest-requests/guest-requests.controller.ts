@@ -7,14 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
-  ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
@@ -62,26 +60,37 @@ export class GuestRequestsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Guest Requests',
-    description: 'Retrieve all guest requests, optionally filtered by status.',
-  })
-  @ApiQuery({
-    name: 'status',
-    required: false,
-    enum: GuestRequestStatus,
-    description: 'Filter requests by status',
+    description: 'Retrieve all guest requests.',
   })
   @ApiResponse({
     status: 200,
     description: 'Guest requests retrieved successfully',
     type: [GuestRequestDto],
   })
-  findAll(
-    @Query('status') status?: GuestRequestStatus,
-  ): Observable<GuestRequestDto[]> {
-    if (status) {
-      return this.guestRequestsService.findByStatus(status);
-    }
+  findAll(): Observable<GuestRequestDto[]> {
     return this.guestRequestsService.findAll();
+  }
+
+  @Get('by-status/:status')
+  @ApiOperation({
+    summary: 'Get Guest Requests by Status',
+    description: 'Retrieve guest requests filtered by status.',
+  })
+  @ApiParam({
+    name: 'status',
+    enum: GuestRequestStatus,
+    description: 'Status to filter requests by',
+    example: GuestRequestStatus.PENDING,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Guest requests retrieved successfully',
+    type: [GuestRequestDto],
+  })
+  findByStatus(
+    @Param('status') status: GuestRequestStatus,
+  ): Observable<GuestRequestDto[]> {
+    return this.guestRequestsService.findByStatus(status);
   }
 
   @Get('pending')

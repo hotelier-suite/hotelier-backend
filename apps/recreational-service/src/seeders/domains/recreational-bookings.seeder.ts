@@ -31,11 +31,9 @@ export class RecreationalBookingsSeeder {
       return;
     }
 
-    // Create bookings for the next 30 days
     const today = new Date();
     const bookings: RecreationalBookingInput[] = [];
 
-    // Sample guest data
     const guests = [
       {
         name: 'Sarah Johnson',
@@ -99,7 +97,6 @@ export class RecreationalBookingsSeeder {
       },
     ];
 
-    // Time slots for bookings
     const timeSlots = [
       { start: '09:00', end: '10:00', duration: 1 },
       { start: '10:00', end: '12:00', duration: 2 },
@@ -124,13 +121,11 @@ export class RecreationalBookingsSeeder {
       null,
     ];
 
-    // Generate bookings for each day
     for (let dayOffset = -7; dayOffset <= 30; dayOffset++) {
       const bookingDate = new Date(today);
       bookingDate.setDate(today.getDate() + dayOffset);
       bookingDate.setHours(0, 0, 0, 0);
 
-      // Create 2-4 random bookings per day
       const bookingsPerDay = Math.floor(Math.random() * 3) + 2;
 
       for (let i = 0; i < bookingsPerDay; i++) {
@@ -142,7 +137,6 @@ export class RecreationalBookingsSeeder {
         const participants =
           Math.floor(Math.random() * Math.min(facility.capacity, 6)) + 1;
 
-        // Determine status based on date
         let status: RecreationalBookingStatus;
         let actualCheckIn: Date | undefined;
         let actualCheckOut: Date | undefined;
@@ -206,7 +200,6 @@ export class RecreationalBookingsSeeder {
       }
     }
 
-    // Save bookings
     for (const booking of bookings) {
       const bookingEntity = this.bookingRepository.create(booking);
       await this.bookingRepository.save(bookingEntity);

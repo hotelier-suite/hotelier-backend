@@ -173,7 +173,7 @@ export class AuthService {
     return tokens;
   }
 
-  async validateUser(userId: number): Promise<ProfileResponseDto | null> {
+  async getProfile(userId: number): Promise<ProfileResponseDto | null> {
     const user = await this.accessControlService.getUserWithRoles(userId);
 
     if (!user || !user.isActive) {

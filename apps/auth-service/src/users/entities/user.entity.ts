@@ -88,7 +88,6 @@ export class User {
   @Column({ nullable: true, select: false })
   refreshToken?: string;
 
-  // Relations
   @OneToMany('UserRole', 'user', { cascade: true })
   userRoles: UserRole[];
 }

@@ -6,7 +6,6 @@ import {
   Query,
   Param,
   ParseIntPipe,
-  Inject,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,8 +16,7 @@ import {
   ApiBearerAuth,
   ApiBody,
 } from '@nestjs/swagger';
-import { Observable, forkJoin, of } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { AuditService } from './audit.service';
 import {
   AuditLogDto,
@@ -28,20 +26,13 @@ import {
   AuditResource,
   AuditAction,
   PaginatedAuditLogDto,
-  AuditLogWithUserDto,
 } from '@app/contracts/audit-service';
-import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_SERVICE_CLIENT } from '../../auth-service';
-import { USERS_PATTERNS, UserResponseDto } from '@app/contracts/auth-service';
 
 @ApiTags('audit')
 @Controller('audit')
 @ApiBearerAuth()
 export class AuditController {
-  constructor(
-    private readonly auditService: AuditService,
-    @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
-  ) {}
+  constructor(private readonly auditService: AuditService) {}
 
   @Post()
   @ApiOperation({
@@ -134,51 +125,7 @@ export class AuditController {
     type: PaginatedAuditLogDto,
   })
   findAll(@Query() query: AuditLogQueryDto): Observable<PaginatedAuditLogDto> {
-    return this.auditService.findAll(query).pipe(
-      switchMap((result) => {
-        const userIds = [...new Set(result.data.map((log) => log.userId))];
-
-        if (userIds.length === 0) {
-          return of({
-            data: result.data as AuditLogWithUserDto[],
-            total: result.total,
-          });
-        }
-
-        const userRequests$ = userIds.map((userId) =>
-          this.authClient
-            .send<UserResponseDto, number>(USERS_PATTERNS.FIND_BY_ID, userId)
-            .pipe(catchError(() => of(null))),
-        );
-
-        return forkJoin(userRequests$).pipe(
-          map((users) => {
-            const userMap = new Map<
-              number,
-              { id: number; name: string; email: string }
-            >();
-            users.forEach((user, index) => {
-              if (user) {
-                userMap.set(userIds[index], {
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                });
-              }
-            });
-
-            const enrichedData: AuditLogWithUserDto[] = result.data.map(
-              (log) => ({
-                ...log,
-                user: userMap.get(log.userId),
-              }),
-            );
-
-            return { data: enrichedData, total: result.total };
-          }),
-        );
-      }),
-    );
+    return this.auditService.findAllWithUsers(query);
   }
 
   @Get('statistics')

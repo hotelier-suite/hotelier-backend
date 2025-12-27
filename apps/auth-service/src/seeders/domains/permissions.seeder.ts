@@ -12,19 +12,14 @@ export class PermissionsSeeder {
 
   async seed() {
     const permissions = [
-      // User management
       { resource: 'users', action: 'create', description: 'Create users' },
       { resource: 'users', action: 'read', description: 'View users' },
       { resource: 'users', action: 'update', description: 'Update users' },
       { resource: 'users', action: 'delete', description: 'Delete users' },
-
-      // Role management
       { resource: 'roles', action: 'create', description: 'Create roles' },
       { resource: 'roles', action: 'read', description: 'View roles' },
       { resource: 'roles', action: 'update', description: 'Update roles' },
       { resource: 'roles', action: 'delete', description: 'Delete roles' },
-
-      // Reservation management
       {
         resource: 'reservations',
         action: 'create',
@@ -45,14 +40,10 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete reservations',
       },
-
-      // Room management
       { resource: 'rooms', action: 'create', description: 'Create rooms' },
       { resource: 'rooms', action: 'read', description: 'View rooms' },
       { resource: 'rooms', action: 'update', description: 'Update rooms' },
       { resource: 'rooms', action: 'delete', description: 'Delete rooms' },
-
-      // Billing management
       { resource: 'billing', action: 'create', description: 'Create invoices' },
       { resource: 'billing', action: 'read', description: 'View billing' },
       { resource: 'billing', action: 'update', description: 'Update billing' },
@@ -61,19 +52,13 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete billing records',
       },
-
-      // Dashboard access
       { resource: 'dashboard', action: 'read', description: 'View dashboard' },
-
-      // Reports access
       { resource: 'reports', action: 'read', description: 'View reports' },
       {
         resource: 'reports',
         action: 'create',
         description: 'Generate reports',
       },
-
-      // Housekeeping management
       {
         resource: 'housekeeping',
         action: 'create',
@@ -94,8 +79,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete cleaning tasks',
       },
-
-      // Restaurant management
       {
         resource: 'restaurant',
         action: 'create',
@@ -116,8 +99,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete restaurant items',
       },
-
-      // Inventory management
       {
         resource: 'inventory',
         action: 'create',
@@ -134,8 +115,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete inventory items',
       },
-
-      // Employee management
       {
         resource: 'employees',
         action: 'create',
@@ -152,8 +131,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete employees',
       },
-
-      // Parking management
       {
         resource: 'parking',
         action: 'create',
@@ -170,14 +147,10 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete parking records',
       },
-
-      // Events management
       { resource: 'events', action: 'create', description: 'Create events' },
       { resource: 'events', action: 'read', description: 'View events' },
       { resource: 'events', action: 'update', description: 'Update events' },
       { resource: 'events', action: 'delete', description: 'Delete events' },
-
-      // Recreational management
       {
         resource: 'recreational',
         action: 'create',
@@ -198,8 +171,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete recreational bookings and facilities',
       },
-
-      // Maintenance management
       {
         resource: 'maintenance',
         action: 'create',
@@ -220,8 +191,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete maintenance requests',
       },
-
-      // Configuration management
       {
         resource: 'configuration',
         action: 'create',
@@ -242,8 +211,6 @@ export class PermissionsSeeder {
         action: 'delete',
         description: 'Delete configurations',
       },
-
-      // User role management
       {
         resource: 'users',
         action: 'manage_roles',

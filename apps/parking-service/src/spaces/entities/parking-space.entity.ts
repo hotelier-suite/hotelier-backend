@@ -112,7 +112,6 @@ export class ParkingSpace {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @ApiProperty({
     description: 'Vehicles assigned to this space',
     type: () => Array,

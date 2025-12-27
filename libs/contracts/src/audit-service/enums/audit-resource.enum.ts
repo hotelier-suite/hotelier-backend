@@ -1,27 +1,22 @@
 export enum AuditResource {
-  // Core Resources
   USER = 'USER',
   ROLE = 'ROLE',
   PERMISSION = 'PERMISSION',
 
-  // Hotel Resources
   RESERVATION = 'RESERVATION',
   ROOM = 'ROOM',
   GUEST = 'GUEST',
 
-  // Financial Resources
   INVOICE = 'INVOICE',
   PAYMENT = 'PAYMENT',
   BILLING = 'BILLING',
 
-  // Operational Resources
   EMPLOYEE = 'EMPLOYEE',
   SHIFT = 'SHIFT',
   ATTENDANCE = 'ATTENDANCE',
   HOUSEKEEPING = 'HOUSEKEEPING',
   MAINTENANCE = 'MAINTENANCE',
 
-  // Service Resources
   RESTAURANT = 'RESTAURANT',
   MENU_ITEM = 'MENU_ITEM',
   ROOM_SERVICE = 'ROOM_SERVICE',
@@ -29,25 +24,20 @@ export enum AuditResource {
   VENUE = 'VENUE',
   RECREATIONAL = 'RECREATIONAL',
 
-  // Inventory Resources
   INVENTORY = 'INVENTORY',
   SUPPLIER = 'SUPPLIER',
   PARKING = 'PARKING',
 
-  // Request Resources
   GUEST_REQUEST = 'GUEST_REQUEST',
   EMPLOYEE_REQUEST = 'EMPLOYEE_REQUEST',
 
-  // Report Resources
   REPORT = 'REPORT',
   ANALYTICS = 'ANALYTICS',
 
-  // System Resources
   CONFIGURATION = 'CONFIGURATION',
   NOTIFICATION = 'NOTIFICATION',
   AUDIT_LOG = 'AUDIT_LOG',
 
-  // Generic
   SYSTEM = 'SYSTEM',
   OTHER = 'OTHER',
 }

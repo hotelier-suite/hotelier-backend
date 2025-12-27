@@ -39,6 +39,6 @@ export class AuthController {
 
   @MessagePattern(AUTH_PATTERNS.GET_PROFILE)
   getProfile(@Payload() userId: number): Promise<ProfileResponseDto | null> {
-    return this.authService.validateUser(userId);
+    return this.authService.getProfile(userId);
   }
 }

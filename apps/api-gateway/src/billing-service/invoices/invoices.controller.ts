@@ -41,25 +41,38 @@ export class InvoicesController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get Invoices',
-    description: 'Retrieve all invoices or filter by status.',
-  })
-  @ApiQuery({
-    name: 'status',
-    description: 'Filter invoices by status',
-    enum: InvoiceStatus,
-    required: false,
+    summary: 'Get All Invoices',
+    description: 'Retrieve all invoices.',
   })
   @ApiResponse({
     status: 200,
     description: 'Invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  findAll(@Query('status') status?: InvoiceStatus): Observable<InvoiceDto[]> {
-    if (status) {
-      return this.invoicesService.findByStatus(status);
-    }
+  findAll(): Observable<InvoiceDto[]> {
     return this.invoicesService.findAll();
+  }
+
+  @Get('by-status/:status')
+  @ApiOperation({
+    summary: 'Get Invoices by Status',
+    description: 'Retrieve invoices filtered by status.',
+  })
+  @ApiParam({
+    name: 'status',
+    description: 'Invoice status to filter by',
+    enum: InvoiceStatus,
+    example: InvoiceStatus.PENDING,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Invoices retrieved successfully',
+    type: [InvoiceDto],
+  })
+  findByStatus(
+    @Param('status') status: InvoiceStatus,
+  ): Observable<InvoiceDto[]> {
+    return this.invoicesService.findByStatus(status);
   }
 
   @Get('overdue')

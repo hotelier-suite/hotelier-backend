@@ -25,7 +25,6 @@ export class RolePermission {
   @CreateDateColumn()
   createdAt: Date;
 
-  // Relations
   @ManyToOne(() => Role, (role) => role.permissions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'roleId' })
   role: Role;

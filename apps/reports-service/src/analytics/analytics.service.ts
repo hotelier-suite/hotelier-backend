@@ -123,7 +123,7 @@ export class AnalyticsService {
     }));
   }
 
-  async getAverageMetric(
+  async getMetricAverages(
     metric: AnalyticsMetric,
     startDate: Date,
     endDate: Date,
@@ -141,7 +141,7 @@ export class AnalyticsService {
     return parseFloat(result?.average || '0') || 0;
   }
 
-  async getTotalMetric(
+  async getMetricTotals(
     metric: AnalyticsMetric,
     startDate: Date,
     endDate: Date,

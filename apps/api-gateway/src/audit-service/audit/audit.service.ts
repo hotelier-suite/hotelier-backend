@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { AUDIT_SERVICE_CLIENT } from '../constants';
 import {
   AUDIT_PATTERNS,
@@ -10,18 +11,21 @@ import {
   AuditStatisticsDto,
   AuditResource,
   AuditLogParams,
+  AuditLogWithUserDto,
+  PaginatedAuditLogDto,
 } from '@app/contracts/audit-service';
+import { AUTH_SERVICE_CLIENT } from '../../auth-service';
+import { USERS_PATTERNS, UserResponseDto } from '@app/contracts/auth-service';
 
 @Injectable()
 export class AuditService {
   constructor(
     @Inject(AUDIT_SERVICE_CLIENT)
     private readonly auditClient: ClientProxy,
+    @Inject(AUTH_SERVICE_CLIENT)
+    private readonly authClient: ClientProxy,
   ) {}
 
-  /**
-   * Create a new audit log entry via RabbitMQ
-   */
   log(params: AuditLogParams): Observable<AuditLogDto> {
     const dto: CreateAuditLogDto = {
       userId: params.userId,
@@ -38,9 +42,6 @@ export class AuditService {
     );
   }
 
-  /**
-   * Create audit log from DTO
-   */
   create(data: CreateAuditLogDto): Observable<AuditLogDto> {
     return this.auditClient.send<AuditLogDto, CreateAuditLogDto>(
       AUDIT_PATTERNS.LOG_CREATE,
@@ -48,9 +49,6 @@ export class AuditService {
     );
   }
 
-  /**
-   * Get audit logs with filtering and pagination
-   */
   findAll(
     query: AuditLogQueryDto,
   ): Observable<{ data: AuditLogDto[]; total: number }> {
@@ -60,9 +58,54 @@ export class AuditService {
     >(AUDIT_PATTERNS.LOG_FIND_ALL, query);
   }
 
-  /**
-   * Get audit log by ID
-   */
+  findAllWithUsers(query: AuditLogQueryDto): Observable<PaginatedAuditLogDto> {
+    return this.findAll(query).pipe(
+      switchMap((result) => {
+        const userIds = [...new Set(result.data.map((log) => log.userId))];
+
+        if (userIds.length === 0) {
+          return of({
+            data: result.data as AuditLogWithUserDto[],
+            total: result.total,
+          });
+        }
+
+        const userRequests$ = userIds.map((userId) =>
+          this.authClient
+            .send<UserResponseDto, number>(USERS_PATTERNS.FIND_BY_ID, userId)
+            .pipe(catchError(() => of(null))),
+        );
+
+        return forkJoin(userRequests$).pipe(
+          map((users) => {
+            const userMap = new Map<
+              number,
+              { id: number; name: string; email: string }
+            >();
+            users.forEach((user, index) => {
+              if (user) {
+                userMap.set(userIds[index], {
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                });
+              }
+            });
+
+            const enrichedData: AuditLogWithUserDto[] = result.data.map(
+              (log) => ({
+                ...log,
+                user: userMap.get(log.userId),
+              }),
+            );
+
+            return { data: enrichedData, total: result.total };
+          }),
+        );
+      }),
+    );
+  }
+
   findOne(id: number): Observable<AuditLogDto> {
     return this.auditClient.send<AuditLogDto, number>(
       AUDIT_PATTERNS.LOG_FIND_ONE,
@@ -70,9 +113,6 @@ export class AuditService {
     );
   }
 
-  /**
-   * Get audit logs for a specific resource
-   */
   findByResource(
     resource: AuditResource,
     resourceId: string,
@@ -83,9 +123,6 @@ export class AuditService {
     >(AUDIT_PATTERNS.LOG_FIND_BY_RESOURCE, { resource, resourceId });
   }
 
-  /**
-   * Get audit logs for a specific user
-   */
   findByUser(userId: number, limit: number = 100): Observable<AuditLogDto[]> {
     return this.auditClient.send<
       AuditLogDto[],
@@ -93,9 +130,6 @@ export class AuditService {
     >(AUDIT_PATTERNS.LOG_FIND_BY_USER, { userId, limit });
   }
 
-  /**
-   * Get audit logs by action
-   */
   findByAction(action: string): Observable<AuditLogDto[]> {
     return this.auditClient.send<AuditLogDto[], string>(
       AUDIT_PATTERNS.LOG_FIND_BY_ACTION,
@@ -103,9 +137,6 @@ export class AuditService {
     );
   }
 
-  /**
-   * Get audit statistics
-   */
   getStatistics(days: number = 30): Observable<AuditStatisticsDto> {
     return this.auditClient.send<AuditStatisticsDto, number>(
       AUDIT_PATTERNS.LOG_GET_STATISTICS,
@@ -113,9 +144,6 @@ export class AuditService {
     );
   }
 
-  /**
-   * Clean old audit logs (for maintenance)
-   */
   cleanOldLogs(olderThanDays: number = 365): Observable<number> {
     return this.auditClient.send<number, number>(
       AUDIT_PATTERNS.LOG_CLEAN_OLD,

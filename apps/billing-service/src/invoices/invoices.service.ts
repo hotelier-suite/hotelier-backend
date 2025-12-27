@@ -200,7 +200,6 @@ export class InvoicesService {
       });
     }
 
-    // Create a payment record for this invoice
     await this.paymentRepository.save({
       reference: `PAY-${Date.now()}-${id}`,
       amount: invoice.total,
@@ -209,7 +208,6 @@ export class InvoicesService {
       invoiceId: invoice.id,
     });
 
-    // Update invoice status and payment method
     await this.invoiceRepository.update(id, {
       status: InvoiceStatus.PAID,
       paymentMethod:

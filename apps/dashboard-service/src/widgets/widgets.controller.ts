@@ -37,7 +37,7 @@ export class WidgetsController {
   }
 
   @MessagePattern(WIDGETS_PATTERNS.DELETE)
-  delete(@Payload() id: number): Promise<DashboardWidgetDto> {
+  remove(@Payload() id: number): Promise<DashboardWidgetDto> {
     return this.widgetsService.remove(id);
   }
 

@@ -118,7 +118,6 @@ export class ReservationsService {
       ].includes(r.status),
     );
 
-    // Fetch all invoices and room service orders in parallel
     const allInvoices: InvoiceDto[] = await lastValueFrom(
       this.billingClient
         .send<
@@ -150,7 +149,6 @@ export class ReservationsService {
       const roomCharges = Number(reservation.totalAmount) || 0;
       const roomNumber = reservation.room?.number;
 
-      // Filter room service orders for this reservation
       const roomServiceOrders = allRoomServiceOrders.filter(
         (order) =>
           (reservation.guestId && order.guestId === reservation.guestId) ||
@@ -171,7 +169,6 @@ export class ReservationsService {
         0,
       );
 
-      // Filter event bookings for this reservation's guest
       const eventBookings = reservation.guestId
         ? allEventBookings.filter(
             (event) => event.guestId === reservation.guestId,
@@ -192,7 +189,6 @@ export class ReservationsService {
         0,
       );
 
-      // Check for existing paid invoice
       const existingInvoice = allInvoices.find(
         (invoice) =>
           invoice.reservationId === reservation.id &&

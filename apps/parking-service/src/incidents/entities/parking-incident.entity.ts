@@ -124,7 +124,6 @@ export class ParkingIncident {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Foreign keys
   @ApiProperty({
     description: 'ID of the related vehicle',
     example: 1,
@@ -147,7 +146,6 @@ export class ParkingIncident {
   @Column({ nullable: true })
   spaceId?: number;
 
-  // Relations
   @ApiProperty({
     description: 'Related vehicle',
     type: () => Vehicle,

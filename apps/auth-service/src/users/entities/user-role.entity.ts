@@ -28,7 +28,6 @@ export class UserRole {
   @Column({ nullable: true })
   assignedBy?: string;
 
-  // Relations
   @ManyToOne(() => User, (user) => user.userRoles, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;

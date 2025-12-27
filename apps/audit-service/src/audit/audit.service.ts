@@ -71,7 +71,6 @@ export class AuditService {
         'auditLog.createdAt',
       ]);
 
-    // Apply filters
     if (query.userId) {
       queryBuilder.andWhere('auditLog.userId = :userId', {
         userId: query.userId,
@@ -120,7 +119,6 @@ export class AuditService {
       });
     }
 
-    // Apply ordering and pagination
     const order: 'ASC' | 'DESC' = query.order === 'ASC' ? 'ASC' : 'DESC';
 
     queryBuilder
@@ -181,14 +179,12 @@ export class AuditService {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    // Get total logs in period
     const totalLogs = await this.auditLogRepository.count({
       where: {
         createdAt: Between(startDate, new Date()),
       },
     });
 
-    // Get logs by action
     const actionStats = await this.auditLogRepository
       .createQueryBuilder('auditLog')
       .select('auditLog.action', 'action')
@@ -198,7 +194,6 @@ export class AuditService {
       .orderBy('COUNT(*)', 'DESC')
       .getRawMany<ActionSummaryResult>();
 
-    // Get logs by resource
     const resourceStats = await this.auditLogRepository
       .createQueryBuilder('auditLog')
       .select('auditLog.resource', 'resource')
@@ -208,7 +203,6 @@ export class AuditService {
       .orderBy('COUNT(*)', 'DESC')
       .getRawMany<ResourceSummaryResult>();
 
-    // Get top users
     const userStats = await this.auditLogRepository
       .createQueryBuilder('auditLog')
       .select('auditLog.userId', 'userId')
@@ -220,7 +214,6 @@ export class AuditService {
       .limit(10)
       .getRawMany<UserSummaryResult>();
 
-    // Get daily activity
     const dailyActivity = await this.auditLogRepository
       .createQueryBuilder('auditLog')
       .select("DATE_TRUNC('day', auditLog.createdAt)", 'date')
@@ -247,7 +240,7 @@ export class AuditService {
         count: parseInt(stat.count, 10),
       })),
       dailyActivity: dailyActivity.map((stat) => ({
-        date: stat.date,
+        date: new Date(stat.date),
         count: parseInt(stat.count, 10),
       })),
     };

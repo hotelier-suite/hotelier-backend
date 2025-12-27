@@ -34,7 +34,6 @@ export class Role {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @OneToMany('UserRole', 'role', { cascade: true })
   userRoles: UserRole[];
 

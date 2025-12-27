@@ -13,7 +13,6 @@ export class ParkingSpacesSeeder {
 
   async seed() {
     const parkingSpaces = [
-      // Guest Parking - Ground Floor
       {
         code: 'G-001',
         zone: 'Ground Floor',
@@ -39,8 +38,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 5.0,
         location: 'Ground Floor - Row A',
       },
-
-      // VIP Parking
       {
         code: 'VIP-001',
         zone: 'VIP Section',
@@ -57,8 +54,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 15.0,
         location: 'Ground Floor - VIP Area',
       },
-
-      // Accessible Parking
       {
         code: 'DIS-001',
         zone: 'Accessibility',
@@ -75,8 +70,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 0.0,
         location: 'Ground Floor - Near Entrance',
       },
-
-      // Employee Parking
       {
         code: 'EMP-001',
         zone: 'Employee Area',
@@ -94,8 +87,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 0.0,
         location: 'Basement - Level B1',
       },
-
-      // Visitor Parking
       {
         code: 'VIS-001',
         zone: 'Visitor Area',
@@ -104,8 +95,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 3.0,
         location: 'Ground Floor - Row C',
       },
-
-      // Loading Zone
       {
         code: 'LOAD-001',
         zone: 'Service Area',
@@ -114,8 +103,6 @@ export class ParkingSpacesSeeder {
         hourlyRate: 0.0,
         location: 'Ground Floor - Loading Dock',
       },
-
-      // Maintenance
       {
         code: 'G-004',
         zone: 'Ground Floor',
