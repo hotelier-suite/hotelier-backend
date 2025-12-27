@@ -43,7 +43,7 @@ export class CreateGuestRequestDto {
   @IsEnum(RequestPriority)
   priority?: RequestPriority;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String, format: 'date-time' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

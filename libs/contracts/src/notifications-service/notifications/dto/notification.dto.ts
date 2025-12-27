@@ -50,7 +50,7 @@ export class NotificationDto {
   @Min(1)
   userId?: number | null;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;

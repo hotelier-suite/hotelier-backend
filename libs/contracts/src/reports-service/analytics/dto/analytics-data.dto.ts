@@ -39,6 +39,7 @@ export class AnalyticsDataDto {
   @ApiProperty({
     description: 'Date when the metric was recorded',
     example: '2024-01-15',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()
@@ -65,6 +66,7 @@ export class AnalyticsDataDto {
   @ApiProperty({
     description: 'Record creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @Type(() => Date)
   @IsDate()
@@ -73,6 +75,7 @@ export class AnalyticsDataDto {
   @ApiProperty({
     description: 'Record last update timestamp',
     example: '2024-01-15T11:45:00.000Z',
+    format: 'date-time',
   })
   @Type(() => Date)
   @IsDate()

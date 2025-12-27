@@ -31,12 +31,12 @@ export class CreateReservationDto {
   @IsString()
   guestPhone?: string;
 
-  @ApiProperty({ example: '2025-09-20' })
+  @ApiProperty({ format: 'date-time', example: '2025-09-20' })
   @Type(() => Date)
   @IsDate()
   checkInDate: Date;
 
-  @ApiProperty({ example: '2025-09-23' })
+  @ApiProperty({ format: 'date-time', example: '2025-09-23' })
   @Type(() => Date)
   @IsDate()
   checkOutDate: Date;

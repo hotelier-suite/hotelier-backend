@@ -37,6 +37,7 @@ export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(
   @ApiProperty({
     description: 'Date when the maintenance request was resolved',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()

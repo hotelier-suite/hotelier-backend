@@ -59,6 +59,7 @@ export class CleaningTaskDto {
     description: 'Time when the cleaning started',
     example: '2024-01-15T09:00:00Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -69,6 +70,7 @@ export class CleaningTaskDto {
     description: 'Time when the cleaning ended',
     example: '2024-01-15T10:30:00Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -101,6 +103,7 @@ export class CleaningTaskDto {
   @ApiProperty({
     description: 'Date when the record was created',
     example: '2024-01-15T08:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -109,6 +112,7 @@ export class CleaningTaskDto {
   @ApiProperty({
     description: 'Date when the record was last updated',
     example: '2024-01-15T10:30:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

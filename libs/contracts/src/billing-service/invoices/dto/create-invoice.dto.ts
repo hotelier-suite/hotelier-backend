@@ -26,6 +26,7 @@ export class CreateInvoiceDto {
     description: 'Invoice issue date',
     example: '2024-01-15T10:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @Type(() => Date)
@@ -35,6 +36,7 @@ export class CreateInvoiceDto {
   @ApiProperty({
     description: 'Invoice due date',
     example: '2024-02-15T23:59:59.999Z',
+    format: 'date-time',
   })
   @Type(() => Date)
   @IsDate()

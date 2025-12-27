@@ -48,6 +48,7 @@ export class BookingStatisticsDto {
   @ApiProperty({
     description: 'Peak booking hour',
     example: '14:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   peakHour: string;

@@ -11,7 +11,7 @@ export class UpdateVehicleDto extends PartialType(CreateVehicleDto) {
   @IsEnum(VehicleStatus)
   status?: VehicleStatus;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String, format: 'date-time' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

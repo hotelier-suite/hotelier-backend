@@ -68,6 +68,7 @@ export class ReportDto {
   @ApiProperty({
     description: 'Start date for the report data',
     example: '2024-01-01',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()
@@ -76,6 +77,7 @@ export class ReportDto {
   @ApiProperty({
     description: 'End date for the report data',
     example: '2024-01-31',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()
@@ -128,12 +130,18 @@ export class ReportDto {
   @Length(1, 100)
   generatedBy: string;
 
-  @ApiProperty({ description: 'Report creation timestamp' })
+  @ApiProperty({
+    description: 'Report creation timestamp',
+    format: 'date-time',
+  })
   @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
-  @ApiProperty({ description: 'Report last update timestamp' })
+  @ApiProperty({
+    description: 'Report last update timestamp',
+    format: 'date-time',
+  })
   @Type(() => Date)
   @IsDate()
   updatedAt: Date;

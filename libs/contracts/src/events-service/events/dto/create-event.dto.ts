@@ -32,12 +32,20 @@ export class CreateEventDto {
   @Length(0, 1000)
   description?: string;
 
-  @ApiProperty({ description: 'Event date', example: '2024-12-15' })
+  @ApiProperty({
+    description: 'Event date',
+    example: '2024-12-15',
+    format: 'date',
+  })
   @Type(() => Date)
   @IsDate()
   eventDate: Date;
 
-  @ApiProperty({ description: 'Event start time', example: '09:00' })
+  @ApiProperty({
+    description: 'Event start time',
+    example: '09:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   startTime: string;
 
@@ -45,6 +53,7 @@ export class CreateEventDto {
     description: 'Event end time',
     example: '17:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()

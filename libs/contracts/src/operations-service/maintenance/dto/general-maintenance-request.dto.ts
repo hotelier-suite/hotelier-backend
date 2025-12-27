@@ -90,6 +90,7 @@ export class GeneralMaintenanceRequestDto {
     description: 'Scheduled date for maintenance',
     example: '2024-12-15',
     required: false,
+    format: 'date',
   })
   @IsOptional()
   @IsDateString()
@@ -100,6 +101,7 @@ export class GeneralMaintenanceRequestDto {
     description: 'Scheduled start time',
     example: '09:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()
@@ -162,6 +164,7 @@ export class GeneralMaintenanceRequestDto {
     description: 'Date when maintenance was started',
     example: '2024-12-15T09:00:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -172,6 +175,7 @@ export class GeneralMaintenanceRequestDto {
     description: 'Date when maintenance was completed',
     example: '2024-12-15T11:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -201,6 +205,7 @@ export class GeneralMaintenanceRequestDto {
   @ApiProperty({
     description: 'Maintenance request creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -209,6 +214,7 @@ export class GeneralMaintenanceRequestDto {
   @ApiProperty({
     description: 'Maintenance request last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

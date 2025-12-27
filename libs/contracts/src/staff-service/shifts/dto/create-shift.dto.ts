@@ -13,16 +13,16 @@ import {
 import { ShiftStatus, ShiftType } from '..';
 
 export class CreateShiftDto {
-  @ApiProperty({ type: String, example: '2024-01-15' })
+  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ example: '08:00' })
+  @ApiProperty({ example: '08:00', format: 'time' })
   @IsMilitaryTime()
   startTime: string;
 
-  @ApiProperty({ example: '16:00' })
+  @ApiProperty({ example: '16:00', format: 'time' })
   @IsMilitaryTime()
   endTime: string;
 

@@ -72,6 +72,7 @@ export class DashboardWidgetDto {
   @ApiProperty({
     description: 'Widget creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -80,6 +81,7 @@ export class DashboardWidgetDto {
   @ApiProperty({
     description: 'Widget last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

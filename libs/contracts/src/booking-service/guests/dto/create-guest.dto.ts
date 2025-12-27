@@ -39,7 +39,12 @@ export class CreateGuestDto {
   @IsString()
   nationality?: string;
 
-  @ApiProperty({ required: false, type: String, example: '1985-05-15' })
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '1985-05-15',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

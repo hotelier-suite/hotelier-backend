@@ -56,12 +56,12 @@ export class VehicleDto {
   @IsString()
   assignedSpace?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   entryTime: Date;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String, format: 'date-time' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
@@ -76,12 +76,12 @@ export class VehicleDto {
   @IsString()
   notes?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

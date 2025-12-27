@@ -91,6 +91,7 @@ export class BeverageInventoryDto {
     description: 'Date of last purchase',
     example: '2024-01-15T10:30:00Z',
     required: false,
+    format: 'date',
   })
   @IsOptional()
   @IsDate()
@@ -107,6 +108,7 @@ export class BeverageInventoryDto {
 
   @ApiProperty({
     description: 'Creation timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -114,6 +116,7 @@ export class BeverageInventoryDto {
 
   @ApiProperty({
     description: 'Last update timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

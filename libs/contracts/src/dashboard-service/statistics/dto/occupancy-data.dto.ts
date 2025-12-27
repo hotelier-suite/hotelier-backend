@@ -7,6 +7,7 @@ export class DashboardOccupancyDataDto {
     description: 'Date',
     type: String,
     example: '2024-01-15',
+    format: 'date',
   })
   @IsDate()
   @Type(() => Date)

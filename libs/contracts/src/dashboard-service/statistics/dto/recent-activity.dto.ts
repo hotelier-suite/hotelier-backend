@@ -28,6 +28,7 @@ export class RecentActivityDto {
   @ApiProperty({
     description: 'Activity timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

@@ -71,6 +71,7 @@ export class CreateGeneralMaintenanceRequestDto {
     description: 'Scheduled date for maintenance',
     example: '2024-12-15',
     required: false,
+    format: 'date',
   })
   @IsOptional()
   @IsDateString()
@@ -81,6 +82,7 @@ export class CreateGeneralMaintenanceRequestDto {
     description: 'Scheduled start time',
     example: '09:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()

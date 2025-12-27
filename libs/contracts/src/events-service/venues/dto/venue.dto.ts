@@ -65,12 +65,12 @@ export class VenueDto {
   @Length(1, 1000)
   description?: string;
 
-  @ApiProperty({ description: 'Creation timestamp' })
+  @ApiProperty({ description: 'Creation timestamp', format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ description: 'Last update timestamp' })
+  @ApiProperty({ description: 'Last update timestamp', format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

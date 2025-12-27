@@ -27,7 +27,7 @@ export class ParkingIncidentDto {
   @IsString()
   description: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   reportDate: Date;
@@ -49,18 +49,18 @@ export class ParkingIncidentDto {
   @IsString()
   resolution?: string;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String, format: 'date-time' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   resolvedAt?: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

@@ -55,6 +55,7 @@ export class AuditLogQueryDto {
     description: 'Filter by start date (ISO string)',
     example: '2024-01-01T00:00:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @Type(() => Date)
@@ -65,6 +66,7 @@ export class AuditLogQueryDto {
     description: 'Filter by end date (ISO string)',
     example: '2024-01-31T23:59:59.999Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @Type(() => Date)

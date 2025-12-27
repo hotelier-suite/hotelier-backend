@@ -29,6 +29,7 @@ export class CreateAnalyticsDataDto {
   @ApiProperty({
     description: 'Date when the metric was recorded',
     example: '2024-01-15',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()

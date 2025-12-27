@@ -37,12 +37,20 @@ export class EventDto {
   @Length(0, 1000)
   description?: string;
 
-  @ApiProperty({ description: 'Event date', example: '2024-12-15' })
+  @ApiProperty({
+    description: 'Event date',
+    example: '2024-12-15',
+    format: 'date',
+  })
   @IsDate()
   @Type(() => Date)
   eventDate: Date;
 
-  @ApiProperty({ description: 'Event start time', example: '09:00' })
+  @ApiProperty({
+    description: 'Event start time',
+    example: '09:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   startTime: string;
 
@@ -50,6 +58,7 @@ export class EventDto {
     description: 'Event end time',
     example: '17:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()
@@ -116,6 +125,7 @@ export class EventDto {
   @ApiProperty({
     description: 'Event creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -124,6 +134,7 @@ export class EventDto {
   @ApiProperty({
     description: 'Event last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

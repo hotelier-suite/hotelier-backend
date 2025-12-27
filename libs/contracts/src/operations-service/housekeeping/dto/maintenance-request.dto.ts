@@ -83,6 +83,7 @@ export class HousekeepingMaintenanceRequestDto {
   @ApiProperty({
     description: 'Date when the maintenance request was reported',
     example: '2024-01-15T08:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -92,6 +93,7 @@ export class HousekeepingMaintenanceRequestDto {
     description: 'Date when the maintenance request was resolved',
     example: '2024-01-15T11:00:00Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -129,6 +131,7 @@ export class HousekeepingMaintenanceRequestDto {
   @ApiProperty({
     description: 'Date when the record was created',
     example: '2024-01-15T08:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -137,6 +140,7 @@ export class HousekeepingMaintenanceRequestDto {
   @ApiProperty({
     description: 'Date when the record was last updated',
     example: '2024-01-15T11:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

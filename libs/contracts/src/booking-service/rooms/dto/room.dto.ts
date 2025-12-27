@@ -51,12 +51,12 @@ export class RoomDto {
   @Length(1, 1000)
   description?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

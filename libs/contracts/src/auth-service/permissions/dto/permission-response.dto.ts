@@ -51,6 +51,7 @@ export class PermissionResponseDto {
   @ApiProperty({
     description: 'Permission creation timestamp',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -59,6 +60,7 @@ export class PermissionResponseDto {
   @ApiProperty({
     description: 'Permission last update timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

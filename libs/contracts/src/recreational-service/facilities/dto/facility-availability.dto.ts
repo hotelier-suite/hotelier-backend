@@ -32,6 +32,7 @@ export class FacilityAvailabilityDto {
     description: 'Date being checked',
     type: String,
     example: '2024-12-15',
+    format: 'date',
   })
   @IsDate()
   @Type(() => Date)

@@ -18,13 +18,18 @@ export class UpdateCleaningTaskDto extends PartialType(CreateCleaningTaskDto) {
   @ApiProperty({
     description: 'Time when the cleaning started',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
   startTime?: Date;
 
-  @ApiProperty({ description: 'Time when the cleaning ended', required: false })
+  @ApiProperty({
+    description: 'Time when the cleaning ended',
+    required: false,
+    format: 'date-time',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

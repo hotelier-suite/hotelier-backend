@@ -37,6 +37,7 @@ export class UpdateMaintenanceReportDto extends PartialType(
   @ApiProperty({
     description: 'Date and time when maintenance work started',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -46,6 +47,7 @@ export class UpdateMaintenanceReportDto extends PartialType(
   @ApiProperty({
     description: 'Date and time when maintenance work was completed',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()

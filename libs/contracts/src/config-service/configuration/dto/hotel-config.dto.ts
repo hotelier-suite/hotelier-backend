@@ -41,6 +41,7 @@ export class HotelConfigDto {
   @ApiProperty({
     description: 'Standard check-in time',
     example: '15:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   checkInTime: string;
@@ -48,6 +49,7 @@ export class HotelConfigDto {
   @ApiProperty({
     description: 'Standard check-out time',
     example: '11:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   checkOutTime: string;

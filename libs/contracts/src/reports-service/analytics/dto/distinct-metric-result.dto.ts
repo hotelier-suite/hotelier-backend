@@ -20,6 +20,7 @@ export class DistinctMetricResultDto {
   @ApiProperty({
     description: 'Date of the metric',
     example: '2024-01-15T00:00:00.000Z',
+    format: 'date-time',
   })
   @Type(() => Date)
   @IsDate()

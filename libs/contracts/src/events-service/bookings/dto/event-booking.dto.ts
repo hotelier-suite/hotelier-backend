@@ -40,16 +40,28 @@ export class EventBookingDto {
   @Length(0, 1000)
   description?: string;
 
-  @ApiProperty({ description: 'Event date', example: '2024-12-14' })
+  @ApiProperty({
+    description: 'Event date',
+    example: '2024-12-14',
+    format: 'date',
+  })
   @IsDate()
   @Type(() => Date)
   eventDate: Date;
 
-  @ApiProperty({ description: 'Event start time', example: '11:00' })
+  @ApiProperty({
+    description: 'Event start time',
+    example: '11:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   startTime: string;
 
-  @ApiProperty({ description: 'Event end time', example: '16:00' })
+  @ApiProperty({
+    description: 'Event end time',
+    example: '16:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   endTime: string;
 
@@ -142,6 +154,7 @@ export class EventBookingDto {
   @ApiProperty({
     description: 'Event booking creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -150,6 +163,7 @@ export class EventBookingDto {
   @ApiProperty({
     description: 'Event booking last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

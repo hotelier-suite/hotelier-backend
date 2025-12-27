@@ -29,6 +29,7 @@ export class UpdateCleaningAssignmentDto extends PartialType(
   @ApiProperty({
     description: 'Date and time when cleaning work started',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -38,6 +39,7 @@ export class UpdateCleaningAssignmentDto extends PartialType(
   @ApiProperty({
     description: 'Date and time when cleaning work was completed',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()

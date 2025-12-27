@@ -7,6 +7,7 @@ export class PeriodDto {
     description: 'Start date of the statistics period',
     type: String,
     example: '2024-12-01',
+    format: 'date',
   })
   @IsDate()
   @Type(() => Date)
@@ -16,6 +17,7 @@ export class PeriodDto {
     description: 'End date of the statistics period',
     type: String,
     example: '2024-12-31',
+    format: 'date',
   })
   @IsDate()
   @Type(() => Date)

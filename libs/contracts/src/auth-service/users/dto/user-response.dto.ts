@@ -76,6 +76,7 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'User registration date',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -85,6 +86,7 @@ export class UserResponseDto {
     description: 'Last visit timestamp',
     example: '2024-01-15T10:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -94,6 +96,7 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'Account creation timestamp',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -102,6 +105,7 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'Last account update timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -111,6 +115,7 @@ export class UserResponseDto {
     description: 'First visit timestamp',
     example: '2024-01-02T09:15:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -128,6 +133,7 @@ export class UserResponseDto {
     description: 'Last login timestamp',
     example: '2024-01-15T10:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()

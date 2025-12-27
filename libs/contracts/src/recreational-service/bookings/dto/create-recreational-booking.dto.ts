@@ -56,6 +56,7 @@ export class CreateRecreationalBookingDto {
   @ApiProperty({
     description: 'Booking date',
     example: '2024-12-15',
+    format: 'date',
   })
   @IsDateString()
   @Type(() => Date)
@@ -64,6 +65,7 @@ export class CreateRecreationalBookingDto {
   @ApiProperty({
     description: 'Booking start time',
     example: '14:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   startTime: string;
@@ -71,6 +73,7 @@ export class CreateRecreationalBookingDto {
   @ApiProperty({
     description: 'Booking end time',
     example: '16:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   endTime: string;

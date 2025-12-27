@@ -66,6 +66,7 @@ export class UpdateHotelConfigDto {
     description: 'Standard check-in time',
     example: '15:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()
@@ -75,6 +76,7 @@ export class UpdateHotelConfigDto {
     description: 'Standard check-out time',
     example: '11:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
   @IsMilitaryTime()

@@ -109,6 +109,7 @@ export class RecreationalFacilityDto {
   @ApiProperty({
     description: 'Operating hours start time',
     example: '06:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   openingTime: string;
@@ -116,6 +117,7 @@ export class RecreationalFacilityDto {
   @ApiProperty({
     description: 'Operating hours end time',
     example: '22:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   closingTime: string;
@@ -200,6 +202,7 @@ export class RecreationalFacilityDto {
 
   @ApiProperty({
     description: 'Facility creation timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -207,6 +210,7 @@ export class RecreationalFacilityDto {
 
   @ApiProperty({
     description: 'Facility last update timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

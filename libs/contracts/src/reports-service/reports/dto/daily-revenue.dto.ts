@@ -3,7 +3,12 @@ import { Type } from 'class-transformer';
 import { IsDate, IsNumber, Min } from 'class-validator';
 
 export class DailyRevenueDto {
-  @ApiProperty({ description: 'Date', type: String, example: '2024-01-15' })
+  @ApiProperty({
+    description: 'Date',
+    type: String,
+    example: '2024-01-15',
+    format: 'date',
+  })
   @IsDate()
   @Type(() => Date)
   date: Date;

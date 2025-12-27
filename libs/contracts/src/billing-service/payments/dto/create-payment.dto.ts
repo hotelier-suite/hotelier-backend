@@ -54,6 +54,7 @@ export class CreatePaymentDto {
     description: 'Payment processing timestamp',
     example: '2024-01-15T15:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @Type(() => Date)

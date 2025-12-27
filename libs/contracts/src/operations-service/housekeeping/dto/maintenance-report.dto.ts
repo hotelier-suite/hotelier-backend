@@ -91,6 +91,7 @@ export class MaintenanceReportDto {
     description: 'Date and time when maintenance work started',
     example: '2024-01-15T09:00:00Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -101,6 +102,7 @@ export class MaintenanceReportDto {
     description: 'Date and time when maintenance work was completed',
     example: '2024-01-15T11:00:00Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -140,6 +142,7 @@ export class MaintenanceReportDto {
   @ApiProperty({
     description: 'Date when the record was created',
     example: '2024-01-15T08:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -148,6 +151,7 @@ export class MaintenanceReportDto {
   @ApiProperty({
     description: 'Date when the record was last updated',
     example: '2024-01-15T11:00:00Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

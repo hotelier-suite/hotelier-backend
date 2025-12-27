@@ -35,16 +35,28 @@ export class CreateEventBookingDto {
   @Transform(({ value }: { value: string }) => value?.trim())
   description?: string;
 
-  @ApiProperty({ description: 'Event date', example: '2024-12-14' })
+  @ApiProperty({
+    description: 'Event date',
+    example: '2024-12-14',
+    format: 'date',
+  })
   @Type(() => Date)
   @IsDate()
   eventDate: Date;
 
-  @ApiProperty({ description: 'Event start time', example: '11:00' })
+  @ApiProperty({
+    description: 'Event start time',
+    example: '11:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   startTime: string;
 
-  @ApiProperty({ description: 'Event end time', example: '16:00' })
+  @ApiProperty({
+    description: 'Event end time',
+    example: '16:00',
+    format: 'time',
+  })
   @IsMilitaryTime()
   endTime: string;
 

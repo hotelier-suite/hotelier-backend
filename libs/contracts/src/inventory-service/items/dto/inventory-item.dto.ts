@@ -68,7 +68,12 @@ export class InventoryItemDto {
   @Length(1, 100)
   location: string;
 
-  @ApiProperty({ required: false, type: String, example: '2024-01-15' })
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2024-01-15',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
@@ -78,12 +83,12 @@ export class InventoryItemDto {
   @IsEnum(InventoryStatus)
   status: InventoryStatus;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

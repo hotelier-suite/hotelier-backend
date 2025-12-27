@@ -18,7 +18,7 @@ export class UpdateParkingIncidentDto extends PartialType(
   @Length(1, 1000)
   resolution?: string;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String, format: 'date-time' })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

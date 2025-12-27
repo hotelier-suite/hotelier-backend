@@ -19,17 +19,17 @@ export class AttendanceDto {
   @Min(1)
   id: number;
 
-  @ApiProperty({ type: String, example: '2024-01-15' })
+  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ required: false, example: '09:00' })
+  @ApiProperty({ required: false, example: '09:00', format: 'time' })
   @IsOptional()
   @IsMilitaryTime()
   checkIn?: string;
 
-  @ApiProperty({ required: false, example: '17:30' })
+  @ApiProperty({ required: false, example: '17:30', format: 'time' })
   @IsOptional()
   @IsMilitaryTime()
   checkOut?: string;
@@ -60,12 +60,12 @@ export class AttendanceDto {
   @Min(0)
   overtimeHours?: number;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

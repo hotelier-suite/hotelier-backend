@@ -19,16 +19,16 @@ export class ShiftDto {
   @Min(1)
   id: number;
 
-  @ApiProperty({ type: String, example: '2024-01-15' })
+  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ example: '08:00' })
+  @ApiProperty({ example: '08:00', format: 'time' })
   @IsMilitaryTime()
   startTime: string;
 
-  @ApiProperty({ example: '16:00' })
+  @ApiProperty({ example: '16:00', format: 'time' })
   @IsMilitaryTime()
   endTime: string;
 
@@ -56,12 +56,12 @@ export class ShiftDto {
   @Length(1, 500)
   notes?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

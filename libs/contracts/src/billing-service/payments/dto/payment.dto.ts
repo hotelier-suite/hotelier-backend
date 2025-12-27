@@ -67,6 +67,7 @@ export class PaymentDto {
   @ApiProperty({
     description: 'Payment processing timestamp',
     example: '2024-01-15T15:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -83,6 +84,7 @@ export class PaymentDto {
   @ApiProperty({
     description: 'Payment record creation timestamp',
     example: '2024-01-15T15:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -91,6 +93,7 @@ export class PaymentDto {
   @ApiProperty({
     description: 'Payment record last update timestamp',
     example: '2024-01-15T15:35:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

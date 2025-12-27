@@ -31,6 +31,7 @@ export class RolePermissionResponseDto {
   @ApiProperty({
     description: 'Permission assignment timestamp',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

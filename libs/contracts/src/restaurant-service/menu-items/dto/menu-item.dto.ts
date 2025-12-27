@@ -102,6 +102,7 @@ export class MenuItemDto {
 
   @ApiProperty({
     description: 'Creation timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -109,6 +110,7 @@ export class MenuItemDto {
 
   @ApiProperty({
     description: 'Last update timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

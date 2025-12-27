@@ -39,6 +39,7 @@ export class CreateEmployeeRequestDto {
   @ApiProperty({
     description: 'Start date of the request (YYYY-MM-DD)',
     example: '2024-01-15',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()
@@ -47,6 +48,7 @@ export class CreateEmployeeRequestDto {
   @ApiProperty({
     description: 'End date of the request (YYYY-MM-DD)',
     example: '2024-01-20',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()

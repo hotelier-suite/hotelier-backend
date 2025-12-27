@@ -44,6 +44,7 @@ export class InvoiceDto {
   @ApiProperty({
     description: 'Invoice issue date',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -52,6 +53,7 @@ export class InvoiceDto {
   @ApiProperty({
     description: 'Invoice due date',
     example: '2024-02-15T23:59:59.999Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -140,6 +142,7 @@ export class InvoiceDto {
   @ApiProperty({
     description: 'Invoice creation timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -148,6 +151,7 @@ export class InvoiceDto {
   @ApiProperty({
     description: 'Invoice last update timestamp',
     example: '2024-01-15T14:20:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

@@ -36,12 +36,20 @@ export class ReservationDto {
   @IsString()
   guestPhone?: string;
 
-  @ApiProperty({ type: String, example: '2024-01-15T15:00:00.000Z' })
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    example: '2024-01-15T15:00:00.000Z',
+  })
   @IsDate()
   @Type(() => Date)
   checkInDate: Date;
 
-  @ApiProperty({ type: String, example: '2024-01-18T11:00:00.000Z' })
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+    example: '2024-01-18T11:00:00.000Z',
+  })
   @IsDate()
   @Type(() => Date)
   checkOutDate: Date;
@@ -91,12 +99,12 @@ export class ReservationDto {
   @Length(1, 1000)
   notes?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

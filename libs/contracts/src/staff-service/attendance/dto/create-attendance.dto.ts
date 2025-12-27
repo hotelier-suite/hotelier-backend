@@ -13,17 +13,17 @@ import {
 import { AttendanceStatus } from '..';
 
 export class CreateAttendanceDto {
-  @ApiProperty({ type: String, example: '2024-01-15' })
+  @ApiProperty({ type: String, format: 'date', example: '2024-01-15' })
   @IsDate()
   @Type(() => Date)
   date: Date;
 
-  @ApiProperty({ required: false, example: '09:00' })
+  @ApiProperty({ required: false, example: '09:00', format: 'time' })
   @IsOptional()
   @IsMilitaryTime()
   checkIn?: string;
 
-  @ApiProperty({ required: false, example: '17:30' })
+  @ApiProperty({ required: false, example: '17:30', format: 'time' })
   @IsOptional()
   @IsMilitaryTime()
   checkOut?: string;

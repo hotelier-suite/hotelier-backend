@@ -89,6 +89,7 @@ export class CreateRecreationalFacilityDto {
   @ApiProperty({
     description: 'Operating hours start time',
     example: '06:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   openingTime: string;
@@ -96,6 +97,7 @@ export class CreateRecreationalFacilityDto {
   @ApiProperty({
     description: 'Operating hours end time',
     example: '22:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   closingTime: string;

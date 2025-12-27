@@ -69,6 +69,7 @@ export class RoomServiceOrderDto {
   @ApiProperty({
     description: 'Time when the order was placed',
     example: '14:30',
+    format: 'time',
   })
   @IsMilitaryTime()
   orderTime: string;
@@ -123,6 +124,7 @@ export class RoomServiceOrderDto {
 
   @ApiProperty({
     description: 'Creation timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -130,6 +132,7 @@ export class RoomServiceOrderDto {
 
   @ApiProperty({
     description: 'Last update timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

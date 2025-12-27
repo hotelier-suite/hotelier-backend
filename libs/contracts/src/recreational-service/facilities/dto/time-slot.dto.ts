@@ -10,6 +10,7 @@ export class TimeSlotDto {
   @ApiProperty({
     description: 'Start time of the slot',
     example: '14:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   startTime: string;
@@ -17,6 +18,7 @@ export class TimeSlotDto {
   @ApiProperty({
     description: 'End time of the slot',
     example: '15:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   endTime: string;

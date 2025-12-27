@@ -41,6 +41,7 @@ export class UpdateGeneralMaintenanceRequestDto extends PartialType(
     description: 'Date when maintenance was started',
     example: '2024-12-15T09:00:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -51,6 +52,7 @@ export class UpdateGeneralMaintenanceRequestDto extends PartialType(
     description: 'Date when maintenance was completed',
     example: '2024-12-15T11:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()

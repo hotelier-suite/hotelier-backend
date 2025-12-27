@@ -44,7 +44,12 @@ export class GuestDto {
   @IsString()
   nationality?: string;
 
-  @ApiProperty({ required: false, type: String, example: '1985-05-15' })
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '1985-05-15',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)
@@ -59,12 +64,12 @@ export class GuestDto {
   @IsBoolean()
   vip: boolean;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;

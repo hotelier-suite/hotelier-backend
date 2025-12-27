@@ -4,12 +4,12 @@ import { IsDate, IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { RoomType } from '../../rooms';
 
 export class GetAvailabilityDto {
-  @ApiProperty({ example: '2025-09-20' })
+  @ApiProperty({ example: '2025-09-20', format: 'date' })
   @Type(() => Date)
   @IsDate()
   startDate: Date;
 
-  @ApiProperty({ example: '2025-09-23' })
+  @ApiProperty({ example: '2025-09-23', format: 'date' })
   @Type(() => Date)
   @IsDate()
   endDate: Date;

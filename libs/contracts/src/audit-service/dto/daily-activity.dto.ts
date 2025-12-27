@@ -7,6 +7,7 @@ export class DailyActivityDto {
     description: 'Date',
     type: String,
     example: '2024-01-15T00:00:00.000Z',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)

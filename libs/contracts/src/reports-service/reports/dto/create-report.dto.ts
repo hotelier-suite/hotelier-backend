@@ -43,6 +43,7 @@ export class CreateReportDto {
   @ApiProperty({
     description: 'Start date for the report data',
     example: '2024-01-01',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()
@@ -51,6 +52,7 @@ export class CreateReportDto {
   @ApiProperty({
     description: 'End date for the report data',
     example: '2024-01-31',
+    format: 'date',
   })
   @Type(() => Date)
   @IsDate()

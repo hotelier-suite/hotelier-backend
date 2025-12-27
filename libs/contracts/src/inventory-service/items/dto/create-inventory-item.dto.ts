@@ -63,7 +63,12 @@ export class CreateInventoryItemDto {
   @Length(1, 100)
   location: string;
 
-  @ApiProperty({ required: false, type: String, example: '2024-01-15' })
+  @ApiProperty({
+    required: false,
+    type: String,
+    format: 'date',
+    example: '2024-01-15',
+  })
   @IsOptional()
   @IsDate()
   @Type(() => Date)

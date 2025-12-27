@@ -62,6 +62,7 @@ export class RecreationalBookingDto {
   @ApiProperty({
     description: 'Booking date',
     example: '2024-12-15',
+    format: 'date',
   })
   @IsDate()
   @Type(() => Date)
@@ -70,6 +71,7 @@ export class RecreationalBookingDto {
   @ApiProperty({
     description: 'Booking start time',
     example: '14:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   startTime: string;
@@ -77,6 +79,7 @@ export class RecreationalBookingDto {
   @ApiProperty({
     description: 'Booking end time',
     example: '16:00',
+    format: 'time',
   })
   @IsMilitaryTime()
   endTime: string;
@@ -154,6 +157,7 @@ export class RecreationalBookingDto {
     description: 'Actual check-in time',
     example: '2024-12-15T14:05:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -164,6 +168,7 @@ export class RecreationalBookingDto {
     description: 'Actual check-out time',
     example: '2024-12-15T15:58:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
   @IsDate()
@@ -214,6 +219,7 @@ export class RecreationalBookingDto {
 
   @ApiProperty({
     description: 'Booking creation timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
@@ -221,6 +227,7 @@ export class RecreationalBookingDto {
 
   @ApiProperty({
     description: 'Booking last update timestamp',
+    format: 'date-time',
   })
   @IsDate()
   @Type(() => Date)
