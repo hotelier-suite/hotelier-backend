@@ -32,7 +32,7 @@ export class RolesService {
 
   findOne(id: number): Observable<RoleResponseDto> {
     return this.authClient.send<RoleResponseDto, number>(
-      ROLES_PATTERNS.FIND_BY_ID,
+      ROLES_PATTERNS.FIND_ONE,
       id,
     );
   }

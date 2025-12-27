@@ -11,7 +11,7 @@ import {
 export class MovementsController {
   constructor(private readonly movementsService: MovementsService) {}
 
-  @MessagePattern(INVENTORY_MOVEMENTS_PATTERNS.GET_ALL)
+  @MessagePattern(INVENTORY_MOVEMENTS_PATTERNS.FIND_ALL)
   findAll(): Promise<InventoryMovementDto[]> {
     return this.movementsService.findAll();
   }

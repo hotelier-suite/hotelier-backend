@@ -26,7 +26,7 @@ export class ShiftsService {
 
   findOne(id: number): Observable<ShiftDto> {
     return this.staffClient.send<ShiftDto, number>(
-      SHIFTS_PATTERNS.FIND_BY_ID,
+      SHIFTS_PATTERNS.FIND_ONE,
       id,
     );
   }

@@ -18,7 +18,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @MessagePattern(USERS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(USERS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<UserResponseDto> {
     return this.usersService.findOne(id);
   }

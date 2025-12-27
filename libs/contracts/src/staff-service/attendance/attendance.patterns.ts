@@ -1,6 +1,6 @@
 export const ATTENDANCE_PATTERNS = {
   FIND_ALL: 'staff.attendance.findAll',
-  FIND_BY_ID: 'staff.attendance.findById',
+  FIND_ONE: 'staff.attendance.findOne',
   FIND_BY_EMPLOYEE: 'staff.attendance.findByEmployee',
   FIND_BY_DATE: 'staff.attendance.findByDate',
   FIND_BY_DATE_RANGE: 'staff.attendance.findByDateRange',

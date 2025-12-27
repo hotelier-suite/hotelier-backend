@@ -4,7 +4,7 @@ export const USERS_PATTERNS = {
   GET_ROLES: 'auth.users.getRoles',
   GET_PERMISSIONS: 'auth.users.getPermissions',
   FIND_ALL: 'auth.users.findAll',
-  FIND_BY_ID: 'auth.users.findById',
+  FIND_ONE: 'auth.users.findOne',
   CREATE: 'auth.users.create',
   UPDATE: 'auth.users.update',
   DELETE: 'auth.users.delete',

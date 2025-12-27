@@ -27,7 +27,7 @@ export class UsersService {
 
   findOne(id: number): Observable<UserResponseDto> {
     return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.FIND_BY_ID,
+      USERS_PATTERNS.FIND_ONE,
       id,
     );
   }

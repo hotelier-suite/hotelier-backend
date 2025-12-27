@@ -19,7 +19,7 @@ export class MovementsService {
     return this.inventoryClient.send<
       InventoryMovementDto[],
       Record<string, never>
-    >(INVENTORY_MOVEMENTS_PATTERNS.GET_ALL, {});
+    >(INVENTORY_MOVEMENTS_PATTERNS.FIND_ALL, {});
   }
 
   create(data: CreateInventoryMovementDto): Observable<InventoryMovementDto> {

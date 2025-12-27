@@ -14,19 +14,19 @@ import {
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
-  @MessagePattern(VEHICLES_PATTERNS.GET_ALL)
+  @MessagePattern(VEHICLES_PATTERNS.FIND_ALL)
   findAll(
     @Payload() filters: { status?: VehicleStatus; guestType?: GuestType },
   ): Promise<VehicleDto[]> {
     return this.vehiclesService.findAll(filters.status, filters.guestType);
   }
 
-  @MessagePattern(VEHICLES_PATTERNS.GET_BY_ID)
+  @MessagePattern(VEHICLES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<VehicleDto> {
     return this.vehiclesService.findOne(id);
   }
 
-  @MessagePattern(VEHICLES_PATTERNS.GET_BY_LICENSE_PLATE)
+  @MessagePattern(VEHICLES_PATTERNS.FIND_BY_LICENSE_PLATE)
   findByLicensePlate(@Payload() licensePlate: string): Promise<VehicleDto> {
     return this.vehiclesService.findByLicensePlate(licensePlate);
   }

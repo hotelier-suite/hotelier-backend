@@ -12,12 +12,12 @@ import {
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
-  @MessagePattern(SUPPLIERS_PATTERNS.GET_ALL)
+  @MessagePattern(SUPPLIERS_PATTERNS.FIND_ALL)
   findAll(): Promise<SupplierResponseDto[]> {
     return this.suppliersService.findAll();
   }
 
-  @MessagePattern(SUPPLIERS_PATTERNS.GET_BY_ID)
+  @MessagePattern(SUPPLIERS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<SupplierResponseDto> {
     return this.suppliersService.findOne(id);
   }

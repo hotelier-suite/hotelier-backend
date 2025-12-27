@@ -20,7 +20,7 @@ export class ReservationsController {
     return this.reservationsService.findAll();
   }
 
-  @MessagePattern(RESERVATIONS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(RESERVATIONS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ReservationDto> {
     return this.reservationsService.findOne(id);
   }

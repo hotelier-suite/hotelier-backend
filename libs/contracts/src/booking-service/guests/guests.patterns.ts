@@ -1,6 +1,6 @@
 export const GUESTS_PATTERNS = {
   FIND_ALL: 'booking.guests.findAll',
-  FIND_BY_ID: 'booking.guests.findById',
+  FIND_ONE: 'booking.guests.findOne',
   CREATE: 'booking.guests.create',
   UPDATE: 'booking.guests.update',
   DELETE: 'booking.guests.delete',

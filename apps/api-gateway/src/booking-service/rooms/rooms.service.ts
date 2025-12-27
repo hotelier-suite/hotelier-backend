@@ -26,7 +26,7 @@ export class RoomsService {
 
   findOne(id: number): Observable<RoomDto> {
     return this.bookingClient.send<RoomDto, number>(
-      ROOMS_PATTERNS.FIND_BY_ID,
+      ROOMS_PATTERNS.FIND_ONE,
       id,
     );
   }

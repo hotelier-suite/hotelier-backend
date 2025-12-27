@@ -20,12 +20,12 @@ export class SuppliersService {
     return this.inventoryClient.send<
       SupplierResponseDto[],
       Record<string, never>
-    >(SUPPLIERS_PATTERNS.GET_ALL, {});
+    >(SUPPLIERS_PATTERNS.FIND_ALL, {});
   }
 
   findOne(id: number): Observable<SupplierResponseDto> {
     return this.inventoryClient.send<SupplierResponseDto, number>(
-      SUPPLIERS_PATTERNS.GET_BY_ID,
+      SUPPLIERS_PATTERNS.FIND_ONE,
       id,
     );
   }

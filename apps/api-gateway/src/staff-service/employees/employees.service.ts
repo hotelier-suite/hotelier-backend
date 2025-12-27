@@ -34,7 +34,7 @@ export class EmployeesService {
 
   findOne(id: number): Observable<EmployeeDto> {
     return this.staffClient.send<EmployeeDto, number>(
-      EMPLOYEES_PATTERNS.FIND_BY_ID,
+      EMPLOYEES_PATTERNS.FIND_ONE,
       id,
     );
   }

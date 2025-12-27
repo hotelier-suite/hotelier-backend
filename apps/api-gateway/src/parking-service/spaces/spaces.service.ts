@@ -19,42 +19,42 @@ export class SpacesService {
 
   findAll(): Observable<ParkingSpaceDto[]> {
     return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
-      SPACES_PATTERNS.GET_ALL,
+      SPACES_PATTERNS.FIND_ALL,
       {},
     );
   }
 
   findAvailable(): Observable<ParkingSpaceDto[]> {
     return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
-      SPACES_PATTERNS.GET_AVAILABLE,
+      SPACES_PATTERNS.FIND_AVAILABLE,
       {},
     );
   }
 
   findByType(type: SpaceType): Observable<ParkingSpaceDto[]> {
     return this.parkingClient.send<ParkingSpaceDto[], SpaceType>(
-      SPACES_PATTERNS.GET_BY_TYPE,
+      SPACES_PATTERNS.FIND_BY_TYPE,
       type,
     );
   }
 
   findByZone(zone: string): Observable<ParkingSpaceDto[]> {
     return this.parkingClient.send<ParkingSpaceDto[], string>(
-      SPACES_PATTERNS.GET_BY_ZONE,
+      SPACES_PATTERNS.FIND_BY_ZONE,
       zone,
     );
   }
 
   findOne(id: number): Observable<ParkingSpaceDto> {
     return this.parkingClient.send<ParkingSpaceDto, number>(
-      SPACES_PATTERNS.GET_BY_ID,
+      SPACES_PATTERNS.FIND_ONE,
       id,
     );
   }
 
   findByCode(code: string): Observable<ParkingSpaceDto> {
     return this.parkingClient.send<ParkingSpaceDto, string>(
-      SPACES_PATTERNS.GET_BY_CODE,
+      SPACES_PATTERNS.FIND_BY_CODE,
       code,
     );
   }

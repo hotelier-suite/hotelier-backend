@@ -21,7 +21,7 @@ export class EmployeeRequestsController {
     return this.employeeRequestsService.findAll();
   }
 
-  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<EmployeeRequestDto> {
     return this.employeeRequestsService.findOne(id);
   }

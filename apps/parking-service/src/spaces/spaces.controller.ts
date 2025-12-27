@@ -13,32 +13,32 @@ import {
 export class SpacesController {
   constructor(private readonly spacesService: SpacesService) {}
 
-  @MessagePattern(SPACES_PATTERNS.GET_ALL)
+  @MessagePattern(SPACES_PATTERNS.FIND_ALL)
   findAll(): Promise<ParkingSpaceDto[]> {
     return this.spacesService.findAll();
   }
 
-  @MessagePattern(SPACES_PATTERNS.GET_AVAILABLE)
+  @MessagePattern(SPACES_PATTERNS.FIND_AVAILABLE)
   findAvailable(): Promise<ParkingSpaceDto[]> {
     return this.spacesService.findAvailable();
   }
 
-  @MessagePattern(SPACES_PATTERNS.GET_BY_TYPE)
+  @MessagePattern(SPACES_PATTERNS.FIND_BY_TYPE)
   findByType(@Payload() type: SpaceType): Promise<ParkingSpaceDto[]> {
     return this.spacesService.findByType(type);
   }
 
-  @MessagePattern(SPACES_PATTERNS.GET_BY_ZONE)
+  @MessagePattern(SPACES_PATTERNS.FIND_BY_ZONE)
   findByZone(@Payload() zone: string): Promise<ParkingSpaceDto[]> {
     return this.spacesService.findByZone(zone);
   }
 
-  @MessagePattern(SPACES_PATTERNS.GET_BY_ID)
+  @MessagePattern(SPACES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ParkingSpaceDto> {
     return this.spacesService.findOne(id);
   }
 
-  @MessagePattern(SPACES_PATTERNS.GET_BY_CODE)
+  @MessagePattern(SPACES_PATTERNS.FIND_BY_CODE)
   findByCode(@Payload() code: string): Promise<ParkingSpaceDto> {
     return this.spacesService.findByCode(code);
   }

@@ -14,7 +14,7 @@ import {
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
 
-  @MessagePattern(INVENTORY_ITEMS_PATTERNS.GET_ALL)
+  @MessagePattern(INVENTORY_ITEMS_PATTERNS.FIND_ALL)
   findAll(
     @Payload()
     filters: {

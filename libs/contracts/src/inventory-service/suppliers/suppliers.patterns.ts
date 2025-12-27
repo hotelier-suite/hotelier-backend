@@ -1,6 +1,6 @@
 export const SUPPLIERS_PATTERNS = {
-  GET_ALL: 'inventory.suppliers.getAll',
-  GET_BY_ID: 'inventory.suppliers.getById',
+  FIND_ALL: 'inventory.suppliers.findAll',
+  FIND_ONE: 'inventory.suppliers.findOne',
   CREATE: 'inventory.suppliers.create',
   UPDATE: 'inventory.suppliers.update',
   DELETE: 'inventory.suppliers.delete',

@@ -1,6 +1,6 @@
 export const SHIFTS_PATTERNS = {
   FIND_ALL: 'staff.shifts.findAll',
-  FIND_BY_ID: 'staff.shifts.findById',
+  FIND_ONE: 'staff.shifts.findOne',
   FIND_BY_EMPLOYEE: 'staff.shifts.findByEmployee',
   FIND_BY_DATE: 'staff.shifts.findByDate',
   FIND_BY_DATE_RANGE: 'staff.shifts.findByDateRange',

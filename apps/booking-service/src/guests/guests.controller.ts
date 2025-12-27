@@ -18,7 +18,7 @@ export class GuestsController {
     return this.guestsService.findAll(query);
   }
 
-  @MessagePattern(GUESTS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(GUESTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<GuestDto> {
     return this.guestsService.findOne(id);
   }

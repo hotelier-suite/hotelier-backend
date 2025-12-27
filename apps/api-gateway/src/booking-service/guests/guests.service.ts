@@ -26,7 +26,7 @@ export class GuestsService {
 
   findOne(id: number): Observable<GuestDto> {
     return this.bookingClient.send<GuestDto, number>(
-      GUESTS_PATTERNS.FIND_BY_ID,
+      GUESTS_PATTERNS.FIND_ONE,
       id,
     );
   }

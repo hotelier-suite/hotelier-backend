@@ -35,7 +35,7 @@ export class GuestRequestsService {
 
   findOne(id: number): Observable<GuestRequestDto> {
     return this.guestRequestsClient.send<GuestRequestDto, number>(
-      GUEST_REQUESTS_PATTERNS.FIND_BY_ID,
+      GUEST_REQUESTS_PATTERNS.FIND_ONE,
       id,
     );
   }

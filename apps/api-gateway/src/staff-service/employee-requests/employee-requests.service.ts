@@ -27,7 +27,7 @@ export class EmployeeRequestsService {
 
   findOne(id: number): Observable<EmployeeRequestDto> {
     return this.staffClient.send<EmployeeRequestDto, number>(
-      EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_ID,
+      EMPLOYEE_REQUESTS_PATTERNS.FIND_ONE,
       id,
     );
   }

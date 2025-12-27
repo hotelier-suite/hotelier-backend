@@ -16,31 +16,31 @@ import { TaskPriority } from '@app/contracts/common';
 export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_ALL)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_ALL)
   findAll(): Promise<ParkingIncidentDto[]> {
     return this.incidentsService.findAll();
   }
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_STATUS)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_STATUS)
   findByStatus(
     @Payload() status: IncidentStatus,
   ): Promise<ParkingIncidentDto[]> {
     return this.incidentsService.findByStatus(status);
   }
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_PRIORITY)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_PRIORITY)
   findByPriority(
     @Payload() priority: TaskPriority,
   ): Promise<ParkingIncidentDto[]> {
     return this.incidentsService.findByPriority(priority);
   }
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_TYPE)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_TYPE)
   findByType(@Payload() type: IncidentType): Promise<ParkingIncidentDto[]> {
     return this.incidentsService.findByType(type);
   }
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_ID)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ParkingIncidentDto> {
     return this.incidentsService.findOne(id);
   }

@@ -52,7 +52,7 @@ export class ReservationsService {
 
   findOne(id: number): Observable<ReservationDto> {
     return this.bookingClient.send<ReservationDto, number>(
-      RESERVATIONS_PATTERNS.FIND_BY_ID,
+      RESERVATIONS_PATTERNS.FIND_ONE,
       id,
     );
   }

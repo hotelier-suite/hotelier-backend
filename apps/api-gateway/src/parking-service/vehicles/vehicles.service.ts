@@ -25,19 +25,19 @@ export class VehiclesService {
     return this.parkingClient.send<
       VehicleDto[],
       { status?: VehicleStatus; guestType?: GuestType }
-    >(VEHICLES_PATTERNS.GET_ALL, { status, guestType });
+    >(VEHICLES_PATTERNS.FIND_ALL, { status, guestType });
   }
 
   findOne(id: number): Observable<VehicleDto> {
     return this.parkingClient.send<VehicleDto, number>(
-      VEHICLES_PATTERNS.GET_BY_ID,
+      VEHICLES_PATTERNS.FIND_ONE,
       id,
     );
   }
 
   findByLicensePlate(licensePlate: string): Observable<VehicleDto> {
     return this.parkingClient.send<VehicleDto, string>(
-      VEHICLES_PATTERNS.GET_BY_LICENSE_PLATE,
+      VEHICLES_PATTERNS.FIND_BY_LICENSE_PLATE,
       licensePlate,
     );
   }

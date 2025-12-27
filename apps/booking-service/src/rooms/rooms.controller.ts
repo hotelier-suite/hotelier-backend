@@ -18,7 +18,7 @@ export class RoomsController {
     return this.roomsService.findAll();
   }
 
-  @MessagePattern(ROOMS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(ROOMS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<RoomDto> {
     return this.roomsService.findOne(id);
   }

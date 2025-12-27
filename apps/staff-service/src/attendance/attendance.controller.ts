@@ -18,7 +18,7 @@ export class AttendanceController {
     return this.attendanceService.findAll();
   }
 
-  @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_ID)
+  @MessagePattern(ATTENDANCE_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<AttendanceDto> {
     return this.attendanceService.findOne(id);
   }

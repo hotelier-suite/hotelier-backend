@@ -72,7 +72,7 @@ export class AuditService {
 
         const userRequests$ = userIds.map((userId) =>
           this.authClient
-            .send<UserResponseDto, number>(USERS_PATTERNS.FIND_BY_ID, userId)
+            .send<UserResponseDto, number>(USERS_PATTERNS.FIND_ONE, userId)
             .pipe(catchError(() => of(null))),
         );
 

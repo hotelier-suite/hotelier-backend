@@ -21,7 +21,7 @@ export class EmployeesController {
     return this.employeesService.findAll(filters.department);
   }
 
-  @MessagePattern(EMPLOYEES_PATTERNS.FIND_BY_ID)
+  @MessagePattern(EMPLOYEES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<EmployeeDto> {
     return this.employeesService.findOne(id);
   }

@@ -22,7 +22,7 @@ export class RolesController {
     return this.rolesService.findAll();
   }
 
-  @MessagePattern(ROLES_PATTERNS.FIND_BY_ID)
+  @MessagePattern(ROLES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<RoleResponseDto> {
     return this.rolesService.findOne(id);
   }

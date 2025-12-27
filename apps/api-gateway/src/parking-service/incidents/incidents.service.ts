@@ -22,35 +22,35 @@ export class IncidentsService {
 
   findAll(): Observable<ParkingIncidentDto[]> {
     return this.parkingClient.send<ParkingIncidentDto[], Record<string, never>>(
-      INCIDENTS_PATTERNS.GET_ALL,
+      INCIDENTS_PATTERNS.FIND_ALL,
       {},
     );
   }
 
   findByStatus(status: IncidentStatus): Observable<ParkingIncidentDto[]> {
     return this.parkingClient.send<ParkingIncidentDto[], IncidentStatus>(
-      INCIDENTS_PATTERNS.GET_BY_STATUS,
+      INCIDENTS_PATTERNS.FIND_BY_STATUS,
       status,
     );
   }
 
   findByPriority(priority: TaskPriority): Observable<ParkingIncidentDto[]> {
     return this.parkingClient.send<ParkingIncidentDto[], TaskPriority>(
-      INCIDENTS_PATTERNS.GET_BY_PRIORITY,
+      INCIDENTS_PATTERNS.FIND_BY_PRIORITY,
       priority,
     );
   }
 
   findByType(type: IncidentType): Observable<ParkingIncidentDto[]> {
     return this.parkingClient.send<ParkingIncidentDto[], IncidentType>(
-      INCIDENTS_PATTERNS.GET_BY_TYPE,
+      INCIDENTS_PATTERNS.FIND_BY_TYPE,
       type,
     );
   }
 
   findOne(id: number): Observable<ParkingIncidentDto> {
     return this.parkingClient.send<ParkingIncidentDto, number>(
-      INCIDENTS_PATTERNS.GET_BY_ID,
+      INCIDENTS_PATTERNS.FIND_ONE,
       id,
     );
   }

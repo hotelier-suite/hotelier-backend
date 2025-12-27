@@ -25,7 +25,7 @@ export class ItemsService {
     return this.inventoryClient.send<
       InventoryItemDto[],
       { category?: InventoryCategory; status?: InventoryStatus }
-    >(INVENTORY_ITEMS_PATTERNS.GET_ALL, { category, status });
+    >(INVENTORY_ITEMS_PATTERNS.FIND_ALL, { category, status });
   }
 
   create(data: CreateInventoryItemDto): Observable<InventoryItemDto> {

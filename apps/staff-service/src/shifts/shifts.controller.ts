@@ -18,7 +18,7 @@ export class ShiftsController {
     return this.shiftsService.findAll();
   }
 
-  @MessagePattern(SHIFTS_PATTERNS.FIND_BY_ID)
+  @MessagePattern(SHIFTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ShiftDto> {
     return this.shiftsService.findOne(id);
   }

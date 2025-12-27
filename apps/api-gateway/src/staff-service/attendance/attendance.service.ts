@@ -26,7 +26,7 @@ export class AttendanceService {
 
   findOne(id: number): Observable<AttendanceDto> {
     return this.staffClient.send<AttendanceDto, number>(
-      ATTENDANCE_PATTERNS.FIND_BY_ID,
+      ATTENDANCE_PATTERNS.FIND_ONE,
       id,
     );
   }
