@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  BeforeInsert,
 } from 'typeorm';
 import { PaymentMethod, PaymentStatus } from '@app/contracts/billing-service';
 import { DecimalTransformer } from '@app/contracts/common';
@@ -57,4 +58,12 @@ export class Payment {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  generateReference(): void {
+    if (!this.reference) {
+      const suffix = this.invoiceId ? `-${this.invoiceId}` : '';
+      this.reference = `PAY-${Date.now()}${suffix}`;
+    }
+  }
 }

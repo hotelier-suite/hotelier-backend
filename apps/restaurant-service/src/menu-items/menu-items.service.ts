@@ -55,14 +55,7 @@ export class MenuItemsService {
   }
 
   async create(data: CreateMenuItemDto): Promise<MenuItemDto> {
-    const count = await this.menuItemRepository.count();
-    const itemCode = `MENU${String(count + 1).padStart(3, '0')}`;
-
-    return this.menuItemRepository.save({
-      ...data,
-      itemCode,
-      available: data.available ?? true,
-    });
+    return this.menuItemRepository.save(data);
   }
 
   async update(id: number, data: UpdateMenuItemDto): Promise<MenuItemDto> {

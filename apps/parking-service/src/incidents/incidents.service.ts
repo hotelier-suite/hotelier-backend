@@ -59,11 +59,7 @@ export class IncidentsService {
   }
 
   create(data: CreateParkingIncidentDto): Promise<ParkingIncidentDto> {
-    return this.parkingIncidentRepository.save({
-      ...data,
-      status: IncidentStatus.PENDING,
-      reportDate: new Date(),
-    });
+    return this.parkingIncidentRepository.save(data);
   }
 
   async update(

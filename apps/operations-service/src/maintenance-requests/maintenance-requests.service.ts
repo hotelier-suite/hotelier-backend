@@ -40,12 +40,7 @@ export class MaintenanceRequestsService {
   create(
     data: CreateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
-    return this.maintenanceRequestRepository.save({
-      ...data,
-      status: HousekeepingMaintenanceStatus.PENDING,
-      priority: data.priority ?? TaskPriority.NORMAL,
-      reportDate: new Date(),
-    });
+    return this.maintenanceRequestRepository.save(data);
   }
 
   async update(

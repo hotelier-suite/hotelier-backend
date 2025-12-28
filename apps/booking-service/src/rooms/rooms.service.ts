@@ -61,10 +61,7 @@ export class RoomsService {
       });
     }
 
-    return this.roomsRepository.save({
-      ...data,
-      isAvailable: true,
-    });
+    return this.roomsRepository.save(data);
   }
 
   async update(id: number, data: UpdateRoomDto): Promise<RoomDto> {

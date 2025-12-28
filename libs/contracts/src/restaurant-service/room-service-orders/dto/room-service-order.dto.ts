@@ -67,12 +67,13 @@ export class RoomServiceOrderDto {
   total: number;
 
   @ApiProperty({
-    description: 'Time when the order was placed',
-    example: '14:30',
-    format: 'time',
+    description: 'Date and time when the order was placed',
+    example: '2024-01-15T14:30:00.000Z',
+    format: 'date-time',
   })
-  @IsMilitaryTime()
-  orderTime: string;
+  @Type(() => Date)
+  @IsDate()
+  orderDate: Date;
 
   @ApiProperty({
     description: 'Estimated delivery time',

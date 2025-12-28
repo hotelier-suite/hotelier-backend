@@ -94,7 +94,6 @@ export class EmployeeRequestsService {
       startDate: data.startDate,
       endDate: data.endDate,
       days: data.days,
-      status: EmployeeRequestStatus.PENDING,
     });
   }
 

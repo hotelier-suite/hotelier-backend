@@ -29,17 +29,9 @@ export class ItemsService {
   }
 
   async create(data: CreateInventoryItemDto): Promise<InventoryItemDto> {
-    const status = this.calculateItemStatus(
-      data.currentStock,
-      data.minimumStock,
-    );
+    const created = await this.inventoryItemRepository.save(data);
 
-    const created = await this.inventoryItemRepository.save({
-      ...data,
-      status,
-    });
-
-    this.notifyStockChange(null, status, created);
+    this.notifyStockChange(null, created.status, created);
 
     return created;
   }
@@ -59,27 +51,12 @@ export class ItemsService {
       });
     }
 
-    const currentStock = data.currentStock ?? existing.currentStock;
-    const minimumStock = data.minimumStock ?? existing.minimumStock;
-    const status = this.calculateItemStatus(currentStock, minimumStock);
+    const previousStatus = existing.status;
 
-    await this.inventoryItemRepository.update(id, {
-      ...data,
-      status,
-    });
+    const merged = this.inventoryItemRepository.merge(existing, data);
+    const updated = await this.inventoryItemRepository.save(merged);
 
-    const updated = await this.inventoryItemRepository.findOne({
-      where: { id },
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Inventory item with id ${id} not found`,
-      });
-    }
-
-    this.notifyStockChange(existing.status, updated.status, updated);
+    this.notifyStockChange(previousStatus, updated.status, updated);
 
     return updated;
   }
@@ -98,21 +75,6 @@ export class ItemsService {
 
     await this.inventoryItemRepository.remove(item);
     return item;
-  }
-
-  private calculateItemStatus(
-    currentStock: number,
-    minimumStock: number,
-  ): InventoryStatus {
-    if (currentStock === 0) {
-      return InventoryStatus.OUT_OF_STOCK;
-    }
-
-    if (currentStock <= minimumStock) {
-      return InventoryStatus.LOW_STOCK;
-    }
-
-    return InventoryStatus.AVAILABLE;
   }
 
   private notifyStockChange(

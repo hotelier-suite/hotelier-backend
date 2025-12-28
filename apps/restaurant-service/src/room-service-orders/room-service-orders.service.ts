@@ -25,7 +25,7 @@ export class RoomServiceOrdersService {
       guest: true,
       items: true,
       total: true,
-      orderTime: true,
+      orderDate: true,
       estimatedTime: true,
       status: true,
       waiter: true,
@@ -59,18 +59,7 @@ export class RoomServiceOrdersService {
   }
 
   async create(data: CreateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
-    const count = await this.roomServiceOrderRepository.count();
-    const orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
-
-    return this.roomServiceOrderRepository.save({
-      ...data,
-      orderNumber,
-      orderTime: new Date().toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      status: RoomServiceStatus.PENDING,
-    });
+    return this.roomServiceOrderRepository.save(data);
   }
 
   async update(

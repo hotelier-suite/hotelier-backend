@@ -49,11 +49,7 @@ export class MaintenanceRequestsSeeder {
     ];
 
     for (const request of requests) {
-      await this.maintenanceRequestRepository.save({
-        ...request,
-        status: request.status ?? HousekeepingMaintenanceStatus.PENDING,
-        reportDate: new Date(),
-      });
+      await this.maintenanceRequestRepository.save(request);
     }
   }
 }

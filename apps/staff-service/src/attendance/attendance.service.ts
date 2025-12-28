@@ -143,7 +143,6 @@ export class AttendanceService {
       employeeId,
       date: today,
       checkIn: time,
-      status: AttendanceStatus.PRESENT,
     });
   }
 

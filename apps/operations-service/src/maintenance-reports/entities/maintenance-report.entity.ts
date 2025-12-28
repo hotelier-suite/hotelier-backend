@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
 import {
   HousekeepingMaintenanceType,
@@ -71,4 +72,11 @@ export class MaintenanceReport {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  generateReportNumber(): void {
+    if (!this.reportNumber) {
+      this.reportNumber = `MR-${Date.now()}`;
+    }
+  }
 }

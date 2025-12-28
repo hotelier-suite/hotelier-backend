@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  BeforeInsert,
 } from 'typeorm';
 import { InvoiceStatus, PaymentMethod } from '@app/contracts/billing-service';
 import { DecimalTransformer } from '@app/contracts/common';
@@ -83,4 +84,11 @@ export class Invoice {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  generateNumber(): void {
+    if (!this.number) {
+      this.number = `INV-${Date.now()}`;
+    }
+  }
 }

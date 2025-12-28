@@ -55,11 +55,6 @@ export class PaymentsService {
   }
 
   create(data: CreatePaymentDto): Promise<PaymentDto> {
-    return this.paymentRepository.save({
-      ...data,
-      reference: `PAY-${Date.now()}`,
-      status: data.status ?? PaymentStatus.COMPLETED,
-      processedAt: data.processedAt ?? new Date(),
-    });
+    return this.paymentRepository.save(data);
   }
 }

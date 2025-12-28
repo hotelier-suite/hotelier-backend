@@ -45,7 +45,7 @@ export class RecreationalBooking {
   @Column()
   participants: number;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
   totalCost: number;
 
   @Column({

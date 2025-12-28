@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm';
+import type { InsertEvent } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 import {
   RoomServiceStatus,
@@ -35,8 +37,8 @@ export class RoomServiceOrder {
   })
   total: number;
 
-  @Column()
-  orderTime: string;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  orderDate: Date;
 
   @Column({ nullable: true })
   estimatedTime?: string;
@@ -62,4 +64,14 @@ export class RoomServiceOrder {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  async generateOrderNumber(
+    event: InsertEvent<RoomServiceOrder>,
+  ): Promise<void> {
+    if (!this.orderNumber) {
+      const count = await event.manager.count(RoomServiceOrder);
+      this.orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
+    }
+  }
 }

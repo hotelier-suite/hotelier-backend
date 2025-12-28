@@ -145,7 +145,7 @@ export class ReservationsService {
       const roomServiceCharges = roomServiceOrders.map((order) => ({
         orderId: order.id,
         orderNumber: order.orderNumber,
-        orderTime: order.orderTime,
+        orderDate: order.orderDate,
         total: Number(order.total),
         status: order.status,
         items: order.items,

@@ -65,10 +65,7 @@ export class MaintenanceReportsSeeder {
     ];
 
     for (const report of reports) {
-      await this.maintenanceReportRepository.save({
-        ...report,
-        status: report.status ?? HousekeepingMaintenanceStatus.PENDING,
-      });
+      await this.maintenanceReportRepository.save(report);
     }
   }
 }

@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
+import type { InsertEvent } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 import { BeverageStatus } from '@app/contracts/restaurant-service';
 
@@ -56,4 +59,24 @@ export class BeverageInventory {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  async generateItemCode(event: InsertEvent<BeverageInventory>): Promise<void> {
+    if (!this.itemCode) {
+      const count = await event.manager.count(BeverageInventory);
+      this.itemCode = `BEV${String(count + 1).padStart(3, '0')}`;
+    }
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  calculateStatus(): void {
+    if (this.stock === 0) {
+      this.status = BeverageStatus.OUT_OF_STOCK;
+    } else if (this.stock <= this.minimumStock) {
+      this.status = BeverageStatus.LOW_STOCK;
+    } else {
+      this.status = BeverageStatus.AVAILABLE;
+    }
+  }
 }

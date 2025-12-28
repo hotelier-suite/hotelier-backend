@@ -72,19 +72,7 @@ export class BeverageInventoryService {
   }
 
   async create(data: CreateBeverageItemDto): Promise<BeverageInventoryDto> {
-    const count = await this.beverageRepository.count();
-    const itemCode = `BEV${String(count + 1).padStart(3, '0')}`;
-
-    const status =
-      data.stock <= data.minimumStock
-        ? BeverageStatus.LOW_STOCK
-        : BeverageStatus.AVAILABLE;
-
-    return this.beverageRepository.save({
-      ...data,
-      itemCode,
-      status,
-    });
+    return this.beverageRepository.save(data);
   }
 
   async update(
@@ -100,15 +88,8 @@ export class BeverageInventoryService {
       });
     }
 
-    const stock = data.stock ?? existing.stock;
-    const minimumStock = data.minimumStock ?? existing.minimumStock;
-    const status =
-      stock <= minimumStock
-        ? BeverageStatus.LOW_STOCK
-        : BeverageStatus.AVAILABLE;
-
-    await this.beverageRepository.update(id, { ...data, status });
-    return this.findOne(id);
+    const merged = this.beverageRepository.merge(existing, data);
+    return this.beverageRepository.save(merged);
   }
 
   async remove(id: number): Promise<BeverageInventoryDto> {

@@ -80,10 +80,7 @@ export class SpacesService {
   }
 
   create(data: CreateParkingSpaceDto): Promise<ParkingSpaceDto> {
-    return this.parkingSpaceRepository.save({
-      ...data,
-      status: SpaceStatus.AVAILABLE,
-    });
+    return this.parkingSpaceRepository.save(data);
   }
 
   async update(

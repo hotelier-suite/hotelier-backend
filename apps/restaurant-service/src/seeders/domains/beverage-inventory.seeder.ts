@@ -23,7 +23,6 @@ export class BeverageInventorySeeder {
         unitCost: 25.0,
         supplier: 'Wine Distributors Ltd',
         lastPurchase: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'ALC002',
@@ -35,7 +34,6 @@ export class BeverageInventorySeeder {
         unitCost: 22.5,
         supplier: 'Wine Distributors Ltd',
         lastPurchase: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'ALC003',
@@ -47,7 +45,6 @@ export class BeverageInventorySeeder {
         unitCost: 4.5,
         supplier: 'Local Brewery',
         lastPurchase: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'ALC004',
@@ -71,7 +68,6 @@ export class BeverageInventorySeeder {
         unitCost: 3.5,
         supplier: 'Fresh Fruit Suppliers',
         lastPurchase: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'NAL002',
@@ -83,7 +79,6 @@ export class BeverageInventorySeeder {
         unitCost: 18.0,
         supplier: 'Coffee Roasters Inc',
         lastPurchase: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'NAL003',
@@ -95,7 +90,6 @@ export class BeverageInventorySeeder {
         unitCost: 1.5,
         supplier: 'Pure Water Co',
         lastPurchase: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-        status: BeverageStatus.AVAILABLE,
       },
       {
         itemCode: 'NAL004',

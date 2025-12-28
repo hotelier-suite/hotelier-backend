@@ -16,14 +16,7 @@ export class NotificationsService {
   ) {}
 
   create(data: CreateNotificationDto): Promise<NotificationDto> {
-    return this.notificationsRepository.save({
-      type: data.type ?? NotificationType.INFO,
-      title: data.title,
-      message: data.message,
-      refId: data.refId,
-      refType: data.refType,
-      userId: typeof data.userId === 'undefined' ? null : data.userId,
-    });
+    return this.notificationsRepository.save(data);
   }
 
   async findForUser(

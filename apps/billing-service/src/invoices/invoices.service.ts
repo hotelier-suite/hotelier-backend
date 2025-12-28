@@ -110,12 +110,7 @@ export class InvoicesService {
   }
 
   async create(data: CreateInvoiceDto): Promise<InvoiceDto> {
-    const invoice = await this.invoiceRepository.save({
-      ...data,
-      number: `INV-${Date.now()}`,
-      status: data.status ?? InvoiceStatus.PENDING,
-      currency: data.currency ?? 'COP',
-    });
+    const invoice = await this.invoiceRepository.save(data);
 
     const loaded = await this.invoiceRepository.findOne({
       where: { id: invoice.id },
@@ -183,10 +178,8 @@ export class InvoicesService {
     }
 
     await this.paymentRepository.save({
-      reference: `PAY-${Date.now()}-${id}`,
       amount: invoice.total,
       method: paymentMethod ?? PaymentMethod.CASH,
-      status: PaymentStatus.COMPLETED,
       invoiceId: invoice.id,
     });
 

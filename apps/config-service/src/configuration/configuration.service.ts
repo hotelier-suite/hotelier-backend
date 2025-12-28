@@ -51,7 +51,6 @@ export class ConfigurationService {
       key,
       value,
       description,
-      isEditable: true,
     });
   }
 

@@ -54,10 +54,7 @@ export class CleaningTasksSeeder {
     ];
 
     for (const task of tasks) {
-      await this.cleaningTaskRepository.save({
-        ...task,
-        status: task.status ?? CleaningStatus.PENDING,
-      });
+      await this.cleaningTaskRepository.save(task);
     }
   }
 }

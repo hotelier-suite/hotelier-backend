@@ -12,6 +12,13 @@ export class RoomServiceOrdersSeeder {
   ) {}
 
   async seed() {
+    const now = new Date();
+    const createDateWithTime = (hours: number, minutes: number): Date => {
+      const date = new Date(now);
+      date.setHours(hours, minutes, 0, 0);
+      return date;
+    };
+
     const orders = [
       {
         orderNumber: 'RS-2024-001',
@@ -36,7 +43,7 @@ export class RoomServiceOrdersSeeder {
           },
         ],
         total: 33.5,
-        orderTime: '14:30',
+        orderDate: createDateWithTime(14, 30),
         estimatedTime: '25 minutes',
         status: RoomServiceStatus.DELIVERED,
         waiter: 'Amanda Davis',
@@ -64,7 +71,7 @@ export class RoomServiceOrdersSeeder {
           },
         ],
         total: 49.5,
-        orderTime: '19:15',
+        orderDate: createDateWithTime(19, 15),
         estimatedTime: '35 minutes',
         status: RoomServiceStatus.PREPARING,
         waiter: 'James Smith',
@@ -92,7 +99,7 @@ export class RoomServiceOrdersSeeder {
           },
         ],
         total: 65.0,
-        orderTime: '08:00',
+        orderDate: createDateWithTime(8, 0),
         estimatedTime: '20 minutes',
         status: RoomServiceStatus.PENDING,
         specialInstructions: 'Please deliver at exactly 8:30 AM',

@@ -7,6 +7,8 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -132,4 +134,16 @@ export class InventoryItem {
     cascade: true,
   })
   movements: InventoryMovement[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  calculateStatus(): void {
+    if (this.currentStock === 0) {
+      this.status = InventoryStatus.OUT_OF_STOCK;
+    } else if (this.currentStock <= this.minimumStock) {
+      this.status = InventoryStatus.LOW_STOCK;
+    } else {
+      this.status = InventoryStatus.AVAILABLE;
+    }
+  }
 }

@@ -149,11 +149,7 @@ export class BookingsService {
       });
     }
 
-    const saved = await this.recreationalBookingRepository.save({
-      ...data,
-      totalCost: 0,
-      status: RecreationalBookingStatus.PENDING,
-    });
+    const saved = await this.recreationalBookingRepository.save(data);
 
     this.notificationsService
       .create({

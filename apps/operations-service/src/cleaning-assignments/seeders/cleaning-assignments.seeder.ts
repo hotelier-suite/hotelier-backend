@@ -41,11 +41,7 @@ export class CleaningAssignmentsSeeder {
     ];
 
     for (const assignment of assignments) {
-      await this.cleaningAssignmentRepository.save({
-        ...assignment,
-        status: assignment.status ?? CleaningStatus.PENDING,
-        assignedDate: new Date(),
-      });
+      await this.cleaningAssignmentRepository.save(assignment);
     }
   }
 }

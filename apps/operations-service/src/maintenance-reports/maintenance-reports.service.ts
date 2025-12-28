@@ -38,12 +38,7 @@ export class MaintenanceReportsService {
   }
 
   create(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
-    return this.maintenanceReportRepository.save({
-      ...data,
-      reportNumber: `MR-${Date.now()}`,
-      status: HousekeepingMaintenanceStatus.PENDING,
-      priority: data.priority ?? TaskPriority.NORMAL,
-    });
+    return this.maintenanceReportRepository.save(data);
   }
 
   async update(
@@ -56,7 +51,15 @@ export class MaintenanceReportsService {
   }
 
   async remove(id: number): Promise<MaintenanceReportDto> {
-    const report = await this.findOne(id);
+    const report = await this.maintenanceReportRepository.findOne({
+      where: { id },
+    });
+    if (!report) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Maintenance report with id ${id} not found`,
+      });
+    }
     await this.maintenanceReportRepository.remove(report);
     return report;
   }

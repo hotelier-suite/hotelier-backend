@@ -227,8 +227,6 @@ export class ReservationsService {
       checkOutDate,
       nights,
       totalAmount: baseTotal,
-      status: ReservationStatus.PENDING,
-      channel: data.channel ?? BookingChannel.DIRECT,
     });
 
     this.notificationsService
