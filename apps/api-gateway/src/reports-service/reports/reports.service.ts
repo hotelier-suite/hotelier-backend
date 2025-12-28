@@ -7,12 +7,12 @@ import {
   ReportDto,
   CreateReportDto,
   UpdateReportDto,
-  ReportType,
   ReportStatus,
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
   FinancialReportPdfDto,
+  FindReportsFilterDto,
 } from '@app/contracts/reports-service';
 
 @Injectable()
@@ -22,10 +22,10 @@ export class ReportsService {
     private readonly reportsClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ReportDto[]> {
-    return this.reportsClient.send<ReportDto[], Record<string, never>>(
+  findAll(filters: FindReportsFilterDto): Observable<ReportDto[]> {
+    return this.reportsClient.send<ReportDto[], FindReportsFilterDto>(
       REPORTS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -55,30 +55,6 @@ export class ReportsService {
       REPORTS_PATTERNS.DELETE,
       id,
     );
-  }
-
-  findByType(type: ReportType): Observable<ReportDto[]> {
-    return this.reportsClient.send<ReportDto[], ReportType>(
-      REPORTS_PATTERNS.FIND_BY_TYPE,
-      type,
-    );
-  }
-
-  findByStatus(status: ReportStatus): Observable<ReportDto[]> {
-    return this.reportsClient.send<ReportDto[], ReportStatus>(
-      REPORTS_PATTERNS.FIND_BY_STATUS,
-      status,
-    );
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Observable<ReportDto[]> {
-    return this.reportsClient.send<
-      ReportDto[],
-      { startDate: Date; endDate: Date }
-    >(REPORTS_PATTERNS.FIND_BY_DATE_RANGE, {
-      startDate,
-      endDate,
-    });
   }
 
   updateStatus(id: number, status: ReportStatus): Observable<ReportDto> {

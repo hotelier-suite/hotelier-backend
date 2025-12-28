@@ -32,7 +32,7 @@ import {
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
-  ReportType,
+  FindReportsFilterDto,
   ReportStatus,
 } from '@app/contracts/reports-service';
 
@@ -46,80 +46,16 @@ export class ReportsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Reports',
-    description: 'Retrieve a list of all reports.',
+    description:
+      'Retrieve a list of all reports with optional filters for type, status, and date range.',
   })
   @ApiResponse({
     status: 200,
     description: 'Reports retrieved successfully',
     type: [ReportDto],
   })
-  findAll(): Observable<ReportDto[]> {
-    return this.reportsService.findAll();
-  }
-
-  @Get('by-type/:type')
-  @ApiOperation({
-    summary: 'Get Reports by Type',
-    description: 'Retrieve reports filtered by type.',
-  })
-  @ApiParam({
-    name: 'type',
-    enum: ReportType,
-    description: 'Report type to filter by',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reports retrieved successfully',
-    type: [ReportDto],
-  })
-  findByType(@Param('type') type: ReportType): Observable<ReportDto[]> {
-    return this.reportsService.findByType(type);
-  }
-
-  @Get('by-status/:status')
-  @ApiOperation({
-    summary: 'Get Reports by Status',
-    description: 'Retrieve reports filtered by status.',
-  })
-  @ApiParam({
-    name: 'status',
-    enum: ReportStatus,
-    description: 'Report status to filter by',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reports retrieved successfully',
-    type: [ReportDto],
-  })
-  findByStatus(@Param('status') status: ReportStatus): Observable<ReportDto[]> {
-    return this.reportsService.findByStatus(status);
-  }
-
-  @Get('by-date-range')
-  @ApiOperation({
-    summary: 'Get Reports by Date Range',
-    description: 'Retrieve reports within a specific date range.',
-  })
-  @ApiQuery({
-    name: 'startDate',
-    description: 'Start date (YYYY-MM-DD)',
-    example: '2024-01-01',
-  })
-  @ApiQuery({
-    name: 'endDate',
-    description: 'End date (YYYY-MM-DD)',
-    example: '2024-01-31',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reports retrieved successfully',
-    type: [ReportDto],
-  })
-  findByDateRange(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
-  ): Observable<ReportDto[]> {
-    return this.reportsService.findByDateRange(startDate, endDate);
+  findAll(@Query() filters: FindReportsFilterDto): Observable<ReportDto[]> {
+    return this.reportsService.findAll(filters);
   }
 
   @Get('analytics/financial-summary')

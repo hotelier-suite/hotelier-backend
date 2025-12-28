@@ -7,8 +7,8 @@ import {
   InventoryItemDto,
   CreateInventoryItemDto,
   UpdateInventoryItemDto,
-  InventoryCategory,
   InventoryStatus,
+  FindInventoryItemsFilterDto,
 } from '@app/contracts/inventory-service';
 import { NotificationType } from '@app/contracts/notifications-service';
 import { NotificationsService } from '../notifications-service';
@@ -21,12 +21,9 @@ export class ItemsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  findAll(
-    category?: InventoryCategory,
-    status?: InventoryStatus,
-  ): Promise<InventoryItemDto[]> {
+  findAll(filters: FindInventoryItemsFilterDto): Promise<InventoryItemDto[]> {
     return this.inventoryRepository.find({
-      where: { category, status },
+      where: filters,
       order: { name: 'ASC' },
     });
   }

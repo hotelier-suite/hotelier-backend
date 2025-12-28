@@ -6,8 +6,8 @@ import {
   CreateParkingSpaceDto,
   ParkingSpaceDto,
   SPACES_PATTERNS,
-  SpaceType,
   UpdateParkingSpaceDto,
+  FindSpacesFilterDto,
 } from '@app/contracts/parking-service';
 
 @Injectable()
@@ -17,31 +17,10 @@ export class SpacesService {
     private readonly parkingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
+  findAll(filters: FindSpacesFilterDto): Observable<ParkingSpaceDto[]> {
+    return this.parkingClient.send<ParkingSpaceDto[], FindSpacesFilterDto>(
       SPACES_PATTERNS.FIND_ALL,
-      {},
-    );
-  }
-
-  findAvailable(): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
-      SPACES_PATTERNS.FIND_AVAILABLE,
-      {},
-    );
-  }
-
-  findByType(type: SpaceType): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], SpaceType>(
-      SPACES_PATTERNS.FIND_BY_TYPE,
-      type,
-    );
-  }
-
-  findByZone(zone: string): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], string>(
-      SPACES_PATTERNS.FIND_BY_ZONE,
-      zone,
+      filters,
     );
   }
 
@@ -49,13 +28,6 @@ export class SpacesService {
     return this.parkingClient.send<ParkingSpaceDto, number>(
       SPACES_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByCode(code: string): Observable<ParkingSpaceDto> {
-    return this.parkingClient.send<ParkingSpaceDto, string>(
-      SPACES_PATTERNS.FIND_BY_CODE,
-      code,
     );
   }
 

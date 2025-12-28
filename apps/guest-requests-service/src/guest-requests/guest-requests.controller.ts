@@ -6,8 +6,8 @@ import {
   CreateGuestRequestDto,
   GuestRequestDto,
   UpdateGuestRequestDto,
-  RequestPriority,
   GuestRequestStatus,
+  FindGuestRequestsFilterDto,
 } from '@app/contracts/guest-requests-service';
 
 @Controller()
@@ -15,27 +15,15 @@ export class GuestRequestsController {
   constructor(private readonly guestRequestsService: GuestRequestsService) {}
 
   @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<GuestRequestDto[]> {
-    return this.guestRequestsService.findAll();
+  findAll(
+    @Payload() filters: FindGuestRequestsFilterDto,
+  ): Promise<GuestRequestDto[]> {
+    return this.guestRequestsService.findAll(filters);
   }
 
   @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<GuestRequestDto> {
     return this.guestRequestsService.findOne(id);
-  }
-
-  @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_BY_STATUS)
-  findByStatus(
-    @Payload() status: GuestRequestStatus,
-  ): Promise<GuestRequestDto[]> {
-    return this.guestRequestsService.findByStatus(status);
-  }
-
-  @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_BY_PRIORITY)
-  findByPriority(
-    @Payload() priority: RequestPriority,
-  ): Promise<GuestRequestDto[]> {
-    return this.guestRequestsService.findByPriority(priority);
   }
 
   @MessagePattern(GUEST_REQUESTS_PATTERNS.CREATE)
@@ -58,10 +46,5 @@ export class GuestRequestsController {
   @MessagePattern(GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS)
   countByStatus(@Payload() status: GuestRequestStatus): Promise<number> {
     return this.guestRequestsService.countByStatus(status);
-  }
-
-  @MessagePattern(GUEST_REQUESTS_PATTERNS.FIND_RECENT)
-  findRecent(@Payload() limit: number): Promise<GuestRequestDto[]> {
-    return this.guestRequestsService.findRecent(limit);
   }
 }

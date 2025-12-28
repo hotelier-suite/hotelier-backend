@@ -6,6 +6,7 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,7 @@ import {
   BeverageInventoryDto,
   CreateBeverageItemDto,
   UpdateBeverageStockDto,
+  FindBeverageInventoryFilterDto,
 } from '@app/contracts/restaurant-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -37,15 +39,18 @@ export class BeverageInventoryController {
   @Get()
   @ApiOperation({
     summary: 'Get All Beverage Inventory',
-    description: 'Retrieve all beverage inventory items sorted by name.',
+    description:
+      'Retrieve beverage inventory items with optional filters. Filter by low stock status or category.',
   })
   @ApiResponse({
     status: 200,
     description: 'Beverage inventory retrieved successfully',
     type: [BeverageInventoryDto],
   })
-  findAll(): Observable<BeverageInventoryDto[]> {
-    return this.beverageInventoryService.findAll();
+  findAll(
+    @Query() filters: FindBeverageInventoryFilterDto,
+  ): Observable<BeverageInventoryDto[]> {
+    return this.beverageInventoryService.findAll(filters);
   }
 
   @Get(':id')

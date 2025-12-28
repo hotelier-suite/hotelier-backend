@@ -6,7 +6,7 @@ import {
   CreateEmployeeDto,
   UpdateEmployeeDto,
   DepartmentStatsDto,
-  Department,
+  FindEmployeesFilterDto,
 } from '@app/contracts/staff-service';
 import { EmployeesService } from './employees.service';
 
@@ -15,10 +15,8 @@ export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
   @MessagePattern(EMPLOYEES_PATTERNS.FIND_ALL)
-  findAll(
-    @Payload() filters: { department?: Department },
-  ): Promise<EmployeeDto[]> {
-    return this.employeesService.findAll(filters.department);
+  findAll(@Payload() filters: FindEmployeesFilterDto): Promise<EmployeeDto[]> {
+    return this.employeesService.findAll(filters);
   }
 
   @MessagePattern(EMPLOYEES_PATTERNS.FIND_ONE)

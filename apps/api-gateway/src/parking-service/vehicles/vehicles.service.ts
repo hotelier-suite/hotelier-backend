@@ -7,8 +7,7 @@ import {
   VehicleDto,
   CreateVehicleDto,
   UpdateVehicleDto,
-  VehicleStatus,
-  GuestType,
+  FindVehiclesFilterDto,
 } from '@app/contracts/parking-service';
 
 @Injectable()
@@ -18,27 +17,17 @@ export class VehiclesService {
     private readonly parkingClient: ClientProxy,
   ) {}
 
-  findAll(
-    status?: VehicleStatus,
-    guestType?: GuestType,
-  ): Observable<VehicleDto[]> {
-    return this.parkingClient.send<
-      VehicleDto[],
-      { status?: VehicleStatus; guestType?: GuestType }
-    >(VEHICLES_PATTERNS.FIND_ALL, { status, guestType });
+  findAll(filters: FindVehiclesFilterDto): Observable<VehicleDto[]> {
+    return this.parkingClient.send<VehicleDto[], FindVehiclesFilterDto>(
+      VEHICLES_PATTERNS.FIND_ALL,
+      filters,
+    );
   }
 
   findOne(id: number): Observable<VehicleDto> {
     return this.parkingClient.send<VehicleDto, number>(
       VEHICLES_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByLicensePlate(licensePlate: string): Observable<VehicleDto> {
-    return this.parkingClient.send<VehicleDto, string>(
-      VEHICLES_PATTERNS.FIND_BY_LICENSE_PLATE,
-      licensePlate,
     );
   }
 

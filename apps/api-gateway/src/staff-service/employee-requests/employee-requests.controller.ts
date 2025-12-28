@@ -5,9 +5,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  ParseDatePipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,8 +22,7 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  EmployeeRequestType,
-  EmployeeRequestStatus,
+  FindEmployeeRequestsFilterDto,
   ApproveRequestDto,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
@@ -41,15 +40,17 @@ export class EmployeeRequestsController {
   @ApiOperation({
     summary: 'Get All Employee Requests',
     description:
-      'Retrieve all employee permission requests (vacation, sick leave, etc.).',
+      'Retrieve all employee permission requests (vacation, sick leave, etc.). Optionally filter by employee ID, status, type, or date range.',
   })
   @ApiResponse({
     status: 200,
     description: 'Employee requests retrieved successfully',
     type: [EmployeeRequestDto],
   })
-  findAll(): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findAll();
+  findAll(
+    @Query() filters: FindEmployeeRequestsFilterDto,
+  ): Observable<EmployeeRequestDto[]> {
+    return this.employeeRequestsService.findAll(filters);
   }
 
   @Get(':id')
@@ -75,98 +76,6 @@ export class EmployeeRequestsController {
     @Param('id', ParseIntPipe) id: number,
   ): Observable<EmployeeRequestDto> {
     return this.employeeRequestsService.findOne(id);
-  }
-
-  @Get('employee/:employeeId')
-  @ApiOperation({
-    summary: 'Get Employee Requests by Employee',
-    description: 'Retrieve all requests for a specific employee.',
-  })
-  @ApiParam({
-    name: 'employeeId',
-    description: 'Employee ID',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee requests retrieved successfully',
-    type: [EmployeeRequestDto],
-  })
-  findByEmployee(
-    @Param('employeeId', ParseIntPipe) employeeId: number,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByEmployee(employeeId);
-  }
-
-  @Get('status/:status')
-  @ApiOperation({
-    summary: 'Get Employee Requests by Status',
-    description: 'Retrieve all requests with a specific status.',
-  })
-  @ApiParam({
-    name: 'status',
-    description: 'Request status',
-    enum: EmployeeRequestStatus,
-    example: EmployeeRequestStatus.PENDING,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee requests retrieved successfully',
-    type: [EmployeeRequestDto],
-  })
-  findByStatus(
-    @Param('status') status: EmployeeRequestStatus,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByStatus(status);
-  }
-
-  @Get('type/:type')
-  @ApiOperation({
-    summary: 'Get Employee Requests by Type',
-    description: 'Retrieve all requests of a specific type.',
-  })
-  @ApiParam({
-    name: 'type',
-    description: 'Request type',
-    enum: EmployeeRequestType,
-    example: EmployeeRequestType.VACATION,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee requests retrieved successfully',
-    type: [EmployeeRequestDto],
-  })
-  findByType(
-    @Param('type') type: EmployeeRequestType,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByType(type);
-  }
-
-  @Get('range/:startDate/:endDate')
-  @ApiOperation({
-    summary: 'Get Employee Requests by Date Range',
-    description: 'Retrieve all requests within a specified date range.',
-  })
-  @ApiParam({
-    name: 'startDate',
-    description: 'Start date in YYYY-MM-DD format',
-    example: '2024-01-01',
-  })
-  @ApiParam({
-    name: 'endDate',
-    description: 'End date in YYYY-MM-DD format',
-    example: '2024-01-31',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee requests retrieved successfully',
-    type: [EmployeeRequestDto],
-  })
-  findByDateRange(
-    @Param('startDate', ParseDatePipe) startDate: Date,
-    @Param('endDate', ParseDatePipe) endDate: Date,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByDateRange(startDate, endDate);
   }
 
   @Post()

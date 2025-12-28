@@ -104,7 +104,7 @@ export class RecreationalFacilityDto {
     example: true,
   })
   @IsBoolean()
-  isAvailable: boolean;
+  available: boolean;
 
   @ApiProperty({
     description: 'Operating hours start time',

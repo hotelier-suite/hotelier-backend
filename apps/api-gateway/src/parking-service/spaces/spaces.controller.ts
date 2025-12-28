@@ -13,7 +13,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -23,8 +22,8 @@ import { AuditResource } from '@app/contracts/audit-service';
 import { SpacesService } from './spaces.service';
 import {
   CreateParkingSpaceDto,
+  FindSpacesFilterDto,
   ParkingSpaceDto,
-  SpaceType,
   UpdateParkingSpaceDto,
 } from '@app/contracts/parking-service';
 
@@ -38,62 +37,13 @@ export class SpacesController {
   @ApiOperation({
     summary: 'Get All Parking Spaces',
     description:
-      'Retrieve all parking spaces in the facility with their current availability status and assigned vehicle information.',
+      'Retrieve all parking spaces in the facility with their current availability status and assigned vehicle information. Optionally filter by status, type, zone, or code.',
   })
   @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  findAll(): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findAll();
-  }
-
-  @Get('available')
-  @ApiOperation({
-    summary: 'Get Available Spaces',
-    description:
-      'Retrieve all parking spaces that are currently unoccupied and available for assignment.',
-  })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  findAvailable(): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findAvailable();
-  }
-
-  @Get('by-type')
-  @ApiOperation({
-    summary: 'Get Spaces by Type',
-    description:
-      'Retrieve all parking spaces filtered by their type (e.g., standard, handicapped, VIP, electric vehicle).',
-  })
-  @ApiQuery({
-    name: 'type',
-    enum: SpaceType,
-    description: 'Filter parking spaces by their designated type',
-  })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid space type value provided',
-  })
-  findByType(@Query('type') type: SpaceType): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findByType(type);
-  }
-
-  @Get('by-zone')
-  @ApiOperation({
-    summary: 'Get Spaces by Zone',
-    description:
-      'Retrieve all parking spaces within a specific zone or area of the parking facility.',
-  })
-  @ApiQuery({
-    name: 'zone',
-    type: String,
-    description: 'Zone identifier to filter parking spaces (e.g., A, B, C)',
-  })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid zone value provided',
-  })
-  findByZone(@Query('zone') zone: string): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findByZone(zone);
+  findAll(
+    @Query() filters: FindSpacesFilterDto,
+  ): Observable<ParkingSpaceDto[]> {
+    return this.spacesService.findAll(filters);
   }
 
   @Get(':id')
@@ -115,27 +65,6 @@ export class SpacesController {
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<ParkingSpaceDto> {
     return this.spacesService.findOne(id);
-  }
-
-  @Get('code/:code')
-  @ApiOperation({
-    summary: 'Get Parking Space by Code',
-    description:
-      'Retrieve a specific parking space by its code (e.g., A-101). Useful for quick lookups by space label.',
-  })
-  @ApiParam({
-    name: 'code',
-    type: String,
-    description: 'Unique code/label of the parking space',
-    example: 'A-101',
-  })
-  @ApiResponse({ status: 200, type: ParkingSpaceDto })
-  @ApiResponse({
-    status: 404,
-    description: 'Parking space with the specified code not found',
-  })
-  findByCode(@Param('code') code: string): Observable<ParkingSpaceDto> {
-    return this.spacesService.findByCode(code);
   }
 
   @Post()

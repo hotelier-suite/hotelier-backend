@@ -49,7 +49,7 @@ export class RecreationalFacility {
   hourlyRate?: number;
 
   @Column({ default: true })
-  isAvailable: boolean;
+  available: boolean;
 
   @Column({ type: 'time' })
   openingTime: string;

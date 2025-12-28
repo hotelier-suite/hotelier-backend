@@ -7,8 +7,8 @@ import {
   VehicleDto,
   CreateVehicleDto,
   UpdateVehicleDto,
-  GuestType,
   VehicleStatus,
+  FindVehiclesFilterDto,
 } from '@app/contracts/parking-service';
 
 @Injectable()
@@ -69,12 +69,9 @@ export class VehiclesService {
     incidents: true,
   };
 
-  findAll(
-    status?: VehicleStatus,
-    guestType?: GuestType,
-  ): Promise<VehicleDto[]> {
+  findAll(filters: FindVehiclesFilterDto): Promise<VehicleDto[]> {
     return this.vehicleRepository.find({
-      where: { status, guestType },
+      where: filters,
       select: this.vehicleReadSelect,
       relations: this.vehicleReadRelations,
       order: { createdAt: 'DESC' },
@@ -92,23 +89,6 @@ export class VehiclesService {
       throw new RpcException({
         statusCode: 404,
         message: `Vehicle with id ${id} not found`,
-      });
-    }
-
-    return vehicle;
-  }
-
-  async findByLicensePlate(licensePlate: string): Promise<VehicleDto> {
-    const vehicle = await this.vehicleRepository.findOne({
-      where: { licensePlate },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-    });
-
-    if (!vehicle) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Vehicle with license plate ${licensePlate} not found`,
       });
     }
 

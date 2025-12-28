@@ -7,6 +7,7 @@ import {
   BeverageInventoryDto,
   CreateBeverageItemDto,
   UpdateBeverageItemDto,
+  FindBeverageInventoryFilterDto,
 } from '@app/contracts/restaurant-service';
 
 @Injectable()
@@ -16,11 +17,13 @@ export class BeverageInventoryService {
     private readonly restaurantClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<BeverageInventoryDto[]> {
+  findAll(
+    filters: FindBeverageInventoryFilterDto,
+  ): Observable<BeverageInventoryDto[]> {
     return this.restaurantClient.send<
       BeverageInventoryDto[],
-      Record<string, never>
-    >(BEVERAGE_INVENTORY_PATTERNS.FIND_ALL, {});
+      FindBeverageInventoryFilterDto
+    >(BEVERAGE_INVENTORY_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<BeverageInventoryDto> {
@@ -58,20 +61,6 @@ export class BeverageInventoryService {
     return this.restaurantClient.send<BeverageInventoryDto, number>(
       BEVERAGE_INVENTORY_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  findLowStock(): Observable<BeverageInventoryDto[]> {
-    return this.restaurantClient.send<
-      BeverageInventoryDto[],
-      Record<string, never>
-    >(BEVERAGE_INVENTORY_PATTERNS.FIND_LOW_STOCK, {});
-  }
-
-  findByCategory(category: string): Observable<BeverageInventoryDto[]> {
-    return this.restaurantClient.send<BeverageInventoryDto[], string>(
-      BEVERAGE_INVENTORY_PATTERNS.FIND_BY_CATEGORY,
-      category,
     );
   }
 }

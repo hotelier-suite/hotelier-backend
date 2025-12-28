@@ -6,7 +6,7 @@ import {
   ShiftDto,
   CreateShiftDto,
   UpdateShiftDto,
-  ShiftStatus,
+  FindShiftsFilterDto,
 } from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
@@ -17,10 +17,10 @@ export class ShiftsService {
     private readonly staffClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ShiftDto[]> {
-    return this.staffClient.send<ShiftDto[], Record<string, never>>(
+  findAll(filters: FindShiftsFilterDto): Observable<ShiftDto[]> {
+    return this.staffClient.send<ShiftDto[], FindShiftsFilterDto>(
       SHIFTS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -28,34 +28,6 @@ export class ShiftsService {
     return this.staffClient.send<ShiftDto, number>(
       SHIFTS_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByEmployee(employeeId: number): Observable<ShiftDto[]> {
-    return this.staffClient.send<ShiftDto[], number>(
-      SHIFTS_PATTERNS.FIND_BY_EMPLOYEE,
-      employeeId,
-    );
-  }
-
-  findByDate(date: Date): Observable<ShiftDto[]> {
-    return this.staffClient.send<ShiftDto[], Date>(
-      SHIFTS_PATTERNS.FIND_BY_DATE,
-      date,
-    );
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Observable<ShiftDto[]> {
-    return this.staffClient.send<
-      ShiftDto[],
-      { startDate: Date; endDate: Date }
-    >(SHIFTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
-  }
-
-  findByStatus(status: ShiftStatus): Observable<ShiftDto[]> {
-    return this.staffClient.send<ShiftDto[], ShiftStatus>(
-      SHIFTS_PATTERNS.FIND_BY_STATUS,
-      status,
     );
   }
 

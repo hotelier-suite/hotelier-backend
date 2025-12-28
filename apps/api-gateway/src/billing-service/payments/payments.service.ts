@@ -6,6 +6,7 @@ import {
   PAYMENTS_PATTERNS,
   PaymentDto,
   CreatePaymentDto,
+  FindPaymentsFilterDto,
 } from '@app/contracts/billing-service';
 
 @Injectable()
@@ -15,10 +16,10 @@ export class PaymentsService {
     private readonly billingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<PaymentDto[]> {
-    return this.billingClient.send<PaymentDto[], Record<string, never>>(
+  findAll(filters: FindPaymentsFilterDto): Observable<PaymentDto[]> {
+    return this.billingClient.send<PaymentDto[], FindPaymentsFilterDto>(
       PAYMENTS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -33,13 +34,6 @@ export class PaymentsService {
     return this.billingClient.send<PaymentDto, CreatePaymentDto>(
       PAYMENTS_PATTERNS.CREATE,
       data,
-    );
-  }
-
-  findByInvoice(invoiceId: number): Observable<PaymentDto[]> {
-    return this.billingClient.send<PaymentDto[], number>(
-      PAYMENTS_PATTERNS.FIND_BY_INVOICE,
-      invoiceId,
     );
   }
 }

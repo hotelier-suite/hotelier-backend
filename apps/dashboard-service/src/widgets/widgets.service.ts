@@ -7,6 +7,7 @@ import {
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
+  FindWidgetsFilterDto,
 } from '@app/contracts/dashboard-service';
 
 @Injectable()
@@ -21,9 +22,12 @@ export class WidgetsService {
     return this.widgetRepository.save(widget);
   }
 
-  async findAll(): Promise<DashboardWidgetDto[]> {
+  async findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {
     return this.widgetRepository.find({
-      where: { visible: true },
+      where: {
+        visible: true,
+        ...filters,
+      },
       order: { position: 'ASC' },
     });
   }
@@ -52,12 +56,5 @@ export class WidgetsService {
     const widget = await this.findOne(id);
     await this.widgetRepository.remove(widget as DashboardWidget);
     return { ...widget, id };
-  }
-
-  async findByUser(userId: number): Promise<DashboardWidgetDto[]> {
-    return this.widgetRepository.find({
-      where: { userId, visible: true },
-      order: { position: 'ASC' },
-    });
   }
 }

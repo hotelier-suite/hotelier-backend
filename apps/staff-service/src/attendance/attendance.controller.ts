@@ -6,7 +6,7 @@ import {
   AttendanceDto,
   CreateAttendanceDto,
   UpdateAttendanceDto,
-  AttendanceStatus,
+  FindAttendanceFilterDto,
 } from '@app/contracts/staff-service';
 
 @Controller()
@@ -14,38 +14,15 @@ export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 
   @MessagePattern(ATTENDANCE_PATTERNS.FIND_ALL)
-  findAll(): Promise<AttendanceDto[]> {
-    return this.attendanceService.findAll();
+  findAll(
+    @Payload() filters: FindAttendanceFilterDto,
+  ): Promise<AttendanceDto[]> {
+    return this.attendanceService.findAll(filters);
   }
 
   @MessagePattern(ATTENDANCE_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<AttendanceDto> {
     return this.attendanceService.findOne(id);
-  }
-
-  @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_EMPLOYEE)
-  findByEmployee(@Payload() employeeId: number): Promise<AttendanceDto[]> {
-    return this.attendanceService.findByEmployee(employeeId);
-  }
-
-  @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_DATE)
-  findByDate(@Payload() date: Date): Promise<AttendanceDto[]> {
-    return this.attendanceService.findByDate(date);
-  }
-
-  @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_DATE_RANGE)
-  findByDateRange(
-    @Payload() payload: { startDate: Date; endDate: Date },
-  ): Promise<AttendanceDto[]> {
-    return this.attendanceService.findByDateRange(
-      payload.startDate,
-      payload.endDate,
-    );
-  }
-
-  @MessagePattern(ATTENDANCE_PATTERNS.FIND_BY_STATUS)
-  findByStatus(@Payload() status: AttendanceStatus): Promise<AttendanceDto[]> {
-    return this.attendanceService.findByStatus(status);
   }
 
   @MessagePattern(ATTENDANCE_PATTERNS.CREATE)

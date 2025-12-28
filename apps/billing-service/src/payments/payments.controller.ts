@@ -5,6 +5,7 @@ import {
   PAYMENTS_PATTERNS,
   PaymentDto,
   CreatePaymentDto,
+  FindPaymentsFilterDto,
 } from '@app/contracts/billing-service';
 
 @Controller()
@@ -12,8 +13,8 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @MessagePattern(PAYMENTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<PaymentDto[]> {
-    return this.paymentsService.findAll();
+  findAll(@Payload() filters: FindPaymentsFilterDto): Promise<PaymentDto[]> {
+    return this.paymentsService.findAll(filters);
   }
 
   @MessagePattern(PAYMENTS_PATTERNS.FIND_ONE)
@@ -24,10 +25,5 @@ export class PaymentsController {
   @MessagePattern(PAYMENTS_PATTERNS.CREATE)
   create(@Payload() data: CreatePaymentDto): Promise<PaymentDto> {
     return this.paymentsService.create(data);
-  }
-
-  @MessagePattern(PAYMENTS_PATTERNS.FIND_BY_INVOICE)
-  findByInvoice(@Payload() invoiceId: number): Promise<PaymentDto[]> {
-    return this.paymentsService.findByInvoice(invoiceId);
   }
 }

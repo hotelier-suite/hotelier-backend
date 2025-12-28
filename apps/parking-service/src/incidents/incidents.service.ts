@@ -9,9 +9,8 @@ import {
   UpdateParkingIncidentDto,
   ResolveIncidentRequestDto,
   IncidentStatus,
-  IncidentType,
+  FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
-import { TaskPriority } from '@app/contracts/common';
 
 @Injectable()
 export class IncidentsService {
@@ -37,32 +36,9 @@ export class IncidentsService {
       spaceId: true,
     };
 
-  findAll(): Promise<ParkingIncidentDto[]> {
+  findAll(filters: FindIncidentsFilterDto): Promise<ParkingIncidentDto[]> {
     return this.parkingIncidentRepository.find({
-      select: this.parkingIncidentReadSelect,
-      order: { reportDate: 'DESC' },
-    });
-  }
-
-  findByStatus(status: IncidentStatus): Promise<ParkingIncidentDto[]> {
-    return this.parkingIncidentRepository.find({
-      where: { status },
-      select: this.parkingIncidentReadSelect,
-      order: { reportDate: 'DESC' },
-    });
-  }
-
-  findByPriority(priority: TaskPriority): Promise<ParkingIncidentDto[]> {
-    return this.parkingIncidentRepository.find({
-      where: { priority },
-      select: this.parkingIncidentReadSelect,
-      order: { reportDate: 'DESC' },
-    });
-  }
-
-  findByType(type: IncidentType): Promise<ParkingIncidentDto[]> {
-    return this.parkingIncidentRepository.find({
-      where: { type },
+      where: filters,
       select: this.parkingIncidentReadSelect,
       order: { reportDate: 'DESC' },
     });

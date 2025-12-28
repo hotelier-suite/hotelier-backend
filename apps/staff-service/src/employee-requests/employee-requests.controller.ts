@@ -5,8 +5,7 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  EmployeeRequestStatus,
-  EmployeeRequestType,
+  FindEmployeeRequestsFilterDto,
 } from '@app/contracts/staff-service';
 import { EmployeeRequestsService } from './employee-requests.service';
 
@@ -17,42 +16,15 @@ export class EmployeeRequestsController {
   ) {}
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findAll();
+  findAll(
+    @Payload() filters: FindEmployeeRequestsFilterDto,
+  ): Promise<EmployeeRequestDto[]> {
+    return this.employeeRequestsService.findAll(filters);
   }
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<EmployeeRequestDto> {
     return this.employeeRequestsService.findOne(id);
-  }
-
-  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_EMPLOYEE)
-  findByEmployee(@Payload() employeeId: number): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByEmployee(employeeId);
-  }
-
-  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_STATUS)
-  findByStatus(
-    @Payload() status: EmployeeRequestStatus,
-  ): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByStatus(status);
-  }
-
-  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_TYPE)
-  findByType(
-    @Payload() type: EmployeeRequestType,
-  ): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByType(type);
-  }
-
-  @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_DATE_RANGE)
-  findByDateRange(
-    @Payload() payload: { startDate: Date; endDate: Date },
-  ): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestsService.findByDateRange(
-      payload.startDate,
-      payload.endDate,
-    );
   }
 
   @MessagePattern(EMPLOYEE_REQUESTS_PATTERNS.CREATE)

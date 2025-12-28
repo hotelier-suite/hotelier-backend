@@ -8,8 +8,6 @@ import {
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-  AuditResource,
-  AuditAction,
   ActionSummaryResult,
   ResourceSummaryResult,
   UserSummaryResult,
@@ -145,34 +143,6 @@ export class AuditService {
     }
 
     return auditLog;
-  }
-
-  findByUser(userId: number, limit: number = 100): Promise<AuditLogDto[]> {
-    return this.auditLogRepository.find({
-      where: { userId },
-      select: this.auditLogReadSelect,
-      order: { createdAt: 'DESC' },
-      take: limit,
-    });
-  }
-
-  findByResource(
-    resource: AuditResource,
-    resourceId: string,
-  ): Promise<AuditLogDto[]> {
-    return this.auditLogRepository.find({
-      where: { resource, resourceId },
-      select: this.auditLogReadSelect,
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByAction(action: string): Promise<AuditLogDto[]> {
-    return this.auditLogRepository.find({
-      where: { action: action as AuditAction },
-      select: this.auditLogReadSelect,
-      order: { createdAt: 'DESC' },
-    });
   }
 
   async getStatistics(days: number = 30): Promise<AuditStatisticsDto> {

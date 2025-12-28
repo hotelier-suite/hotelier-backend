@@ -7,7 +7,7 @@ import {
   InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
-  InvoiceStatus,
+  FindInvoicesFilterDto,
   PaymentMethod,
 } from '@app/contracts/billing-service';
 
@@ -16,19 +16,8 @@ export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
   @MessagePattern(INVOICES_PATTERNS.FIND_ALL)
-  findAll(
-    @Payload()
-    filters: {
-      status?: InvoiceStatus;
-      startDate?: Date;
-      endDate?: Date;
-    },
-  ): Promise<InvoiceDto[]> {
-    return this.invoicesService.findAll(
-      filters.status,
-      filters.startDate,
-      filters.endDate,
-    );
+  findAll(@Payload() filters: FindInvoicesFilterDto): Promise<InvoiceDto[]> {
+    return this.invoicesService.findAll(filters);
   }
 
   @MessagePattern(INVOICES_PATTERNS.FIND_ONE)
@@ -51,11 +40,6 @@ export class InvoicesController {
   @MessagePattern(INVOICES_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<InvoiceDto> {
     return this.invoicesService.remove(id);
-  }
-
-  @MessagePattern(INVOICES_PATTERNS.FIND_BY_CUSTOMER)
-  findByCustomer(@Payload() userId: number): Promise<InvoiceDto[]> {
-    return this.invoicesService.findByCustomer(userId);
   }
 
   @MessagePattern(INVOICES_PATTERNS.MARK_AS_PAID)

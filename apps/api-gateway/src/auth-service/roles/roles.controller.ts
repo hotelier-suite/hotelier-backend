@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   ParseIntPipe,
   HttpCode,
   HttpStatus,
@@ -23,6 +24,7 @@ import {
   CreateRoleDto,
   RoleResponseDto,
   UpdateRoleDto,
+  FindRolesFilterDto,
 } from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AuditLog } from '../../audit-service';
@@ -62,40 +64,15 @@ export class RolesController {
   @ApiOperation({
     summary: 'Get All Roles',
     description:
-      'Retrieve all roles in the system with their associated permissions.',
+      'Retrieve all roles in the system with their associated permissions. Optionally filter by name.',
   })
   @ApiResponse({
     status: 200,
     description: 'Roles retrieved successfully',
     type: [RoleResponseDto],
   })
-  findAll(): Observable<RoleResponseDto[]> {
-    return this.rolesService.findAll();
-  }
-
-  @Get('name/:name')
-  @ApiOperation({
-    summary: 'Get Role by Name',
-    description:
-      'Retrieve a specific role by its unique name with associated permissions.',
-  })
-  @ApiParam({
-    name: 'name',
-    description: 'Unique name of the role',
-    type: 'string',
-    example: 'admin',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Role retrieved successfully',
-    type: RoleResponseDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Role not found',
-  })
-  findByName(@Param('name') name: string): Observable<RoleResponseDto> {
-    return this.rolesService.findByName(name);
+  findAll(@Query() filters: FindRolesFilterDto): Observable<RoleResponseDto[]> {
+    return this.rolesService.findAll(filters);
   }
 
   @Get(':id')

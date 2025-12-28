@@ -7,7 +7,7 @@ import {
   CreateRecreationalFacilityDto,
   UpdateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-  FacilityType,
+  FindFacilitiesFilterDto,
 } from '@app/contracts/recreational-service';
 
 @Controller()
@@ -15,8 +15,10 @@ export class FacilitiesController {
   constructor(private readonly facilitiesService: FacilitiesService) {}
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.FIND_ALL)
-  findAll(): Promise<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findAll();
+  findAll(
+    @Payload() filters: FindFacilitiesFilterDto,
+  ): Promise<RecreationalFacilityDto[]> {
+    return this.facilitiesService.findAll(filters);
   }
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.FIND_ONE)
@@ -41,18 +43,6 @@ export class FacilitiesController {
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<RecreationalFacilityDto> {
     return this.facilitiesService.remove(id);
-  }
-
-  @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.FIND_AVAILABLE)
-  findAvailable(): Promise<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findAvailable();
-  }
-
-  @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.FIND_BY_TYPE)
-  findByType(
-    @Payload() type: FacilityType,
-  ): Promise<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findByType(type);
   }
 
   @MessagePattern(RECREATIONAL_FACILITIES_PATTERNS.GET_AVAILABILITY)

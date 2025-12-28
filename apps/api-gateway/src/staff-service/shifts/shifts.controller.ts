@@ -5,9 +5,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  ParseDatePipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -19,9 +19,9 @@ import {
 import { Observable } from 'rxjs';
 import {
   CreateShiftDto,
+  FindShiftsFilterDto,
   ShiftDto,
   UpdateShiftDto,
-  ShiftStatus,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -36,15 +36,15 @@ export class ShiftsController {
   @ApiOperation({
     summary: 'Get All Shifts',
     description:
-      'Retrieve all shifts with employee information, sorted by date (newest first).',
+      'Retrieve all shifts with employee information. Optionally filter by employee ID, date, date range, or status.',
   })
   @ApiResponse({
     status: 200,
     description: 'Shifts retrieved successfully',
     type: [ShiftDto],
   })
-  findAll(): Observable<ShiftDto[]> {
-    return this.shiftsService.findAll();
+  findAll(@Query() filters: FindShiftsFilterDto): Observable<ShiftDto[]> {
+    return this.shiftsService.findAll(filters);
   }
 
   @Get(':id')
@@ -70,97 +70,6 @@ export class ShiftsController {
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<ShiftDto> {
     return this.shiftsService.findOne(id);
-  }
-
-  @Get('employee/:employeeId')
-  @ApiOperation({
-    summary: 'Get Shifts by Employee',
-    description: 'Retrieve all shifts for a specific employee.',
-  })
-  @ApiParam({
-    name: 'employeeId',
-    description: 'Employee ID',
-    type: 'number',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee shifts retrieved successfully',
-    type: [ShiftDto],
-  })
-  findByEmployee(
-    @Param('employeeId', ParseIntPipe) employeeId: number,
-  ): Observable<ShiftDto[]> {
-    return this.shiftsService.findByEmployee(employeeId);
-  }
-
-  @Get('date/:date')
-  @ApiOperation({
-    summary: 'Get Shifts by Date',
-    description: 'Retrieve all shifts for a specific date.',
-  })
-  @ApiParam({
-    name: 'date',
-    description: 'Date in YYYY-MM-DD format',
-    type: 'string',
-    example: '2024-01-15',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Shifts for date retrieved successfully',
-    type: [ShiftDto],
-  })
-  findByDate(@Param('date', ParseDatePipe) date: Date): Observable<ShiftDto[]> {
-    return this.shiftsService.findByDate(date);
-  }
-
-  @Get('range/:startDate/:endDate')
-  @ApiOperation({
-    summary: 'Get Shifts by Date Range',
-    description: 'Retrieve all shifts within a specific date range.',
-  })
-  @ApiParam({
-    name: 'startDate',
-    description: 'Start date in YYYY-MM-DD format',
-    type: 'string',
-    example: '2024-01-15',
-  })
-  @ApiParam({
-    name: 'endDate',
-    description: 'End date in YYYY-MM-DD format',
-    type: 'string',
-    example: '2024-01-22',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Shifts in date range retrieved successfully',
-    type: [ShiftDto],
-  })
-  findByDateRange(
-    @Param('startDate', ParseDatePipe) startDate: Date,
-    @Param('endDate', ParseDatePipe) endDate: Date,
-  ): Observable<ShiftDto[]> {
-    return this.shiftsService.findByDateRange(startDate, endDate);
-  }
-
-  @Get('status/:status')
-  @ApiOperation({
-    summary: 'Get Shifts by Status',
-    description: 'Retrieve all shifts with a specific status.',
-  })
-  @ApiParam({
-    name: 'status',
-    description: 'Shift status',
-    enum: ShiftStatus,
-    example: ShiftStatus.SCHEDULED,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Shifts with status retrieved successfully',
-    type: [ShiftDto],
-  })
-  findByStatus(@Param('status') status: ShiftStatus): Observable<ShiftDto[]> {
-    return this.shiftsService.findByStatus(status);
   }
 
   @Post()

@@ -14,7 +14,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -24,10 +23,9 @@ import { AuditResource } from '@app/contracts/audit-service';
 import { VehiclesService } from './vehicles.service';
 import {
   CreateVehicleDto,
-  GuestType,
+  FindVehiclesFilterDto,
   UpdateVehicleDto,
   VehicleDto,
-  VehicleStatus,
 } from '@app/contracts/parking-service';
 
 @ApiTags('parking')
@@ -40,26 +38,11 @@ export class VehiclesController {
   @ApiOperation({
     summary: 'Get All Vehicles',
     description:
-      'Retrieve all registered vehicles in the parking system with their current status and assigned space information. Optionally filter by status or guest type.',
-  })
-  @ApiQuery({
-    name: 'status',
-    enum: VehicleStatus,
-    required: false,
-    description: 'Filter vehicles by their current parking status',
-  })
-  @ApiQuery({
-    name: 'guestType',
-    enum: GuestType,
-    required: false,
-    description: 'Filter vehicles by the type of guest',
+      'Retrieve all registered vehicles in the parking system with their current status and assigned space information. Optionally filter by status, guest type, or license plate.',
   })
   @ApiResponse({ status: 200, type: [VehicleDto] })
-  findAll(
-    @Query('status') status?: VehicleStatus,
-    @Query('guestType') guestType?: GuestType,
-  ): Observable<VehicleDto[]> {
-    return this.vehiclesService.findAll(status, guestType);
+  findAll(@Query() filters: FindVehiclesFilterDto): Observable<VehicleDto[]> {
+    return this.vehiclesService.findAll(filters);
   }
 
   @Get(':id')
@@ -81,29 +64,6 @@ export class VehiclesController {
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<VehicleDto> {
     return this.vehiclesService.findOne(id);
-  }
-
-  @Get('license/:licensePlate')
-  @ApiOperation({
-    summary: 'Get Vehicle by License Plate',
-    description:
-      'Retrieve a specific vehicle by its license plate number. Useful for quick lookups at parking entry/exit points.',
-  })
-  @ApiParam({
-    name: 'licensePlate',
-    type: String,
-    description: 'License plate number of the vehicle',
-    example: 'ABC-1234',
-  })
-  @ApiResponse({ status: 200, type: VehicleDto })
-  @ApiResponse({
-    status: 404,
-    description: 'Vehicle with the specified license plate not found',
-  })
-  findByLicensePlate(
-    @Param('licensePlate') licensePlate: string,
-  ): Observable<VehicleDto> {
-    return this.vehiclesService.findByLicensePlate(licensePlate);
   }
 
   @Post()

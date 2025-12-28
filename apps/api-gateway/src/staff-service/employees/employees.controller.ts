@@ -13,7 +13,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -22,8 +21,8 @@ import {
   CreateEmployeeDto,
   DepartmentStatsDto,
   EmployeeDto,
+  FindEmployeesFilterDto,
   UpdateEmployeeDto,
-  Department,
 } from '@app/contracts/staff-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -70,22 +69,13 @@ export class EmployeesController {
     summary: 'Get All Employees',
     description: 'Retrieve all employees. Optionally filter by department.',
   })
-  @ApiQuery({
-    name: 'department',
-    enum: Department,
-    required: false,
-    description: 'Filter by department',
-    example: Department.HOUSEKEEPING,
-  })
   @ApiResponse({
     status: 200,
     description: 'Employees retrieved successfully',
     type: [EmployeeDto],
   })
-  findAll(
-    @Query('department') department?: Department,
-  ): Observable<EmployeeDto[]> {
-    return this.employeesService.findAll(department);
+  findAll(@Query() filters: FindEmployeesFilterDto): Observable<EmployeeDto[]> {
+    return this.employeesService.findAll(filters);
   }
 
   @Get('stats/departments')

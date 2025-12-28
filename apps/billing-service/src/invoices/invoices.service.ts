@@ -17,6 +17,7 @@ import {
   InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
+  FindInvoicesFilterDto,
 } from '@app/contracts/billing-service';
 import * as PDFDocument from 'pdfkit';
 
@@ -61,16 +62,14 @@ export class InvoicesService {
     invoiceItems: true,
   };
 
-  findAll(
-    status?: InvoiceStatus,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<InvoiceDto[]> {
+  findAll(filters: FindInvoicesFilterDto): Promise<InvoiceDto[]> {
     return this.invoiceRepository.find({
       where: {
-        status,
-        createdAt:
-          startDate && endDate ? Between(startDate, endDate) : undefined,
+        ...filters,
+        ...(filters.startDate &&
+          filters.endDate && {
+            createdAt: Between(filters.startDate, filters.endDate),
+          }),
       },
       select: this.invoiceReadSelect,
       relations: this.invoiceReadRelations,
@@ -149,15 +148,6 @@ export class InvoicesService {
 
     await this.invoiceRepository.remove(invoice);
     return invoice;
-  }
-
-  findByCustomer(userId: number): Promise<InvoiceDto[]> {
-    return this.invoiceRepository.find({
-      where: { userId },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
-      order: { createdAt: 'DESC' },
-    });
   }
 
   async markAsPaid(

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -8,7 +8,10 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { PaymentsService } from './payments.service';
-import { PaymentDto } from '@app/contracts/billing-service';
+import {
+  FindPaymentsFilterDto,
+  PaymentDto,
+} from '@app/contracts/billing-service';
 
 @ApiTags('billing')
 @Controller('billing/payments')
@@ -19,15 +22,16 @@ export class PaymentsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Payments',
-    description: 'Retrieve all payment records.',
+    description:
+      'Retrieve all payment records. Optionally filter by invoice ID.',
   })
   @ApiResponse({
     status: 200,
     description: 'Payments retrieved successfully',
     type: [PaymentDto],
   })
-  findAll(): Observable<PaymentDto[]> {
-    return this.paymentsService.findAll();
+  findAll(@Query() filters: FindPaymentsFilterDto): Observable<PaymentDto[]> {
+    return this.paymentsService.findAll(filters);
   }
 
   @Get(':id')
@@ -52,31 +56,5 @@ export class PaymentsController {
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<PaymentDto> {
     return this.paymentsService.findOne(id);
-  }
-
-  @Get('invoice/:invoiceId')
-  @ApiOperation({
-    summary: 'Get Payments by Invoice',
-    description: 'Retrieve all payments associated with a specific invoice.',
-  })
-  @ApiParam({
-    name: 'invoiceId',
-    description: 'Invoice ID',
-    example: 1,
-    type: Number,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Payments retrieved successfully',
-    type: [PaymentDto],
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Invoice not found',
-  })
-  findByInvoice(
-    @Param('invoiceId', ParseIntPipe) invoiceId: number,
-  ): Observable<PaymentDto[]> {
-    return this.paymentsService.findByInvoice(invoiceId);
   }
 }

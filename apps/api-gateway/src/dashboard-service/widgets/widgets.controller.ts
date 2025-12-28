@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import {
   DashboardWidgetDto,
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
+  FindWidgetsFilterDto,
 } from '@app/contracts/dashboard-service';
 
 @ApiTags('dashboard')
@@ -57,15 +59,18 @@ export class WidgetsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Widgets',
-    description: 'Retrieve all dashboard widgets.',
+    description:
+      'Retrieve all dashboard widgets with optional filtering by user ID.',
   })
   @ApiResponse({
     status: 200,
     description: 'Widgets retrieved successfully',
     type: [DashboardWidgetDto],
   })
-  findAll(): Observable<DashboardWidgetDto[]> {
-    return this.widgetsService.findAll();
+  findAll(
+    @Query() filters: FindWidgetsFilterDto,
+  ): Observable<DashboardWidgetDto[]> {
+    return this.widgetsService.findAll(filters);
   }
 
   @Get(':id')
@@ -149,27 +154,5 @@ export class WidgetsController {
     @Param('id', ParseIntPipe) id: number,
   ): Observable<DashboardWidgetDto> {
     return this.widgetsService.remove(id);
-  }
-
-  @Get('user/:userId')
-  @ApiOperation({
-    summary: 'Get Widgets by User',
-    description: 'Retrieve all dashboard widgets for a specific user.',
-  })
-  @ApiParam({
-    name: 'userId',
-    description: 'User ID',
-    example: 1,
-    type: Number,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'User widgets retrieved successfully',
-    type: [DashboardWidgetDto],
-  })
-  findByUser(
-    @Param('userId', ParseIntPipe) userId: number,
-  ): Observable<DashboardWidgetDto[]> {
-    return this.widgetsService.findByUser(userId);
   }
 }

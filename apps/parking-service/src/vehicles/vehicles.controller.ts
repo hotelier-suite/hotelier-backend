@@ -6,8 +6,7 @@ import {
   VehicleDto,
   CreateVehicleDto,
   UpdateVehicleDto,
-  GuestType,
-  VehicleStatus,
+  FindVehiclesFilterDto,
 } from '@app/contracts/parking-service';
 
 @Controller()
@@ -15,20 +14,13 @@ export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @MessagePattern(VEHICLES_PATTERNS.FIND_ALL)
-  findAll(
-    @Payload() filters: { status?: VehicleStatus; guestType?: GuestType },
-  ): Promise<VehicleDto[]> {
-    return this.vehiclesService.findAll(filters.status, filters.guestType);
+  findAll(@Payload() filters: FindVehiclesFilterDto): Promise<VehicleDto[]> {
+    return this.vehiclesService.findAll(filters);
   }
 
   @MessagePattern(VEHICLES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<VehicleDto> {
     return this.vehiclesService.findOne(id);
-  }
-
-  @MessagePattern(VEHICLES_PATTERNS.FIND_BY_LICENSE_PLATE)
-  findByLicensePlate(@Payload() licensePlate: string): Promise<VehicleDto> {
-    return this.vehiclesService.findByLicensePlate(licensePlate);
   }
 
   @MessagePattern(VEHICLES_PATTERNS.CREATE)

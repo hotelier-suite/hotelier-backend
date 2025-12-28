@@ -8,6 +8,7 @@ import {
   CreateBeverageItemDto,
   UpdateBeverageItemDto,
   BeverageStatus,
+  FindBeverageInventoryFilterDto,
 } from '@app/contracts/restaurant-service';
 
 @Injectable()
@@ -33,8 +34,14 @@ export class BeverageInventoryService {
     updatedAt: true,
   };
 
-  findAll(): Promise<BeverageInventoryDto[]> {
+  findAll(
+    filters: FindBeverageInventoryFilterDto,
+  ): Promise<BeverageInventoryDto[]> {
     return this.beverageRepository.find({
+      where: {
+        ...(filters.lowStock && { status: BeverageStatus.LOW_STOCK }),
+        ...(filters.category && { category: filters.category }),
+      },
       select: this.readSelect,
       order: { name: 'ASC' },
     });
@@ -144,21 +151,5 @@ export class BeverageInventoryService {
 
     await this.beverageRepository.remove(beverage);
     return beverage;
-  }
-
-  findLowStock(): Promise<BeverageInventoryDto[]> {
-    return this.beverageRepository.find({
-      where: { status: BeverageStatus.LOW_STOCK },
-      select: this.readSelect,
-      order: { name: 'ASC' },
-    });
-  }
-
-  findByCategory(category: string): Promise<BeverageInventoryDto[]> {
-    return this.beverageRepository.find({
-      where: { category },
-      select: this.readSelect,
-      order: { name: 'ASC' },
-    });
   }
 }

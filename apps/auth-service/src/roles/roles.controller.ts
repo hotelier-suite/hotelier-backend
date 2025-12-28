@@ -6,6 +6,7 @@ import {
   CreateRoleDto,
   UpdateRoleDto,
   RoleResponseDto,
+  FindRolesFilterDto,
 } from '@app/contracts/auth-service';
 
 @Controller()
@@ -18,18 +19,13 @@ export class RolesController {
   }
 
   @MessagePattern(ROLES_PATTERNS.FIND_ALL)
-  findAll(): Promise<RoleResponseDto[]> {
-    return this.rolesService.findAll();
+  findAll(@Payload() filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
+    return this.rolesService.findAll(filters);
   }
 
   @MessagePattern(ROLES_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<RoleResponseDto> {
     return this.rolesService.findOne(id);
-  }
-
-  @MessagePattern(ROLES_PATTERNS.FIND_BY_NAME)
-  findByName(@Payload() name: string): Promise<RoleResponseDto> {
-    return this.rolesService.findByName(name);
   }
 
   @MessagePattern(ROLES_PATTERNS.UPDATE)

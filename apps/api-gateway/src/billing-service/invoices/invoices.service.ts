@@ -8,7 +8,7 @@ import {
   InvoicePdfDto,
   CreateInvoiceDto,
   UpdateInvoiceDto,
-  InvoiceStatus,
+  FindInvoicesFilterDto,
   PaymentMethod,
 } from '@app/contracts/billing-service';
 
@@ -19,15 +19,11 @@ export class InvoicesService {
     private readonly billingClient: ClientProxy,
   ) {}
 
-  findAll(
-    status?: InvoiceStatus,
-    startDate?: Date,
-    endDate?: Date,
-  ): Observable<InvoiceDto[]> {
-    return this.billingClient.send<
-      InvoiceDto[],
-      { status?: InvoiceStatus; startDate?: Date; endDate?: Date }
-    >(INVOICES_PATTERNS.FIND_ALL, { status, startDate, endDate });
+  findAll(filters: FindInvoicesFilterDto): Observable<InvoiceDto[]> {
+    return this.billingClient.send<InvoiceDto[], FindInvoicesFilterDto>(
+      INVOICES_PATTERNS.FIND_ALL,
+      filters,
+    );
   }
 
   findOne(id: number): Observable<InvoiceDto> {
@@ -55,13 +51,6 @@ export class InvoicesService {
     return this.billingClient.send<InvoiceDto, number>(
       INVOICES_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  findByCustomer(userId: number): Observable<InvoiceDto[]> {
-    return this.billingClient.send<InvoiceDto[], number>(
-      INVOICES_PATTERNS.FIND_BY_CUSTOMER,
-      userId,
     );
   }
 

@@ -5,9 +5,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  ParseDatePipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 import { AttendanceService } from './attendance.service';
 import {
   AttendanceDto,
-  AttendanceStatus,
+  FindAttendanceFilterDto,
   UpdateAttendanceDto,
   CreateAttendanceDto,
   CheckInDto,
@@ -37,15 +37,18 @@ export class AttendanceController {
   @Get()
   @ApiOperation({
     summary: 'Get All Attendance Records',
-    description: 'Retrieve all attendance records with employee information.',
+    description:
+      'Retrieve all attendance records with employee information. Optionally filter by employee ID, date, date range, or status.',
   })
   @ApiResponse({
     status: 200,
     description: 'Attendance records retrieved successfully',
     type: [AttendanceDto],
   })
-  findAll(): Observable<AttendanceDto[]> {
-    return this.attendanceService.findAll();
+  findAll(
+    @Query() filters: FindAttendanceFilterDto,
+  ): Observable<AttendanceDto[]> {
+    return this.attendanceService.findAll(filters);
   }
 
   @Get(':id')
@@ -69,110 +72,6 @@ export class AttendanceController {
   })
   findOne(@Param('id', ParseIntPipe) id: number): Observable<AttendanceDto> {
     return this.attendanceService.findOne(id);
-  }
-
-  @Get('employee/:employeeId')
-  @ApiOperation({
-    summary: 'Get Attendance Records by Employee',
-    description: 'Retrieve all attendance records for a specific employee.',
-  })
-  @ApiParam({
-    name: 'employeeId',
-    description: 'Employee ID',
-    example: 123,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Employee attendance records retrieved successfully',
-    type: [AttendanceDto],
-  })
-  findByEmployee(
-    @Param('employeeId', ParseIntPipe) employeeId: number,
-  ): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByEmployee(employeeId);
-  }
-
-  @Get('date/:date')
-  @ApiOperation({
-    summary: 'Get Attendance Records by Date',
-    description: 'Retrieve all attendance records for a specific date.',
-  })
-  @ApiParam({
-    name: 'date',
-    description: 'Date in YYYY-MM-DD format',
-    example: '2024-01-15',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Attendance records for the date retrieved successfully',
-    type: [AttendanceDto],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid date format',
-  })
-  findByDate(
-    @Param('date', ParseDatePipe) date: Date,
-  ): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByDate(date);
-  }
-
-  @Get('range/:startDate/:endDate')
-  @ApiOperation({
-    summary: 'Get Attendance Records by Date Range',
-    description:
-      'Retrieve all attendance records within a specified date range.',
-  })
-  @ApiParam({
-    name: 'startDate',
-    description: 'Start date in YYYY-MM-DD format',
-    example: '2024-01-01',
-  })
-  @ApiParam({
-    name: 'endDate',
-    description: 'End date in YYYY-MM-DD format',
-    example: '2024-01-31',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Attendance records for the date range retrieved successfully',
-    type: [AttendanceDto],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid date format',
-  })
-  findByDateRange(
-    @Param('startDate', ParseDatePipe) startDate: Date,
-    @Param('endDate', ParseDatePipe) endDate: Date,
-  ): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByDateRange(startDate, endDate);
-  }
-
-  @Get('status/:status')
-  @ApiOperation({
-    summary: 'Get Attendance Records by Status',
-    description: 'Retrieve all attendance records with a specific status.',
-  })
-  @ApiParam({
-    name: 'status',
-    description: 'Attendance status',
-    enum: AttendanceStatus,
-    example: AttendanceStatus.PRESENT,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Attendance records with the status retrieved successfully',
-    type: [AttendanceDto],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid status value',
-  })
-  findByStatus(
-    @Param('status') status: AttendanceStatus,
-  ): Observable<AttendanceDto[]> {
-    return this.attendanceService.findByStatus(status);
   }
 
   @Post()

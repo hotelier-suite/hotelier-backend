@@ -5,7 +5,7 @@ import { RECREATIONAL_SERVICE_CLIENT } from '../constants';
 import {
   CreateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-  FacilityType,
+  FindFacilitiesFilterDto,
   RecreationalFacilityDto,
   RECREATIONAL_FACILITIES_PATTERNS,
   UpdateRecreationalFacilityDto,
@@ -18,11 +18,13 @@ export class FacilitiesService {
     private readonly recreationalClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<RecreationalFacilityDto[]> {
+  findAll(
+    filters: FindFacilitiesFilterDto,
+  ): Observable<RecreationalFacilityDto[]> {
     return this.recreationalClient.send<
       RecreationalFacilityDto[],
-      Record<string, never>
-    >(RECREATIONAL_FACILITIES_PATTERNS.FIND_ALL, {});
+      FindFacilitiesFilterDto
+    >(RECREATIONAL_FACILITIES_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<RecreationalFacilityDto> {
@@ -56,20 +58,6 @@ export class FacilitiesService {
       RECREATIONAL_FACILITIES_PATTERNS.DELETE,
       id,
     );
-  }
-
-  findAvailable(): Observable<RecreationalFacilityDto[]> {
-    return this.recreationalClient.send<
-      RecreationalFacilityDto[],
-      Record<string, never>
-    >(RECREATIONAL_FACILITIES_PATTERNS.FIND_AVAILABLE, {});
-  }
-
-  findByType(type: FacilityType): Observable<RecreationalFacilityDto[]> {
-    return this.recreationalClient.send<
-      RecreationalFacilityDto[],
-      FacilityType
-    >(RECREATIONAL_FACILITIES_PATTERNS.FIND_BY_TYPE, type);
   }
 
   getAvailability(

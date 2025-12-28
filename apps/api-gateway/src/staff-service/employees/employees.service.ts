@@ -7,7 +7,7 @@ import {
   CreateEmployeeDto,
   UpdateEmployeeDto,
   DepartmentStatsDto,
-  Department,
+  FindEmployeesFilterDto,
 } from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
@@ -18,10 +18,10 @@ export class EmployeesService {
     private readonly staffClient: ClientProxy,
   ) {}
 
-  findAll(department?: Department): Observable<EmployeeDto[]> {
-    return this.staffClient.send<EmployeeDto[], { department?: Department }>(
+  findAll(filters: FindEmployeesFilterDto): Observable<EmployeeDto[]> {
+    return this.staffClient.send<EmployeeDto[], FindEmployeesFilterDto>(
       EMPLOYEES_PATTERNS.FIND_ALL,
-      { department },
+      filters,
     );
   }
 

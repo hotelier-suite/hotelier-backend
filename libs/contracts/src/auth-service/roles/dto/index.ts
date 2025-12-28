@@ -1,4 +1,5 @@
 export * from './create-role.dto';
+export * from './find-roles-filter.dto';
 export * from './permission-ids.dto';
 export * from './role-permission-response.dto';
 export * from './role-permissions-payload.dto';

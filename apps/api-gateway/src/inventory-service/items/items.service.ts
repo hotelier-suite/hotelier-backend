@@ -7,8 +7,7 @@ import {
   InventoryItemDto,
   CreateInventoryItemDto,
   UpdateInventoryItemDto,
-  InventoryCategory,
-  InventoryStatus,
+  FindInventoryItemsFilterDto,
 } from '@app/contracts/inventory-service';
 
 @Injectable()
@@ -19,13 +18,12 @@ export class ItemsService {
   ) {}
 
   findAll(
-    category?: InventoryCategory,
-    status?: InventoryStatus,
+    filters: FindInventoryItemsFilterDto,
   ): Observable<InventoryItemDto[]> {
     return this.inventoryClient.send<
       InventoryItemDto[],
-      { category?: InventoryCategory; status?: InventoryStatus }
-    >(INVENTORY_ITEMS_PATTERNS.FIND_ALL, { category, status });
+      FindInventoryItemsFilterDto
+    >(INVENTORY_ITEMS_PATTERNS.FIND_ALL, filters);
   }
 
   create(data: CreateInventoryItemDto): Observable<InventoryItemDto> {

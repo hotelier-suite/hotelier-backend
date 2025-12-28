@@ -10,6 +10,7 @@ import {
   DepartmentStatsDto,
   Department,
   StaffStatus,
+  FindEmployeesFilterDto,
 } from '@app/contracts/staff-service';
 
 @Injectable()
@@ -47,9 +48,9 @@ export class EmployeesService {
     return loaded;
   }
 
-  findAll(department?: Department): Promise<EmployeeDto[]> {
+  findAll(filters: FindEmployeesFilterDto): Promise<EmployeeDto[]> {
     return this.employeeRepository.find({
-      where: { department },
+      where: filters,
       order: { name: 'ASC' },
     });
   }

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, LessThanOrEqual, Repository } from 'typeorm';
 import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  EmployeeRequestType,
   EmployeeRequestStatus,
+  FindEmployeeRequestsFilterDto,
 } from '@app/contracts/staff-service';
 import { EmployeeRequest } from './entities';
 import { Employee } from '../employees';
@@ -21,8 +21,25 @@ export class EmployeeRequestsService {
     private readonly employeeRepository: Repository<Employee>,
   ) {}
 
-  findAll(): Promise<EmployeeRequestDto[]> {
+  findAll({
+    startDate,
+    endDate,
+    employeeId,
+    status,
+    type,
+  }: FindEmployeeRequestsFilterDto): Promise<EmployeeRequestDto[]> {
     return this.employeeRequestRepository.find({
+      where: {
+        ...(employeeId && { employeeId }),
+        ...(status && { status }),
+        ...(type && { type }),
+        ...(startDate && !endDate && { startDate }),
+        ...(endDate && !startDate && { startDate: LessThanOrEqual(endDate) }),
+        ...(startDate &&
+          endDate && {
+            startDate: Between(startDate, endDate),
+          }),
+      },
       relations: { employee: true },
       order: { createdAt: 'DESC' },
     });
@@ -42,48 +59,6 @@ export class EmployeeRequestsService {
     }
 
     return request;
-  }
-
-  findByEmployee(employeeId: number): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestRepository.find({
-      where: { employeeId },
-      relations: { employee: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByStatus(status: EmployeeRequestStatus): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestRepository.find({
-      where: { status },
-      relations: { employee: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByType(type: EmployeeRequestType): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestRepository.find({
-      where: { type },
-      relations: { employee: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByDateRange(
-    startDate: Date,
-    endDate: Date,
-  ): Promise<EmployeeRequestDto[]> {
-    return this.employeeRequestRepository
-      .createQueryBuilder('request')
-      .leftJoinAndSelect('request.employee', 'employee')
-      .where(
-        'request.startDate >= :startDate AND request.endDate <= :endDate',
-        {
-          startDate,
-          endDate,
-        },
-      )
-      .orderBy('request.createdAt', 'DESC')
-      .getMany();
   }
 
   async create(data: CreateEmployeeRequestDto): Promise<EmployeeRequestDto> {

@@ -6,7 +6,7 @@ import {
   AttendanceDto,
   CreateAttendanceDto,
   UpdateAttendanceDto,
-  AttendanceStatus,
+  FindAttendanceFilterDto,
 } from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
@@ -17,10 +17,10 @@ export class AttendanceService {
     private readonly staffClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<AttendanceDto[]> {
-    return this.staffClient.send<AttendanceDto[], Record<string, never>>(
+  findAll(filters: FindAttendanceFilterDto): Observable<AttendanceDto[]> {
+    return this.staffClient.send<AttendanceDto[], FindAttendanceFilterDto>(
       ATTENDANCE_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -28,34 +28,6 @@ export class AttendanceService {
     return this.staffClient.send<AttendanceDto, number>(
       ATTENDANCE_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByEmployee(employeeId: number): Observable<AttendanceDto[]> {
-    return this.staffClient.send<AttendanceDto[], number>(
-      ATTENDANCE_PATTERNS.FIND_BY_EMPLOYEE,
-      employeeId,
-    );
-  }
-
-  findByDate(date: Date): Observable<AttendanceDto[]> {
-    return this.staffClient.send<AttendanceDto[], Date>(
-      ATTENDANCE_PATTERNS.FIND_BY_DATE,
-      date,
-    );
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Observable<AttendanceDto[]> {
-    return this.staffClient.send<
-      AttendanceDto[],
-      { startDate: Date; endDate: Date }
-    >(ATTENDANCE_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
-  }
-
-  findByStatus(status: AttendanceStatus): Observable<AttendanceDto[]> {
-    return this.staffClient.send<AttendanceDto[], AttendanceStatus>(
-      ATTENDANCE_PATTERNS.FIND_BY_STATUS,
-      status,
     );
   }
 

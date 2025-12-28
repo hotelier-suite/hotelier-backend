@@ -32,7 +32,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Professional 50-meter pool with 8 lanes, heated water and poolside amenities. Perfect for swimming, aqua aerobics and recreation.',
         hourlyRate: 15.0,
-        isAvailable: true,
+        available: true,
         openingTime: '06:00',
         closingTime: '22:00',
         minimumBookingHours: 1,
@@ -65,7 +65,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Fully equipped gym with cardio machines, free weights and strength training equipment. Personal training available.',
         hourlyRate: 10.0,
-        isAvailable: true,
+        available: true,
         openingTime: '05:00',
         closingTime: '23:00',
         minimumBookingHours: 1,
@@ -97,7 +97,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Professional hard-surface tennis court with night lighting. Equipment rental available at reception.',
         hourlyRate: 20.0,
-        isAvailable: true,
+        available: true,
         openingTime: '07:00',
         closingTime: '21:00',
         minimumBookingHours: 1,
@@ -128,7 +128,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Private spa suite with massage table, relaxation area and premium amenities for couples or individual treatments.',
         hourlyRate: 30.0,
-        isAvailable: true,
+        available: true,
         openingTime: '09:00',
         closingTime: '20:00',
         minimumBookingHours: 1,
@@ -161,7 +161,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Traditional Finnish sauna with dry heat therapy. Towels and cooling area included.',
         hourlyRate: 12.0,
-        isAvailable: true,
+        available: true,
         openingTime: '08:00',
         closingTime: '22:00',
         minimumBookingHours: 1,
@@ -193,7 +193,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Outdoor jacuzzi with stunning city views. Perfect for relaxation and romantic evenings.',
         hourlyRate: 18.0,
-        isAvailable: true,
+        available: true,
         openingTime: '10:00',
         closingTime: '23:00',
         minimumBookingHours: 1,
@@ -225,7 +225,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Entertainment room with pool table, air hockey, ping pong, video game consoles and comfortable lounge area.',
         hourlyRate: 8.0,
-        isAvailable: true,
+        available: true,
         openingTime: '09:00',
         closingTime: '24:00',
         minimumBookingHours: 1,
@@ -258,7 +258,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Tranquil yoga and meditation studio with mirrors, mats and props. Perfect for group classes or private practice.',
         hourlyRate: 10.0,
-        isAvailable: true,
+        available: true,
         openingTime: '06:00',
         closingTime: '21:00',
         minimumBookingHours: 1,
@@ -291,7 +291,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Safe and fun play area for children with slides, ball pit, toys and supervised activities.',
         hourlyRate: 5.0,
-        isAvailable: true,
+        available: true,
         openingTime: '09:00',
         closingTime: '19:00',
         minimumBookingHours: 1,
@@ -323,7 +323,7 @@ export class RecreationalFacilitiesSeeder {
         description:
           'Fully equipped business center with computers, printers, meeting space and high-speed internet.',
         hourlyRate: 8.0,
-        isAvailable: true,
+        available: true,
         openingTime: '06:00',
         closingTime: '22:00',
         minimumBookingHours: 1,

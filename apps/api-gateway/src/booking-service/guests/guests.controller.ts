@@ -14,7 +14,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -24,6 +23,7 @@ import {
   CreateGuestDto,
   UpdateGuestDto,
   GuestDto,
+  ListGuestsQueryDto,
 } from '@app/contracts/booking-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -41,15 +41,9 @@ export class GuestsController {
     description:
       'Retrieve all guests registered in the system with optional filtering. Returns guest profiles including contact information and identification details.',
   })
-  @ApiQuery({
-    name: 'search',
-    required: false,
-    description:
-      'Search term to filter guests by name, email, phone number, or document ID',
-  })
   @ApiResponse({ status: 200, type: [GuestDto] })
-  findAll(@Query('search') search?: string): Observable<GuestDto[]> {
-    return this.guestsService.findAll({ search });
+  findAll(@Query() filters: ListGuestsQueryDto): Observable<GuestDto[]> {
+    return this.guestsService.findAll(filters);
   }
 
   @Get(':id')

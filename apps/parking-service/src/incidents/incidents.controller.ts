@@ -7,37 +7,18 @@ import {
   CreateParkingIncidentDto,
   UpdateParkingIncidentDto,
   ResolveIncidentRequestDto,
-  IncidentStatus,
-  IncidentType,
+  FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
-import { TaskPriority } from '@app/contracts/common';
 
 @Controller()
 export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
   @MessagePattern(INCIDENTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findAll();
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_STATUS)
-  findByStatus(
-    @Payload() status: IncidentStatus,
+  findAll(
+    @Payload() filters: FindIncidentsFilterDto,
   ): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByStatus(status);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_PRIORITY)
-  findByPriority(
-    @Payload() priority: TaskPriority,
-  ): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByPriority(priority);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.FIND_BY_TYPE)
-  findByType(@Payload() type: IncidentType): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByType(type);
+    return this.incidentsService.findAll(filters);
   }
 
   @MessagePattern(INCIDENTS_PATTERNS.FIND_ONE)

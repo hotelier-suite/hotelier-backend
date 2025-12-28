@@ -23,8 +23,6 @@ import {
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-  AuditResource,
-  AuditAction,
   PaginatedAuditLogDto,
 } from '@app/contracts/audit-service';
 
@@ -56,69 +54,6 @@ export class AuditController {
     summary: 'Get All Audit Logs',
     description: 'Retrieve audit logs with filtering and pagination',
   })
-  @ApiQuery({
-    name: 'userId',
-    required: false,
-    description: 'Filter by user ID',
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'action',
-    required: false,
-    description: 'Filter by action',
-    enum: AuditAction,
-  })
-  @ApiQuery({
-    name: 'resource',
-    required: false,
-    description: 'Filter by resource',
-    enum: AuditResource,
-  })
-  @ApiQuery({
-    name: 'resourceId',
-    required: false,
-    description: 'Filter by resource ID',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'startDate',
-    required: false,
-    description: 'Filter by start date (ISO string)',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'endDate',
-    required: false,
-    description: 'Filter by end date (ISO string)',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'search',
-    required: false,
-    description: 'Search in description',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'skip',
-    required: false,
-    description: 'Number of records to skip',
-    type: Number,
-    example: 0,
-  })
-  @ApiQuery({
-    name: 'take',
-    required: false,
-    description: 'Number of records to take',
-    type: Number,
-    example: 50,
-  })
-  @ApiQuery({
-    name: 'order',
-    required: false,
-    description: 'Sort order',
-    enum: ['asc', 'desc'],
-    example: 'desc',
-  })
   @ApiResponse({
     status: 200,
     description: 'Audit logs retrieved successfully',
@@ -149,65 +84,6 @@ export class AuditController {
     @Query('days', ParseIntPipe) days: number = 30,
   ): Observable<AuditStatisticsDto> {
     return this.auditService.getStatistics(days);
-  }
-
-  @Get('resource/:resource/:resourceId')
-  @ApiOperation({
-    summary: 'Get Resource Audit History',
-    description: 'Get all audit logs for a specific resource',
-  })
-  @ApiParam({
-    name: 'resource',
-    description: 'Resource type',
-    enum: AuditResource,
-  })
-  @ApiParam({
-    name: 'resourceId',
-    description: 'Resource ID',
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Resource audit history retrieved successfully',
-    type: [AuditLogDto],
-  })
-  findByResource(
-    @Param('resource') resource: string,
-    @Param('resourceId') resourceId: string,
-  ): Observable<AuditLogDto[]> {
-    return this.auditService.findByResource(
-      resource as AuditResource,
-      resourceId,
-    );
-  }
-
-  @Get('user/:userId')
-  @ApiOperation({
-    summary: 'Get User Audit History',
-    description: 'Get audit logs for a specific user',
-  })
-  @ApiParam({
-    name: 'userId',
-    description: 'User ID',
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    description: 'Maximum number of logs to return',
-    type: Number,
-    example: 100,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'User audit history retrieved successfully',
-    type: [AuditLogDto],
-  })
-  findByUser(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Query('limit', ParseIntPipe) limit: number = 100,
-  ): Observable<AuditLogDto[]> {
-    return this.auditService.findByUser(userId, limit);
   }
 
   @Get(':id')

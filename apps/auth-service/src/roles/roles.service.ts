@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import {
   CreateRoleDto,
   UpdateRoleDto,
   RoleResponseDto,
+  FindRolesFilterDto,
 } from '@app/contracts/auth-service';
 import { Role, RolePermission } from './entities';
 import { UserRole } from '../users';
@@ -58,31 +59,19 @@ export class RolesService {
     }
   }
 
-  async findAll(): Promise<RoleResponseDto[]> {
-    const roles = await this.roleRepository.find({
+  async findAll(filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
+    return this.roleRepository.find({
+      where: {
+        ...(filters.name && { name: ILike(`%${filters.name}%`) }),
+      },
       relations: { permissions: { permission: true } },
       order: { name: 'ASC' },
     });
-
-    return roles;
   }
 
   async findOne(id: number): Promise<RoleResponseDto> {
     const role = await this.roleRepository.findOne({
       where: { id },
-      relations: { permissions: { permission: true } },
-    });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
-
-    return role;
-  }
-
-  async findByName(name: string): Promise<RoleResponseDto> {
-    const role = await this.roleRepository.findOne({
-      where: { name },
       relations: { permissions: { permission: true } },
     });
 

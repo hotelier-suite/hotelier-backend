@@ -14,7 +14,6 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -26,8 +25,7 @@ import {
   InventoryItemDto,
   CreateInventoryItemDto,
   UpdateInventoryItemDto,
-  InventoryCategory,
-  InventoryStatus,
+  FindInventoryItemsFilterDto,
 } from '@app/contracts/inventory-service';
 
 @ApiTags('inventory')
@@ -43,30 +41,15 @@ export class ItemsController {
     description:
       'Retrieve all inventory items. Optionally filter by category and/or status.',
   })
-  @ApiQuery({
-    name: 'category',
-    enum: InventoryCategory,
-    required: false,
-    description: 'Filter by inventory category',
-    example: InventoryCategory.CLEANING_SUPPLIES,
-  })
-  @ApiQuery({
-    name: 'status',
-    enum: InventoryStatus,
-    required: false,
-    description: 'Filter by inventory status',
-    example: InventoryStatus.LOW_STOCK,
-  })
   @ApiResponse({
     status: 200,
     description: 'Inventory items retrieved successfully',
     type: [InventoryItemDto],
   })
   findAll(
-    @Query('category') category?: InventoryCategory,
-    @Query('status') status?: InventoryStatus,
+    @Query() filters: FindInventoryItemsFilterDto,
   ): Observable<InventoryItemDto[]> {
-    return this.itemsService.findAll(category, status);
+    return this.itemsService.findAll(filters);
   }
 
   @Post()

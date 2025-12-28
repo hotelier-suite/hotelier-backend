@@ -6,6 +6,7 @@ import {
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
+  FindWidgetsFilterDto,
 } from '@app/contracts/dashboard-service';
 
 @Controller()
@@ -20,8 +21,10 @@ export class WidgetsController {
   }
 
   @MessagePattern(WIDGETS_PATTERNS.FIND_ALL)
-  findAll(): Promise<DashboardWidgetDto[]> {
-    return this.widgetsService.findAll();
+  findAll(
+    @Payload() filters: FindWidgetsFilterDto,
+  ): Promise<DashboardWidgetDto[]> {
+    return this.widgetsService.findAll(filters);
   }
 
   @MessagePattern(WIDGETS_PATTERNS.FIND_ONE)
@@ -39,10 +42,5 @@ export class WidgetsController {
   @MessagePattern(WIDGETS_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<DashboardWidgetDto> {
     return this.widgetsService.remove(id);
-  }
-
-  @MessagePattern(WIDGETS_PATTERNS.FIND_BY_USER)
-  findByUser(@Payload() userId: number): Promise<DashboardWidgetDto[]> {
-    return this.widgetsService.findByUser(userId);
   }
 }

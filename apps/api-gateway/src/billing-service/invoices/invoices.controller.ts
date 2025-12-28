@@ -9,7 +9,6 @@ import {
   Param,
   Query,
   ParseIntPipe,
-  ParseDatePipe,
   StreamableFile,
 } from '@nestjs/common';
 import {
@@ -19,7 +18,6 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
-  ApiQuery,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -29,7 +27,7 @@ import {
   CreateInvoiceDto,
   UpdateInvoiceDto,
   MarkAsPaidRequestDto,
-  InvoiceStatus,
+  FindInvoicesFilterDto,
 } from '@app/contracts/billing-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -44,38 +42,15 @@ export class InvoicesController {
   @ApiOperation({
     summary: 'Get All Invoices',
     description:
-      'Retrieve all invoices. Optionally filter by status and/or date range.',
-  })
-  @ApiQuery({
-    name: 'status',
-    enum: InvoiceStatus,
-    required: false,
-    description: 'Filter by invoice status',
-    example: InvoiceStatus.PENDING,
-  })
-  @ApiQuery({
-    name: 'startDate',
-    required: false,
-    description: 'Filter by start date (ISO 8601 format)',
-    example: '2024-01-01',
-  })
-  @ApiQuery({
-    name: 'endDate',
-    required: false,
-    description: 'Filter by end date (ISO 8601 format)',
-    example: '2024-12-31',
+      'Retrieve all invoices. Optionally filter by status, date range, and/or user.',
   })
   @ApiResponse({
     status: 200,
     description: 'Invoices retrieved successfully',
     type: [InvoiceDto],
   })
-  findAll(
-    @Query('status') status?: InvoiceStatus,
-    @Query('startDate', ParseDatePipe) startDate?: Date,
-    @Query('endDate', ParseDatePipe) endDate?: Date,
-  ): Observable<InvoiceDto[]> {
-    return this.invoicesService.findAll(status, startDate, endDate);
+  findAll(@Query() filters: FindInvoicesFilterDto): Observable<InvoiceDto[]> {
+    return this.invoicesService.findAll(filters);
   }
 
   @Get(':id')

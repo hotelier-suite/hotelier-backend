@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, FindOptionsWhere } from 'typeorm';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom, of, timeout, catchError } from 'rxjs';
 import { Report } from './entities';
@@ -14,6 +14,7 @@ import {
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
   FinancialReportPdfDto,
+  FindReportsFilterDto,
 } from '@app/contracts/reports-service';
 import {
   BILLING_STATISTICS_PATTERNS,
@@ -49,8 +50,23 @@ export class ReportsService {
     return this.reportRepository.save(report);
   }
 
-  async findAll(): Promise<ReportDto[]> {
+  async findAll(filters?: FindReportsFilterDto): Promise<ReportDto[]> {
+    const where: FindOptionsWhere<Report> = {};
+
+    if (filters?.type) {
+      where.type = filters.type;
+    }
+
+    if (filters?.status) {
+      where.status = filters.status;
+    }
+
+    if (filters?.startDate && filters?.endDate) {
+      where.createdAt = Between(filters.startDate, filters.endDate);
+    }
+
     return this.reportRepository.find({
+      where,
       order: { createdAt: 'DESC' },
     });
   }
@@ -66,29 +82,6 @@ export class ReportsService {
       });
     }
     return report;
-  }
-
-  async findByType(type: ReportType): Promise<ReportDto[]> {
-    return this.reportRepository.find({
-      where: { type },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  async findByStatus(status: ReportStatus): Promise<ReportDto[]> {
-    return this.reportRepository.find({
-      where: { status },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  async findByDateRange(startDate: Date, endDate: Date): Promise<ReportDto[]> {
-    return this.reportRepository.find({
-      where: {
-        createdAt: Between(startDate, endDate),
-      },
-      order: { createdAt: 'DESC' },
-    });
   }
 
   async updateStatus(id: number, status: ReportStatus): Promise<ReportDto> {

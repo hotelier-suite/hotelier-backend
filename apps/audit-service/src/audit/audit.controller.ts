@@ -7,7 +7,6 @@ import {
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-  AuditResource,
 } from '@app/contracts/audit-service';
 
 @Controller()
@@ -29,28 +28,6 @@ export class AuditController {
   @MessagePattern(AUDIT_PATTERNS.LOG_FIND_ONE)
   findOne(@Payload() id: number): Promise<AuditLogDto> {
     return this.auditService.findOne(id);
-  }
-
-  @MessagePattern(AUDIT_PATTERNS.LOG_FIND_BY_USER)
-  findByUser(
-    @Payload() payload: { userId: number; limit?: number },
-  ): Promise<AuditLogDto[]> {
-    return this.auditService.findByUser(payload.userId, payload.limit);
-  }
-
-  @MessagePattern(AUDIT_PATTERNS.LOG_FIND_BY_RESOURCE)
-  findByResource(
-    @Payload() payload: { resource: AuditResource; resourceId: string },
-  ): Promise<AuditLogDto[]> {
-    return this.auditService.findByResource(
-      payload.resource,
-      payload.resourceId,
-    );
-  }
-
-  @MessagePattern(AUDIT_PATTERNS.LOG_FIND_BY_ACTION)
-  findByAction(@Payload() action: string): Promise<AuditLogDto[]> {
-    return this.auditService.findByAction(action);
   }
 
   @MessagePattern(AUDIT_PATTERNS.LOG_GET_STATISTICS)

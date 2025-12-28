@@ -9,9 +9,9 @@ import {
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
-  ReportType,
   ReportStatus,
   FinancialReportPdfDto,
+  FindReportsFilterDto,
 } from '@app/contracts/reports-service';
 
 @Controller()
@@ -19,8 +19,8 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   @MessagePattern(REPORTS_PATTERNS.FIND_ALL)
-  findAll(): Promise<ReportDto[]> {
-    return this.reportsService.findAll();
+  findAll(@Payload() filters: FindReportsFilterDto): Promise<ReportDto[]> {
+    return this.reportsService.findAll(filters);
   }
 
   @MessagePattern(REPORTS_PATTERNS.FIND_ONE)
@@ -43,26 +43,6 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<ReportDto> {
     return this.reportsService.remove(id);
-  }
-
-  @MessagePattern(REPORTS_PATTERNS.FIND_BY_TYPE)
-  findByType(@Payload() type: ReportType): Promise<ReportDto[]> {
-    return this.reportsService.findByType(type);
-  }
-
-  @MessagePattern(REPORTS_PATTERNS.FIND_BY_STATUS)
-  findByStatus(@Payload() status: ReportStatus): Promise<ReportDto[]> {
-    return this.reportsService.findByStatus(status);
-  }
-
-  @MessagePattern(REPORTS_PATTERNS.FIND_BY_DATE_RANGE)
-  findByDateRange(
-    @Payload() payload: { startDate: Date; endDate: Date },
-  ): Promise<ReportDto[]> {
-    return this.reportsService.findByDateRange(
-      payload.startDate,
-      payload.endDate,
-    );
   }
 
   @MessagePattern(REPORTS_PATTERNS.UPDATE_STATUS)

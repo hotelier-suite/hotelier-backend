@@ -3,6 +3,7 @@ export * from './report-parameters.dto';
 export * from './date-range.dto';
 export * from './create-report.dto';
 export * from './update-report.dto';
+export * from './find-reports-filter.dto';
 export * from './occupancy-report-data.dto';
 export * from './daily-revenue.dto';
 export * from './revenue-report-data.dto';

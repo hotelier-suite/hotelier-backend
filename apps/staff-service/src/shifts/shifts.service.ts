@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import {
   ShiftDto,
   CreateShiftDto,
   UpdateShiftDto,
-  ShiftStatus,
+  FindShiftsFilterDto,
 } from '@app/contracts/staff-service';
 import { Shift } from './entities';
 import { Employee } from '../employees';
@@ -23,8 +23,34 @@ export class ShiftsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  findAll(): Promise<ShiftDto[]> {
+  findAll(filters?: FindShiftsFilterDto): Promise<ShiftDto[]> {
+    const where: FindOptionsWhere<Shift> = {};
+
+    if (filters?.employeeId) {
+      where.employeeId = filters.employeeId;
+    }
+
+    if (filters?.status) {
+      where.status = filters.status;
+    }
+
+    // Single date filter
+    if (filters?.date) {
+      const startOfDay = new Date(filters.date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(filters.date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      where.date = Between(startOfDay, endOfDay);
+    }
+    // Date range filter
+    else if (filters?.startDate && filters?.endDate) {
+      where.date = Between(filters.startDate, filters.endDate);
+    }
+
     return this.shiftRepository.find({
+      where,
       order: { date: 'DESC' },
       relations: { employee: true },
     });
@@ -44,46 +70,6 @@ export class ShiftsService {
     }
 
     return shift;
-  }
-
-  findByEmployee(employeeId: number): Promise<ShiftDto[]> {
-    return this.shiftRepository.find({
-      where: { employeeId },
-      order: { date: 'DESC' },
-      relations: { employee: true },
-    });
-  }
-
-  findByDate(date: Date): Promise<ShiftDto[]> {
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return this.shiftRepository.find({
-      where: { date: Between(startOfDay, endOfDay) },
-      order: { startTime: 'ASC' },
-      relations: { employee: true },
-    });
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Promise<ShiftDto[]> {
-    return this.shiftRepository.find({
-      where: {
-        date: Between(startDate, endDate),
-      },
-      relations: { employee: true },
-      order: { date: 'DESC' },
-    });
-  }
-
-  findByStatus(status: ShiftStatus): Promise<ShiftDto[]> {
-    return this.shiftRepository.find({
-      where: { status },
-      order: { date: 'ASC' },
-      relations: { employee: true },
-    });
   }
 
   async create(data: CreateShiftDto): Promise<ShiftDto> {

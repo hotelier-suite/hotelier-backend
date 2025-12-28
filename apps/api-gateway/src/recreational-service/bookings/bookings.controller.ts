@@ -24,6 +24,7 @@ import { BookingsService } from './bookings.service';
 import {
   BookingStatisticsDto,
   CreateRecreationalBookingDto,
+  FindRecreationalBookingsFilterDto,
   RecreationalBookingDto,
   UpdateRecreationalBookingDto,
 } from '@app/contracts/recreational-service';
@@ -71,76 +72,18 @@ export class BookingsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Recreational Bookings',
-    description: 'Retrieve all recreational bookings',
+    description:
+      'Retrieve all recreational bookings with optional filters for date and facility',
   })
   @ApiResponse({
     status: 200,
     description: 'List of recreational bookings',
     type: [RecreationalBookingDto],
   })
-  findAll(): Observable<RecreationalBookingDto[]> {
-    return this.bookingsService.findAll();
-  }
-
-  @Get('by-date/:date')
-  @ApiOperation({
-    summary: 'Get Bookings by Date',
-    description: 'Retrieve all recreational bookings for a specific date',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of recreational bookings for the specified date',
-    type: [RecreationalBookingDto],
-  })
-  @ApiParam({
-    name: 'date',
-    type: String,
-    description: 'Date in ISO 8601 format (YYYY-MM-DD)',
-    example: '2024-12-28',
-  })
-  findByDate(
-    @Param('date', ParseDatePipe) date: Date,
+  findAll(
+    @Query() filters: FindRecreationalBookingsFilterDto,
   ): Observable<RecreationalBookingDto[]> {
-    return this.bookingsService.findByDate(date);
-  }
-
-  @Get('by-facility/:facilityId')
-  @ApiOperation({
-    summary: 'Get Bookings by Facility',
-    description:
-      'Retrieve all recreational bookings for a specific facility with optional date range',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of recreational bookings for the specified facility',
-    type: [RecreationalBookingDto],
-  })
-  @ApiParam({
-    name: 'facilityId',
-    type: Number,
-    description: 'Recreational facility ID',
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'startDate',
-    required: false,
-    type: String,
-    description: 'Filter bookings from this start date (YYYY-MM-DD)',
-    example: '2024-12-01',
-  })
-  @ApiQuery({
-    name: 'endDate',
-    required: false,
-    type: String,
-    description: 'Filter bookings until this end date (YYYY-MM-DD)',
-    example: '2024-12-31',
-  })
-  findByFacility(
-    @Param('facilityId', ParseIntPipe) facilityId: number,
-    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
-    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
-  ): Observable<RecreationalBookingDto[]> {
-    return this.bookingsService.findByFacility(facilityId, startDate, endDate);
+    return this.bookingsService.findAll(filters);
   }
 
   @Get('statistics')

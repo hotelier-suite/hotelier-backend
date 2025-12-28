@@ -6,8 +6,7 @@ import {
   InventoryItemDto,
   CreateInventoryItemDto,
   UpdateInventoryItemDto,
-  InventoryCategory,
-  InventoryStatus,
+  FindInventoryItemsFilterDto,
 } from '@app/contracts/inventory-service';
 
 @Controller()
@@ -16,13 +15,9 @@ export class ItemsController {
 
   @MessagePattern(INVENTORY_ITEMS_PATTERNS.FIND_ALL)
   findAll(
-    @Payload()
-    filters: {
-      category?: InventoryCategory;
-      status?: InventoryStatus;
-    },
+    @Payload() filters: FindInventoryItemsFilterDto,
   ): Promise<InventoryItemDto[]> {
-    return this.itemsService.findAll(filters.category, filters.status);
+    return this.itemsService.findAll(filters);
   }
 
   @MessagePattern(INVENTORY_ITEMS_PATTERNS.CREATE)

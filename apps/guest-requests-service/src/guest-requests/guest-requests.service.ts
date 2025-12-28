@@ -6,8 +6,8 @@ import {
   CreateGuestRequestDto,
   GuestRequestDto,
   UpdateGuestRequestDto,
-  RequestPriority,
   GuestRequestStatus,
+  FindGuestRequestsFilterDto,
 } from '@app/contracts/guest-requests-service';
 import { GuestRequest } from './entities';
 
@@ -18,9 +18,15 @@ export class GuestRequestsService {
     private readonly guestRequestRepository: Repository<GuestRequest>,
   ) {}
 
-  findAll(): Promise<GuestRequestDto[]> {
+  findAll({
+    status,
+    priority,
+    limit,
+  }: FindGuestRequestsFilterDto): Promise<GuestRequestDto[]> {
     return this.guestRequestRepository.find({
+      where: { status, priority },
       order: { createdAt: 'DESC' },
+      take: limit,
     });
   }
 
@@ -37,20 +43,6 @@ export class GuestRequestsService {
     }
 
     return request;
-  }
-
-  findByStatus(status: GuestRequestStatus): Promise<GuestRequestDto[]> {
-    return this.guestRequestRepository.find({
-      where: { status },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByPriority(priority: RequestPriority): Promise<GuestRequestDto[]> {
-    return this.guestRequestRepository.find({
-      where: { priority },
-      order: { createdAt: 'DESC' },
-    });
   }
 
   async create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
@@ -87,15 +79,6 @@ export class GuestRequestsService {
   countByStatus(status: GuestRequestStatus): Promise<number> {
     return this.guestRequestRepository.count({
       where: { status },
-    });
-  }
-
-  findRecent(limit = 5): Promise<GuestRequestDto[]> {
-    const take = typeof limit === 'number' && limit > 0 ? limit : 5;
-
-    return this.guestRequestRepository.find({
-      order: { createdAt: 'DESC' },
-      take,
     });
   }
 }

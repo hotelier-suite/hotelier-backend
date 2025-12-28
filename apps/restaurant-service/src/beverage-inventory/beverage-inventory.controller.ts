@@ -6,6 +6,7 @@ import {
   BeverageInventoryDto,
   CreateBeverageItemDto,
   UpdateBeverageItemDto,
+  FindBeverageInventoryFilterDto,
 } from '@app/contracts/restaurant-service';
 
 @Controller()
@@ -15,8 +16,10 @@ export class BeverageInventoryController {
   ) {}
 
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.FIND_ALL)
-  findAll(): Promise<BeverageInventoryDto[]> {
-    return this.beverageInventoryService.findAll();
+  findAll(
+    @Payload() filters: FindBeverageInventoryFilterDto,
+  ): Promise<BeverageInventoryDto[]> {
+    return this.beverageInventoryService.findAll(filters);
   }
 
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.FIND_ONE)
@@ -48,15 +51,5 @@ export class BeverageInventoryController {
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<BeverageInventoryDto> {
     return this.beverageInventoryService.remove(id);
-  }
-
-  @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.FIND_LOW_STOCK)
-  findLowStock(): Promise<BeverageInventoryDto[]> {
-    return this.beverageInventoryService.findLowStock();
-  }
-
-  @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.FIND_BY_CATEGORY)
-  findByCategory(@Payload() category: string): Promise<BeverageInventoryDto[]> {
-    return this.beverageInventoryService.findByCategory(category);
   }
 }

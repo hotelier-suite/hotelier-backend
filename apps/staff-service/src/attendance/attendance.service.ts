@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import {
   AttendanceDto,
   CreateAttendanceDto,
   UpdateAttendanceDto,
   AttendanceStatus,
+  FindAttendanceFilterDto,
 } from '@app/contracts/staff-service';
 import { Attendance } from './entities';
 import { Employee } from '../employees';
@@ -49,8 +50,34 @@ export class AttendanceService {
     return loaded;
   }
 
-  findAll(): Promise<AttendanceDto[]> {
+  findAll(filters?: FindAttendanceFilterDto): Promise<AttendanceDto[]> {
+    const where: FindOptionsWhere<Attendance> = {};
+
+    if (filters?.employeeId) {
+      where.employeeId = filters.employeeId;
+    }
+
+    if (filters?.status) {
+      where.status = filters.status;
+    }
+
+    // Single date filter
+    if (filters?.date) {
+      const startOfDay = new Date(filters.date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(filters.date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      where.date = Between(startOfDay, endOfDay);
+    }
+    // Date range filter
+    else if (filters?.startDate && filters?.endDate) {
+      where.date = Between(filters.startDate, filters.endDate);
+    }
+
     return this.attendanceRepository.find({
+      where,
       order: { date: 'DESC' },
       relations: { employee: true },
     });
@@ -70,46 +97,6 @@ export class AttendanceService {
     }
 
     return attendance;
-  }
-
-  findByEmployee(employeeId: number): Promise<AttendanceDto[]> {
-    return this.attendanceRepository.find({
-      where: { employeeId },
-      order: { date: 'DESC' },
-      relations: { employee: true },
-    });
-  }
-
-  findByDate(date: Date): Promise<AttendanceDto[]> {
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return this.attendanceRepository.find({
-      where: {
-        date: Between(startOfDay, endOfDay),
-      },
-      order: { date: 'ASC' },
-      relations: { employee: true },
-    });
-  }
-
-  findByDateRange(startDate: Date, endDate: Date): Promise<AttendanceDto[]> {
-    return this.attendanceRepository.find({
-      where: { date: Between(startDate, endDate) },
-      order: { date: 'ASC' },
-      relations: { employee: true },
-    });
-  }
-
-  findByStatus(status: AttendanceStatus): Promise<AttendanceDto[]> {
-    return this.attendanceRepository.find({
-      where: { status },
-      order: { date: 'DESC' },
-      relations: { employee: true },
-    });
   }
 
   async update(id: number, data: UpdateAttendanceDto): Promise<AttendanceDto> {

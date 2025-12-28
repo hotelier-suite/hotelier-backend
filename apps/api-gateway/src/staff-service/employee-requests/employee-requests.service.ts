@@ -6,8 +6,7 @@ import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
   UpdateEmployeeRequestDto,
-  EmployeeRequestStatus,
-  EmployeeRequestType,
+  FindEmployeeRequestsFilterDto,
 } from '@app/contracts/staff-service';
 import { STAFF_SERVICE_CLIENT } from '../constants';
 
@@ -18,11 +17,13 @@ export class EmployeeRequestsService {
     private readonly staffClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], Record<string, never>>(
-      EMPLOYEE_REQUESTS_PATTERNS.FIND_ALL,
-      {},
-    );
+  findAll(
+    filters: FindEmployeeRequestsFilterDto,
+  ): Observable<EmployeeRequestDto[]> {
+    return this.staffClient.send<
+      EmployeeRequestDto[],
+      FindEmployeeRequestsFilterDto
+    >(EMPLOYEE_REQUESTS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<EmployeeRequestDto> {
@@ -30,39 +31,6 @@ export class EmployeeRequestsService {
       EMPLOYEE_REQUESTS_PATTERNS.FIND_ONE,
       id,
     );
-  }
-
-  findByEmployee(employeeId: number): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], number>(
-      EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_EMPLOYEE,
-      employeeId,
-    );
-  }
-
-  findByStatus(
-    status: EmployeeRequestStatus,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], EmployeeRequestStatus>(
-      EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_STATUS,
-      status,
-    );
-  }
-
-  findByType(type: EmployeeRequestType): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<EmployeeRequestDto[], EmployeeRequestType>(
-      EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_TYPE,
-      type,
-    );
-  }
-
-  findByDateRange(
-    startDate: Date,
-    endDate: Date,
-  ): Observable<EmployeeRequestDto[]> {
-    return this.staffClient.send<
-      EmployeeRequestDto[],
-      { startDate: Date; endDate: Date }
-    >(EMPLOYEE_REQUESTS_PATTERNS.FIND_BY_DATE_RANGE, { startDate, endDate });
   }
 
   create(data: CreateEmployeeRequestDto): Observable<EmployeeRequestDto> {

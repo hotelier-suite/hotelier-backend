@@ -25,7 +25,7 @@ import { FacilitiesService } from './facilities.service';
 import {
   CreateRecreationalFacilityDto,
   FacilityAvailabilityDto,
-  FacilityType,
+  FindFacilitiesFilterDto,
   RecreationalFacilityDto,
   UpdateRecreationalFacilityDto,
 } from '@app/contracts/recreational-service';
@@ -68,51 +68,17 @@ export class FacilitiesController {
   @ApiOperation({
     summary: 'Get All Recreational Facilities',
     description:
-      'Retrieve all recreational facilities with their current status',
+      'Retrieve all recreational facilities with optional filters for status, availability, and type',
   })
   @ApiResponse({
     status: 200,
     description: 'List of all recreational facilities',
     type: [RecreationalFacilityDto],
   })
-  findAll(): Observable<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findAll();
-  }
-
-  @Get('available')
-  @ApiOperation({
-    summary: 'Get Available Facilities',
-    description: 'Retrieve only available recreational facilities',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of available recreational facilities',
-    type: [RecreationalFacilityDto],
-  })
-  findAvailable(): Observable<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findAvailable();
-  }
-
-  @Get('by-type/:type')
-  @ApiOperation({
-    summary: 'Get Facilities by Type',
-    description: 'Retrieve recreational facilities filtered by type',
-  })
-  @ApiParam({
-    name: 'type',
-    enum: FacilityType,
-    description: 'Facility type to filter by',
-    example: FacilityType.GYM,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'List of recreational facilities of the specified type',
-    type: [RecreationalFacilityDto],
-  })
-  findByType(
-    @Param('type') type: FacilityType,
+  findAll(
+    @Query() filters: FindFacilitiesFilterDto,
   ): Observable<RecreationalFacilityDto[]> {
-    return this.facilitiesService.findByType(type);
+    return this.facilitiesService.findAll(filters);
   }
 
   @Get(':id')

@@ -7,6 +7,7 @@ import {
   CreateDashboardWidgetDto,
   UpdateDashboardWidgetDto,
   DashboardWidgetDto,
+  FindWidgetsFilterDto,
 } from '@app/contracts/dashboard-service';
 
 @Injectable()
@@ -23,11 +24,11 @@ export class WidgetsService {
     >(WIDGETS_PATTERNS.CREATE, data);
   }
 
-  findAll(): Observable<DashboardWidgetDto[]> {
+  findAll(filters: FindWidgetsFilterDto): Observable<DashboardWidgetDto[]> {
     return this.dashboardClient.send<
       DashboardWidgetDto[],
-      Record<string, never>
-    >(WIDGETS_PATTERNS.FIND_ALL, {});
+      FindWidgetsFilterDto
+    >(WIDGETS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<DashboardWidgetDto> {
@@ -51,13 +52,6 @@ export class WidgetsService {
     return this.dashboardClient.send<DashboardWidgetDto, number>(
       WIDGETS_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  findByUser(userId: number): Observable<DashboardWidgetDto[]> {
-    return this.dashboardClient.send<DashboardWidgetDto[], number>(
-      WIDGETS_PATTERNS.FIND_BY_USER,
-      userId,
     );
   }
 }

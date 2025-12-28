@@ -6,6 +6,7 @@ import {
   UpdateRoleDto,
   RoleResponseDto,
   RolePermissionsPayloadDto,
+  FindRolesFilterDto,
 } from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
@@ -23,10 +24,10 @@ export class RolesService {
     );
   }
 
-  findAll(): Observable<RoleResponseDto[]> {
-    return this.authClient.send<RoleResponseDto[], Record<string, never>>(
+  findAll(filters: FindRolesFilterDto): Observable<RoleResponseDto[]> {
+    return this.authClient.send<RoleResponseDto[], FindRolesFilterDto>(
       ROLES_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -34,13 +35,6 @@ export class RolesService {
     return this.authClient.send<RoleResponseDto, number>(
       ROLES_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByName(name: string): Observable<RoleResponseDto> {
-    return this.authClient.send<RoleResponseDto, string>(
-      ROLES_PATTERNS.FIND_BY_NAME,
-      name,
     );
   }
 

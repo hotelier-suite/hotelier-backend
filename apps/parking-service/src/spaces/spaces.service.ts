@@ -7,8 +7,8 @@ import {
   ParkingSpaceDto,
   CreateParkingSpaceDto,
   UpdateParkingSpaceDto,
+  FindSpacesFilterDto,
   SpaceStatus,
-  SpaceType,
 } from '@app/contracts/parking-service';
 
 @Injectable()
@@ -54,35 +54,9 @@ export class SpacesService {
       vehicles: true,
     };
 
-  findAll(): Promise<ParkingSpaceDto[]> {
+  findAll(filters: FindSpacesFilterDto): Promise<ParkingSpaceDto[]> {
     return this.parkingSpaceRepository.find({
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
-      order: { code: 'ASC' },
-    });
-  }
-
-  findAvailable(): Promise<ParkingSpaceDto[]> {
-    return this.parkingSpaceRepository.find({
-      where: { status: SpaceStatus.AVAILABLE },
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
-      order: { code: 'ASC' },
-    });
-  }
-
-  findByType(type: SpaceType): Promise<ParkingSpaceDto[]> {
-    return this.parkingSpaceRepository.find({
-      where: { type },
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
-      order: { code: 'ASC' },
-    });
-  }
-
-  findByZone(zone: string): Promise<ParkingSpaceDto[]> {
-    return this.parkingSpaceRepository.find({
-      where: { zone },
+      where: filters,
       select: this.parkingSpaceReadSelect,
       relations: this.parkingSpaceReadRelations,
       order: { code: 'ASC' },
@@ -100,23 +74,6 @@ export class SpacesService {
       throw new RpcException({
         statusCode: 404,
         message: `Parking space with id ${id} not found`,
-      });
-    }
-
-    return space;
-  }
-
-  async findByCode(code: string): Promise<ParkingSpaceDto> {
-    const space = await this.parkingSpaceRepository.findOne({
-      where: { code },
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
-    });
-
-    if (!space) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Parking space with code ${code} not found`,
       });
     }
 

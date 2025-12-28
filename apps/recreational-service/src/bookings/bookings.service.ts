@@ -21,6 +21,7 @@ import {
   BookingStatusBreakdownDto,
   RecreationalBookingStatus,
   FacilityStatus,
+  FindRecreationalBookingsFilterDto,
 } from '@app/contracts/recreational-service';
 
 @Injectable()
@@ -70,8 +71,25 @@ export class BookingsService {
       facility: true,
     };
 
-  findAll(): Promise<RecreationalBookingDto[]> {
+  findAll(
+    filters: FindRecreationalBookingsFilterDto,
+  ): Promise<RecreationalBookingDto[]> {
+    const where: FindOptionsWhere<RecreationalBooking> = {};
+
+    if (filters.date) {
+      const startOfDay = new Date(filters.date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(filters.date);
+      endOfDay.setHours(23, 59, 59, 999);
+      where.bookingDate = Between(startOfDay, endOfDay);
+    }
+
+    if (filters.facilityId) {
+      where.facilityId = filters.facilityId;
+    }
+
     return this.bookingRepository.find({
+      where,
       select: this.bookingReadSelect,
       relations: this.bookingReadRelations,
       order: { bookingDate: 'DESC', startTime: 'ASC' },
@@ -314,41 +332,6 @@ export class BookingsService {
     return this.findOne(id);
   }
 
-  findByDate(date: Date): Promise<RecreationalBookingDto[]> {
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return this.bookingRepository.find({
-      where: {
-        bookingDate: Between(startOfDay, endOfDay),
-      },
-      select: this.bookingReadSelect,
-      relations: this.bookingReadRelations,
-      order: { startTime: 'ASC' },
-    }) as unknown as Promise<RecreationalBookingDto[]>;
-  }
-
-  findByFacility(
-    facilityId: number,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<RecreationalBookingDto[]> {
-    const where: FindOptionsWhere<RecreationalBooking> = { facilityId };
-
-    if (startDate && endDate) {
-      where.bookingDate = Between(startDate, endDate);
-    }
-
-    return this.bookingRepository.find({
-      where,
-      select: this.bookingReadSelect,
-      relations: this.bookingReadRelations,
-      order: { bookingDate: 'DESC', startTime: 'ASC' },
-    }) as unknown as Promise<RecreationalBookingDto[]>;
-  }
-
   async getStatistics(
     startDate: Date,
     endDate: Date,
@@ -444,7 +427,7 @@ export class BookingsService {
     startTime: string,
     endTime: string,
   ): void {
-    if (!facility.isAvailable || facility.status !== FacilityStatus.AVAILABLE) {
+    if (!facility.available || facility.status !== FacilityStatus.AVAILABLE) {
       throw new RpcException({
         statusCode: 400,
         message: 'Facility is not available for booking',

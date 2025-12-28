@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, Length } from 'class-validator';
 
 export class ListGuestsQueryDto {
-  @ApiProperty({
-    description: 'Search term to filter guests by name or email',
-    required: false,
+  @ApiPropertyOptional({
+    description:
+      'Search term to filter guests by name, email, phone number, or document ID',
     example: 'john',
   })
   @IsOptional()

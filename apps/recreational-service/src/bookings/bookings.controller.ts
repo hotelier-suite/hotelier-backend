@@ -7,6 +7,7 @@ import {
   CreateRecreationalBookingDto,
   UpdateRecreationalBookingDto,
   BookingStatisticsDto,
+  FindRecreationalBookingsFilterDto,
 } from '@app/contracts/recreational-service';
 
 @Controller()
@@ -14,8 +15,10 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_ALL)
-  findAll(): Promise<RecreationalBookingDto[]> {
-    return this.bookingsService.findAll();
+  findAll(
+    @Payload() filters: FindRecreationalBookingsFilterDto,
+  ): Promise<RecreationalBookingDto[]> {
+    return this.bookingsService.findAll(filters);
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_ONE)
@@ -57,27 +60,6 @@ export class BookingsController {
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.CHECK_OUT)
   checkOut(@Payload() id: number): Promise<RecreationalBookingDto> {
     return this.bookingsService.checkOut(id);
-  }
-
-  @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_DATE)
-  findByDate(@Payload() date: Date): Promise<RecreationalBookingDto[]> {
-    return this.bookingsService.findByDate(date);
-  }
-
-  @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY)
-  findByFacility(
-    @Payload()
-    payload: {
-      facilityId: number;
-      startDate?: Date;
-      endDate?: Date;
-    },
-  ): Promise<RecreationalBookingDto[]> {
-    return this.bookingsService.findByFacility(
-      payload.facilityId,
-      payload.startDate,
-      payload.endDate,
-    );
   }
 
   @MessagePattern(RECREATIONAL_BOOKINGS_PATTERNS.GET_STATISTICS)

@@ -13,19 +13,16 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
-import { TaskPriority } from '@app/contracts/common';
 import { IncidentsService } from './incidents.service';
 import {
   CreateParkingIncidentDto,
-  IncidentStatus,
-  IncidentType,
+  FindIncidentsFilterDto,
   ParkingIncidentDto,
   ResolveIncidentRequestDto,
   UpdateParkingIncidentDto,
@@ -41,77 +38,13 @@ export class IncidentsController {
   @ApiOperation({
     summary: 'Get All Incidents',
     description:
-      'Retrieve all parking incidents reported in the facility, including their current status and resolution details.',
+      'Retrieve all parking incidents reported in the facility, with optional filters for status, priority, and type.',
   })
   @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  findAll(): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findAll();
-  }
-
-  @Get('by-status')
-  @ApiOperation({
-    summary: 'Get Incidents by Status',
-    description:
-      'Retrieve all parking incidents filtered by their current status (e.g., open, in progress, resolved).',
-  })
-  @ApiQuery({
-    name: 'status',
-    enum: IncidentStatus,
-    description: 'Filter incidents by their current resolution status',
-  })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid status value provided',
-  })
-  findByStatus(
-    @Query('status') status: IncidentStatus,
+  findAll(
+    @Query() filters: FindIncidentsFilterDto,
   ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByStatus(status);
-  }
-
-  @Get('by-priority')
-  @ApiOperation({
-    summary: 'Get Incidents by Priority',
-    description:
-      'Retrieve all parking incidents filtered by their priority level (e.g., low, medium, high, critical).',
-  })
-  @ApiQuery({
-    name: 'priority',
-    enum: TaskPriority,
-    description: 'Filter incidents by their assigned priority level',
-  })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid priority value provided',
-  })
-  findByPriority(
-    @Query('priority') priority: TaskPriority,
-  ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByPriority(priority);
-  }
-
-  @Get('by-type')
-  @ApiOperation({
-    summary: 'Get Incidents by Type',
-    description:
-      'Retrieve all parking incidents filtered by their type (e.g., damage, theft, unauthorized parking).',
-  })
-  @ApiQuery({
-    name: 'type',
-    enum: IncidentType,
-    description: 'Filter incidents by their category or type',
-  })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid incident type value provided',
-  })
-  findByType(
-    @Query('type') type: IncidentType,
-  ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByType(type);
+    return this.incidentsService.findAll(filters);
   }
 
   @Get(':id')

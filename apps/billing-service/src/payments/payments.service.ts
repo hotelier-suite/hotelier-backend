@@ -7,6 +7,7 @@ import {
   PaymentStatus,
   PaymentDto,
   CreatePaymentDto,
+  FindPaymentsFilterDto,
 } from '@app/contracts/billing-service';
 
 @Injectable()
@@ -29,8 +30,9 @@ export class PaymentsService {
     updatedAt: true,
   };
 
-  findAll(): Promise<PaymentDto[]> {
+  findAll(filters: FindPaymentsFilterDto): Promise<PaymentDto[]> {
     return this.paymentRepository.find({
+      where: filters,
       select: this.paymentReadSelect,
       order: { createdAt: 'DESC' },
     });
@@ -73,13 +75,5 @@ export class PaymentsService {
     }
 
     return loaded;
-  }
-
-  findByInvoice(invoiceId: number): Promise<PaymentDto[]> {
-    return this.paymentRepository.find({
-      where: { invoiceId },
-      select: this.paymentReadSelect,
-      order: { createdAt: 'DESC' },
-    });
   }
 }

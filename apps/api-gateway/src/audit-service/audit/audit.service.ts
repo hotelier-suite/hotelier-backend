@@ -9,7 +9,6 @@ import {
   CreateAuditLogDto,
   AuditLogQueryDto,
   AuditStatisticsDto,
-  AuditResource,
   AuditLogParams,
   AuditLogWithUserDto,
   PaginatedAuditLogDto,
@@ -110,30 +109,6 @@ export class AuditService {
     return this.auditClient.send<AuditLogDto, number>(
       AUDIT_PATTERNS.LOG_FIND_ONE,
       id,
-    );
-  }
-
-  findByResource(
-    resource: AuditResource,
-    resourceId: string,
-  ): Observable<AuditLogDto[]> {
-    return this.auditClient.send<
-      AuditLogDto[],
-      { resource: AuditResource; resourceId: string }
-    >(AUDIT_PATTERNS.LOG_FIND_BY_RESOURCE, { resource, resourceId });
-  }
-
-  findByUser(userId: number, limit: number = 100): Observable<AuditLogDto[]> {
-    return this.auditClient.send<
-      AuditLogDto[],
-      { userId: number; limit?: number }
-    >(AUDIT_PATTERNS.LOG_FIND_BY_USER, { userId, limit });
-  }
-
-  findByAction(action: string): Observable<AuditLogDto[]> {
-    return this.auditClient.send<AuditLogDto[], string>(
-      AUDIT_PATTERNS.LOG_FIND_BY_ACTION,
-      action,
     );
   }
 

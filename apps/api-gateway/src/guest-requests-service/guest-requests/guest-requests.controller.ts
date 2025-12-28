@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,8 +22,7 @@ import {
   CreateGuestRequestDto,
   GuestRequestDto,
   UpdateGuestRequestDto,
-  RequestPriority,
-  GuestRequestStatus,
+  FindGuestRequestsFilterDto,
 } from '@app/contracts/guest-requests-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -60,73 +60,18 @@ export class GuestRequestsController {
   @Get()
   @ApiOperation({
     summary: 'Get All Guest Requests',
-    description: 'Retrieve all guest requests.',
+    description:
+      'Retrieve all guest requests with optional filters for status, priority, and limit.',
   })
   @ApiResponse({
     status: 200,
     description: 'Guest requests retrieved successfully',
     type: [GuestRequestDto],
   })
-  findAll(): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.findAll();
-  }
-
-  @Get('by-status/:status')
-  @ApiOperation({
-    summary: 'Get Guest Requests by Status',
-    description: 'Retrieve guest requests filtered by status.',
-  })
-  @ApiParam({
-    name: 'status',
-    enum: GuestRequestStatus,
-    description: 'Status to filter requests by',
-    example: GuestRequestStatus.PENDING,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Guest requests retrieved successfully',
-    type: [GuestRequestDto],
-  })
-  findByStatus(
-    @Param('status') status: GuestRequestStatus,
+  findAll(
+    @Query() filters: FindGuestRequestsFilterDto,
   ): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.findByStatus(status);
-  }
-
-  @Get('pending')
-  @ApiOperation({
-    summary: 'Get Pending Requests',
-    description: 'Retrieve all pending guest requests.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Pending requests retrieved successfully',
-    type: [GuestRequestDto],
-  })
-  findPending(): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.findPending();
-  }
-
-  @Get('priority/:priority')
-  @ApiOperation({
-    summary: 'Get Requests by Priority',
-    description: 'Retrieve guest requests filtered by priority level.',
-  })
-  @ApiParam({
-    name: 'priority',
-    description: 'Request priority level',
-    enum: RequestPriority,
-    example: RequestPriority.HIGH,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Requests by priority retrieved successfully',
-    type: [GuestRequestDto],
-  })
-  findByPriority(
-    @Param('priority') priority: RequestPriority,
-  ): Observable<GuestRequestDto[]> {
-    return this.guestRequestsService.findByPriority(priority);
+    return this.guestRequestsService.findAll(filters);
   }
 
   @Get(':id')

@@ -8,6 +8,7 @@ import {
   CreateRecreationalBookingDto,
   UpdateRecreationalBookingDto,
   BookingStatisticsDto,
+  FindRecreationalBookingsFilterDto,
 } from '@app/contracts/recreational-service';
 
 @Injectable()
@@ -17,11 +18,13 @@ export class BookingsService {
     private readonly recreationalClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<RecreationalBookingDto[]> {
+  findAll(
+    filters: FindRecreationalBookingsFilterDto,
+  ): Observable<RecreationalBookingDto[]> {
     return this.recreationalClient.send<
       RecreationalBookingDto[],
-      Record<string, never>
-    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_ALL, {});
+      FindRecreationalBookingsFilterDto
+    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<RecreationalBookingDto> {
@@ -76,28 +79,6 @@ export class BookingsService {
       RECREATIONAL_BOOKINGS_PATTERNS.CHECK_OUT,
       id,
     );
-  }
-
-  findByDate(date: Date): Observable<RecreationalBookingDto[]> {
-    return this.recreationalClient.send<RecreationalBookingDto[], Date>(
-      RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_DATE,
-      date,
-    );
-  }
-
-  findByFacility(
-    facilityId: number,
-    startDate?: Date,
-    endDate?: Date,
-  ): Observable<RecreationalBookingDto[]> {
-    return this.recreationalClient.send<
-      RecreationalBookingDto[],
-      { facilityId: number; startDate?: Date; endDate?: Date }
-    >(RECREATIONAL_BOOKINGS_PATTERNS.FIND_BY_FACILITY, {
-      facilityId,
-      startDate,
-      endDate,
-    });
   }
 
   getStatistics(

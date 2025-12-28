@@ -12,9 +12,9 @@ import {
   RecreationalFacilityDto,
   FacilityAvailabilityDto,
   TimeSlotDto,
-  FacilityType,
   FacilityStatus,
   RecreationalBookingStatus,
+  FindFacilitiesFilterDto,
 } from '@app/contracts/recreational-service';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class FacilitiesService {
       location: true,
       description: true,
       hourlyRate: true,
-      isAvailable: true,
+      available: true,
       openingTime: true,
       closingTime: true,
       minimumBookingHours: true,
@@ -87,8 +87,11 @@ export class FacilitiesService {
     return loaded;
   }
 
-  findAll(): Promise<RecreationalFacilityDto[]> {
+  findAll(
+    filters: FindFacilitiesFilterDto,
+  ): Promise<RecreationalFacilityDto[]> {
     return this.facilityRepository.find({
+      where: filters,
       select: this.facilityReadSelect,
       order: { name: 'ASC' },
     });
@@ -108,25 +111,6 @@ export class FacilitiesService {
     }
 
     return facility;
-  }
-
-  findAvailable(): Promise<RecreationalFacilityDto[]> {
-    return this.facilityRepository.find({
-      where: {
-        isAvailable: true,
-        status: FacilityStatus.AVAILABLE,
-      },
-      select: this.facilityReadSelect,
-      order: { name: 'ASC' },
-    });
-  }
-
-  findByType(type: FacilityType): Promise<RecreationalFacilityDto[]> {
-    return this.facilityRepository.find({
-      where: { type },
-      select: this.facilityReadSelect,
-      order: { name: 'ASC' },
-    });
   }
 
   async update(
@@ -202,13 +186,13 @@ export class FacilitiesService {
 
     if (
       !isAvailableDay ||
-      !facility.isAvailable ||
+      !facility.available ||
       facility.status !== FacilityStatus.AVAILABLE
     ) {
       return {
         facilityId: facility.id,
         facilityName: facility.name,
-        date: date.toISOString().split('T')[0],
+        date,
         isAvailable: false,
         availableSlots: [],
         notes: 'Facility not available on this date',
@@ -223,7 +207,7 @@ export class FacilitiesService {
     return {
       facilityId: facility.id,
       facilityName: facility.name,
-      date: date.toISOString().split('T')[0],
+      date,
       isAvailable: availableSlots.some((slot) => slot.isAvailable),
       availableSlots,
       notes: facility.maintenanceNotes,
