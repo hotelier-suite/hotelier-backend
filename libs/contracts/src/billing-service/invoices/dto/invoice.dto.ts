@@ -46,6 +46,7 @@ export class InvoiceDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   issueDate: Date;
 
@@ -54,6 +55,7 @@ export class InvoiceDto {
     example: '2024-02-15T23:59:59.999Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   dueDate: Date;
 
@@ -142,6 +144,7 @@ export class InvoiceDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -150,6 +153,7 @@ export class InvoiceDto {
     example: '2024-01-15T14:20:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

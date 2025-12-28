@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { RoomType } from '../../rooms';
 
@@ -8,6 +9,7 @@ export class GetAvailabilityDto {
     example: '2025-09-20',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   startDate: Date;
 
@@ -16,6 +18,7 @@ export class GetAvailabilityDto {
     example: '2025-09-23',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   endDate: Date;
 

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -74,6 +75,7 @@ export class GuestRequestDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   time?: Date;
 
@@ -84,6 +86,7 @@ export class GuestRequestDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   completedAt?: Date;
 
@@ -109,6 +112,7 @@ export class GuestRequestDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -117,6 +121,7 @@ export class GuestRequestDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

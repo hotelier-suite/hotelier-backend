@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -63,6 +64,7 @@ export class RecreationalBookingDto {
     example: '2024-12-15',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   bookingDate: Date;
 
@@ -158,6 +160,7 @@ export class RecreationalBookingDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   actualCheckIn?: Date;
 
@@ -168,6 +171,7 @@ export class RecreationalBookingDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   actualCheckOut?: Date;
 
@@ -217,6 +221,7 @@ export class RecreationalBookingDto {
     description: 'Booking creation timestamp',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -224,6 +229,7 @@ export class RecreationalBookingDto {
     description: 'Booking last update timestamp',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

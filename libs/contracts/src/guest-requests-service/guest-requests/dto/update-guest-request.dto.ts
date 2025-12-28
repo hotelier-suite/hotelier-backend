@@ -1,4 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsOptional } from 'class-validator';
 import { CreateGuestRequestDto } from './create-guest-request.dto';
 
@@ -10,6 +11,7 @@ export class UpdateGuestRequestDto extends PartialType(CreateGuestRequestDto) {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   completedAt?: Date;
 }

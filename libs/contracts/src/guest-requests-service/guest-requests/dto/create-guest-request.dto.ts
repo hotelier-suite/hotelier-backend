@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
 
@@ -62,6 +63,7 @@ export class CreateGuestRequestDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   time?: Date;
 

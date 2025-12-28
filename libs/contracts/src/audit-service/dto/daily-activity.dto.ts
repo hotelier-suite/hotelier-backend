@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsInt, Min } from 'class-validator';
 
 export class DailyActivityDto {
@@ -8,6 +9,7 @@ export class DailyActivityDto {
     example: '2024-01-15T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 

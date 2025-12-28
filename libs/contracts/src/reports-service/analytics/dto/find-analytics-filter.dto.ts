@@ -1,5 +1,6 @@
 import { IsOptional, IsEnum, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { AnalyticsMetric } from '../enums';
 
 export class FindAnalyticsFilterDto {
@@ -18,6 +19,7 @@ export class FindAnalyticsFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -27,6 +29,7 @@ export class FindAnalyticsFilterDto {
     example: '2024-12-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 }

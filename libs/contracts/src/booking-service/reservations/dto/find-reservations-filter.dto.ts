@@ -1,5 +1,6 @@
 import { IsOptional, IsEnum, IsInt, IsBoolean, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { ReservationStatus } from '../enums';
 
 export class FindReservationsFilterDto {
@@ -34,6 +35,7 @@ export class FindReservationsFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -43,6 +45,7 @@ export class FindReservationsFilterDto {
     example: '2024-12-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 }

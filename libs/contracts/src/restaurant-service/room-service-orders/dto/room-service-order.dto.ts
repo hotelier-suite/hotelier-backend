@@ -126,6 +126,7 @@ export class RoomServiceOrderDto {
     description: 'Creation timestamp',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -133,6 +134,7 @@ export class RoomServiceOrderDto {
     description: 'Last update timestamp',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -18,6 +19,7 @@ export class CreateShiftDto {
     format: 'date',
     example: '2024-01-15',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 

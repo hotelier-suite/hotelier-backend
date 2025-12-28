@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate } from 'class-validator';
 
 export class PeriodDto {
@@ -8,6 +9,7 @@ export class PeriodDto {
     example: '2024-12-01',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   startDate: Date;
 
@@ -17,6 +19,7 @@ export class PeriodDto {
     example: '2024-12-31',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   endDate: Date;
 }

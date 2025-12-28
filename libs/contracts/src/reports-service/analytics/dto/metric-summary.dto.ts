@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsDate } from 'class-validator';
 import { AnalyticsMetric } from '..';
 
@@ -23,6 +24,7 @@ export class MetricSummaryDto {
     example: '2024-01-15T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 }

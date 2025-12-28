@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
@@ -40,6 +41,7 @@ export class AnalyticsDataDto {
     example: '2024-01-15',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 
@@ -66,6 +68,7 @@ export class AnalyticsDataDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -74,6 +77,7 @@ export class AnalyticsDataDto {
     example: '2024-01-15T11:45:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

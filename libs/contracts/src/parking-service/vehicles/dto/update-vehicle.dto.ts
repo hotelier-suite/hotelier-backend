@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional } from 'class-validator';
 import { CreateVehicleDto } from './create-vehicle.dto';
 import { VehicleStatus } from '../enums';
@@ -21,6 +22,7 @@ export class UpdateVehicleDto extends PartialType(CreateVehicleDto) {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   exitTime?: Date;
 }

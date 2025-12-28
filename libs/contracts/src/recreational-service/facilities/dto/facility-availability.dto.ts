@@ -34,6 +34,7 @@ export class FacilityAvailabilityDto {
     example: '2024-12-15',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 

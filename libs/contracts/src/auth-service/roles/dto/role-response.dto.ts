@@ -49,6 +49,7 @@ export class RoleResponseDto {
     example: '2024-01-01T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt!: Date;
 
@@ -57,6 +58,7 @@ export class RoleResponseDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt!: Date;
 

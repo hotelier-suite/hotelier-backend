@@ -1,5 +1,6 @@
 import { IsOptional, IsEnum, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { ReportType } from '../enums/report-type.enum';
 import { ReportStatus } from '../enums/report-status.enum';
 
@@ -27,6 +28,7 @@ export class FindReportsFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -35,6 +37,7 @@ export class FindReportsFilterDto {
     example: '2024-12-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 }

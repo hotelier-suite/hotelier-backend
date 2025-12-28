@@ -45,6 +45,7 @@ export class EventBookingDto {
     example: '2024-12-14',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   eventDate: Date;
 
@@ -155,6 +156,7 @@ export class EventBookingDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -163,6 +165,7 @@ export class EventBookingDto {
     example: '2024-01-15T14:20:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

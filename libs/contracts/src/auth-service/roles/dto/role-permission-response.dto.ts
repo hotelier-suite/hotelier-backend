@@ -33,6 +33,7 @@ export class RolePermissionResponseDto {
     example: '2024-01-01T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt!: Date;
 

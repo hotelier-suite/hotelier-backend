@@ -1,5 +1,6 @@
 import { PartialType } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -31,6 +32,7 @@ export class UpdateCleaningAssignmentDto extends PartialType(
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startedAt?: Date;
 
@@ -40,6 +42,7 @@ export class UpdateCleaningAssignmentDto extends PartialType(
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   completedAt?: Date;
 

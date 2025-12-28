@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsString, IsDate } from 'class-validator';
 
 export class DistinctMetricResultDto {
@@ -21,6 +22,7 @@ export class DistinctMetricResultDto {
     example: '2024-01-15T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 }

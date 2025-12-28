@@ -1,5 +1,6 @@
 import { IsOptional, IsEnum, IsDate, IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { EmployeeRequestStatus } from '../enums/request-status.enum';
 import { EmployeeRequestType } from '../enums/request-type.enum';
 
@@ -37,6 +38,7 @@ export class FindEmployeeRequestsFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -45,6 +47,7 @@ export class FindEmployeeRequestsFilterDto {
     example: '2024-01-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 }

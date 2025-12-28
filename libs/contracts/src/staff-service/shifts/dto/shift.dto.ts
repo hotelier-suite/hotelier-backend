@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -24,6 +25,7 @@ export class ShiftDto {
     format: 'date',
     example: '2024-01-15',
   })
+  @Type(() => Date)
   @IsDate()
   date: Date;
 
@@ -90,6 +92,7 @@ export class ShiftDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -98,6 +101,7 @@ export class ShiftDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 

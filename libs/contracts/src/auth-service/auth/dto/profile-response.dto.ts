@@ -75,6 +75,7 @@ export class ProfileResponseDto {
     description: 'User registration date',
     example: '2024-01-01T00:00:00.000Z',
   })
+  @Type(() => Date)
   @IsDate()
   registrationDate: Date;
 

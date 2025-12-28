@@ -1,5 +1,6 @@
 import { IsOptional, IsEnum, IsDate, IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { AttendanceStatus } from '../enums/attendance-status.enum';
 
 export class FindAttendanceFilterDto {
@@ -18,6 +19,7 @@ export class FindAttendanceFilterDto {
     example: '2024-01-15',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   date?: Date;
 
@@ -26,6 +28,7 @@ export class FindAttendanceFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -34,6 +37,7 @@ export class FindAttendanceFilterDto {
     example: '2024-01-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 

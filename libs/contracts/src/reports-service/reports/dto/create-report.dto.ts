@@ -45,6 +45,7 @@ export class CreateReportDto {
     example: '2024-01-01',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   startDate: Date;
 
@@ -53,6 +54,7 @@ export class CreateReportDto {
     example: '2024-01-31',
     format: 'date',
   })
+  @Type(() => Date)
   @IsDate()
   endDate: Date;
 

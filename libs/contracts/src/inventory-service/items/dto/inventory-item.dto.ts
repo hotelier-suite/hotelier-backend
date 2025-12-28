@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -114,6 +115,7 @@ export class InventoryItemDto {
     example: '2024-01-15',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   lastPurchaseDate?: Date;
 
@@ -130,6 +132,7 @@ export class InventoryItemDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -138,6 +141,7 @@ export class InventoryItemDto {
     type: String,
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

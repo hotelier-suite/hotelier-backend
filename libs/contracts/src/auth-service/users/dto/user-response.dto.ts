@@ -78,6 +78,7 @@ export class UserResponseDto {
     example: '2024-01-01T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   registrationDate!: Date;
 
@@ -88,6 +89,7 @@ export class UserResponseDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   lastVisit?: Date;
 
@@ -96,6 +98,7 @@ export class UserResponseDto {
     example: '2024-01-01T00:00:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt!: Date;
 
@@ -104,6 +107,7 @@ export class UserResponseDto {
     example: '2024-01-15T10:30:00.000Z',
     format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt!: Date;
 
@@ -114,6 +118,7 @@ export class UserResponseDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   firstVisit?: Date;
 
@@ -131,6 +136,7 @@ export class UserResponseDto {
     format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   lastLogin?: Date;
 

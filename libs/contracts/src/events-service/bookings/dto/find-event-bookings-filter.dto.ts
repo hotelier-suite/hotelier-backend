@@ -1,5 +1,6 @@
 import { IsOptional, IsInt, IsBoolean, IsEnum, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { EventStatus } from '../../events/enums';
 
 export class FindEventBookingsFilterDto {
@@ -42,6 +43,7 @@ export class FindEventBookingsFilterDto {
     example: '2024-01-01',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -51,6 +53,7 @@ export class FindEventBookingsFilterDto {
     example: '2024-12-31',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 }
