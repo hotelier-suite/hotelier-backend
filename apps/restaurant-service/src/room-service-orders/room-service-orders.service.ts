@@ -14,37 +14,38 @@ import {
 export class RoomServiceOrdersService {
   constructor(
     @InjectRepository(RoomServiceOrder)
-    private readonly orderRepository: Repository<RoomServiceOrder>,
+    private readonly roomServiceOrderRepository: Repository<RoomServiceOrder>,
   ) {}
 
-  private readonly readSelect: FindOptionsSelect<RoomServiceOrder> = {
-    id: true,
-    orderNumber: true,
-    room: true,
-    guest: true,
-    items: true,
-    total: true,
-    orderTime: true,
-    estimatedTime: true,
-    status: true,
-    waiter: true,
-    specialInstructions: true,
-    guestId: true,
-    createdAt: true,
-    updatedAt: true,
-  };
+  private readonly roomServiceOrderReadSelect: FindOptionsSelect<RoomServiceOrder> =
+    {
+      id: true,
+      orderNumber: true,
+      room: true,
+      guest: true,
+      items: true,
+      total: true,
+      orderTime: true,
+      estimatedTime: true,
+      status: true,
+      waiter: true,
+      specialInstructions: true,
+      guestId: true,
+      createdAt: true,
+      updatedAt: true,
+    };
 
   findAll(): Promise<RoomServiceOrderDto[]> {
-    return this.orderRepository.find({
-      select: this.readSelect,
+    return this.roomServiceOrderRepository.find({
+      select: this.roomServiceOrderReadSelect,
       order: { createdAt: 'DESC' },
     });
   }
 
   async findOne(id: number): Promise<RoomServiceOrderDto> {
-    const order = await this.orderRepository.findOne({
+    const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.roomServiceOrderReadSelect,
     });
 
     if (!order) {
@@ -58,10 +59,10 @@ export class RoomServiceOrdersService {
   }
 
   async create(data: CreateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
-    const count = await this.orderRepository.count();
+    const count = await this.roomServiceOrderRepository.count();
     const orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
 
-    const order = await this.orderRepository.save({
+    const order = await this.roomServiceOrderRepository.save({
       ...data,
       orderNumber,
       orderTime: new Date().toLocaleTimeString('es-ES', {
@@ -71,9 +72,9 @@ export class RoomServiceOrdersService {
       status: RoomServiceStatus.PENDING,
     });
 
-    const loaded = await this.orderRepository.findOne({
+    const loaded = await this.roomServiceOrderRepository.findOne({
       where: { id: order.id },
-      select: this.readSelect,
+      select: this.roomServiceOrderReadSelect,
     });
 
     if (!loaded) {
@@ -90,7 +91,9 @@ export class RoomServiceOrdersService {
     id: number,
     data: UpdateRoomServiceOrderDto,
   ): Promise<RoomServiceOrderDto> {
-    const existing = await this.orderRepository.findOne({ where: { id } });
+    const existing = await this.roomServiceOrderRepository.findOne({
+      where: { id },
+    });
 
     if (!existing) {
       throw new RpcException({
@@ -99,14 +102,14 @@ export class RoomServiceOrdersService {
       });
     }
 
-    await this.orderRepository.update(id, data);
+    await this.roomServiceOrderRepository.update(id, data);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<RoomServiceOrderDto> {
-    const order = await this.orderRepository.findOne({
+    const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.roomServiceOrderReadSelect,
     });
 
     if (!order) {
@@ -116,7 +119,7 @@ export class RoomServiceOrdersService {
       });
     }
 
-    await this.orderRepository.remove(order);
+    await this.roomServiceOrderRepository.remove(order);
     return order;
   }
 }

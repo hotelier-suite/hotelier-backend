@@ -15,15 +15,19 @@ import { TaskPriority } from '@app/contracts/common';
 export class MaintenanceReportsService {
   constructor(
     @InjectRepository(MaintenanceReport)
-    private readonly reportRepository: Repository<MaintenanceReport>,
+    private readonly maintenanceReportRepository: Repository<MaintenanceReport>,
   ) {}
 
   findAll(): Promise<MaintenanceReportDto[]> {
-    return this.reportRepository.find({ order: { createdAt: 'DESC' } });
+    return this.maintenanceReportRepository.find({
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<MaintenanceReportDto> {
-    const report = await this.reportRepository.findOne({ where: { id } });
+    const report = await this.maintenanceReportRepository.findOne({
+      where: { id },
+    });
     if (!report) {
       throw new RpcException({
         statusCode: 404,
@@ -34,13 +38,13 @@ export class MaintenanceReportsService {
   }
 
   create(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
-    const report = this.reportRepository.create({
+    const report = this.maintenanceReportRepository.create({
       ...data,
       reportNumber: `MR-${Date.now()}`,
       status: HousekeepingMaintenanceStatus.PENDING,
       priority: data.priority ?? TaskPriority.NORMAL,
     });
-    return this.reportRepository.save(report);
+    return this.maintenanceReportRepository.save(report);
   }
 
   async update(
@@ -48,13 +52,13 @@ export class MaintenanceReportsService {
     data: UpdateMaintenanceReportDto,
   ): Promise<MaintenanceReportDto> {
     await this.findOne(id);
-    await this.reportRepository.update(id, data);
+    await this.maintenanceReportRepository.update(id, data);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<MaintenanceReportDto> {
     const report = await this.findOne(id);
-    await this.reportRepository.remove(report);
+    await this.maintenanceReportRepository.remove(report);
     return report;
   }
 }

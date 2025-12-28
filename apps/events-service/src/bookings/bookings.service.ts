@@ -23,12 +23,12 @@ import {
 export class BookingsService {
   constructor(
     @InjectRepository(EventBooking)
-    private readonly bookingRepository: Repository<EventBooking>,
+    private readonly eventBookingRepository: Repository<EventBooking>,
     @InjectRepository(Venue)
     private readonly venueRepository: Repository<Venue>,
   ) {}
 
-  private readonly readSelect: FindOptionsSelect<EventBooking> = {
+  private readonly eventBookingReadSelect: FindOptionsSelect<EventBooking> = {
     id: true,
     title: true,
     description: true,
@@ -60,9 +60,10 @@ export class BookingsService {
     },
   };
 
-  private readonly readRelations: FindOptionsRelations<EventBooking> = {
-    venue: true,
-  };
+  private readonly eventBookingReadRelations: FindOptionsRelations<EventBooking> =
+    {
+      venue: true,
+    };
 
   findAll(filters: FindEventBookingsFilterDto): Promise<EventBookingDto[]> {
     const where: FindOptionsWhere<EventBooking> = {};
@@ -92,19 +93,19 @@ export class BookingsService {
       where.eventDate = LessThanOrEqual(filters.endDate);
     }
 
-    return this.bookingRepository.find({
+    return this.eventBookingRepository.find({
       where,
-      select: this.readSelect,
-      relations: this.readRelations,
+      select: this.eventBookingReadSelect,
+      relations: this.eventBookingReadRelations,
       order: { eventDate: 'ASC' },
     });
   }
 
   async findOne(id: number): Promise<EventBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.eventBookingRepository.findOne({
       where: { id },
-      select: this.readSelect,
-      relations: this.readRelations,
+      select: this.eventBookingReadSelect,
+      relations: this.eventBookingReadRelations,
     });
 
     if (!booking) {
@@ -135,15 +136,15 @@ export class BookingsService {
       data.endTime,
     );
 
-    const booking = await this.bookingRepository.save({
+    const booking = await this.eventBookingRepository.save({
       ...data,
       totalCost,
     });
 
-    const loaded = await this.bookingRepository.findOne({
+    const loaded = await this.eventBookingRepository.findOne({
       where: { id: booking.id },
-      select: this.readSelect,
-      relations: this.readRelations,
+      select: this.eventBookingReadSelect,
+      relations: this.eventBookingReadRelations,
     });
 
     if (!loaded) {
@@ -160,9 +161,9 @@ export class BookingsService {
     id: number,
     data: UpdateEventBookingDto,
   ): Promise<EventBookingDto> {
-    const existing = await this.bookingRepository.findOne({
+    const existing = await this.eventBookingRepository.findOne({
       where: { id },
-      relations: this.readRelations,
+      relations: this.eventBookingReadRelations,
     });
 
     if (!existing) {
@@ -193,7 +194,7 @@ export class BookingsService {
       endTime,
     );
 
-    await this.bookingRepository.update(id, {
+    await this.eventBookingRepository.update(id, {
       ...data,
       totalCost,
     });
@@ -202,10 +203,10 @@ export class BookingsService {
   }
 
   async remove(id: number): Promise<EventBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.eventBookingRepository.findOne({
       where: { id },
-      select: this.readSelect,
-      relations: this.readRelations,
+      select: this.eventBookingReadSelect,
+      relations: this.eventBookingReadRelations,
     });
 
     if (!booking) {
@@ -215,7 +216,7 @@ export class BookingsService {
       });
     }
 
-    await this.bookingRepository.remove(booking);
+    await this.eventBookingRepository.remove(booking);
     return booking;
   }
 

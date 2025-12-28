@@ -14,12 +14,12 @@ import {
 export class WidgetsService {
   constructor(
     @InjectRepository(DashboardWidget)
-    private readonly widgetRepository: Repository<DashboardWidget>,
+    private readonly dashboardWidgetRepository: Repository<DashboardWidget>,
   ) {}
 
   create(data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
-    const widget = this.widgetRepository.create(data);
-    return this.widgetRepository.save(widget);
+    const widget = this.dashboardWidgetRepository.create(data);
+    return this.dashboardWidgetRepository.save(widget);
   }
 
   findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {
@@ -29,14 +29,16 @@ export class WidgetsService {
       where.userId = filters.userId;
     }
 
-    return this.widgetRepository.find({
+    return this.dashboardWidgetRepository.find({
       where,
       order: { position: 'ASC' },
     });
   }
 
   async findOne(id: number): Promise<DashboardWidgetDto> {
-    const widget = await this.widgetRepository.findOne({ where: { id } });
+    const widget = await this.dashboardWidgetRepository.findOne({
+      where: { id },
+    });
     if (!widget) {
       throw new RpcException({
         statusCode: 404,
@@ -52,12 +54,22 @@ export class WidgetsService {
   ): Promise<DashboardWidgetDto> {
     const widget = await this.findOne(id);
     Object.assign(widget, data);
-    return this.widgetRepository.save(widget as DashboardWidget);
+    return this.dashboardWidgetRepository.save(widget);
   }
 
   async remove(id: number): Promise<DashboardWidgetDto> {
-    const widget = await this.findOne(id);
-    await this.widgetRepository.remove(widget as DashboardWidget);
-    return { ...widget, id };
+    const widget = await this.dashboardWidgetRepository.findOne({
+      where: { id },
+    });
+
+    if (!widget) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Widget with id ${id} not found`,
+      });
+    }
+
+    await this.dashboardWidgetRepository.delete(id);
+    return widget;
   }
 }

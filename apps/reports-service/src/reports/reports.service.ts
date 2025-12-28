@@ -1,6 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, FindOptionsWhere } from 'typeorm';
+import {
+  Repository,
+  Between,
+  FindOptionsWhere,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+} from 'typeorm';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { lastValueFrom, of, timeout, catchError } from 'rxjs';
 import { Report } from './entities';
@@ -64,6 +70,10 @@ export class ReportsService {
 
     if (filters?.startDate && filters?.endDate) {
       where.createdAt = Between(filters.startDate, filters.endDate);
+    } else if (filters?.startDate) {
+      where.createdAt = MoreThanOrEqual(filters.startDate);
+    } else if (filters?.endDate) {
+      where.createdAt = LessThanOrEqual(filters.endDate);
     }
 
     return this.reportRepository.find({

@@ -18,21 +18,22 @@ export class BeverageInventoryService {
     private readonly beverageRepository: Repository<BeverageInventory>,
   ) {}
 
-  private readonly readSelect: FindOptionsSelect<BeverageInventory> = {
-    id: true,
-    itemCode: true,
-    name: true,
-    category: true,
-    stock: true,
-    minimumStock: true,
-    unit: true,
-    unitCost: true,
-    supplier: true,
-    lastPurchase: true,
-    status: true,
-    createdAt: true,
-    updatedAt: true,
-  };
+  private readonly beverageInventoryReadSelect: FindOptionsSelect<BeverageInventory> =
+    {
+      id: true,
+      itemCode: true,
+      name: true,
+      category: true,
+      stock: true,
+      minimumStock: true,
+      unit: true,
+      unitCost: true,
+      supplier: true,
+      lastPurchase: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    };
 
   findAll(
     filters: FindBeverageInventoryFilterDto,
@@ -49,7 +50,7 @@ export class BeverageInventoryService {
 
     return this.beverageRepository.find({
       where,
-      select: this.readSelect,
+      select: this.beverageInventoryReadSelect,
       order: { name: 'ASC' },
     });
   }
@@ -57,7 +58,7 @@ export class BeverageInventoryService {
   async findOne(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.beverageInventoryReadSelect,
     });
 
     if (!beverage) {
@@ -87,7 +88,7 @@ export class BeverageInventoryService {
 
     const loaded = await this.beverageRepository.findOne({
       where: { id: beverage.id },
-      select: this.readSelect,
+      select: this.beverageInventoryReadSelect,
     });
 
     if (!loaded) {
@@ -127,7 +128,7 @@ export class BeverageInventoryService {
   async remove(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.beverageInventoryReadSelect,
     });
 
     if (!beverage) {

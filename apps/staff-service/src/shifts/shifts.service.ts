@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  Between,
+  FindOptionsWhere,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import {
   ShiftDto,
   CreateShiftDto,
@@ -47,6 +53,10 @@ export class ShiftsService {
     // Date range filter
     else if (filters?.startDate && filters?.endDate) {
       where.date = Between(filters.startDate, filters.endDate);
+    } else if (filters?.startDate) {
+      where.date = MoreThanOrEqual(filters.startDate);
+    } else if (filters?.endDate) {
+      where.date = LessThanOrEqual(filters.endDate);
     }
 
     return this.shiftRepository.find({

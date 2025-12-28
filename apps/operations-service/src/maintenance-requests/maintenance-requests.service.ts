@@ -15,15 +15,19 @@ import { TaskPriority } from '@app/contracts/common';
 export class MaintenanceRequestsService {
   constructor(
     @InjectRepository(MaintenanceRequest)
-    private readonly requestRepository: Repository<MaintenanceRequest>,
+    private readonly maintenanceRequestRepository: Repository<MaintenanceRequest>,
   ) {}
 
   findAll(): Promise<HousekeepingMaintenanceRequestDto[]> {
-    return this.requestRepository.find({ order: { createdAt: 'DESC' } });
+    return this.maintenanceRequestRepository.find({
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<HousekeepingMaintenanceRequestDto> {
-    const request = await this.requestRepository.findOne({ where: { id } });
+    const request = await this.maintenanceRequestRepository.findOne({
+      where: { id },
+    });
     if (!request) {
       throw new RpcException({
         statusCode: 404,
@@ -36,13 +40,13 @@ export class MaintenanceRequestsService {
   create(
     data: CreateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
-    const request = this.requestRepository.create({
+    const request = this.maintenanceRequestRepository.create({
       ...data,
       status: HousekeepingMaintenanceStatus.PENDING,
       priority: data.priority ?? TaskPriority.NORMAL,
       reportDate: new Date(),
     });
-    return this.requestRepository.save(request);
+    return this.maintenanceRequestRepository.save(request);
   }
 
   async update(
@@ -50,13 +54,13 @@ export class MaintenanceRequestsService {
     data: UpdateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
     await this.findOne(id);
-    await this.requestRepository.update(id, data);
+    await this.maintenanceRequestRepository.update(id, data);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<HousekeepingMaintenanceRequestDto> {
     const request = await this.findOne(id);
-    await this.requestRepository.remove(request);
+    await this.maintenanceRequestRepository.remove(request);
     return request;
   }
 }

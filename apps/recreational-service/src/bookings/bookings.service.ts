@@ -28,45 +28,46 @@ import {
 export class BookingsService {
   constructor(
     @InjectRepository(RecreationalBooking)
-    private readonly bookingRepository: Repository<RecreationalBooking>,
+    private readonly recreationalBookingRepository: Repository<RecreationalBooking>,
     @InjectRepository(RecreationalFacility)
-    private readonly facilityRepository: Repository<RecreationalFacility>,
+    private readonly recreationalFacilityRepository: Repository<RecreationalFacility>,
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  private readonly bookingReadSelect: FindOptionsSelect<RecreationalBooking> = {
-    id: true,
-    facilityId: true,
-    guestName: true,
-    guestEmail: true,
-    guestPhone: true,
-    roomNumber: true,
-    bookingDate: true,
-    startTime: true,
-    endTime: true,
-    duration: true,
-    participants: true,
-    totalCost: true,
-    status: true,
-    priority: true,
-    specialRequests: true,
-    staffNotes: true,
-    actualCheckIn: true,
-    actualCheckOut: true,
-    discountPercent: true,
-    discountAmount: true,
-    createdByUserId: true,
-    createdAt: true,
-    updatedAt: true,
-    facility: {
+  private readonly recreationalBookingReadSelect: FindOptionsSelect<RecreationalBooking> =
+    {
       id: true,
-      name: true,
-      type: true,
-      location: true,
-    },
-  };
+      facilityId: true,
+      guestName: true,
+      guestEmail: true,
+      guestPhone: true,
+      roomNumber: true,
+      bookingDate: true,
+      startTime: true,
+      endTime: true,
+      duration: true,
+      participants: true,
+      totalCost: true,
+      status: true,
+      priority: true,
+      specialRequests: true,
+      staffNotes: true,
+      actualCheckIn: true,
+      actualCheckOut: true,
+      discountPercent: true,
+      discountAmount: true,
+      createdByUserId: true,
+      createdAt: true,
+      updatedAt: true,
+      facility: {
+        id: true,
+        name: true,
+        type: true,
+        location: true,
+      },
+    };
 
-  private readonly bookingReadRelations: FindOptionsRelations<RecreationalBooking> =
+  private readonly recreationalBookingReadRelations: FindOptionsRelations<RecreationalBooking> =
     {
       facility: true,
     };
@@ -88,19 +89,19 @@ export class BookingsService {
       where.facilityId = filters.facilityId;
     }
 
-    return this.bookingRepository.find({
+    return this.recreationalBookingRepository.find({
       where,
-      select: this.bookingReadSelect,
-      relations: this.bookingReadRelations,
+      select: this.recreationalBookingReadSelect,
+      relations: this.recreationalBookingReadRelations,
       order: { bookingDate: 'DESC', startTime: 'ASC' },
     });
   }
 
   async findOne(id: number): Promise<RecreationalBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
-      select: this.bookingReadSelect,
-      relations: this.bookingReadRelations,
+      select: this.recreationalBookingReadSelect,
+      relations: this.recreationalBookingReadRelations,
     });
 
     if (!booking) {
@@ -116,7 +117,7 @@ export class BookingsService {
   async create(
     data: CreateRecreationalBookingDto,
   ): Promise<RecreationalBookingDto> {
-    const facility = await this.facilityRepository.findOne({
+    const facility = await this.recreationalFacilityRepository.findOne({
       where: { id: data.facilityId },
     });
 
@@ -148,13 +149,13 @@ export class BookingsService {
       });
     }
 
-    const booking = this.bookingRepository.create({
+    const booking = this.recreationalBookingRepository.create({
       ...data,
       totalCost: 0,
       status: RecreationalBookingStatus.PENDING,
     });
 
-    const saved = await this.bookingRepository.save(booking);
+    const saved = await this.recreationalBookingRepository.save(booking);
 
     this.notificationsService
       .create({
@@ -177,7 +178,7 @@ export class BookingsService {
     id: number,
     data: UpdateRecreationalBookingDto,
   ): Promise<RecreationalBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
       relations: ['facility'],
     });
@@ -191,7 +192,7 @@ export class BookingsService {
 
     if (data.bookingDate || data.startTime || data.endTime || data.facilityId) {
       const facilityId = data.facilityId || booking.facilityId;
-      const facility = await this.facilityRepository.findOne({
+      const facility = await this.recreationalFacilityRepository.findOne({
         where: { id: facilityId },
       });
 
@@ -222,7 +223,7 @@ export class BookingsService {
       );
     }
 
-    await this.bookingRepository.update(id, {
+    await this.recreationalBookingRepository.update(id, {
       ...data,
       totalCost: 0,
     });
@@ -232,12 +233,12 @@ export class BookingsService {
 
   async remove(id: number): Promise<RecreationalBookingDto> {
     const booking = await this.findOne(id);
-    await this.bookingRepository.delete(id);
+    await this.recreationalBookingRepository.delete(id);
     return booking;
   }
 
   async cancel(id: number, reason?: string): Promise<RecreationalBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
       relations: ['facility'],
     });
@@ -259,7 +260,7 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.CANCELLED;
     booking.staffNotes = reason ? `Cancelled: ${reason}` : 'Booking cancelled';
 
-    await this.bookingRepository.save(booking);
+    await this.recreationalBookingRepository.save(booking);
 
     this.notificationsService
       .create({
@@ -279,7 +280,7 @@ export class BookingsService {
   }
 
   async checkIn(id: number): Promise<RecreationalBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
       relations: ['facility'],
     });
@@ -301,12 +302,12 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.CHECKED_IN;
     booking.actualCheckIn = new Date();
 
-    await this.bookingRepository.save(booking);
+    await this.recreationalBookingRepository.save(booking);
     return this.findOne(id);
   }
 
   async checkOut(id: number): Promise<RecreationalBookingDto> {
-    const booking = await this.bookingRepository.findOne({
+    const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
       relations: ['facility'],
     });
@@ -328,7 +329,7 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.COMPLETED;
     booking.actualCheckOut = new Date();
 
-    await this.bookingRepository.save(booking);
+    await this.recreationalBookingRepository.save(booking);
     return this.findOne(id);
   }
 
@@ -336,7 +337,7 @@ export class BookingsService {
     startDate: Date,
     endDate: Date,
   ): Promise<BookingStatisticsDto> {
-    const bookings = await this.bookingRepository.find({
+    const bookings = await this.recreationalBookingRepository.find({
       where: {
         bookingDate: Between(startDate, endDate),
       },
@@ -471,7 +472,7 @@ export class BookingsService {
     endTime: string,
     excludeBookingId?: number,
   ): Promise<void> {
-    const qb = this.bookingRepository
+    const qb = this.recreationalBookingRepository
       .createQueryBuilder('booking')
       .where('booking.facilityId = :facilityId', { facilityId })
       .andWhere('booking.bookingDate = :date', { date })
@@ -508,11 +509,11 @@ export class BookingsService {
     startDate: Date,
     endDate: Date,
   ): Promise<FacilityUsageStatsDto[]> {
-    const facilities = await this.facilityRepository.find();
+    const facilities = await this.recreationalFacilityRepository.find();
     const stats: FacilityUsageStatsDto[] = [];
 
     for (const facility of facilities) {
-      const bookings = await this.bookingRepository.find({
+      const bookings = await this.recreationalBookingRepository.find({
         where: {
           facilityId: facility.id,
           bookingDate: Between(startDate, endDate),

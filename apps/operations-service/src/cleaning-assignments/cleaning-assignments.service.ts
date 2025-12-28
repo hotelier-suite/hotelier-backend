@@ -14,15 +14,17 @@ import {
 export class CleaningAssignmentsService {
   constructor(
     @InjectRepository(CleaningAssignment)
-    private readonly assignmentRepository: Repository<CleaningAssignment>,
+    private readonly cleaningAssignmentRepository: Repository<CleaningAssignment>,
   ) {}
 
   findAll(): Promise<CleaningAssignmentDto[]> {
-    return this.assignmentRepository.find({ order: { assignedDate: 'DESC' } });
+    return this.cleaningAssignmentRepository.find({
+      order: { assignedDate: 'DESC' },
+    });
   }
 
   async findOne(id: number): Promise<CleaningAssignmentDto> {
-    const assignment = await this.assignmentRepository.findOne({
+    const assignment = await this.cleaningAssignmentRepository.findOne({
       where: { id },
     });
     if (!assignment) {
@@ -35,11 +37,11 @@ export class CleaningAssignmentsService {
   }
 
   create(data: CreateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
-    const assignment = this.assignmentRepository.create({
+    const assignment = this.cleaningAssignmentRepository.create({
       ...data,
       status: CleaningStatus.PENDING,
     });
-    return this.assignmentRepository.save(assignment);
+    return this.cleaningAssignmentRepository.save(assignment);
   }
 
   async update(
@@ -47,13 +49,13 @@ export class CleaningAssignmentsService {
     data: UpdateCleaningAssignmentDto,
   ): Promise<CleaningAssignmentDto> {
     await this.findOne(id);
-    await this.assignmentRepository.update(id, data);
+    await this.cleaningAssignmentRepository.update(id, data);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<CleaningAssignmentDto> {
     const assignment = await this.findOne(id);
-    await this.assignmentRepository.remove(assignment);
+    await this.cleaningAssignmentRepository.remove(assignment);
     return assignment;
   }
 }

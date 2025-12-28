@@ -7,7 +7,7 @@ import { Configuration, ConfigCategory } from '../configuration';
 export class SeedersService {
   constructor(
     @InjectRepository(Configuration)
-    private readonly configRepository: Repository<Configuration>,
+    private readonly configurationRepository: Repository<Configuration>,
   ) {}
 
   private async setIfMissing(
@@ -18,12 +18,12 @@ export class SeedersService {
     isEditable = true,
     isSecure = false,
   ) {
-    const existing = await this.configRepository.findOne({
+    const existing = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
     if (!existing) {
-      await this.configRepository.save({
+      await this.configurationRepository.save({
         category,
         key,
         value,

@@ -15,13 +15,13 @@ import {
 export class MovementsService {
   constructor(
     @InjectRepository(InventoryMovement)
-    private readonly movementRepository: Repository<InventoryMovement>,
+    private readonly inventoryMovementRepository: Repository<InventoryMovement>,
     @InjectRepository(InventoryItem)
-    private readonly inventoryRepository: Repository<InventoryItem>,
+    private readonly inventoryItemRepository: Repository<InventoryItem>,
   ) {}
 
   findAll(): Promise<InventoryMovementDto[]> {
-    return this.movementRepository.find({
+    return this.inventoryMovementRepository.find({
       relations: { inventory: true },
       order: { createdAt: 'DESC' },
     });
@@ -30,7 +30,7 @@ export class MovementsService {
   async create(
     data: CreateInventoryMovementDto,
   ): Promise<InventoryMovementDto> {
-    const inventoryItem = await this.inventoryRepository.findOne({
+    const inventoryItem = await this.inventoryItemRepository.findOne({
       where: { id: data.inventoryId },
     });
 
@@ -55,7 +55,7 @@ export class MovementsService {
       });
     }
 
-    const movement = this.movementRepository.create({
+    const movement = this.inventoryMovementRepository.create({
       ...data,
       previousStock,
       newStock,
@@ -63,7 +63,7 @@ export class MovementsService {
       inventory: inventoryItem,
     });
 
-    const savedMovement = await this.movementRepository.save(movement);
+    const savedMovement = await this.inventoryMovementRepository.save(movement);
 
     inventoryItem.currentStock = newStock;
     inventoryItem.status = this.calculateItemStatus(
@@ -71,9 +71,9 @@ export class MovementsService {
       inventoryItem.minimumStock,
     );
 
-    await this.inventoryRepository.save(inventoryItem);
+    await this.inventoryItemRepository.save(inventoryItem);
 
-    const loaded = await this.movementRepository.findOne({
+    const loaded = await this.inventoryMovementRepository.findOne({
       where: { id: savedMovement.id },
       relations: { inventory: true },
     });

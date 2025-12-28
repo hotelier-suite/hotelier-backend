@@ -16,7 +16,7 @@ export class EventsService {
     private readonly eventRepository: Repository<Event>,
   ) {}
 
-  private readonly readSelect: FindOptionsSelect<Event> = {
+  private readonly eventReadSelect: FindOptionsSelect<Event> = {
     id: true,
     title: true,
     description: true,
@@ -36,7 +36,7 @@ export class EventsService {
 
   findAll(): Promise<EventDto[]> {
     return this.eventRepository.find({
-      select: this.readSelect,
+      select: this.eventReadSelect,
       order: { eventDate: 'ASC' },
     });
   }
@@ -44,7 +44,7 @@ export class EventsService {
   async findOne(id: number): Promise<EventDto> {
     const event = await this.eventRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.eventReadSelect,
     });
 
     if (!event) {
@@ -62,7 +62,7 @@ export class EventsService {
 
     const loaded = await this.eventRepository.findOne({
       where: { id: event.id },
-      select: this.readSelect,
+      select: this.eventReadSelect,
     });
 
     if (!loaded) {
@@ -92,7 +92,7 @@ export class EventsService {
   async remove(id: number): Promise<EventDto> {
     const event = await this.eventRepository.findOne({
       where: { id },
-      select: this.readSelect,
+      select: this.eventReadSelect,
     });
 
     if (!event) {

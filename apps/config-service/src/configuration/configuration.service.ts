@@ -12,14 +12,14 @@ import {
 export class ConfigurationService {
   constructor(
     @InjectRepository(Configuration)
-    private readonly configRepository: Repository<Configuration>,
+    private readonly configurationRepository: Repository<Configuration>,
   ) {}
 
   private async getValue(
     category: ConfigCategory,
     key: string,
   ): Promise<string | null> {
-    const record = await this.configRepository.findOne({
+    const record = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
@@ -32,18 +32,21 @@ export class ConfigurationService {
     value: string,
     description = '',
   ): Promise<void> {
-    const existing = await this.configRepository.findOne({
+    const existing = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
     if (existing) {
       if (existing.value !== value || existing.description !== description) {
-        await this.configRepository.update(existing.id, { value, description });
+        await this.configurationRepository.update(existing.id, {
+          value,
+          description,
+        });
       }
       return;
     }
 
-    await this.configRepository.save({
+    await this.configurationRepository.save({
       category,
       key,
       value,

@@ -23,7 +23,7 @@ export class FacilitiesService {
     @InjectRepository(RecreationalFacility)
     private readonly facilityRepository: Repository<RecreationalFacility>,
     @InjectRepository(RecreationalBooking)
-    private readonly bookingRepository: Repository<RecreationalBooking>,
+    private readonly recreationalBookingRepository: Repository<RecreationalBooking>,
     private readonly notificationsService: NotificationsService,
   ) {}
 
@@ -143,7 +143,7 @@ export class FacilitiesService {
       });
     }
 
-    const activeBookings = await this.bookingRepository.count({
+    const activeBookings = await this.recreationalBookingRepository.count({
       where: {
         facilityId: id,
         status: And(
@@ -236,7 +236,7 @@ export class FacilitiesService {
       .map(Number);
     const [closingHours] = facility.closingTime.split(':').map(Number);
 
-    const existingBookings = await this.bookingRepository.find({
+    const existingBookings = await this.recreationalBookingRepository.find({
       where: {
         facilityId: facility.id,
         bookingDate: date,

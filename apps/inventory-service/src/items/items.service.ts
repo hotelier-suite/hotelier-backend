@@ -17,12 +17,12 @@ import { NotificationsService } from '../notifications-service';
 export class ItemsService {
   constructor(
     @InjectRepository(InventoryItem)
-    private readonly inventoryRepository: Repository<InventoryItem>,
+    private readonly inventoryItemRepository: Repository<InventoryItem>,
     private readonly notificationsService: NotificationsService,
   ) {}
 
   findAll(filters: FindInventoryItemsFilterDto): Promise<InventoryItemDto[]> {
-    return this.inventoryRepository.find({
+    return this.inventoryItemRepository.find({
       where: filters,
       order: { name: 'ASC' },
     });
@@ -34,12 +34,12 @@ export class ItemsService {
       data.minimumStock,
     );
 
-    const created = await this.inventoryRepository.save({
+    const created = await this.inventoryItemRepository.save({
       ...data,
       status,
     });
 
-    const loaded = await this.inventoryRepository.findOne({
+    const loaded = await this.inventoryItemRepository.findOne({
       where: { id: created.id },
     });
 
@@ -59,7 +59,7 @@ export class ItemsService {
     id: number,
     data: UpdateInventoryItemDto,
   ): Promise<InventoryItemDto> {
-    const existing = await this.inventoryRepository.findOne({
+    const existing = await this.inventoryItemRepository.findOne({
       where: { id },
     });
 
@@ -74,12 +74,12 @@ export class ItemsService {
     const minimumStock = data.minimumStock ?? existing.minimumStock;
     const status = this.calculateItemStatus(currentStock, minimumStock);
 
-    await this.inventoryRepository.update(id, {
+    await this.inventoryItemRepository.update(id, {
       ...data,
       status,
     });
 
-    const updated = await this.inventoryRepository.findOne({
+    const updated = await this.inventoryItemRepository.findOne({
       where: { id },
     });
 
@@ -96,7 +96,7 @@ export class ItemsService {
   }
 
   async remove(id: number): Promise<InventoryItemDto> {
-    const item = await this.inventoryRepository.findOne({
+    const item = await this.inventoryItemRepository.findOne({
       where: { id },
     });
 
@@ -107,7 +107,7 @@ export class ItemsService {
       });
     }
 
-    await this.inventoryRepository.remove(item);
+    await this.inventoryItemRepository.remove(item);
     return item;
   }
 
