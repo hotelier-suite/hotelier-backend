@@ -39,20 +39,9 @@ export class ItemsService {
       status,
     });
 
-    const loaded = await this.inventoryItemRepository.findOne({
-      where: { id: created.id },
-    });
+    this.notifyStockChange(null, status, created);
 
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load inventory item with id ${created.id} after creation`,
-      });
-    }
-
-    this.notifyStockChange(null, loaded.status, loaded);
-
-    return loaded;
+    return created;
   }
 
   async update(

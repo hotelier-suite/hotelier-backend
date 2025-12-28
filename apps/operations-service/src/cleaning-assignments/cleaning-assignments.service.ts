@@ -37,11 +37,7 @@ export class CleaningAssignmentsService {
   }
 
   create(data: CreateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
-    const assignment = this.cleaningAssignmentRepository.create({
-      ...data,
-      status: CleaningStatus.PENDING,
-    });
-    return this.cleaningAssignmentRepository.save(assignment);
+    return this.cleaningAssignmentRepository.save(data);
   }
 
   async update(

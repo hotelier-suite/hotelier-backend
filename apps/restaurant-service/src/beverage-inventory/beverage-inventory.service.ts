@@ -80,25 +80,11 @@ export class BeverageInventoryService {
         ? BeverageStatus.LOW_STOCK
         : BeverageStatus.AVAILABLE;
 
-    const beverage = await this.beverageRepository.save({
+    return this.beverageRepository.save({
       ...data,
       itemCode,
       status,
     });
-
-    const loaded = await this.beverageRepository.findOne({
-      where: { id: beverage.id },
-      select: this.beverageInventorySelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load beverage with id ${beverage.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(

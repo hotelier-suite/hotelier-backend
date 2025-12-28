@@ -231,24 +231,12 @@ export class ReservationsService {
       channel: data.channel ?? BookingChannel.DIRECT,
     });
 
-    const loaded = await this.reservationsRepository.findOne({
-      where: { id: created.id },
-      relations: this.reservationRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load reservation with id ${created.id} after creation`,
-      });
-    }
-
     this.notificationsService
       .create({
         title: 'New reservation',
-        message: `Reservation #${loaded.id} created for room ${room.number} (${nights} night${nights !== 1 ? 's' : ''})`,
+        message: `Reservation #${created.id} created for room ${room.number} (${nights} night${nights !== 1 ? 's' : ''})`,
         type: NotificationType.INFO,
-        refId: loaded.id,
+        refId: created.id,
         refType: 'reservation',
         userId: null,
       })
@@ -258,7 +246,7 @@ export class ReservationsService {
         },
       });
 
-    return loaded;
+    return created;
   }
 
   async update(

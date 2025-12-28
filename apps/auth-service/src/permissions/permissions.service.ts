@@ -20,28 +20,8 @@ export class PermissionsService {
     private readonly rolePermissionRepository: Repository<RolePermission>,
   ) {}
 
-  async create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
-    try {
-      const permission = await this.permissionRepository.save(data);
-      return permission;
-    } catch (e: unknown) {
-      const err = e as { code?: unknown };
-      if (typeof err.code === 'string' && err.code === '23505') {
-        throw new RpcException({
-          statusCode: 409,
-          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        });
-      }
-
-      if (e instanceof RpcException) {
-        throw e;
-      }
-
-      throw new RpcException({
-        statusCode: 500,
-        message: 'Internal server error',
-      });
-    }
+  create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
+    return this.permissionRepository.save(data);
   }
 
   async findAll(
@@ -80,38 +60,19 @@ export class PermissionsService {
       });
     }
 
-    try {
-      await this.permissionRepository.update(id, data);
-      const updated = await this.permissionRepository.findOne({
-        where: { id },
-      });
+    await this.permissionRepository.update(id, data);
+    const updated = await this.permissionRepository.findOne({
+      where: { id },
+    });
 
-      if (!updated) {
-        throw new RpcException({
-          statusCode: 404,
-          message: `Permission with id ${id} not found`,
-        });
-      }
-
-      return updated;
-    } catch (e: unknown) {
-      const err = e as { code?: unknown };
-      if (typeof err.code === 'string' && err.code === '23505') {
-        throw new RpcException({
-          statusCode: 409,
-          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        });
-      }
-
-      if (e instanceof RpcException) {
-        throw e;
-      }
-
+    if (!updated) {
       throw new RpcException({
-        statusCode: 500,
-        message: 'Internal server error',
+        statusCode: 404,
+        message: `Permission with id ${id} not found`,
       });
     }
+
+    return updated;
   }
 
   async remove(id: number): Promise<PermissionResponseDto> {

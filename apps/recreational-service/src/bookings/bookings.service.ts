@@ -149,13 +149,11 @@ export class BookingsService {
       });
     }
 
-    const booking = this.recreationalBookingRepository.create({
+    const saved = await this.recreationalBookingRepository.save({
       ...data,
       totalCost: 0,
       status: RecreationalBookingStatus.PENDING,
     });
-
-    const saved = await this.recreationalBookingRepository.save(booking);
 
     this.notificationsService
       .create({
@@ -171,7 +169,7 @@ export class BookingsService {
         },
       });
 
-    return this.findOne(saved.id);
+    return saved;
   }
 
   async update(

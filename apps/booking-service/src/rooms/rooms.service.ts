@@ -61,23 +61,10 @@ export class RoomsService {
       });
     }
 
-    const created = await this.roomsRepository.save({
+    return this.roomsRepository.save({
       ...data,
       isAvailable: true,
     });
-
-    const loaded = await this.roomsRepository.findOne({
-      where: { id: created.id },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load room with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(id: number, data: UpdateRoomDto): Promise<RoomDto> {

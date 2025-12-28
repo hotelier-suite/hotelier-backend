@@ -57,22 +57,8 @@ export class EventsService {
     return event;
   }
 
-  async create(data: CreateEventDto): Promise<EventDto> {
-    const event = await this.eventRepository.save(data);
-
-    const loaded = await this.eventRepository.findOne({
-      where: { id: event.id },
-      select: this.eventSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load event with id ${event.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateEventDto): Promise<EventDto> {
+    return this.eventRepository.save(data);
   }
 
   async update(id: number, data: UpdateEventDto): Promise<EventDto> {

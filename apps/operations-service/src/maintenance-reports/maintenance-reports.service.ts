@@ -38,13 +38,12 @@ export class MaintenanceReportsService {
   }
 
   create(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
-    const report = this.maintenanceReportRepository.create({
+    return this.maintenanceReportRepository.save({
       ...data,
       reportNumber: `MR-${Date.now()}`,
       status: HousekeepingMaintenanceStatus.PENDING,
       priority: data.priority ?? TaskPriority.NORMAL,
     });
-    return this.maintenanceReportRepository.save(report);
   }
 
   async update(

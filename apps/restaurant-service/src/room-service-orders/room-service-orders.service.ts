@@ -62,7 +62,7 @@ export class RoomServiceOrdersService {
     const count = await this.roomServiceOrderRepository.count();
     const orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
 
-    const order = await this.roomServiceOrderRepository.save({
+    return this.roomServiceOrderRepository.save({
       ...data,
       orderNumber,
       orderTime: new Date().toLocaleTimeString('es-ES', {
@@ -71,20 +71,6 @@ export class RoomServiceOrdersService {
       }),
       status: RoomServiceStatus.PENDING,
     });
-
-    const loaded = await this.roomServiceOrderRepository.findOne({
-      where: { id: order.id },
-      select: this.roomServiceOrderSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load order with id ${order.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(

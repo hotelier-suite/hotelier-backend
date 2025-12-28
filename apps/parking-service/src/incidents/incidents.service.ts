@@ -58,26 +58,12 @@ export class IncidentsService {
     return incident;
   }
 
-  async create(data: CreateParkingIncidentDto): Promise<ParkingIncidentDto> {
-    const created = await this.parkingIncidentRepository.save({
+  create(data: CreateParkingIncidentDto): Promise<ParkingIncidentDto> {
+    return this.parkingIncidentRepository.save({
       ...data,
       status: IncidentStatus.PENDING,
       reportDate: new Date(),
     });
-
-    const loaded = await this.parkingIncidentRepository.findOne({
-      where: { id: created.id },
-      select: this.parkingIncidentSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load incident with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(

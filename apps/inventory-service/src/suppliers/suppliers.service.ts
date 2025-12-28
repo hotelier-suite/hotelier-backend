@@ -72,27 +72,8 @@ export class SuppliersService {
     };
   }
 
-  async create(data: CreateSupplierDto): Promise<SupplierResponseDto> {
-    const created = await this.supplierRepository.save(data);
-
-    const loaded = await this.supplierRepository.findOne({
-      where: { id: created.id },
-      select: this.supplierSelect,
-      relations: this.supplierRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load supplier with id ${created.id} after creation`,
-      });
-    }
-
-    const { inventoryItems, ...rest } = loaded;
-    return {
-      ...rest,
-      totalItems: inventoryItems?.length ?? 0,
-    };
+  create(data: CreateSupplierDto): Promise<SupplierResponseDto> {
+    return this.supplierRepository.save(data);
   }
 
   async update(

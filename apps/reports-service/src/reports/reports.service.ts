@@ -14,7 +14,6 @@ import {
   CreateReportDto,
   UpdateReportDto,
   ReportType,
-  ReportStatus,
   ReportDto,
   FinancialSummaryDto,
   ReportOccupancyDataDto,
@@ -50,11 +49,7 @@ export class ReportsService {
   ) {}
 
   create(data: CreateReportDto): Promise<ReportDto> {
-    const report = this.reportRepository.create({
-      ...data,
-      status: data.status || ReportStatus.PENDING,
-    });
-    return this.reportRepository.save(report);
+    return this.reportRepository.save(data);
   }
 
   findAll(filters?: FindReportsFilterDto): Promise<ReportDto[]> {

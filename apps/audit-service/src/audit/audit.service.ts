@@ -33,23 +33,8 @@ export class AuditService {
     createdAt: true,
   };
 
-  async create(data: CreateAuditLogDto): Promise<AuditLogDto> {
-    const auditLog = this.auditLogRepository.create(data);
-    const saved = await this.auditLogRepository.save(auditLog);
-
-    const loaded = await this.auditLogRepository.findOne({
-      where: { id: saved.id },
-      select: this.auditLogSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load audit log with id ${saved.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateAuditLogDto): Promise<AuditLogDto> {
+    return this.auditLogRepository.save(data);
   }
 
   async findAll(

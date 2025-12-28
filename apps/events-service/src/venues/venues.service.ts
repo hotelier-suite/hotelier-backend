@@ -36,22 +36,8 @@ export class VenuesService {
     updatedAt: true,
   };
 
-  async create(data: CreateVenueDto): Promise<VenueDto> {
-    const venue = await this.venueRepository.save(data);
-
-    const loaded = await this.venueRepository.findOne({
-      where: { id: venue.id },
-      select: this.venueSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load venue with id ${venue.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateVenueDto): Promise<VenueDto> {
+    return this.venueRepository.save(data);
   }
 
   findAll(filters: FindVenuesFilterDto = {}): Promise<VenueDto[]> {

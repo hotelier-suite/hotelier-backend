@@ -135,25 +135,11 @@ export class BookingsService {
       data.endTime,
     );
 
-    const booking = await this.eventBookingRepository.save({
+    return this.eventBookingRepository.save({
       ...data,
+      venue,
       totalCost,
     });
-
-    const loaded = await this.eventBookingRepository.findOne({
-      where: { id: booking.id },
-      select: this.eventBookingSelect,
-      relations: this.eventBookingRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load booking with id ${booking.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(

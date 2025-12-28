@@ -60,22 +60,7 @@ export class GuestsService {
       });
     }
 
-    const created = await this.guestsRepository.save({
-      ...data,
-    });
-
-    const loaded = await this.guestsRepository.findOne({
-      where: { id: created.id },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load guest with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
+    return this.guestsRepository.save(data);
   }
 
   async update(id: number, data: UpdateGuestDto): Promise<GuestDto> {

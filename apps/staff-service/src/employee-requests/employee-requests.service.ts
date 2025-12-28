@@ -87,7 +87,7 @@ export class EmployeeRequestsService {
       });
     }
 
-    const request = this.employeeRequestRepository.create({
+    return this.employeeRequestRepository.save({
       employeeId: data.employeeId,
       type: data.type,
       reason: data.reason,
@@ -96,10 +96,6 @@ export class EmployeeRequestsService {
       days: data.days,
       status: EmployeeRequestStatus.PENDING,
     });
-
-    const savedRequest = await this.employeeRequestRepository.save(request);
-
-    return this.findOne(savedRequest.id);
   }
 
   async update(

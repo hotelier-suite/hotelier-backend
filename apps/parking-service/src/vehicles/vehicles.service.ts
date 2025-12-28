@@ -95,26 +95,11 @@ export class VehiclesService {
     return vehicle;
   }
 
-  async create(data: CreateVehicleDto): Promise<VehicleDto> {
-    const created = await this.vehicleRepository.save({
+  create(data: CreateVehicleDto): Promise<VehicleDto> {
+    return this.vehicleRepository.save({
       ...data,
       status: VehicleStatus.PARKED,
     });
-
-    const loaded = await this.vehicleRepository.findOne({
-      where: { id: created.id },
-      select: this.vehicleSelect,
-      relations: this.vehicleRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load vehicle with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(id: number, data: UpdateVehicleDto): Promise<VehicleDto> {

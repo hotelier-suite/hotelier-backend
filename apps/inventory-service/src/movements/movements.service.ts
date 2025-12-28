@@ -73,19 +73,7 @@ export class MovementsService {
 
     await this.inventoryItemRepository.save(inventoryItem);
 
-    const loaded = await this.inventoryMovementRepository.findOne({
-      where: { id: savedMovement.id },
-      relations: { inventory: true },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load inventory movement with id ${savedMovement.id} after creation`,
-      });
-    }
-
-    return loaded;
+    return savedMovement;
   }
 
   private calculateItemStatus(

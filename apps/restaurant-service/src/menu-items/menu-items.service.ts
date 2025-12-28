@@ -58,25 +58,11 @@ export class MenuItemsService {
     const count = await this.menuItemRepository.count();
     const itemCode = `MENU${String(count + 1).padStart(3, '0')}`;
 
-    const item = await this.menuItemRepository.save({
+    return this.menuItemRepository.save({
       ...data,
       itemCode,
       available: data.available ?? true,
     });
-
-    const loaded = await this.menuItemRepository.findOne({
-      where: { id: item.id },
-      select: this.menuItemSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load menu item with id ${item.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(id: number, data: UpdateMenuItemDto): Promise<MenuItemDto> {

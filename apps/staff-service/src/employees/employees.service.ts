@@ -32,20 +32,7 @@ export class EmployeesService {
       });
     }
 
-    const created = await this.employeeRepository.save(data);
-
-    const loaded = await this.employeeRepository.findOne({
-      where: { id: created.id },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load employee with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
+    return this.employeeRepository.save(data);
   }
 
   findAll(filters: FindEmployeesFilterDto): Promise<EmployeeDto[]> {

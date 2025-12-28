@@ -54,27 +54,14 @@ export class FacilitiesService {
   async create(
     data: CreateRecreationalFacilityDto,
   ): Promise<RecreationalFacilityDto> {
-    const facility = this.facilityRepository.create(data);
-    const saved = await this.facilityRepository.save(facility);
-
-    const loaded = await this.facilityRepository.findOne({
-      where: { id: saved.id },
-      select: this.facilitySelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load facility with id ${saved.id} after creation`,
-      });
-    }
+    const facility = await this.facilityRepository.save(data);
 
     this.notificationsService
       .create({
         type: NotificationType.INFO,
         title: 'New Recreational Facility Added',
-        message: `New ${data.type.toLowerCase()} facility "${data.name}" has been added to the system.`,
-        refId: saved.id,
+        message: `New ${data.type.toLowerCase()} facility "${data.name}" has been added`,
+        refId: facility.id,
         refType: 'recreational_facility',
       })
       .subscribe({
@@ -83,7 +70,7 @@ export class FacilitiesService {
         },
       });
 
-    return loaded;
+    return facility;
   }
 
   findAll(

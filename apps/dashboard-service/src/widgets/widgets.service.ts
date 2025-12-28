@@ -18,8 +18,7 @@ export class WidgetsService {
   ) {}
 
   create(data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
-    const widget = this.dashboardWidgetRepository.create(data);
-    return this.dashboardWidgetRepository.save(widget);
+    return this.dashboardWidgetRepository.save(data);
   }
 
   findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {

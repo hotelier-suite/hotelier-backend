@@ -54,26 +54,12 @@ export class PaymentsService {
     return payment;
   }
 
-  async create(data: CreatePaymentDto): Promise<PaymentDto> {
-    const payment = await this.paymentRepository.save({
+  create(data: CreatePaymentDto): Promise<PaymentDto> {
+    return this.paymentRepository.save({
       ...data,
       reference: `PAY-${Date.now()}`,
       status: data.status ?? PaymentStatus.COMPLETED,
       processedAt: data.processedAt ?? new Date(),
     });
-
-    const loaded = await this.paymentRepository.findOne({
-      where: { id: payment.id },
-      select: this.paymentSelect,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load payment with id ${payment.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 }

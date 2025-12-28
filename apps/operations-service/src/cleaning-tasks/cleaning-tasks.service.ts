@@ -34,12 +34,11 @@ export class CleaningTasksService {
   }
 
   create(data: CreateCleaningTaskDto): Promise<CleaningTaskDto> {
-    const task = this.cleaningTaskRepository.create({
+    return this.cleaningTaskRepository.save({
       ...data,
       status: CleaningStatus.PENDING,
       priority: data.priority ?? TaskPriority.NORMAL,
     });
-    return this.cleaningTaskRepository.save(task);
   }
 
   async update(

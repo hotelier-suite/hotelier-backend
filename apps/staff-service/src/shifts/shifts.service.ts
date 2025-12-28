@@ -101,26 +101,17 @@ export class ShiftsService {
       data.endTime,
     );
 
-    const created = await this.shiftRepository.save(data);
-
-    const loaded = await this.shiftRepository.findOne({
-      where: { id: created.id },
-      relations: { employee: true },
+    const created = await this.shiftRepository.save({
+      ...data,
+      employee,
     });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load shift with id ${created.id} after creation`,
-      });
-    }
 
     this.notificationsService
       .create({
         title: 'New Shift Assigned',
-        message: `A shift has been assigned for ${loaded.date.toLocaleDateString()} from ${loaded.startTime} to ${loaded.endTime}`,
+        message: `A shift has been assigned for ${created.date.toLocaleDateString()} from ${created.startTime} to ${created.endTime}`,
         type: NotificationType.INFO,
-        refId: loaded.employeeId,
+        refId: created.employeeId,
         refType: 'employee',
         userId: null,
       })
@@ -130,7 +121,7 @@ export class ShiftsService {
         },
       });
 
-    return loaded;
+    return created;
   }
 
   async update(id: number, data: UpdateShiftDto): Promise<ShiftDto> {

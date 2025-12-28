@@ -41,11 +41,7 @@ export class MaintenanceService {
   create(
     data: CreateGeneralMaintenanceRequestDto,
   ): Promise<GeneralMaintenanceRequestDto> {
-    const request = this.maintenanceRequestRepository.create({
-      ...data,
-      status: MaintenanceStatus.SCHEDULED,
-    });
-    return this.maintenanceRequestRepository.save(request);
+    return this.maintenanceRequestRepository.save(data);
   }
 
   async update(

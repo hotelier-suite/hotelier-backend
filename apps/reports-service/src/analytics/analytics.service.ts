@@ -30,10 +30,7 @@ export class AnalyticsService {
   ) {}
 
   create(data: CreateAnalyticsDataDto): Promise<AnalyticsDataDto> {
-    const analyticsData = this.analyticsRepository.create(data);
-    return this.analyticsRepository.save(
-      analyticsData,
-    ) as Promise<AnalyticsDataDto>;
+    return this.analyticsRepository.save(data);
   }
 
   findAll(filters: FindAnalyticsFilterDto): Promise<AnalyticsDataDto[]> {

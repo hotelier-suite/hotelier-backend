@@ -15,8 +15,8 @@ export class NotificationsService {
     private readonly notificationsRepository: Repository<Notification>,
   ) {}
 
-  async create(data: CreateNotificationDto): Promise<NotificationDto> {
-    const notification = this.notificationsRepository.create({
+  create(data: CreateNotificationDto): Promise<NotificationDto> {
+    return this.notificationsRepository.save({
       type: data.type ?? NotificationType.INFO,
       title: data.title,
       message: data.message,
@@ -24,8 +24,6 @@ export class NotificationsService {
       refType: data.refType,
       userId: typeof data.userId === 'undefined' ? null : data.userId,
     });
-
-    return this.notificationsRepository.save(notification);
   }
 
   async findForUser(

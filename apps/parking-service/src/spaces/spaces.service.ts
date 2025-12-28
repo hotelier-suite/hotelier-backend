@@ -79,26 +79,11 @@ export class SpacesService {
     return space;
   }
 
-  async create(data: CreateParkingSpaceDto): Promise<ParkingSpaceDto> {
-    const created = await this.parkingSpaceRepository.save({
+  create(data: CreateParkingSpaceDto): Promise<ParkingSpaceDto> {
+    return this.parkingSpaceRepository.save({
       ...data,
       status: SpaceStatus.AVAILABLE,
     });
-
-    const loaded = await this.parkingSpaceRepository.findOne({
-      where: { id: created.id },
-      select: this.parkingSpaceSelect,
-      relations: this.parkingSpaceRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load parking space with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   async update(

@@ -51,21 +51,8 @@ export class GuestRequestsService {
     return request;
   }
 
-  async create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
-    const created = await this.guestRequestRepository.save(data);
-
-    const loaded = await this.guestRequestRepository.findOne({
-      where: { id: created.id },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load guest request with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
+    return this.guestRequestRepository.save(data);
   }
 
   async update(

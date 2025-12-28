@@ -39,21 +39,10 @@ export class AttendanceService {
       });
     }
 
-    const created = await this.attendanceRepository.save(data);
-
-    const loaded = await this.attendanceRepository.findOne({
-      where: { id: created.id },
-      relations: { employee: true },
+    return this.attendanceRepository.save({
+      ...data,
+      employee,
     });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load attendance record with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
   }
 
   findAll(filters?: FindAttendanceFilterDto): Promise<AttendanceDto[]> {
