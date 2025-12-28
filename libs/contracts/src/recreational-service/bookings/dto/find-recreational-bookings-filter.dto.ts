@@ -1,6 +1,5 @@
 import { IsOptional, IsNumber, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 
 export class FindRecreationalBookingsFilterDto {
   @ApiPropertyOptional({
@@ -9,7 +8,6 @@ export class FindRecreationalBookingsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   date?: Date;
 
   @ApiPropertyOptional({
@@ -18,6 +16,5 @@ export class FindRecreationalBookingsFilterDto {
   })
   @IsOptional()
   @IsNumber()
-  @Type(() => Number)
   facilityId?: number;
 }

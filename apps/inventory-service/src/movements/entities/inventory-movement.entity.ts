@@ -17,6 +17,7 @@ import {
   Length,
 } from 'class-validator';
 import { MovementType } from '@app/contracts/inventory-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { InventoryItem } from '../../items';
 
 @Entity('inventory_movements')
@@ -102,11 +103,7 @@ export class InventoryMovement {
     precision: 10,
     scale: 2,
     nullable: true,
-    transformer: {
-      to: (value: number | null) => value,
-      from: (value: string | null) =>
-        value == null ? null : Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   cost?: number | null;
 

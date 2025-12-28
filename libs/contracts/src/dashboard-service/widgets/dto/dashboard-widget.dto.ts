@@ -8,7 +8,6 @@ import {
   IsDate,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class DashboardWidgetDto {
   @ApiProperty({
@@ -75,7 +74,6 @@ export class DashboardWidgetDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -84,6 +82,5 @@ export class DashboardWidgetDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

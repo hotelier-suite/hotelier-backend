@@ -1,6 +1,5 @@
 import { IsOptional, IsInt } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 
 export class FindPaymentsFilterDto {
   @ApiPropertyOptional({
@@ -9,6 +8,5 @@ export class FindPaymentsFilterDto {
   })
   @IsOptional()
   @IsInt()
-  @Type(() => Number)
   invoiceId?: number;
 }

@@ -46,7 +46,6 @@ export class EventBookingDto {
     format: 'date',
   })
   @IsDate()
-  @Type(() => Date)
   eventDate: Date;
 
   @ApiProperty({
@@ -157,7 +156,6 @@ export class EventBookingDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -166,6 +164,5 @@ export class EventBookingDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

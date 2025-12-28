@@ -1,6 +1,5 @@
 import { IsOptional, IsString, IsBoolean, IsInt } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type, Transform } from 'class-transformer';
 
 export class FindUsersFilterDto {
   @ApiPropertyOptional({
@@ -17,7 +16,6 @@ export class FindUsersFilterDto {
   })
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
   isActive?: boolean;
 
   @ApiPropertyOptional({
@@ -26,6 +24,5 @@ export class FindUsersFilterDto {
   })
   @IsOptional()
   @IsInt()
-  @Type(() => Number)
   roleId?: number;
 }

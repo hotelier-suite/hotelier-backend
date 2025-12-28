@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -84,6 +83,5 @@ export class AuditLogDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 }

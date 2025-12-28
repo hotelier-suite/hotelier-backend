@@ -18,11 +18,11 @@ import {
   Min,
   Length,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   InventoryCategory,
   InventoryStatus,
 } from '@app/contracts/inventory-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { Supplier } from '../../suppliers';
 import { InventoryMovement } from '../../movements';
 
@@ -76,10 +76,7 @@ export class InventoryItem {
   @Column('decimal', {
     precision: 10,
     scale: 2,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   unitCost: number;
 
@@ -104,7 +101,6 @@ export class InventoryItem {
   @ApiProperty({ required: false, type: String, example: '2024-01-15' })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'date', nullable: true })
   lastPurchaseDate?: Date;
 

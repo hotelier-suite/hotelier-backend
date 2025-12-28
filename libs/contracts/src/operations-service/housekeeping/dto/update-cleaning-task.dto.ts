@@ -1,7 +1,6 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateCleaningTaskDto } from './create-cleaning-task.dto';
 import { IsDate, IsEnum, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
 import { CleaningStatus } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -22,7 +21,6 @@ export class UpdateCleaningTaskDto extends PartialType(CreateCleaningTaskDto) {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startTime?: Date;
 
   @ApiProperty({
@@ -32,6 +30,5 @@ export class UpdateCleaningTaskDto extends PartialType(CreateCleaningTaskDto) {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   endTime?: Date;
 }

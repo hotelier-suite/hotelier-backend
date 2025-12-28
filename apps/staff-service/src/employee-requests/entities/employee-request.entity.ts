@@ -16,7 +16,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   EmployeeRequestType,
   EmployeeRequestStatus,
@@ -42,11 +41,9 @@ export class EmployeeRequest {
   @Column({ type: 'text' })
   reason: string;
 
-  @Type(() => Date)
   @Column({ type: 'date' })
   startDate: Date;
 
-  @Type(() => Date)
   @Column({ type: 'date' })
   endDate: Date;
 

@@ -1,6 +1,5 @@
 import { IsOptional, IsInt, IsBoolean, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type, Transform } from 'class-transformer';
 
 export class FindVenuesFilterDto {
   @ApiPropertyOptional({
@@ -9,7 +8,6 @@ export class FindVenuesFilterDto {
   })
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
   isAvailable?: boolean;
 
   @ApiPropertyOptional({
@@ -18,7 +16,6 @@ export class FindVenuesFilterDto {
   })
   @IsOptional()
   @IsInt()
-  @Type(() => Number)
   minCapacity?: number;
 
   @ApiPropertyOptional({

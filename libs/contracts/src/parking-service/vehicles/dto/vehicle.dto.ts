@@ -7,7 +7,6 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { GuestType, VehicleStatus, VehicleType } from '..';
 import type { ParkingSpaceDto } from '../../spaces';
 import type { ParkingIncidentDto } from '../../incidents';
@@ -87,7 +86,6 @@ export class VehicleDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   entryTime: Date;
 
   @ApiProperty({
@@ -98,7 +96,6 @@ export class VehicleDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   exitTime?: Date;
 
   @ApiProperty({
@@ -123,7 +120,6 @@ export class VehicleDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -132,7 +128,6 @@ export class VehicleDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 
   @ApiProperty({

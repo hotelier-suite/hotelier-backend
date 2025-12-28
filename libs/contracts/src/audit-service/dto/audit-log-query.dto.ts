@@ -8,7 +8,7 @@ import {
   Min,
   Max,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { AuditAction, AuditResource } from '..';
 
 export class AuditLogQueryDto {
@@ -18,7 +18,6 @@ export class AuditLogQueryDto {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsNumber()
   userId?: number;
 
@@ -58,7 +57,6 @@ export class AuditLogQueryDto {
     format: 'date-time',
   })
   @IsOptional()
-  @Type(() => Date)
   @IsDate()
   startDate?: Date;
 
@@ -69,7 +67,6 @@ export class AuditLogQueryDto {
     format: 'date-time',
   })
   @IsOptional()
-  @Type(() => Date)
   @IsDate()
   endDate?: Date;
 
@@ -89,7 +86,6 @@ export class AuditLogQueryDto {
     default: 0,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsNumber()
   @Min(0)
   skip?: number = 0;
@@ -101,7 +97,6 @@ export class AuditLogQueryDto {
     default: 50,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsNumber()
   @Min(1)
   @Max(1000)

@@ -1,6 +1,5 @@
 import { IsOptional, IsEnum, IsInt, IsBoolean, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type, Transform } from 'class-transformer';
 import { ReservationStatus } from '../enums';
 
 export class FindReservationsFilterDto {
@@ -10,7 +9,6 @@ export class FindReservationsFilterDto {
   })
   @IsOptional()
   @IsInt()
-  @Type(() => Number)
   userId?: number;
 
   @ApiPropertyOptional({
@@ -28,7 +26,6 @@ export class FindReservationsFilterDto {
   })
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
   isCurrent?: boolean;
 
   @ApiPropertyOptional({
@@ -38,7 +35,6 @@ export class FindReservationsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startDate?: Date;
 
   @ApiPropertyOptional({
@@ -48,6 +44,5 @@ export class FindReservationsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   endDate?: Date;
 }

@@ -15,7 +15,6 @@ import {
   Min,
   Length,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { ShiftType, ShiftStatus } from '@app/contracts/staff-service';
 import { Employee } from '../../employees';
 
@@ -26,7 +25,6 @@ export class Shift {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Type(() => Date)
   @Column({ type: 'date' })
   date: Date;
 

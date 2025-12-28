@@ -14,7 +14,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   GuestRequestType,
   GuestRequestStatus,
@@ -70,13 +69,11 @@ export class GuestRequest {
 
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   time?: Date;
 
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   completedAt?: Date;
 

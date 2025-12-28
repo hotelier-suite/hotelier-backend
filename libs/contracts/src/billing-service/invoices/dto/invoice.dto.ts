@@ -47,7 +47,6 @@ export class InvoiceDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   issueDate: Date;
 
   @ApiProperty({
@@ -56,7 +55,6 @@ export class InvoiceDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   dueDate: Date;
 
   @ApiProperty({
@@ -145,7 +143,6 @@ export class InvoiceDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -154,6 +151,5 @@ export class InvoiceDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

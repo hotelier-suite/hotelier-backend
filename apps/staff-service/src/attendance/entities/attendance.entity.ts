@@ -16,8 +16,8 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { AttendanceStatus } from '@app/contracts/staff-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { Employee } from '../../employees';
 
 @Entity('attendance')
@@ -27,7 +27,6 @@ export class Attendance {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Type(() => Date)
   @IsDate()
   @Column({ type: 'date' })
   date: Date;
@@ -63,10 +62,7 @@ export class Attendance {
     precision: 5,
     scale: 2,
     default: 0,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   hoursWorked?: number;
 
@@ -77,10 +73,7 @@ export class Attendance {
     precision: 5,
     scale: 2,
     default: 0,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   overtimeHours?: number;
 

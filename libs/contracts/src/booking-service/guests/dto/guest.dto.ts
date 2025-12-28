@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -78,7 +77,6 @@ export class GuestDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   birthDate?: Date;
 
   @ApiProperty({
@@ -103,7 +101,6 @@ export class GuestDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -112,6 +109,5 @@ export class GuestDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

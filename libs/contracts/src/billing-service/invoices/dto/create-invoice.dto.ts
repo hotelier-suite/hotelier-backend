@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -29,7 +28,6 @@ export class CreateInvoiceDto {
     format: 'date-time',
   })
   @IsOptional()
-  @Type(() => Date)
   @IsDate()
   issueDate?: Date;
 
@@ -38,7 +36,6 @@ export class CreateInvoiceDto {
     example: '2024-02-15T23:59:59.999Z',
     format: 'date-time',
   })
-  @Type(() => Date)
   @IsDate()
   dueDate: Date;
 

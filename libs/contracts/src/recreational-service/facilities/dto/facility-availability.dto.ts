@@ -35,7 +35,6 @@ export class FacilityAvailabilityDto {
     format: 'date',
   })
   @IsDate()
-  @Type(() => Date)
   date: Date;
 
   @ApiProperty({

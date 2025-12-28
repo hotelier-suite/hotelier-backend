@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -67,11 +66,9 @@ export class VenueDto {
 
   @ApiProperty({ description: 'Creation timestamp', format: 'date-time' })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({ description: 'Last update timestamp', format: 'date-time' })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

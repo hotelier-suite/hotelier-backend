@@ -7,7 +7,6 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
 
 export class GuestRequestDto {
@@ -76,7 +75,6 @@ export class GuestRequestDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   time?: Date;
 
   @ApiProperty({
@@ -87,7 +85,6 @@ export class GuestRequestDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   completedAt?: Date;
 
   @ApiProperty({
@@ -113,7 +110,6 @@ export class GuestRequestDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -122,6 +118,5 @@ export class GuestRequestDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

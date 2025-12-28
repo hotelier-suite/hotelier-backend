@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class RecentActivityDto {
   @ApiProperty({
@@ -31,6 +30,5 @@ export class RecentActivityDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   timestamp: Date;
 }

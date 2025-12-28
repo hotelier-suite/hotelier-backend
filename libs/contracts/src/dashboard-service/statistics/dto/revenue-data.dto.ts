@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { IsDate, IsNumber, Min } from 'class-validator';
 
 export class RevenueDataDto {
@@ -10,7 +9,6 @@ export class RevenueDataDto {
     format: 'date',
   })
   @IsDate()
-  @Type(() => Date)
   date: Date;
 
   @ApiProperty({

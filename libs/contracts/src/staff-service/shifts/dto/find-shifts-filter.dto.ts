@@ -1,6 +1,5 @@
 import { IsOptional, IsEnum, IsDate, IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { ShiftStatus } from '../enums/shift-status.enum';
 
 export class FindShiftsFilterDto {
@@ -12,7 +11,6 @@ export class FindShiftsFilterDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Type(() => Number)
   employeeId?: number;
 
   @ApiPropertyOptional({
@@ -21,7 +19,6 @@ export class FindShiftsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   date?: Date;
 
   @ApiPropertyOptional({
@@ -30,7 +27,6 @@ export class FindShiftsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startDate?: Date;
 
   @ApiPropertyOptional({
@@ -39,7 +35,6 @@ export class FindShiftsFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   endDate?: Date;
 
   @ApiPropertyOptional({

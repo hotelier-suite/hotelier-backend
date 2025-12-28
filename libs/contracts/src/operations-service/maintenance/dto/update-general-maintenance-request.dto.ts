@@ -9,7 +9,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { CreateGeneralMaintenanceRequestDto } from './create-general-maintenance-request.dto';
 import { MaintenanceStatus } from '../enums';
 
@@ -45,7 +44,6 @@ export class UpdateGeneralMaintenanceRequestDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startedAt?: Date;
 
   @ApiProperty({
@@ -56,7 +54,6 @@ export class UpdateGeneralMaintenanceRequestDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   completedAt?: Date;
 
   @ApiProperty({

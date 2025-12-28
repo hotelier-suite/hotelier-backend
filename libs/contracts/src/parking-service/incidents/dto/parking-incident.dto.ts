@@ -7,7 +7,6 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { TaskPriority } from '@app/contracts/common';
 import { IncidentStatus, IncidentType } from '..';
 import type { VehicleDto } from '../../vehicles';
@@ -43,7 +42,6 @@ export class ParkingIncidentDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   reportDate: Date;
 
   @ApiProperty({
@@ -85,7 +83,6 @@ export class ParkingIncidentDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   resolvedAt?: Date;
 
   @ApiProperty({
@@ -94,7 +91,6 @@ export class ParkingIncidentDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -103,7 +99,6 @@ export class ParkingIncidentDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 
   @ApiProperty({

@@ -34,7 +34,6 @@ export class RolePermissionResponseDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt!: Date;
 
   @ApiProperty({

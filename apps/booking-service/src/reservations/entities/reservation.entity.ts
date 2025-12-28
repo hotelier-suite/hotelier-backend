@@ -20,11 +20,11 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   ReservationStatus,
   BookingChannel,
 } from '@app/contracts/booking-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { Guest } from '../../guests';
 import { Room } from '../../rooms';
 
@@ -56,13 +56,11 @@ export class Reservation {
 
   @ApiProperty({ type: String, example: '2024-01-15T15:00:00.000Z' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp' })
   checkInDate: Date;
 
   @ApiProperty({ type: String, example: '2024-01-18T11:00:00.000Z' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp' })
   checkOutDate: Date;
 
@@ -84,10 +82,7 @@ export class Reservation {
   @Column('decimal', {
     precision: 10,
     scale: 2,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   totalAmount: number;
 
@@ -100,11 +95,7 @@ export class Reservation {
     precision: 5,
     scale: 2,
     nullable: true,
-    transformer: {
-      to: (value: number | null) => value,
-      from: (value: string | null) =>
-        value === null ? null : Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   discountPercent?: number | null;
 
@@ -116,11 +107,7 @@ export class Reservation {
     precision: 10,
     scale: 2,
     nullable: true,
-    transformer: {
-      to: (value: number | null) => value,
-      from: (value: string | null) =>
-        value === null ? null : Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   discountAmount?: number | null;
 

@@ -70,7 +70,6 @@ export class ReportDto {
     example: '2024-01-01',
     format: 'date',
   })
-  @Type(() => Date)
   @IsDate()
   startDate: Date;
 
@@ -79,7 +78,6 @@ export class ReportDto {
     example: '2024-01-31',
     format: 'date',
   })
-  @Type(() => Date)
   @IsDate()
   endDate: Date;
 
@@ -134,7 +132,6 @@ export class ReportDto {
     description: 'Report creation timestamp',
     format: 'date-time',
   })
-  @Type(() => Date)
   @IsDate()
   createdAt: Date;
 
@@ -142,7 +139,6 @@ export class ReportDto {
     description: 'Report last update timestamp',
     format: 'date-time',
   })
-  @Type(() => Date)
   @IsDate()
   updatedAt: Date;
 }

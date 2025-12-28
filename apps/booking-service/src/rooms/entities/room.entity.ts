@@ -17,6 +17,7 @@ import {
   Min,
 } from 'class-validator';
 import { RoomType } from '@app/contracts/booking-service';
+import { DecimalTransformer } from '@app/contracts/common';
 
 @Entity('rooms')
 export class Room {
@@ -46,10 +47,7 @@ export class Room {
   @Column('decimal', {
     precision: 10,
     scale: 2,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   price: number;
 

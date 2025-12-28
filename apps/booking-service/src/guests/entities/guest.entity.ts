@@ -17,7 +17,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { Reservation } from '../../reservations';
 
 @Entity('guests')
@@ -70,7 +69,6 @@ export class Guest {
   @ApiProperty({ required: false, type: String, example: '1985-05-15' })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'date', nullable: true })
   birthDate?: Date;
 

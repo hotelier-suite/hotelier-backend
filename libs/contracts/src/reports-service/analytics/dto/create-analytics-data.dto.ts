@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
@@ -31,7 +30,6 @@ export class CreateAnalyticsDataDto {
     example: '2024-01-15',
     format: 'date',
   })
-  @Type(() => Date)
   @IsDate()
   date: Date;
 

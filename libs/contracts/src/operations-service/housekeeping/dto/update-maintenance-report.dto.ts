@@ -9,7 +9,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { CreateMaintenanceReportDto } from './create-maintenance-report.dto';
 import { HousekeepingMaintenanceStatus } from '../enums';
 
@@ -41,7 +40,6 @@ export class UpdateMaintenanceReportDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startedAt?: Date;
 
   @ApiProperty({
@@ -51,7 +49,6 @@ export class UpdateMaintenanceReportDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   completedAt?: Date;
 
   @ApiProperty({

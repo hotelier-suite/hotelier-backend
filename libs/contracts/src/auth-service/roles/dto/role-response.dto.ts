@@ -50,7 +50,6 @@ export class RoleResponseDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt!: Date;
 
   @ApiProperty({
@@ -59,7 +58,6 @@ export class RoleResponseDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt!: Date;
 
   @ApiProperty({

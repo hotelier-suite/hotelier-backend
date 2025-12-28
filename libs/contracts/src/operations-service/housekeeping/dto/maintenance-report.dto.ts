@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -95,7 +94,6 @@ export class MaintenanceReportDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startedAt?: Date;
 
   @ApiProperty({
@@ -106,7 +104,6 @@ export class MaintenanceReportDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   completedAt?: Date;
 
   @ApiProperty({
@@ -145,7 +142,6 @@ export class MaintenanceReportDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -154,6 +150,5 @@ export class MaintenanceReportDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

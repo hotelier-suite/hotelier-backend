@@ -17,6 +17,7 @@ import {
   Min,
 } from 'class-validator';
 import { SpaceType, SpaceStatus } from '@app/contracts/parking-service';
+import { DecimalTransformer } from '@app/contracts/common';
 import { Vehicle } from '../../vehicles';
 import { ParkingIncident } from '../../incidents';
 
@@ -88,10 +89,7 @@ export class ParkingSpace {
     precision: 8,
     scale: 2,
     default: 0,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   hourlyRate: number;
 

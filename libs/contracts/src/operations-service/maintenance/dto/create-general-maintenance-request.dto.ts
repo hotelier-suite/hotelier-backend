@@ -10,7 +10,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { MaintenancePriority, MaintenanceType } from '..';
 
 export class CreateGeneralMaintenanceRequestDto {
@@ -75,7 +74,6 @@ export class CreateGeneralMaintenanceRequestDto {
   })
   @IsOptional()
   @IsDateString()
-  @Type(() => Date)
   scheduledDate?: Date;
 
   @ApiProperty({

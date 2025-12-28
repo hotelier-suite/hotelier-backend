@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -40,7 +40,6 @@ export class CreateEventBookingDto {
     example: '2024-12-14',
     format: 'date',
   })
-  @Type(() => Date)
   @IsDate()
   eventDate: Date;
 

@@ -1,6 +1,5 @@
 import { IsOptional, IsEnum, IsInt, IsDate } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { InvoiceStatus } from '../enums';
 
 export class FindInvoicesFilterDto {
@@ -20,7 +19,6 @@ export class FindInvoicesFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startDate?: Date;
 
   @ApiPropertyOptional({
@@ -30,7 +28,6 @@ export class FindInvoicesFilterDto {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   endDate?: Date;
 
   @ApiPropertyOptional({
@@ -39,6 +36,5 @@ export class FindInvoicesFilterDto {
   })
   @IsOptional()
   @IsInt()
-  @Type(() => Number)
   userId?: number;
 }

@@ -10,7 +10,6 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { CreateCleaningAssignmentDto } from './create-cleaning-assignment.dto';
 import { CleaningStatus } from '../enums';
 
@@ -33,7 +32,6 @@ export class UpdateCleaningAssignmentDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   startedAt?: Date;
 
   @ApiProperty({
@@ -43,7 +41,6 @@ export class UpdateCleaningAssignmentDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   completedAt?: Date;
 
   @ApiProperty({

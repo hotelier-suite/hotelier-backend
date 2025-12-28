@@ -8,7 +8,6 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { NotificationType } from '..';
 
 export class NotificationDto {
@@ -88,6 +87,5 @@ export class NotificationDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 }

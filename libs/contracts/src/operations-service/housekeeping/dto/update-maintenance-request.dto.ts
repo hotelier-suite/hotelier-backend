@@ -9,7 +9,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { CreateHousekeepingMaintenanceRequestDto } from './create-maintenance-request.dto';
 import { HousekeepingMaintenanceStatus } from '../enums';
 
@@ -41,7 +40,6 @@ export class UpdateHousekeepingMaintenanceRequestDto extends PartialType(
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   resolvedDate?: Date;
 
   @ApiProperty({ description: 'Cost of the maintenance work', required: false })

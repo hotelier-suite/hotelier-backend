@@ -17,7 +17,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { IncidentType, IncidentStatus } from '@app/contracts/parking-service';
 import { TaskPriority } from '@app/contracts/common';
 import { Vehicle } from '../../vehicles';
@@ -54,7 +53,6 @@ export class ParkingIncident {
 
   @ApiProperty({ description: 'Date and time when incident was reported' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   reportDate: Date;
 
@@ -112,7 +110,6 @@ export class ParkingIncident {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   resolvedAt?: Date;
 

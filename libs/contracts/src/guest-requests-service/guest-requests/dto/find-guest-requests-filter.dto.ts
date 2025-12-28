@@ -1,6 +1,5 @@
 import { IsOptional, IsEnum, IsInt, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { GuestRequestStatus } from '../enums/request-status.enum';
 import { RequestPriority } from '../enums/request-priority.enum';
 
@@ -31,6 +30,5 @@ export class FindGuestRequestsFilterDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Type(() => Number)
   limit?: number;
 }

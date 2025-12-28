@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -54,7 +53,6 @@ export class PermissionResponseDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt!: Date;
 
   @ApiProperty({
@@ -63,6 +61,5 @@ export class PermissionResponseDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt!: Date;
 }

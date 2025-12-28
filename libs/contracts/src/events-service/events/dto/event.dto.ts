@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
@@ -43,7 +42,6 @@ export class EventDto {
     format: 'date',
   })
   @IsDate()
-  @Type(() => Date)
   eventDate: Date;
 
   @ApiProperty({
@@ -128,7 +126,6 @@ export class EventDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -137,6 +134,5 @@ export class EventDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }

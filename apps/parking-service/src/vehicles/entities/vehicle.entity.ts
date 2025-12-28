@@ -18,7 +18,6 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import {
   VehicleType,
   GuestType,
@@ -116,7 +115,6 @@ export class Vehicle {
 
   @ApiProperty({ description: 'Vehicle entry timestamp' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   entryTime: Date;
 
@@ -126,7 +124,6 @@ export class Vehicle {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   exitTime?: Date;
 

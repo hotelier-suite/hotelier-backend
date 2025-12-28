@@ -127,7 +127,6 @@ export class RoomServiceOrderDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   createdAt: Date;
 
   @ApiProperty({
@@ -135,6 +134,5 @@ export class RoomServiceOrderDto {
     format: 'date-time',
   })
   @IsDate()
-  @Type(() => Date)
   updatedAt: Date;
 }
