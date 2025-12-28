@@ -33,9 +33,7 @@ export class MaintenanceReportsService {
     return report;
   }
 
-  async create(
-    data: CreateMaintenanceReportDto,
-  ): Promise<MaintenanceReportDto> {
+  create(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
     const report = this.reportRepository.create({
       ...data,
       reportNumber: `MR-${Date.now()}`,

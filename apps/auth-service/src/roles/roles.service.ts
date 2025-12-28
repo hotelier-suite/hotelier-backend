@@ -59,7 +59,7 @@ export class RolesService {
     }
   }
 
-  async findAll(filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
+  findAll(filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
     return this.roleRepository.find({
       where: {
         ...(filters.name && { name: ILike(`%${filters.name}%`) }),

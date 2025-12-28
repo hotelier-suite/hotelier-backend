@@ -29,14 +29,14 @@ export class AnalyticsService {
     private readonly analyticsRepository: Repository<AnalyticsData>,
   ) {}
 
-  async create(data: CreateAnalyticsDataDto): Promise<AnalyticsDataDto> {
+  create(data: CreateAnalyticsDataDto): Promise<AnalyticsDataDto> {
     const analyticsData = this.analyticsRepository.create(data);
     return this.analyticsRepository.save(
       analyticsData,
     ) as Promise<AnalyticsDataDto>;
   }
 
-  async findAll(filters: FindAnalyticsFilterDto): Promise<AnalyticsDataDto[]> {
+  findAll(filters: FindAnalyticsFilterDto): Promise<AnalyticsDataDto[]> {
     const where: FindOptionsWhere<AnalyticsData> = {};
 
     if (filters.type) {
@@ -89,7 +89,7 @@ export class AnalyticsService {
     return analyticsData;
   }
 
-  async recordMetric(
+  recordMetric(
     metric: AnalyticsMetric,
     value: number,
     date?: Date,
@@ -101,7 +101,7 @@ export class AnalyticsService {
     }) as Promise<AnalyticsDataDto>;
   }
 
-  async findByType(
+  findByType(
     metric: AnalyticsMetric,
     startDate: Date,
     endDate: Date,
@@ -115,10 +115,7 @@ export class AnalyticsService {
     }) as Promise<AnalyticsDataDto[]>;
   }
 
-  async findByDateRange(
-    startDate: Date,
-    endDate: Date,
-  ): Promise<AnalyticsDataDto[]> {
+  findByDateRange(startDate: Date, endDate: Date): Promise<AnalyticsDataDto[]> {
     return this.analyticsRepository.find({
       where: {
         date: Between(startDate, endDate),
@@ -181,7 +178,7 @@ export class AnalyticsService {
     return parseFloat(result?.total || '0') || 0;
   }
 
-  async getMetricTrend(
+  getMetricTrend(
     metric: AnalyticsMetric,
     days: number,
   ): Promise<AnalyticsDataDto[]> {
@@ -221,7 +218,7 @@ export class AnalyticsService {
     return summary;
   }
 
-  async getOccupancyData(
+  getOccupancyData(
     startDate?: Date,
     endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {
@@ -231,7 +228,7 @@ export class AnalyticsService {
     return this.findByType(AnalyticsMetric.OCCUPANCY_RATE, start, end);
   }
 
-  async getRevenueData(
+  getRevenueData(
     startDate?: Date,
     endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {
@@ -241,14 +238,14 @@ export class AnalyticsService {
     return this.findByType(AnalyticsMetric.REVENUE_PER_ROOM, start, end);
   }
 
-  async getGuestTypeData(): Promise<AnalyticsDataDto[]> {
+  getGuestTypeData(): Promise<AnalyticsDataDto[]> {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const now = new Date();
 
     return this.findByDateRange(thirtyDaysAgo, now);
   }
 
-  async getSatisfactionData(
+  getSatisfactionData(
     startDate?: Date,
     endDate?: Date,
   ): Promise<AnalyticsDataDto[]> {

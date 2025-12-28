@@ -17,12 +17,12 @@ export class WidgetsService {
     private readonly widgetRepository: Repository<DashboardWidget>,
   ) {}
 
-  async create(data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
+  create(data: CreateDashboardWidgetDto): Promise<DashboardWidgetDto> {
     const widget = this.widgetRepository.create(data);
     return this.widgetRepository.save(widget);
   }
 
-  async findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {
+  findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {
     return this.widgetRepository.find({
       where: {
         visible: true,

@@ -45,7 +45,7 @@ export class StatisticsService {
     };
   }
 
-  async getYearToDateFinancialSummary(): Promise<FinancialSummaryResponseDto> {
+  getYearToDateFinancialSummary(): Promise<FinancialSummaryResponseDto> {
     const startDate = new Date(new Date().getFullYear(), 0, 1);
     const endDate = new Date();
     return this.getFinancialSummary(startDate, endDate);

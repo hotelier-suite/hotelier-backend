@@ -43,7 +43,7 @@ export class ReportsService {
     private readonly bookingClient: ClientProxy,
   ) {}
 
-  async create(data: CreateReportDto): Promise<ReportDto> {
+  create(data: CreateReportDto): Promise<ReportDto> {
     const report = this.reportRepository.create({
       ...data,
       status: data.status || ReportStatus.PENDING,
@@ -51,7 +51,7 @@ export class ReportsService {
     return this.reportRepository.save(report);
   }
 
-  async findAll(filters?: FindReportsFilterDto): Promise<ReportDto[]> {
+  findAll(filters?: FindReportsFilterDto): Promise<ReportDto[]> {
     const where: FindOptionsWhere<Report> = {};
 
     if (filters?.type) {
@@ -96,7 +96,7 @@ export class ReportsService {
     return report;
   }
 
-  async generateOccupancyReport(
+  generateOccupancyReport(
     startDate: Date,
     endDate: Date,
     generatedBy: string,
@@ -114,7 +114,7 @@ export class ReportsService {
     });
   }
 
-  async generateRevenueReport(
+  generateRevenueReport(
     startDate: Date,
     endDate: Date,
     generatedBy: string,
@@ -132,7 +132,7 @@ export class ReportsService {
     });
   }
 
-  async generateGuestSatisfactionReport(
+  generateGuestSatisfactionReport(
     startDate: Date,
     endDate: Date,
     generatedBy: string,

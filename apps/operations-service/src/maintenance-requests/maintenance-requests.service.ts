@@ -33,7 +33,7 @@ export class MaintenanceRequestsService {
     return request;
   }
 
-  async create(
+  create(
     data: CreateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
     const request = this.requestRepository.create({

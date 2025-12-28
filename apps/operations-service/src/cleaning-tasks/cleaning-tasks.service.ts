@@ -33,7 +33,7 @@ export class CleaningTasksService {
     return task;
   }
 
-  async create(data: CreateCleaningTaskDto): Promise<CleaningTaskDto> {
+  create(data: CreateCleaningTaskDto): Promise<CleaningTaskDto> {
     const task = this.taskRepository.create({
       ...data,
       status: CleaningStatus.PENDING,

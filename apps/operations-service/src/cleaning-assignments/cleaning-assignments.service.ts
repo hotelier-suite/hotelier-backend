@@ -34,9 +34,7 @@ export class CleaningAssignmentsService {
     return assignment;
   }
 
-  async create(
-    data: CreateCleaningAssignmentDto,
-  ): Promise<CleaningAssignmentDto> {
+  create(data: CreateCleaningAssignmentDto): Promise<CleaningAssignmentDto> {
     const assignment = this.assignmentRepository.create({
       ...data,
       status: CleaningStatus.PENDING,

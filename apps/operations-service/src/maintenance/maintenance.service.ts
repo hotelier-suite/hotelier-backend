@@ -17,7 +17,7 @@ export class MaintenanceService {
     private readonly maintenanceRequestRepository: Repository<GeneralMaintenanceRequest>,
   ) {}
 
-  async findAll(): Promise<GeneralMaintenanceRequestDto[]> {
+  findAll(): Promise<GeneralMaintenanceRequestDto[]> {
     return this.maintenanceRequestRepository.find({
       order: { createdAt: 'DESC' },
     });
@@ -38,7 +38,7 @@ export class MaintenanceService {
     return request;
   }
 
-  async create(
+  create(
     data: CreateGeneralMaintenanceRequestDto,
   ): Promise<GeneralMaintenanceRequestDto> {
     const request = this.maintenanceRequestRepository.create({
