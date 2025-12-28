@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -24,7 +24,6 @@ import {
   CreateParkingIncidentDto,
   FindIncidentsFilterDto,
   ParkingIncidentDto,
-  ResolveIncidentRequestDto,
   UpdateParkingIncidentDto,
 } from '@app/contracts/parking-service';
 
@@ -92,7 +91,7 @@ export class IncidentsController {
     return this.incidentsService.create(body);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Incident',
     description:
@@ -122,39 +121,6 @@ export class IncidentsController {
     @Body() body: UpdateParkingIncidentDto,
   ): Observable<ParkingIncidentDto> {
     return this.incidentsService.update(id, body);
-  }
-
-  @Put(':id/resolve')
-  @ApiOperation({
-    summary: 'Resolve Incident',
-    description:
-      'Mark a parking incident as resolved with resolution details. This closes the incident and records the resolution.',
-  })
-  @ApiParam({
-    name: 'id',
-    type: Number,
-    description: 'Unique identifier of the incident to resolve',
-    example: 1,
-  })
-  @ApiBody({
-    type: ResolveIncidentRequestDto,
-    description:
-      'Resolution details including resolution notes and actions taken',
-  })
-  @ApiResponse({ status: 200, type: ParkingIncidentDto })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid request data - validation failed',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Incident not found',
-  })
-  resolve(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: ResolveIncidentRequestDto,
-  ): Observable<ParkingIncidentDto> {
-    return this.incidentsService.resolve(id, body);
   }
 
   @Delete(':id')

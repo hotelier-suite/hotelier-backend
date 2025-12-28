@@ -138,7 +138,10 @@ export class UsersService {
     return loaded;
   }
 
-  async update(id: number, data: Partial<User>): Promise<UserResponseDto> {
+  async update(
+    id: number,
+    data: Partial<User> & { roleIds?: number[] },
+  ): Promise<UserResponseDto> {
     const existing = await this.userRepository.findOne({
       where: { id },
       relations: { userRoles: { role: true } },
@@ -151,7 +154,18 @@ export class UsersService {
       });
     }
 
-    await this.userRepository.update(id, data);
+    // Extract roleIds from data and handle separately
+    const { roleIds, ...userData } = data;
+
+    // Update user data if there are any fields to update
+    if (Object.keys(userData).length > 0) {
+      await this.userRepository.update(id, userData);
+    }
+
+    // Handle role assignment if roleIds is provided
+    if (roleIds !== undefined) {
+      await this.assignRolesToUser(id, roleIds);
+    }
 
     const updated = await this.userRepository.findOne({
       where: { id },
@@ -169,99 +183,10 @@ export class UsersService {
     return updated;
   }
 
-  async remove(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.remove(user);
-    return user;
-  }
-
-  async activate(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: { userRoles: { role: true } },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.update(id, { isActive: true });
-
-    const updated = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    return updated;
-  }
-
-  async deactivate(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: { userRoles: { role: true } },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.update(id, { isActive: false });
-
-    const updated = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    return updated;
-  }
-
-  async assignRolesToUser(userId: number, roleIds: number[]): Promise<void> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      select: { id: true },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${userId} not found`,
-      });
-    }
-
+  private async assignRolesToUser(
+    userId: number,
+    roleIds: number[],
+  ): Promise<void> {
     const incomingRoleIds = Array.isArray(roleIds) ? roleIds : [];
 
     const validRoleIds = incomingRoleIds.filter(
@@ -305,6 +230,24 @@ export class UsersService {
         await userRoleRepository.save(userRoles);
       }
     });
+  }
+
+  async remove(id: number): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: this.userReadSelect,
+      relations: this.userReadRelations,
+    });
+
+    if (!user) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `User with id ${id} not found`,
+      });
+    }
+
+    await this.userRepository.remove(user);
+    return user;
   }
 
   async removeRolesFromUser(userId: number, roleIds: number[]): Promise<void> {

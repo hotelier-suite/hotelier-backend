@@ -4,6 +4,5 @@ export const ROLES_PATTERNS = {
   FIND_ONE: 'auth.roles.findOne',
   UPDATE: 'auth.roles.update',
   DELETE: 'auth.roles.delete',
-  ASSIGN_PERMISSIONS: 'auth.roles.assignPermissions',
   REMOVE_PERMISSIONS: 'auth.roles.removePermissions',
 } as const;

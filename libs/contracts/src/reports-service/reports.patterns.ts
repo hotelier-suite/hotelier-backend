@@ -4,7 +4,6 @@ export const REPORTS_PATTERNS = {
   FIND_ONE: 'reports.findOne',
   UPDATE: 'reports.update',
   DELETE: 'reports.delete',
-  UPDATE_STATUS: 'reports.updateStatus',
   GENERATE_OCCUPANCY: 'reports.generate.occupancy',
   GENERATE_REVENUE: 'reports.generate.revenue',
   GENERATE_GUEST_SATISFACTION: 'reports.generate.guestSatisfaction',

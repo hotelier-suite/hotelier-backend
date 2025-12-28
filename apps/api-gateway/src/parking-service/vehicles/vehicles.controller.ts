@@ -7,7 +7,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -86,7 +85,7 @@ export class VehiclesController {
     return this.vehiclesService.create(body);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Vehicle',
     description:

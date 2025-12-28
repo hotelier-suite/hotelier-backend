@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -86,7 +86,7 @@ export class SpacesController {
     return this.spacesService.create(body);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Parking Space',
     description:

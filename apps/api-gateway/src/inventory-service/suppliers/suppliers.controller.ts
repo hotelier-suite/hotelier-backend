@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -98,7 +98,7 @@ export class SuppliersController {
     return this.suppliersService.create(data);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Supplier',
     description:

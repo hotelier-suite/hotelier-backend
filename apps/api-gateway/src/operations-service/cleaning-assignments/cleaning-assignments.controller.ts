@@ -6,7 +6,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Put,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -127,7 +127,7 @@ export class CleaningAssignmentsController {
     status: 404,
     description: 'Cleaning assignment not found with the specified ID',
   })
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateCleaningAssignmentDto,

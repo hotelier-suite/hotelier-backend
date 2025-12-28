@@ -7,7 +7,6 @@ import {
   ReportDto,
   CreateReportDto,
   UpdateReportDto,
-  ReportStatus,
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
@@ -55,13 +54,6 @@ export class ReportsService {
       REPORTS_PATTERNS.DELETE,
       id,
     );
-  }
-
-  updateStatus(id: number, status: ReportStatus): Observable<ReportDto> {
-    return this.reportsClient.send<
-      ReportDto,
-      { id: number; status: ReportStatus }
-    >(REPORTS_PATTERNS.UPDATE_STATUS, { id, status });
   }
 
   generateOccupancyReport(

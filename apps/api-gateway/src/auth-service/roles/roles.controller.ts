@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -20,7 +20,6 @@ import {
 } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import {
-  PermissionIdsDto,
   CreateRoleDto,
   RoleResponseDto,
   UpdateRoleDto,
@@ -100,7 +99,7 @@ export class RolesController {
     return this.rolesService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Role',
     description:
@@ -160,42 +159,6 @@ export class RolesController {
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<RoleResponseDto> {
     return this.rolesService.remove(id);
-  }
-
-  @Put(':id/permissions')
-  @ApiOperation({
-    summary: 'Assign Permissions to Role',
-    description:
-      'Assign multiple permissions to a specific role. This replaces any existing permission assignments.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Unique identifier of the role to assign permissions to',
-    type: 'number',
-    example: 1,
-  })
-  @ApiBody({
-    description: 'Array of permission IDs to assign to the role',
-    type: PermissionIdsDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permissions assigned successfully',
-  })
-  @ApiResponse({
-    status: 400,
-    description:
-      'Invalid request data - permissionIds must be an array of valid integers',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Role or permission not found',
-  })
-  assignPermissions(
-    @Param('id', ParseIntPipe) roleId: number,
-    @Body() body: PermissionIdsDto,
-  ): Observable<void> {
-    return this.rolesService.assignPermissions(roleId, body.permissionIds);
   }
 
   @Delete(':roleId/permissions/:permissionId')

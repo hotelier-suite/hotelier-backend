@@ -6,7 +6,6 @@ import {
   CreateParkingIncidentDto,
   INCIDENTS_PATTERNS,
   ParkingIncidentDto,
-  ResolveIncidentRequestDto,
   UpdateParkingIncidentDto,
   FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
@@ -47,16 +46,6 @@ export class IncidentsService {
       ParkingIncidentDto,
       { id: number; data: UpdateParkingIncidentDto }
     >(INCIDENTS_PATTERNS.UPDATE, { id, data });
-  }
-
-  resolve(
-    id: number,
-    data: ResolveIncidentRequestDto,
-  ): Observable<ParkingIncidentDto> {
-    return this.parkingClient.send<
-      ParkingIncidentDto,
-      { id: number; data: ResolveIncidentRequestDto }
-    >(INCIDENTS_PATTERNS.RESOLVE, { id, data });
   }
 
   remove(id: number): Observable<ParkingIncidentDto> {

@@ -93,7 +93,27 @@ export class RolesService {
     }
 
     try {
-      await this.roleRepository.update(id, data);
+      // Update basic role fields (name, description)
+      const { permissionIds, ...roleData } = data;
+      if (Object.keys(roleData).length > 0) {
+        await this.roleRepository.update(id, roleData);
+      }
+
+      // Handle permission assignment if permissionIds is provided
+      if (permissionIds !== undefined) {
+        // Delete existing permissions
+        await this.rolePermissionRepository.delete({ roleId: id });
+
+        // Add new permissions
+        if (permissionIds.length > 0) {
+          const rolePermissions = permissionIds.map((permissionId) => ({
+            roleId: id,
+            permissionId,
+          }));
+          await this.rolePermissionRepository.save(rolePermissions);
+        }
+      }
+
       const updated = await this.roleRepository.findOne({
         where: { id },
         relations: { permissions: { permission: true } },
@@ -154,27 +174,6 @@ export class RolesService {
 
     await this.roleRepository.remove(role);
     return role;
-  }
-
-  async assignPermissionsToRole(
-    roleId: number,
-    permissionIds: number[],
-  ): Promise<void> {
-    const role = await this.roleRepository.findOne({ where: { id: roleId } });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
-
-    await this.rolePermissionRepository.delete({ roleId });
-
-    if (permissionIds.length > 0) {
-      const rolePermissions = permissionIds.map((permissionId) => ({
-        roleId,
-        permissionId,
-      }));
-      await this.rolePermissionRepository.save(rolePermissions);
-    }
   }
 
   async removePermissionsFromRole(

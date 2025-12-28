@@ -7,7 +7,6 @@ import {
   ParkingIncidentDto,
   CreateParkingIncidentDto,
   UpdateParkingIncidentDto,
-  ResolveIncidentRequestDto,
   IncidentStatus,
   FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
@@ -87,19 +86,6 @@ export class IncidentsService {
     data: UpdateParkingIncidentDto,
   ): Promise<ParkingIncidentDto> {
     await this.parkingIncidentRepository.update(id, data);
-
-    return this.findOne(id);
-  }
-
-  async resolve(
-    id: number,
-    data: ResolveIncidentRequestDto,
-  ): Promise<ParkingIncidentDto> {
-    await this.parkingIncidentRepository.update(id, {
-      status: IncidentStatus.RESOLVED,
-      resolution: data.resolution,
-      resolvedAt: new Date(),
-    });
 
     return this.findOne(id);
   }

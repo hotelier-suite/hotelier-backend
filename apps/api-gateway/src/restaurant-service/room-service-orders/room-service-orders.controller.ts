@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Body,
   Param,
   ParseIntPipe,
@@ -100,7 +100,7 @@ export class RoomServiceOrdersController {
     return this.roomServiceOrdersService.create(data);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Room Service Order',
     description:

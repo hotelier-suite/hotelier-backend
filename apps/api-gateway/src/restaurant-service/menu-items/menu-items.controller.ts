@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -93,7 +93,7 @@ export class MenuItemsController {
     return this.menuItemsService.create(data);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Menu Item',
     description: 'Update an existing menu item (price, availability, etc.).',

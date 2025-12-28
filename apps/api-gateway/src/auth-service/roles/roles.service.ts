@@ -52,13 +52,6 @@ export class RolesService {
     );
   }
 
-  assignPermissions(roleId: number, permissionIds: number[]): Observable<void> {
-    return this.authClient.send<void, RolePermissionsPayloadDto>(
-      ROLES_PATTERNS.ASSIGN_PERMISSIONS,
-      { roleId, permissionIds },
-    );
-  }
-
   removePermissions(roleId: number, permissionIds: number[]): Observable<void> {
     return this.authClient.send<void, RolePermissionsPayloadDto>(
       ROLES_PATTERNS.REMOVE_PERMISSIONS,

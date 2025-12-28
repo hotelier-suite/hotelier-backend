@@ -20,6 +20,7 @@ import {
   INVOICES_PATTERNS,
   FinancialSummaryResponseDto,
   InvoiceDto,
+  FindInvoicesFilterDto,
 } from '@app/contracts/billing-service';
 import {
   CLEANING_ASSIGNMENTS_PATTERNS,
@@ -29,6 +30,7 @@ import {
   GUEST_REQUESTS_PATTERNS,
   GuestRequestStatus,
   GuestRequestDto,
+  FindGuestRequestsFilterDto,
 } from '@app/contracts/guest-requests-service';
 import {
   EMPLOYEES_PATTERNS,
@@ -228,13 +230,10 @@ export class StatisticsService {
 
     const invoices = await lastValueFrom(
       this.billingClient
-        .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
-          INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
-          {
-            startDate: start,
-            endDate: today,
-          },
-        )
+        .send<InvoiceDto[], FindInvoicesFilterDto>(INVOICES_PATTERNS.FIND_ALL, {
+          startDate: start,
+          endDate: today,
+        })
         .pipe(catchError(() => of([]))),
     );
 
@@ -321,7 +320,7 @@ export class StatisticsService {
           this.billingClient
             .send<
               InvoiceDto[],
-              Record<string, never>
+              FindInvoicesFilterDto
             >(INVOICES_PATTERNS.FIND_ALL, {})
             .pipe(catchError(() => of([]))),
         ),
@@ -337,8 +336,8 @@ export class StatisticsService {
           this.guestRequestsClient
             .send<
               GuestRequestDto[],
-              number
-            >(GUEST_REQUESTS_PATTERNS.FIND_RECENT, 5)
+              FindGuestRequestsFilterDto
+            >(GUEST_REQUESTS_PATTERNS.FIND_ALL, { limit: 5 })
             .pipe(catchError(() => of([]))),
         ),
       ]);

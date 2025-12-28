@@ -6,7 +6,6 @@ import {
   ParkingIncidentDto,
   CreateParkingIncidentDto,
   UpdateParkingIncidentDto,
-  ResolveIncidentRequestDto,
   FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
 
@@ -38,13 +37,6 @@ export class IncidentsController {
     @Payload() payload: { id: number; data: UpdateParkingIncidentDto },
   ): Promise<ParkingIncidentDto> {
     return this.incidentsService.update(payload.id, payload.data);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.RESOLVE)
-  resolve(
-    @Payload() payload: { id: number; data: ResolveIncidentRequestDto },
-  ): Promise<ParkingIncidentDto> {
-    return this.incidentsService.resolve(payload.id, payload.data);
   }
 
   @MessagePattern(INCIDENTS_PATTERNS.DELETE)

@@ -40,16 +40,6 @@ export class RolesController {
     return this.rolesService.remove(id);
   }
 
-  @MessagePattern(ROLES_PATTERNS.ASSIGN_PERMISSIONS)
-  assignPermissionsToRole(
-    @Payload() payload: { roleId: number; permissionIds: number[] },
-  ): Promise<void> {
-    return this.rolesService.assignPermissionsToRole(
-      payload.roleId,
-      payload.permissionIds,
-    );
-  }
-
   @MessagePattern(ROLES_PATTERNS.REMOVE_PERMISSIONS)
   removePermissionsFromRole(
     @Payload() payload: { roleId: number; permissionIds: number[] },

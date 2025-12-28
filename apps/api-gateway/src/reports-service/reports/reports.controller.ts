@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -33,7 +33,6 @@ import {
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
   FindReportsFilterDto,
-  ReportStatus,
 } from '@app/contracts/reports-service';
 
 @ApiTags('reports')
@@ -331,7 +330,7 @@ export class ReportsController {
     );
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Report',
     description: 'Update an existing report.',
@@ -360,38 +359,6 @@ export class ReportsController {
     @Body() updateReportDto: UpdateReportDto,
   ): Observable<ReportDto> {
     return this.reportsService.update(id, updateReportDto);
-  }
-
-  @Put(':id/status/:status')
-  @ApiOperation({
-    summary: 'Update Report Status',
-    description: 'Update the status of a specific report.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Report ID',
-    example: 1,
-    type: Number,
-  })
-  @ApiParam({
-    name: 'status',
-    enum: ReportStatus,
-    description: 'New status for the report',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Report status updated successfully',
-    type: ReportDto,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Report not found',
-  })
-  updateStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('status') status: ReportStatus,
-  ): Observable<ReportDto> {
-    return this.reportsService.updateStatus(id, status);
   }
 
   @Delete(':id')

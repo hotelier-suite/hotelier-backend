@@ -41,13 +41,6 @@ export class BeverageInventoryController {
     return this.beverageInventoryService.update(payload.id, payload.data);
   }
 
-  @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.UPDATE_STOCK)
-  updateStock(
-    @Payload() payload: { id: number; stock: number },
-  ): Promise<BeverageInventoryDto> {
-    return this.beverageInventoryService.updateStock(payload.id, payload.stock);
-  }
-
   @MessagePattern(BEVERAGE_INVENTORY_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<BeverageInventoryDto> {
     return this.beverageInventoryService.remove(id);

@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -70,7 +70,7 @@ export class ItemsController {
     return this.itemsService.create(data);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Inventory Item',
     description: 'Update an existing inventory item.',

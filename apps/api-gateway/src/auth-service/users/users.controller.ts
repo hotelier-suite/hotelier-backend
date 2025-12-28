@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Body,
   Patch,
   Param,
@@ -26,7 +25,6 @@ import {
   CreateUserDto,
   UpdateUserDto,
   UserResponseDto,
-  UserRoleIdsDto,
   RoleResponseDto,
   PermissionResponseDto,
   JwtUser,
@@ -59,35 +57,6 @@ export class UsersController {
   })
   getMyProfile(@CurrentUser() user: JwtUser): Observable<UserResponseDto> {
     return this.usersService.findOne(user.id);
-  }
-
-  @Patch('profile/me')
-  @ApiOperation({
-    summary: 'Update Own Profile',
-    description: "Update the current user's profile information.",
-  })
-  @ApiBody({
-    description: 'User profile update data',
-    type: UpdateUserDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Profile updated successfully',
-    type: UserResponseDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input data',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized',
-  })
-  updateMyProfile(
-    @CurrentUser() user: JwtUser,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Observable<UserResponseDto> {
-    return this.usersService.update(user.id, updateUserDto);
   }
 
   @Get()
@@ -274,127 +243,6 @@ export class UsersController {
   })
   remove(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
     return this.usersService.remove(id);
-  }
-
-  @Patch(':id/activate')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @AuditLog({
-    action: AuditAction.UPDATE,
-    resource: AuditResource.USER,
-    description: 'User activated',
-    resourceIdParam: 'id',
-  })
-  @ApiOperation({
-    summary: 'Activate User',
-    description:
-      'Activate a user account, allowing the user to log in and access the system.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Unique identifier of the user to activate',
-    type: 'number',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 204,
-    description: 'User activated successfully',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - authentication required',
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Insufficient permissions',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
-  activate(@Param('id', ParseIntPipe) id: number): Observable<UserResponseDto> {
-    return this.usersService.activate(id);
-  }
-
-  @Patch(':id/deactivate')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @AuditLog({
-    action: AuditAction.UPDATE,
-    resource: AuditResource.USER,
-    description: 'User deactivated',
-    resourceIdParam: 'id',
-  })
-  @ApiOperation({
-    summary: 'Deactivate User',
-    description:
-      'Deactivate a user account, preventing the user from logging in until reactivated.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Unique identifier of the user to deactivate',
-    type: 'number',
-    example: 1,
-  })
-  @ApiResponse({
-    status: 204,
-    description: 'User deactivated successfully',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - authentication required',
-  })
-  @ApiResponse({
-    status: 403,
-    description: 'Insufficient permissions',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found',
-  })
-  deactivate(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<UserResponseDto> {
-    return this.usersService.deactivate(id);
-  }
-
-  @Put(':userId/roles')
-  @ApiOperation({
-    summary: 'Assign Roles to User',
-    description:
-      'Assign multiple roles to a specific user. This replaces any existing role assignments.',
-  })
-  @ApiParam({
-    name: 'userId',
-    description: 'Unique identifier of the user to assign roles to',
-    type: 'number',
-    example: 1,
-  })
-  @ApiBody({
-    description: 'Array of role IDs to assign to the user',
-    type: UserRoleIdsDto,
-  })
-  @ApiResponse({
-    status: 204,
-    description: 'Roles assigned successfully',
-  })
-  @ApiResponse({
-    status: 400,
-    description:
-      'Invalid request - roleIds must be an array of valid positive integers',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - authentication required',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User or role not found',
-  })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  assignRolesToUser(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Body() body: UserRoleIdsDto,
-  ): Observable<void> {
-    return this.usersService.assignRolesToUser(userId, body.roleIds);
   }
 
   @Delete(':userId/roles/:roleId')

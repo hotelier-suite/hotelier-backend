@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Body,
   Param,
   ParseIntPipe,
@@ -21,7 +21,7 @@ import { BeverageInventoryService } from './beverage-inventory.service';
 import {
   BeverageInventoryDto,
   CreateBeverageItemDto,
-  UpdateBeverageStockDto,
+  UpdateBeverageItemDto,
   FindBeverageInventoryFilterDto,
 } from '@app/contracts/restaurant-service';
 import { AuditLog } from '../../audit-service';
@@ -104,10 +104,10 @@ export class BeverageInventoryController {
     return this.beverageInventoryService.create(data);
   }
 
-  @Put(':id/stock')
+  @Patch(':id')
   @ApiOperation({
-    summary: 'Update Beverage Stock',
-    description: 'Update the stock quantity of a beverage item.',
+    summary: 'Update Beverage Item',
+    description: 'Update a beverage inventory item including stock quantity.',
   })
   @ApiParam({
     name: 'id',
@@ -116,22 +116,22 @@ export class BeverageInventoryController {
     example: 1,
   })
   @ApiBody({
-    description: 'Stock update data',
-    type: UpdateBeverageStockDto,
+    description: 'Beverage item update data',
+    type: UpdateBeverageItemDto,
   })
   @ApiResponse({
     status: 200,
-    description: 'Beverage stock updated successfully',
+    description: 'Beverage item updated successfully',
     type: BeverageInventoryDto,
   })
   @ApiResponse({
     status: 404,
     description: 'Beverage item not found',
   })
-  updateStock(
+  update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: UpdateBeverageStockDto,
+    @Body() data: UpdateBeverageItemDto,
   ): Observable<BeverageInventoryDto> {
-    return this.beverageInventoryService.updateStock(id, body.stock);
+    return this.beverageInventoryService.update(id, data);
   }
 }

@@ -21,6 +21,7 @@ import {
   INVOICES_PATTERNS,
   FinancialSummaryResponseDto,
   InvoiceDto,
+  FindInvoicesFilterDto,
 } from '@app/contracts/billing-service';
 import {
   RESERVATIONS_PATTERNS,
@@ -82,11 +83,6 @@ export class ReportsService {
       });
     }
     return report;
-  }
-
-  async updateStatus(id: number, status: ReportStatus): Promise<ReportDto> {
-    await this.reportRepository.update(id, { status });
-    return this.findOne(id);
   }
 
   async update(id: number, data: UpdateReportDto): Promise<ReportDto> {
@@ -188,13 +184,10 @@ export class ReportsService {
       ),
       lastValueFrom(
         this.billingClient
-          .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
-            INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
-            {
-              startDate,
-              endDate,
-            },
-          )
+          .send<
+            InvoiceDto[],
+            FindInvoicesFilterDto
+          >(INVOICES_PATTERNS.FIND_ALL, { startDate, endDate })
           .pipe(
             timeout(ReportsService.SERVICE_TIMEOUT),
             catchError(() => of([] as InvoiceDto[])),
@@ -653,13 +646,10 @@ export class ReportsService {
 
     const invoices = await lastValueFrom(
       this.billingClient
-        .send<InvoiceDto[], { startDate: Date; endDate: Date }>(
-          INVOICES_PATTERNS.FIND_BY_DATE_RANGE,
-          {
-            startDate,
-            endDate,
-          },
-        )
+        .send<
+          InvoiceDto[],
+          FindInvoicesFilterDto
+        >(INVOICES_PATTERNS.FIND_ALL, { startDate, endDate })
         .pipe(
           timeout(ReportsService.SERVICE_TIMEOUT),
           catchError((error: Error) => {

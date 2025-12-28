@@ -53,27 +53,6 @@ export class UsersService {
     );
   }
 
-  activate(id: number): Observable<UserResponseDto> {
-    return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.ACTIVATE,
-      id,
-    );
-  }
-
-  deactivate(id: number): Observable<UserResponseDto> {
-    return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.DEACTIVATE,
-      id,
-    );
-  }
-
-  assignRolesToUser(userId: number, roleIds: number[]): Observable<void> {
-    return this.authClient.send<void, UserRolesPayloadDto>(
-      USERS_PATTERNS.ASSIGN_ROLES,
-      { userId, roleIds },
-    );
-  }
-
   removeRolesFromUser(userId: number, roleIds: number[]): Observable<void> {
     return this.authClient.send<void, UserRolesPayloadDto>(
       USERS_PATTERNS.REMOVE_ROLES,

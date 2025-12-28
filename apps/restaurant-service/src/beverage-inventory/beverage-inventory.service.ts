@@ -117,25 +117,6 @@ export class BeverageInventoryService {
     return this.findOne(id);
   }
 
-  async updateStock(id: number, stock: number): Promise<BeverageInventoryDto> {
-    const existing = await this.beverageRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Beverage item with id ${id} not found`,
-      });
-    }
-
-    const status =
-      stock <= existing.minimumStock
-        ? BeverageStatus.LOW_STOCK
-        : BeverageStatus.AVAILABLE;
-
-    await this.beverageRepository.update(id, { stock, status });
-    return this.findOne(id);
-  }
-
   async remove(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageRepository.findOne({
       where: { id },

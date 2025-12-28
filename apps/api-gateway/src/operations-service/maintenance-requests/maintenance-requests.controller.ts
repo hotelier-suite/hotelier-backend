@@ -6,7 +6,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Put,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -128,7 +128,7 @@ export class MaintenanceRequestsController {
     status: 404,
     description: 'Maintenance request not found with the specified ID',
   })
-  @Put(':id')
+  @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateHousekeepingMaintenanceRequestDto,

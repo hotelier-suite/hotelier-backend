@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Patch,
   Delete,
   Body,
@@ -105,7 +104,7 @@ export class InvoicesController {
     return this.invoicesService.create(invoiceData);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @AuditLog({
     action: AuditAction.UPDATE,
     resource: AuditResource.INVOICE,

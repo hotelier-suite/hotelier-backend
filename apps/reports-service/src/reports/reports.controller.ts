@@ -9,7 +9,6 @@ import {
   FinancialSummaryDto,
   ReportOccupancyDataDto,
   MonthlyRevenueDto,
-  ReportStatus,
   FinancialReportPdfDto,
   FindReportsFilterDto,
 } from '@app/contracts/reports-service';
@@ -43,13 +42,6 @@ export class ReportsController {
   @MessagePattern(REPORTS_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<ReportDto> {
     return this.reportsService.remove(id);
-  }
-
-  @MessagePattern(REPORTS_PATTERNS.UPDATE_STATUS)
-  updateStatus(
-    @Payload() payload: { id: number; status: ReportStatus },
-  ): Promise<ReportDto> {
-    return this.reportsService.updateStatus(payload.id, payload.status);
   }
 
   @MessagePattern(REPORTS_PATTERNS.GENERATE_OCCUPANCY)
