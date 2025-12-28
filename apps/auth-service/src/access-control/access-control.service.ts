@@ -75,7 +75,7 @@ export class AccessControlService {
     });
   }
 
-  async getUserWithRefreshToken(userId: number): Promise<User | null> {
+  getUserWithRefreshToken(userId: number): Promise<User | null> {
     return this.userRepository.findOne({
       where: { id: userId },
       select: {

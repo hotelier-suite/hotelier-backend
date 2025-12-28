@@ -283,13 +283,11 @@ export class UsersService {
     }
   }
 
-  async getUserRoles(userId: number): Promise<RoleResponseDto[]> {
+  getUserRoles(userId: number): Promise<RoleResponseDto[]> {
     return this.accessControlService.getUserRoles(userId);
   }
 
-  async getUserPermissionsList(
-    userId: number,
-  ): Promise<PermissionResponseDto[]> {
+  getUserPermissionsList(userId: number): Promise<PermissionResponseDto[]> {
     return this.accessControlService.getUserPermissionsList(userId);
   }
 }
