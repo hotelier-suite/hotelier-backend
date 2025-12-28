@@ -27,13 +27,7 @@ export class NotificationsService {
         NotificationDto,
         CreateNotificationDto
       >(NOTIFICATIONS_PATTERNS.CREATE, params)
-      .pipe(
-        tap((saved) => {
-          try {
-            this.notifications$.next({ data: saved });
-          } catch {}
-        }),
-      );
+      .pipe(tap((saved) => this.notifications$.next({ data: saved })));
   }
 
   findForUser(
