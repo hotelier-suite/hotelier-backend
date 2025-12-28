@@ -4,6 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Repository,
   Between,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+  FindOptionsWhere,
   FindOptionsSelect,
   FindOptionsRelations,
 } from 'typeorm';
@@ -63,14 +66,26 @@ export class InvoicesService {
   };
 
   findAll(filters: FindInvoicesFilterDto): Promise<InvoiceDto[]> {
+    const where: FindOptionsWhere<Invoice> = {};
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.userId) {
+      where.userId = filters.userId;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.createdAt = Between(filters.startDate, filters.endDate);
+    } else if (filters.startDate) {
+      where.createdAt = MoreThanOrEqual(filters.startDate);
+    } else if (filters.endDate) {
+      where.createdAt = LessThanOrEqual(filters.endDate);
+    }
+
     return this.invoiceRepository.find({
-      where: {
-        ...filters,
-        ...(filters.startDate &&
-          filters.endDate && {
-            createdAt: Between(filters.startDate, filters.endDate),
-          }),
-      },
+      where,
       select: this.invoiceReadSelect,
       relations: this.invoiceReadRelations,
       order: { createdAt: 'DESC' },

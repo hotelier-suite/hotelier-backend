@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, LessThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository,
+  FindOptionsWhere,
+} from 'typeorm';
 import {
   EmployeeRequestDto,
   CreateEmployeeRequestDto,
@@ -21,25 +27,33 @@ export class EmployeeRequestsService {
     private readonly employeeRepository: Repository<Employee>,
   ) {}
 
-  findAll({
-    startDate,
-    endDate,
-    employeeId,
-    status,
-    type,
-  }: FindEmployeeRequestsFilterDto): Promise<EmployeeRequestDto[]> {
+  findAll(
+    filters: FindEmployeeRequestsFilterDto,
+  ): Promise<EmployeeRequestDto[]> {
+    const where: FindOptionsWhere<EmployeeRequest> = {};
+
+    if (filters.employeeId) {
+      where.employeeId = filters.employeeId;
+    }
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.type) {
+      where.type = filters.type;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.startDate = Between(filters.startDate, filters.endDate);
+    } else if (filters.startDate) {
+      where.startDate = MoreThanOrEqual(filters.startDate);
+    } else if (filters.endDate) {
+      where.startDate = LessThanOrEqual(filters.endDate);
+    }
+
     return this.employeeRequestRepository.find({
-      where: {
-        ...(employeeId && { employeeId }),
-        ...(status && { status }),
-        ...(type && { type }),
-        ...(startDate && !endDate && { startDate }),
-        ...(endDate && !startDate && { startDate: LessThanOrEqual(endDate) }),
-        ...(startDate &&
-          endDate && {
-            startDate: Between(startDate, endDate),
-          }),
-      },
+      where,
       relations: { employee: true },
       order: { createdAt: 'DESC' },
     });

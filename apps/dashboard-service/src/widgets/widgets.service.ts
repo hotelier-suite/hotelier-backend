@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import { DashboardWidget } from './entities';
 import {
@@ -23,11 +23,14 @@ export class WidgetsService {
   }
 
   findAll(filters: FindWidgetsFilterDto): Promise<DashboardWidgetDto[]> {
+    const where: FindOptionsWhere<DashboardWidget> = { visible: true };
+
+    if (filters.userId) {
+      where.userId = filters.userId;
+    }
+
     return this.widgetRepository.find({
-      where: {
-        visible: true,
-        ...filters,
-      },
+      where,
       order: { position: 'ASC' },
     });
   }

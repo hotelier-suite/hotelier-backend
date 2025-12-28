@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import {
   CreateGuestRequestDto,
   GuestRequestDto,
@@ -18,15 +18,21 @@ export class GuestRequestsService {
     private readonly guestRequestRepository: Repository<GuestRequest>,
   ) {}
 
-  findAll({
-    status,
-    priority,
-    limit,
-  }: FindGuestRequestsFilterDto): Promise<GuestRequestDto[]> {
+  findAll(filters: FindGuestRequestsFilterDto): Promise<GuestRequestDto[]> {
+    const where: FindOptionsWhere<GuestRequest> = {};
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.priority) {
+      where.priority = filters.priority;
+    }
+
     return this.guestRequestRepository.find({
-      where: { status, priority },
+      where,
       order: { createdAt: 'DESC' },
-      take: limit,
+      take: filters.limit,
     });
   }
 

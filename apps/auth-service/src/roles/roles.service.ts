@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { ILike, Repository, FindOptionsWhere } from 'typeorm';
 import {
   CreateRoleDto,
   UpdateRoleDto,
@@ -60,10 +60,14 @@ export class RolesService {
   }
 
   findAll(filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
+    const where: FindOptionsWhere<Role> = {};
+
+    if (filters.name) {
+      where.name = ILike(`%${filters.name}%`);
+    }
+
     return this.roleRepository.find({
-      where: {
-        ...(filters.name && { name: ILike(`%${filters.name}%`) }),
-      },
+      where,
       relations: { permissions: { permission: true } },
       order: { name: 'ASC' },
     });

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsSelect } from 'typeorm';
+import { Repository, FindOptionsSelect, FindOptionsWhere } from 'typeorm';
 import { BeverageInventory } from './entities';
 import {
   BeverageInventoryDto,
@@ -37,11 +37,18 @@ export class BeverageInventoryService {
   findAll(
     filters: FindBeverageInventoryFilterDto,
   ): Promise<BeverageInventoryDto[]> {
+    const where: FindOptionsWhere<BeverageInventory> = {};
+
+    if (filters.lowStock) {
+      where.status = BeverageStatus.LOW_STOCK;
+    }
+
+    if (filters.category) {
+      where.category = filters.category;
+    }
+
     return this.beverageRepository.find({
-      where: {
-        ...(filters.lowStock && { status: BeverageStatus.LOW_STOCK }),
-        ...(filters.category && { category: filters.category }),
-      },
+      where,
       select: this.readSelect,
       order: { name: 'ASC' },
     });
