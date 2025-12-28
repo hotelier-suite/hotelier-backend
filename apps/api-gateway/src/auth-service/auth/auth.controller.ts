@@ -149,9 +149,7 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized - Invalid or missing token',
   })
-  getProfile(
-    @CurrentUser() user: JwtUser,
-  ): Observable<ProfileResponseDto | null> {
+  getProfile(@CurrentUser() user: JwtUser): Observable<ProfileResponseDto> {
     return this.authService.getProfile(user.id);
   }
 }

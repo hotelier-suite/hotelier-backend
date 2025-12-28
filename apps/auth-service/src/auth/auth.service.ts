@@ -173,11 +173,14 @@ export class AuthService {
     return tokens;
   }
 
-  async getProfile(userId: number): Promise<ProfileResponseDto | null> {
+  async getProfile(userId: number): Promise<ProfileResponseDto> {
     const user = await this.accessControlService.getUserWithRoles(userId);
 
     if (!user || !user.isActive) {
-      return null;
+      throw new RpcException({
+        statusCode: 404,
+        message: 'User not found or inactive',
+      });
     }
 
     const permissions = await this.accessControlService.getUserPermissions(

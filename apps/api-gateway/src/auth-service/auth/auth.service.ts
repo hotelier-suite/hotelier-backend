@@ -49,8 +49,8 @@ export class AuthService {
     >(AUTH_PATTERNS.REFRESH_TOKENS, { userId, refreshToken });
   }
 
-  getProfile(userId: number): Observable<ProfileResponseDto | null> {
-    return this.authClient.send<ProfileResponseDto | null, number>(
+  getProfile(userId: number): Observable<ProfileResponseDto> {
+    return this.authClient.send<ProfileResponseDto, number>(
       AUTH_PATTERNS.GET_PROFILE,
       userId,
     );
