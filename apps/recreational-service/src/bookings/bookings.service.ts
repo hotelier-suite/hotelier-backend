@@ -34,7 +34,7 @@ export class BookingsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  private readonly recreationalBookingReadSelect: FindOptionsSelect<RecreationalBooking> =
+  private readonly recreationalBookingSelect: FindOptionsSelect<RecreationalBooking> =
     {
       id: true,
       facilityId: true,
@@ -67,7 +67,7 @@ export class BookingsService {
       },
     };
 
-  private readonly recreationalBookingReadRelations: FindOptionsRelations<RecreationalBooking> =
+  private readonly recreationalBookingRelations: FindOptionsRelations<RecreationalBooking> =
     {
       facility: true,
     };
@@ -91,8 +91,8 @@ export class BookingsService {
 
     return this.recreationalBookingRepository.find({
       where,
-      select: this.recreationalBookingReadSelect,
-      relations: this.recreationalBookingReadRelations,
+      select: this.recreationalBookingSelect,
+      relations: this.recreationalBookingRelations,
       order: { bookingDate: 'DESC', startTime: 'ASC' },
     });
   }
@@ -100,8 +100,8 @@ export class BookingsService {
   async findOne(id: number): Promise<RecreationalBookingDto> {
     const booking = await this.recreationalBookingRepository.findOne({
       where: { id },
-      select: this.recreationalBookingReadSelect,
-      relations: this.recreationalBookingReadRelations,
+      select: this.recreationalBookingSelect,
+      relations: this.recreationalBookingRelations,
     });
 
     if (!booking) {

@@ -18,7 +18,7 @@ export class VehiclesService {
     private readonly vehicleRepository: Repository<Vehicle>,
   ) {}
 
-  private readonly vehicleReadSelect: FindOptionsSelect<Vehicle> = {
+  private readonly vehicleSelect: FindOptionsSelect<Vehicle> = {
     id: true,
     licensePlate: true,
     brand: true,
@@ -64,7 +64,7 @@ export class VehiclesService {
     },
   };
 
-  private readonly vehicleReadRelations: FindOptionsRelations<Vehicle> = {
+  private readonly vehicleRelations: FindOptionsRelations<Vehicle> = {
     space: true,
     incidents: true,
   };
@@ -72,8 +72,8 @@ export class VehiclesService {
   findAll(filters: FindVehiclesFilterDto): Promise<VehicleDto[]> {
     return this.vehicleRepository.find({
       where: filters,
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
+      select: this.vehicleSelect,
+      relations: this.vehicleRelations,
       order: { createdAt: 'DESC' },
     });
   }
@@ -81,8 +81,8 @@ export class VehiclesService {
   async findOne(id: number): Promise<VehicleDto> {
     const vehicle = await this.vehicleRepository.findOne({
       where: { id },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
+      select: this.vehicleSelect,
+      relations: this.vehicleRelations,
     });
 
     if (!vehicle) {
@@ -103,8 +103,8 @@ export class VehiclesService {
 
     const loaded = await this.vehicleRepository.findOne({
       where: { id: created.id },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
+      select: this.vehicleSelect,
+      relations: this.vehicleRelations,
     });
 
     if (!loaded) {

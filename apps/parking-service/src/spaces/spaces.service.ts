@@ -18,7 +18,7 @@ export class SpacesService {
     private readonly parkingSpaceRepository: Repository<ParkingSpace>,
   ) {}
 
-  private readonly parkingSpaceReadSelect: FindOptionsSelect<ParkingSpace> = {
+  private readonly parkingSpaceSelect: FindOptionsSelect<ParkingSpace> = {
     id: true,
     code: true,
     zone: true,
@@ -49,16 +49,15 @@ export class SpacesService {
     },
   };
 
-  private readonly parkingSpaceReadRelations: FindOptionsRelations<ParkingSpace> =
-    {
-      vehicles: true,
-    };
+  private readonly parkingSpaceRelations: FindOptionsRelations<ParkingSpace> = {
+    vehicles: true,
+  };
 
   findAll(filters: FindSpacesFilterDto): Promise<ParkingSpaceDto[]> {
     return this.parkingSpaceRepository.find({
       where: filters,
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
+      select: this.parkingSpaceSelect,
+      relations: this.parkingSpaceRelations,
       order: { code: 'ASC' },
     });
   }
@@ -66,8 +65,8 @@ export class SpacesService {
   async findOne(id: number): Promise<ParkingSpaceDto> {
     const space = await this.parkingSpaceRepository.findOne({
       where: { id },
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
+      select: this.parkingSpaceSelect,
+      relations: this.parkingSpaceRelations,
     });
 
     if (!space) {
@@ -88,8 +87,8 @@ export class SpacesService {
 
     const loaded = await this.parkingSpaceRepository.findOne({
       where: { id: created.id },
-      select: this.parkingSpaceReadSelect,
-      relations: this.parkingSpaceReadRelations,
+      select: this.parkingSpaceSelect,
+      relations: this.parkingSpaceRelations,
     });
 
     if (!loaded) {

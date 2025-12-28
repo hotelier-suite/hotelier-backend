@@ -18,7 +18,7 @@ export class BeverageInventoryService {
     private readonly beverageRepository: Repository<BeverageInventory>,
   ) {}
 
-  private readonly beverageInventoryReadSelect: FindOptionsSelect<BeverageInventory> =
+  private readonly beverageInventorySelect: FindOptionsSelect<BeverageInventory> =
     {
       id: true,
       itemCode: true,
@@ -50,7 +50,7 @@ export class BeverageInventoryService {
 
     return this.beverageRepository.find({
       where,
-      select: this.beverageInventoryReadSelect,
+      select: this.beverageInventorySelect,
       order: { name: 'ASC' },
     });
   }
@@ -58,7 +58,7 @@ export class BeverageInventoryService {
   async findOne(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageRepository.findOne({
       where: { id },
-      select: this.beverageInventoryReadSelect,
+      select: this.beverageInventorySelect,
     });
 
     if (!beverage) {
@@ -88,7 +88,7 @@ export class BeverageInventoryService {
 
     const loaded = await this.beverageRepository.findOne({
       where: { id: beverage.id },
-      select: this.beverageInventoryReadSelect,
+      select: this.beverageInventorySelect,
     });
 
     if (!loaded) {
@@ -128,7 +128,7 @@ export class BeverageInventoryService {
   async remove(id: number): Promise<BeverageInventoryDto> {
     const beverage = await this.beverageRepository.findOne({
       where: { id },
-      select: this.beverageInventoryReadSelect,
+      select: this.beverageInventorySelect,
     });
 
     if (!beverage) {

@@ -35,7 +35,7 @@ export class InvoicesService {
     private readonly paymentRepository: Repository<Payment>,
   ) {}
 
-  private readonly invoiceReadSelect: FindOptionsSelect<Invoice> = {
+  private readonly invoiceSelect: FindOptionsSelect<Invoice> = {
     id: true,
     number: true,
     guestName: true,
@@ -61,7 +61,7 @@ export class InvoicesService {
     },
   };
 
-  private readonly invoiceReadRelations: FindOptionsRelations<Invoice> = {
+  private readonly invoiceRelations: FindOptionsRelations<Invoice> = {
     invoiceItems: true,
   };
 
@@ -86,8 +86,8 @@ export class InvoicesService {
 
     return this.invoiceRepository.find({
       where,
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
+      select: this.invoiceSelect,
+      relations: this.invoiceRelations,
       order: { createdAt: 'DESC' },
     });
   }
@@ -95,8 +95,8 @@ export class InvoicesService {
   async findOne(id: number): Promise<InvoiceDto> {
     const invoice = await this.invoiceRepository.findOne({
       where: { id },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
+      select: this.invoiceSelect,
+      relations: this.invoiceRelations,
     });
 
     if (!invoice) {
@@ -119,8 +119,8 @@ export class InvoicesService {
 
     const loaded = await this.invoiceRepository.findOne({
       where: { id: invoice.id },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
+      select: this.invoiceSelect,
+      relations: this.invoiceRelations,
     });
 
     if (!loaded) {
@@ -150,8 +150,8 @@ export class InvoicesService {
   async remove(id: number): Promise<InvoiceDto> {
     const invoice = await this.invoiceRepository.findOne({
       where: { id },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
+      select: this.invoiceSelect,
+      relations: this.invoiceRelations,
     });
 
     if (!invoice) {
@@ -171,8 +171,8 @@ export class InvoicesService {
   ): Promise<InvoiceDto> {
     const invoice = await this.invoiceRepository.findOne({
       where: { id },
-      select: this.invoiceReadSelect,
-      relations: this.invoiceReadRelations,
+      select: this.invoiceSelect,
+      relations: this.invoiceRelations,
     });
 
     if (!invoice) {

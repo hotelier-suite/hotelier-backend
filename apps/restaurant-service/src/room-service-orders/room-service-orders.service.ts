@@ -17,7 +17,7 @@ export class RoomServiceOrdersService {
     private readonly roomServiceOrderRepository: Repository<RoomServiceOrder>,
   ) {}
 
-  private readonly roomServiceOrderReadSelect: FindOptionsSelect<RoomServiceOrder> =
+  private readonly roomServiceOrderSelect: FindOptionsSelect<RoomServiceOrder> =
     {
       id: true,
       orderNumber: true,
@@ -37,7 +37,7 @@ export class RoomServiceOrdersService {
 
   findAll(): Promise<RoomServiceOrderDto[]> {
     return this.roomServiceOrderRepository.find({
-      select: this.roomServiceOrderReadSelect,
+      select: this.roomServiceOrderSelect,
       order: { createdAt: 'DESC' },
     });
   }
@@ -45,7 +45,7 @@ export class RoomServiceOrdersService {
   async findOne(id: number): Promise<RoomServiceOrderDto> {
     const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
-      select: this.roomServiceOrderReadSelect,
+      select: this.roomServiceOrderSelect,
     });
 
     if (!order) {
@@ -74,7 +74,7 @@ export class RoomServiceOrdersService {
 
     const loaded = await this.roomServiceOrderRepository.findOne({
       where: { id: order.id },
-      select: this.roomServiceOrderReadSelect,
+      select: this.roomServiceOrderSelect,
     });
 
     if (!loaded) {
@@ -109,7 +109,7 @@ export class RoomServiceOrdersService {
   async remove(id: number): Promise<RoomServiceOrderDto> {
     const order = await this.roomServiceOrderRepository.findOne({
       where: { id },
-      select: this.roomServiceOrderReadSelect,
+      select: this.roomServiceOrderSelect,
     });
 
     if (!order) {

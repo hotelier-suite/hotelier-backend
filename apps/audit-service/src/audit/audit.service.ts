@@ -21,7 +21,7 @@ export class AuditService {
     private auditLogRepository: Repository<AuditLog>,
   ) {}
 
-  private readonly auditLogReadSelect: FindOptionsSelect<AuditLog> = {
+  private readonly auditLogSelect: FindOptionsSelect<AuditLog> = {
     id: true,
     userId: true,
     action: true,
@@ -39,7 +39,7 @@ export class AuditService {
 
     const loaded = await this.auditLogRepository.findOne({
       where: { id: saved.id },
-      select: this.auditLogReadSelect,
+      select: this.auditLogSelect,
     });
 
     if (!loaded) {
@@ -132,7 +132,7 @@ export class AuditService {
   async findOne(id: number): Promise<AuditLogDto> {
     const auditLog = await this.auditLogRepository.findOne({
       where: { id },
-      select: this.auditLogReadSelect,
+      select: this.auditLogSelect,
     });
 
     if (!auditLog) {

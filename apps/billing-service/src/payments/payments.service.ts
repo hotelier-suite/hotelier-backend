@@ -17,7 +17,7 @@ export class PaymentsService {
     private readonly paymentRepository: Repository<Payment>,
   ) {}
 
-  private readonly paymentReadSelect: FindOptionsSelect<Payment> = {
+  private readonly paymentSelect: FindOptionsSelect<Payment> = {
     id: true,
     reference: true,
     amount: true,
@@ -33,7 +33,7 @@ export class PaymentsService {
   findAll(filters: FindPaymentsFilterDto): Promise<PaymentDto[]> {
     return this.paymentRepository.find({
       where: filters,
-      select: this.paymentReadSelect,
+      select: this.paymentSelect,
       order: { createdAt: 'DESC' },
     });
   }
@@ -41,7 +41,7 @@ export class PaymentsService {
   async findOne(id: number): Promise<PaymentDto> {
     const payment = await this.paymentRepository.findOne({
       where: { id },
-      select: this.paymentReadSelect,
+      select: this.paymentSelect,
     });
 
     if (!payment) {
@@ -64,7 +64,7 @@ export class PaymentsService {
 
     const loaded = await this.paymentRepository.findOne({
       where: { id: payment.id },
-      select: this.paymentReadSelect,
+      select: this.paymentSelect,
     });
 
     if (!loaded) {

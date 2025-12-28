@@ -31,7 +31,7 @@ export class UsersService {
     private readonly accessControlService: AccessControlService,
   ) {}
 
-  private readonly userReadSelect: FindOptionsSelect<User> = {
+  private readonly userSelect: FindOptionsSelect<User> = {
     id: true,
     email: true,
     name: true,
@@ -56,7 +56,7 @@ export class UsersService {
     },
   };
 
-  private readonly userReadRelations: FindOptionsRelations<User> = {
+  private readonly userRelations: FindOptionsRelations<User> = {
     userRoles: {
       role: true,
     },
@@ -120,8 +120,8 @@ export class UsersService {
 
     return this.userRepository.find({
       where,
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
       order: { createdAt: 'DESC' },
     });
   }
@@ -129,8 +129,8 @@ export class UsersService {
   async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!user) {
@@ -148,8 +148,8 @@ export class UsersService {
 
     const loaded = await this.userRepository.findOne({
       where: { id: user.id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!loaded) {
@@ -193,8 +193,8 @@ export class UsersService {
 
     const updated = await this.userRepository.findOne({
       where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!updated) {
@@ -259,8 +259,8 @@ export class UsersService {
   async remove(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!user) {

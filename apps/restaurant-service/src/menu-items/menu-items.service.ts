@@ -16,7 +16,7 @@ export class MenuItemsService {
     private readonly menuItemRepository: Repository<MenuItem>,
   ) {}
 
-  private readonly menuItemReadSelect: FindOptionsSelect<MenuItem> = {
+  private readonly menuItemSelect: FindOptionsSelect<MenuItem> = {
     id: true,
     itemCode: true,
     category: true,
@@ -33,7 +33,7 @@ export class MenuItemsService {
 
   findAll(): Promise<MenuItemDto[]> {
     return this.menuItemRepository.find({
-      select: this.menuItemReadSelect,
+      select: this.menuItemSelect,
       order: { category: 'ASC', name: 'ASC' },
     });
   }
@@ -41,7 +41,7 @@ export class MenuItemsService {
   async findOne(id: number): Promise<MenuItemDto> {
     const item = await this.menuItemRepository.findOne({
       where: { id },
-      select: this.menuItemReadSelect,
+      select: this.menuItemSelect,
     });
 
     if (!item) {
@@ -66,7 +66,7 @@ export class MenuItemsService {
 
     const loaded = await this.menuItemRepository.findOne({
       where: { id: item.id },
-      select: this.menuItemReadSelect,
+      select: this.menuItemSelect,
     });
 
     if (!loaded) {
@@ -96,7 +96,7 @@ export class MenuItemsService {
   async remove(id: number): Promise<MenuItemDto> {
     const item = await this.menuItemRepository.findOne({
       where: { id },
-      select: this.menuItemReadSelect,
+      select: this.menuItemSelect,
     });
 
     if (!item) {

@@ -3,6 +3,7 @@ import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Between,
+  FindOptionsRelations,
   FindOptionsWhere,
   In,
   LessThan,
@@ -40,6 +41,11 @@ export class ReservationsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
+  private readonly reservationRelations: FindOptionsRelations<Reservation> = {
+    guest: true,
+    room: true,
+  };
+
   findAll(filters: FindReservationsFilterDto): Promise<ReservationDto[]> {
     const where: FindOptionsWhere<Reservation> = {};
 
@@ -73,7 +79,7 @@ export class ReservationsService {
 
     return this.reservationsRepository.find({
       where,
-      relations: { guest: true, room: true },
+      relations: this.reservationRelations,
       order,
     });
   }
@@ -81,7 +87,7 @@ export class ReservationsService {
   async findOne(id: number): Promise<ReservationDto> {
     const reservation = await this.reservationsRepository.findOne({
       where: { id },
-      relations: { guest: true, room: true },
+      relations: this.reservationRelations,
     });
 
     if (!reservation) {
@@ -227,7 +233,7 @@ export class ReservationsService {
 
     const loaded = await this.reservationsRepository.findOne({
       where: { id: created.id },
-      relations: { guest: true, room: true },
+      relations: this.reservationRelations,
     });
 
     if (!loaded) {
@@ -261,7 +267,7 @@ export class ReservationsService {
   ): Promise<ReservationDto> {
     const existing = await this.reservationsRepository.findOne({
       where: { id },
-      relations: { guest: true, room: true },
+      relations: this.reservationRelations,
     });
 
     if (!existing) {
@@ -466,7 +472,7 @@ export class ReservationsService {
   async remove(id: number): Promise<ReservationDto> {
     const reservation = await this.reservationsRepository.findOne({
       where: { id },
-      relations: { guest: true, room: true },
+      relations: this.reservationRelations,
     });
 
     if (!reservation) {

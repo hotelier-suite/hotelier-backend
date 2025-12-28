@@ -18,27 +18,26 @@ export class IncidentsService {
     private readonly parkingIncidentRepository: Repository<ParkingIncident>,
   ) {}
 
-  private readonly parkingIncidentReadSelect: FindOptionsSelect<ParkingIncident> =
-    {
-      id: true,
-      type: true,
-      description: true,
-      reportDate: true,
-      status: true,
-      responsible: true,
-      priority: true,
-      resolution: true,
-      resolvedAt: true,
-      createdAt: true,
-      updatedAt: true,
-      vehicleId: true,
-      spaceId: true,
-    };
+  private readonly parkingIncidentSelect: FindOptionsSelect<ParkingIncident> = {
+    id: true,
+    type: true,
+    description: true,
+    reportDate: true,
+    status: true,
+    responsible: true,
+    priority: true,
+    resolution: true,
+    resolvedAt: true,
+    createdAt: true,
+    updatedAt: true,
+    vehicleId: true,
+    spaceId: true,
+  };
 
   findAll(filters: FindIncidentsFilterDto): Promise<ParkingIncidentDto[]> {
     return this.parkingIncidentRepository.find({
       where: filters,
-      select: this.parkingIncidentReadSelect,
+      select: this.parkingIncidentSelect,
       order: { reportDate: 'DESC' },
     });
   }
@@ -46,7 +45,7 @@ export class IncidentsService {
   async findOne(id: number): Promise<ParkingIncidentDto> {
     const incident = await this.parkingIncidentRepository.findOne({
       where: { id },
-      select: this.parkingIncidentReadSelect,
+      select: this.parkingIncidentSelect,
     });
 
     if (!incident) {
@@ -68,7 +67,7 @@ export class IncidentsService {
 
     const loaded = await this.parkingIncidentRepository.findOne({
       where: { id: created.id },
-      select: this.parkingIncidentReadSelect,
+      select: this.parkingIncidentSelect,
     });
 
     if (!loaded) {

@@ -16,7 +16,7 @@ export class SuppliersService {
     private readonly supplierRepository: Repository<Supplier>,
   ) {}
 
-  private readonly supplierReadSelect: FindOptionsSelect<Supplier> = {
+  private readonly supplierSelect: FindOptionsSelect<Supplier> = {
     id: true,
     name: true,
     contact: true,
@@ -31,14 +31,14 @@ export class SuppliersService {
     },
   };
 
-  private readonly supplierReadRelations: FindOptionsRelations<Supplier> = {
+  private readonly supplierRelations: FindOptionsRelations<Supplier> = {
     inventoryItems: true,
   };
 
   async findAll(): Promise<SupplierResponseDto[]> {
     const suppliers = await this.supplierRepository.find({
-      select: this.supplierReadSelect,
-      relations: this.supplierReadRelations,
+      select: this.supplierSelect,
+      relations: this.supplierRelations,
       order: { name: 'ASC' },
     });
 
@@ -54,8 +54,8 @@ export class SuppliersService {
   async findOne(id: number): Promise<SupplierResponseDto> {
     const supplier = await this.supplierRepository.findOne({
       where: { id },
-      select: this.supplierReadSelect,
-      relations: this.supplierReadRelations,
+      select: this.supplierSelect,
+      relations: this.supplierRelations,
     });
 
     if (!supplier) {
@@ -77,8 +77,8 @@ export class SuppliersService {
 
     const loaded = await this.supplierRepository.findOne({
       where: { id: created.id },
-      select: this.supplierReadSelect,
-      relations: this.supplierReadRelations,
+      select: this.supplierSelect,
+      relations: this.supplierRelations,
     });
 
     if (!loaded) {
@@ -117,8 +117,8 @@ export class SuppliersService {
   async remove(id: number): Promise<SupplierResponseDto> {
     const supplier = await this.supplierRepository.findOne({
       where: { id },
-      select: this.supplierReadSelect,
-      relations: this.supplierReadRelations,
+      select: this.supplierSelect,
+      relations: this.supplierRelations,
     });
 
     if (!supplier) {

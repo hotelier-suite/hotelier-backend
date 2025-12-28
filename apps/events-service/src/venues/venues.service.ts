@@ -23,7 +23,7 @@ export class VenuesService {
     private readonly venueRepository: Repository<Venue>,
   ) {}
 
-  private readonly venueReadSelect: FindOptionsSelect<Venue> = {
+  private readonly venueSelect: FindOptionsSelect<Venue> = {
     id: true,
     name: true,
     capacity: true,
@@ -41,7 +41,7 @@ export class VenuesService {
 
     const loaded = await this.venueRepository.findOne({
       where: { id: venue.id },
-      select: this.venueReadSelect,
+      select: this.venueSelect,
     });
 
     if (!loaded) {
@@ -71,7 +71,7 @@ export class VenuesService {
 
     return this.venueRepository.find({
       where,
-      select: this.venueReadSelect,
+      select: this.venueSelect,
       order: { name: 'ASC' },
     });
   }
@@ -79,7 +79,7 @@ export class VenuesService {
   async findOne(id: number): Promise<VenueDto> {
     const venue = await this.venueRepository.findOne({
       where: { id },
-      select: this.venueReadSelect,
+      select: this.venueSelect,
     });
 
     if (!venue) {
@@ -109,7 +109,7 @@ export class VenuesService {
   async remove(id: number): Promise<VenueDto> {
     const venue = await this.venueRepository.findOne({
       where: { id },
-      select: this.venueReadSelect,
+      select: this.venueSelect,
     });
 
     if (!venue) {

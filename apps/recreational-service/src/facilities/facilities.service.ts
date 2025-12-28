@@ -27,30 +27,29 @@ export class FacilitiesService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  private readonly facilityReadSelect: FindOptionsSelect<RecreationalFacility> =
-    {
-      id: true,
-      name: true,
-      type: true,
-      status: true,
-      capacity: true,
-      area: true,
-      location: true,
-      description: true,
-      hourlyRate: true,
-      available: true,
-      openingTime: true,
-      closingTime: true,
-      minimumBookingHours: true,
-      maximumBookingHours: true,
-      amenities: true,
-      rules: true,
-      advanceBookingHours: true,
-      availableDays: true,
-      maintenanceNotes: true,
-      createdAt: true,
-      updatedAt: true,
-    };
+  private readonly facilitySelect: FindOptionsSelect<RecreationalFacility> = {
+    id: true,
+    name: true,
+    type: true,
+    status: true,
+    capacity: true,
+    area: true,
+    location: true,
+    description: true,
+    hourlyRate: true,
+    available: true,
+    openingTime: true,
+    closingTime: true,
+    minimumBookingHours: true,
+    maximumBookingHours: true,
+    amenities: true,
+    rules: true,
+    advanceBookingHours: true,
+    availableDays: true,
+    maintenanceNotes: true,
+    createdAt: true,
+    updatedAt: true,
+  };
 
   async create(
     data: CreateRecreationalFacilityDto,
@@ -60,7 +59,7 @@ export class FacilitiesService {
 
     const loaded = await this.facilityRepository.findOne({
       where: { id: saved.id },
-      select: this.facilityReadSelect,
+      select: this.facilitySelect,
     });
 
     if (!loaded) {
@@ -92,7 +91,7 @@ export class FacilitiesService {
   ): Promise<RecreationalFacilityDto[]> {
     return this.facilityRepository.find({
       where: filters,
-      select: this.facilityReadSelect,
+      select: this.facilitySelect,
       order: { name: 'ASC' },
     });
   }
@@ -100,7 +99,7 @@ export class FacilitiesService {
   async findOne(id: number): Promise<RecreationalFacilityDto> {
     const facility = await this.facilityRepository.findOne({
       where: { id },
-      select: this.facilityReadSelect,
+      select: this.facilitySelect,
     });
 
     if (!facility) {
@@ -133,7 +132,7 @@ export class FacilitiesService {
   async remove(id: number): Promise<RecreationalFacilityDto> {
     const facility = await this.facilityRepository.findOne({
       where: { id },
-      select: this.facilityReadSelect,
+      select: this.facilitySelect,
     });
 
     if (!facility) {
