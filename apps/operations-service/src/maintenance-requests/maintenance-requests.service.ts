@@ -47,9 +47,19 @@ export class MaintenanceRequestsService {
     id: number,
     data: UpdateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
-    await this.findOne(id);
-    await this.maintenanceRequestRepository.update(id, data);
-    return this.findOne(id);
+    const existing = await this.maintenanceRequestRepository.findOne({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Maintenance request with id ${id} not found`,
+      });
+    }
+
+    const merged = this.maintenanceRequestRepository.merge(existing, data);
+    return this.maintenanceRequestRepository.save(merged);
   }
 
   async remove(id: number): Promise<HousekeepingMaintenanceRequestDto> {

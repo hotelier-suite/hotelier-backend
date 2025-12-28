@@ -69,8 +69,8 @@ export class EmployeesService {
       });
     }
 
-    await this.employeeRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.employeeRepository.merge(existing, data);
+    return this.employeeRepository.save(merged);
   }
 
   async remove(id: number): Promise<EmployeeDto> {

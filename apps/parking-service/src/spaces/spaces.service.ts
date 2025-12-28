@@ -87,9 +87,19 @@ export class SpacesService {
     id: number,
     data: UpdateParkingSpaceDto,
   ): Promise<ParkingSpaceDto> {
-    await this.parkingSpaceRepository.update(id, data);
+    const existing = await this.parkingSpaceRepository.findOne({
+      where: { id },
+    });
 
-    return this.findOne(id);
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Parking space with id ${id} not found`,
+      });
+    }
+
+    const merged = this.parkingSpaceRepository.merge(existing, data);
+    return this.parkingSpaceRepository.save(merged);
   }
 
   async remove(id: number): Promise<ParkingSpaceDto> {

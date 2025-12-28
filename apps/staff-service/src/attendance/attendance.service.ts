@@ -99,11 +99,20 @@ export class AttendanceService {
   }
 
   async update(id: number, data: UpdateAttendanceDto): Promise<AttendanceDto> {
-    await this.findOne(id);
+    const existing = await this.attendanceRepository.findOne({
+      where: { id },
+      relations: { employee: true },
+    });
 
-    await this.attendanceRepository.update(id, data);
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Attendance record with id ${id} not found`,
+      });
+    }
 
-    return this.findOne(id);
+    const merged = this.attendanceRepository.merge(existing, data);
+    return this.attendanceRepository.save(merged);
   }
 
   async remove(id: number): Promise<AttendanceDto> {

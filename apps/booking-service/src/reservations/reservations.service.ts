@@ -401,7 +401,7 @@ export class ReservationsService {
       }
     }
 
-    await this.reservationsRepository.update(id, {
+    const merged = this.reservationsRepository.merge(existing, {
       ...data,
       checkInDate,
       checkOutDate,
@@ -413,19 +413,31 @@ export class ReservationsService {
       discountAmount: nextDiscountAmount,
     });
 
-    return this.findOne(id);
+    return this.reservationsRepository.save(merged);
   }
 
   async checkout(id: number): Promise<CheckoutReservationResponseDto> {
-    const reservation = await this.findOne(id);
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id },
+      relations: this.reservationRelations,
+    });
 
-    if (reservation.status === ReservationStatus.CHECKED_OUT) {
-      return { reservation };
+    if (!reservation) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Reservation with id ${id} not found`,
+      });
     }
 
-    await this.reservationsRepository.update(id, {
+    if (reservation.status === ReservationStatus.CHECKED_OUT) {
+      return { reservation: await this.findOne(id) };
+    }
+
+    const merged = this.reservationsRepository.merge(reservation, {
       status: ReservationStatus.CHECKED_OUT,
     });
+
+    const saved = await this.reservationsRepository.save(merged);
 
     if (reservation.roomId) {
       await this.roomsRepository.update(reservation.roomId, {
@@ -436,9 +448,9 @@ export class ReservationsService {
     this.notificationsService
       .create({
         title: 'Checkout completed',
-        message: `Reservation #${reservation.id} checked out`,
+        message: `Reservation #${saved.id} checked out`,
         type: NotificationType.INFO,
-        refId: reservation.id,
+        refId: saved.id,
         refType: 'reservation',
         userId: null,
       })
@@ -449,7 +461,7 @@ export class ReservationsService {
       });
 
     return {
-      reservation: await this.findOne(id),
+      reservation: saved,
       assignmentId: null,
       invoiceId: null,
     };

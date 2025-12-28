@@ -179,12 +179,13 @@ export class BookingsService {
       endTime,
     );
 
-    await this.eventBookingRepository.update(id, {
+    const merged = this.eventBookingRepository.merge(existing, {
       ...data,
+      venue,
       totalCost,
     });
 
-    return this.findOne(id);
+    return this.eventBookingRepository.save(merged);
   }
 
   async remove(id: number): Promise<EventBookingDto> {

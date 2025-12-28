@@ -112,8 +112,8 @@ export class FacilitiesService {
       });
     }
 
-    await this.facilityRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.facilityRepository.merge(existing, data);
+    return this.facilityRepository.save(merged);
   }
 
   async remove(id: number): Promise<RecreationalFacilityDto> {

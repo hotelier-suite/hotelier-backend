@@ -89,20 +89,8 @@ export class RoomsService {
       }
     }
 
-    await this.roomsRepository.update(id, data);
-
-    const updated = await this.roomsRepository.findOne({
-      where: { id },
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Room with id ${id} not found`,
-      });
-    }
-
-    return updated;
+    const merged = this.roomsRepository.merge(existing, data);
+    return this.roomsRepository.save(merged);
   }
 
   async remove(id: number): Promise<RoomDto> {
@@ -122,12 +110,9 @@ export class RoomsService {
   }
 
   async setAvailability(id: number, isAvailable: boolean): Promise<RoomDto> {
-    await this.findOne(id);
+    const existing = await this.findOne(id);
 
-    await this.roomsRepository.update(id, {
-      isAvailable,
-    });
-
-    return this.findOne(id);
+    const merged = this.roomsRepository.merge(existing, { isAvailable });
+    return this.roomsRepository.save(merged);
   }
 }

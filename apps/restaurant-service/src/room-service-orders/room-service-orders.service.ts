@@ -77,8 +77,8 @@ export class RoomServiceOrdersService {
       });
     }
 
-    await this.roomServiceOrderRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.roomServiceOrderRepository.merge(existing, data);
+    return this.roomServiceOrderRepository.save(merged);
   }
 
   async remove(id: number): Promise<RoomServiceOrderDto> {

@@ -44,9 +44,19 @@ export class CleaningAssignmentsService {
     id: number,
     data: UpdateCleaningAssignmentDto,
   ): Promise<CleaningAssignmentDto> {
-    await this.findOne(id);
-    await this.cleaningAssignmentRepository.update(id, data);
-    return this.findOne(id);
+    const existing = await this.cleaningAssignmentRepository.findOne({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Cleaning assignment with id ${id} not found`,
+      });
+    }
+
+    const merged = this.cleaningAssignmentRepository.merge(existing, data);
+    return this.cleaningAssignmentRepository.save(merged);
   }
 
   async remove(id: number): Promise<CleaningAssignmentDto> {

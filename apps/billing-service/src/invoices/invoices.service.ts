@@ -15,7 +15,6 @@ import { Payment } from '../payments/entities';
 import {
   InvoiceStatus,
   PaymentMethod,
-  PaymentStatus,
   InvoiceDto,
   InvoicePdfDto,
   CreateInvoiceDto,
@@ -110,22 +109,7 @@ export class InvoicesService {
   }
 
   async create(data: CreateInvoiceDto): Promise<InvoiceDto> {
-    const invoice = await this.invoiceRepository.save(data);
-
-    const loaded = await this.invoiceRepository.findOne({
-      where: { id: invoice.id },
-      select: this.invoiceSelect,
-      relations: this.invoiceRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load invoice with id ${invoice.id} after creation`,
-      });
-    }
-
-    return loaded;
+    return this.invoiceRepository.save(data);
   }
 
   async update(id: number, data: UpdateInvoiceDto): Promise<InvoiceDto> {
@@ -138,8 +122,8 @@ export class InvoicesService {
       });
     }
 
-    await this.invoiceRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.invoiceRepository.merge(existing, data);
+    return this.invoiceRepository.save(merged);
   }
 
   async remove(id: number): Promise<InvoiceDto> {
@@ -183,13 +167,13 @@ export class InvoicesService {
       invoiceId: invoice.id,
     });
 
-    await this.invoiceRepository.update(id, {
+    const merged = this.invoiceRepository.merge(invoice, {
       status: InvoiceStatus.PAID,
       paymentMethod:
         paymentMethod ?? invoice.paymentMethod ?? PaymentMethod.CASH,
     });
 
-    return this.findOne(id);
+    return this.invoiceRepository.save(merged);
   }
 
   async generatePdf(id: number): Promise<InvoicePdfDto> {

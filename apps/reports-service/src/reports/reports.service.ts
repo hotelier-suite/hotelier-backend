@@ -91,8 +91,19 @@ export class ReportsService {
   }
 
   async update(id: number, data: UpdateReportDto): Promise<ReportDto> {
-    await this.reportRepository.update(id, data);
-    return this.findOne(id);
+    const existing = await this.reportRepository.findOne({
+      where: { id },
+    });
+
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Report with id ${id} not found`,
+      });
+    }
+
+    const merged = this.reportRepository.merge(existing, data);
+    return this.reportRepository.save(merged);
   }
 
   async remove(id: number): Promise<ReportDto> {

@@ -91,8 +91,8 @@ export class SuppliersService {
       });
     }
 
-    await this.supplierRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.supplierRepository.merge(existing, data);
+    return this.supplierRepository.save(merged);
   }
 
   async remove(id: number): Promise<SupplierResponseDto> {

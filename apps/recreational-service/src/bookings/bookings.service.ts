@@ -217,12 +217,12 @@ export class BookingsService {
       );
     }
 
-    await this.recreationalBookingRepository.update(id, {
+    const merged = this.recreationalBookingRepository.merge(booking, {
       ...data,
       totalCost: 0,
     });
 
-    return this.findOne(id);
+    return this.recreationalBookingRepository.save(merged);
   }
 
   async remove(id: number): Promise<RecreationalBookingDto> {
@@ -254,14 +254,14 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.CANCELLED;
     booking.staffNotes = reason ? `Cancelled: ${reason}` : 'Booking cancelled';
 
-    await this.recreationalBookingRepository.save(booking);
+    const saved = await this.recreationalBookingRepository.save(booking);
 
     this.notificationsService
       .create({
         type: NotificationType.INFO,
         title: 'Recreational Booking Cancelled',
         message: `Booking for ${booking.facility.name} on ${booking.bookingDate.toISOString().split('T')[0]} has been cancelled`,
-        refId: booking.id,
+        refId: saved.id,
         refType: 'recreational_booking',
       })
       .subscribe({
@@ -270,7 +270,7 @@ export class BookingsService {
         },
       });
 
-    return this.findOne(id);
+    return saved;
   }
 
   async checkIn(id: number): Promise<RecreationalBookingDto> {
@@ -296,8 +296,7 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.CHECKED_IN;
     booking.actualCheckIn = new Date();
 
-    await this.recreationalBookingRepository.save(booking);
-    return this.findOne(id);
+    return this.recreationalBookingRepository.save(booking);
   }
 
   async checkOut(id: number): Promise<RecreationalBookingDto> {
@@ -323,8 +322,7 @@ export class BookingsService {
     booking.status = RecreationalBookingStatus.COMPLETED;
     booking.actualCheckOut = new Date();
 
-    await this.recreationalBookingRepository.save(booking);
-    return this.findOne(id);
+    return this.recreationalBookingRepository.save(booking);
   }
 
   async getStatistics(

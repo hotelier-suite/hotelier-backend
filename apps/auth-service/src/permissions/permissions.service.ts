@@ -60,19 +60,8 @@ export class PermissionsService {
       });
     }
 
-    await this.permissionRepository.update(id, data);
-    const updated = await this.permissionRepository.findOne({
-      where: { id },
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Permission with id ${id} not found`,
-      });
-    }
-
-    return updated;
+    const merged = this.permissionRepository.merge(permission, data);
+    return this.permissionRepository.save(merged);
   }
 
   async remove(id: number): Promise<PermissionResponseDto> {

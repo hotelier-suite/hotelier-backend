@@ -68,8 +68,8 @@ export class MenuItemsService {
       });
     }
 
-    await this.menuItemRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.menuItemRepository.merge(existing, data);
+    return this.menuItemRepository.save(merged);
   }
 
   async remove(id: number): Promise<MenuItemDto> {

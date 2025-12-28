@@ -88,8 +88,8 @@ export class VenuesService {
       });
     }
 
-    await this.venueRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.venueRepository.merge(existingVenue, data);
+    return this.venueRepository.save(merged);
   }
 
   async remove(id: number): Promise<VenueDto> {

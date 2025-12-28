@@ -65,13 +65,15 @@ export class MovementsService {
 
     const savedMovement = await this.inventoryMovementRepository.save(movement);
 
-    inventoryItem.currentStock = newStock;
-    inventoryItem.status = this.calculateItemStatus(
-      inventoryItem.currentStock,
+    const newStatus = this.calculateItemStatus(
+      newStock,
       inventoryItem.minimumStock,
     );
 
-    await this.inventoryItemRepository.save(inventoryItem);
+    await this.inventoryItemRepository.update(inventoryItem.id, {
+      currentStock: newStock,
+      status: newStatus,
+    });
 
     return savedMovement;
   }

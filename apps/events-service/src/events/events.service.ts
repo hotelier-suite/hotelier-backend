@@ -71,8 +71,8 @@ export class EventsService {
       });
     }
 
-    await this.eventRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.eventRepository.merge(existing, data);
+    return this.eventRepository.save(merged);
   }
 
   async remove(id: number): Promise<EventDto> {

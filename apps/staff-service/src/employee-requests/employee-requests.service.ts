@@ -101,11 +101,20 @@ export class EmployeeRequestsService {
     id: number,
     data: UpdateEmployeeRequestDto,
   ): Promise<EmployeeRequestDto> {
-    await this.findOne(id);
+    const existing = await this.employeeRequestRepository.findOne({
+      where: { id },
+      relations: { employee: true },
+    });
 
-    await this.employeeRequestRepository.update(id, data);
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Employee request with id ${id} not found`,
+      });
+    }
 
-    return this.findOne(id);
+    const merged = this.employeeRequestRepository.merge(existing, data);
+    return this.employeeRequestRepository.save(merged);
   }
 
   approve(id: number, approvedBy: string): Promise<EmployeeRequestDto> {

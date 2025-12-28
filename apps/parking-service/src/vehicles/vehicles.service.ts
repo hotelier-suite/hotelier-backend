@@ -100,9 +100,19 @@ export class VehiclesService {
   }
 
   async update(id: number, data: UpdateVehicleDto): Promise<VehicleDto> {
-    await this.vehicleRepository.update(id, data);
+    const existing = await this.vehicleRepository.findOne({
+      where: { id },
+    });
 
-    return this.findOne(id);
+    if (!existing) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Vehicle with id ${id} not found`,
+      });
+    }
+
+    const merged = this.vehicleRepository.merge(existing, data);
+    return this.vehicleRepository.save(merged);
   }
 
   checkOut(id: number): Promise<VehicleDto> {

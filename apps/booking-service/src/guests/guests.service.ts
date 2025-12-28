@@ -88,8 +88,8 @@ export class GuestsService {
       }
     }
 
-    await this.guestsRepository.update(id, data);
-    return this.findOne(id);
+    const merged = this.guestsRepository.merge(existing, data);
+    return this.guestsRepository.save(merged);
   }
 
   async remove(id: number): Promise<GuestDto> {
