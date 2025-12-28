@@ -4,5 +4,4 @@ export const VENUES_PATTERNS = {
   FIND_ONE: 'venues.findOne',
   UPDATE: 'venues.update',
   DELETE: 'venues.delete',
-  GET_AVAILABLE: 'venues.available',
 } as const;

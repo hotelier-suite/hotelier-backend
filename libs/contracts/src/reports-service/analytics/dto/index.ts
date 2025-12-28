@@ -6,3 +6,4 @@ export * from './distinct-metric-result.dto';
 export * from './average-metric-result.dto';
 export * from './total-metric-result.dto';
 export * from './metric-summary.dto';
+export * from './find-analytics-filter.dto';

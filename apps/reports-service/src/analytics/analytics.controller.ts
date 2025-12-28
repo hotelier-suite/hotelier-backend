@@ -8,6 +8,7 @@ import {
   CreateAnalyticsDataDto,
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
+  FindAnalyticsFilterDto,
 } from '@app/contracts/reports-service';
 
 @Controller()
@@ -20,8 +21,10 @@ export class AnalyticsController {
   }
 
   @MessagePattern(ANALYTICS_PATTERNS.FIND_ALL)
-  findAll(): Promise<AnalyticsDataDto[]> {
-    return this.analyticsService.findAll();
+  findAll(
+    @Payload() filters: FindAnalyticsFilterDto,
+  ): Promise<AnalyticsDataDto[]> {
+    return this.analyticsService.findAll(filters);
   }
 
   @MessagePattern(ANALYTICS_PATTERNS.FIND_ONE)

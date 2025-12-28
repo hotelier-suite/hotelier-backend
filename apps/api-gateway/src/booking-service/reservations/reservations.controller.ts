@@ -31,6 +31,7 @@ import {
   BookingChannel,
   RoomType,
   RoomDto,
+  FindReservationsFilterDto,
 } from '@app/contracts/booking-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -40,17 +41,6 @@ import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 @ApiBearerAuth()
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
-
-  @Get('current')
-  @ApiOperation({
-    summary: 'Get current guests with active reservations',
-    description:
-      'Retrieve all reservations for guests currently checked in at the hotel.',
-  })
-  @ApiResponse({ status: 200, type: [ReservationDto] })
-  findCurrent(): Observable<ReservationDto[]> {
-    return this.reservationsService.findCurrent();
-  }
 
   @Post()
   @AuditLog({
@@ -110,15 +100,17 @@ export class ReservationsController {
   @ApiOperation({
     summary: 'Get All Reservations',
     description:
-      'Retrieve all reservations with related guest, room, and user information.',
+      'Retrieve all reservations with optional filters. Use userId to get reservations for a specific user, isCurrent=true to get checked-in guests, or status to filter by reservation status.',
   })
   @ApiResponse({
     status: 200,
     description: 'Reservations retrieved successfully',
     type: [ReservationDto],
   })
-  findAll(): Observable<ReservationDto[]> {
-    return this.reservationsService.findAll();
+  findAll(
+    @Query() filters: FindReservationsFilterDto,
+  ): Observable<ReservationDto[]> {
+    return this.reservationsService.findAll(filters);
   }
 
   @Get('billing-details')
@@ -178,20 +170,6 @@ export class ReservationsController {
       type,
       guests,
     });
-  }
-
-  @Get('mine')
-  @ApiOperation({
-    summary: 'Get My Reservations',
-    description:
-      'Retrieve all reservations for the currently authenticated user.',
-  })
-  @ApiResponse({ status: 200, type: [ReservationDto] })
-  findMine(
-    @Req() req: Request & { user?: { id?: number } },
-  ): Observable<ReservationDto[]> {
-    const userId = req.user?.id;
-    return this.reservationsService.findMine(userId!);
   }
 
   @Get(':id')

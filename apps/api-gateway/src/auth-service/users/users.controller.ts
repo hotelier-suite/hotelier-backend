@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -28,6 +29,7 @@ import {
   RoleResponseDto,
   PermissionResponseDto,
   JwtUser,
+  FindUsersFilterDto,
 } from '@app/contracts/auth-service';
 import { CurrentUser } from '../../common';
 import { AuditLog } from '../../audit-service';
@@ -63,7 +65,7 @@ export class UsersController {
   @ApiOperation({
     summary: 'Get All Users',
     description:
-      'Retrieve all users with their roles (without sensitive data).',
+      'Retrieve all users with their roles (without sensitive data). Supports optional filtering by email, active status, and role.',
   })
   @ApiResponse({
     status: 200,
@@ -78,8 +80,8 @@ export class UsersController {
     status: 403,
     description: 'Insufficient permissions',
   })
-  findAll(): Observable<UserResponseDto[]> {
-    return this.usersService.findAll();
+  findAll(@Query() filters: FindUsersFilterDto): Observable<UserResponseDto[]> {
+    return this.usersService.findAll(filters);
   }
 
   @Post()

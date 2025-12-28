@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import {
   RoomDto,
   CreateRoomDto,
   UpdateRoomDto,
+  FindRoomsFilterDto,
 } from '@app/contracts/booking-service';
 import { Room } from './entities';
 
@@ -16,8 +17,19 @@ export class RoomsService {
     private readonly roomsRepository: Repository<Room>,
   ) {}
 
-  findAll(): Promise<RoomDto[]> {
+  findAll(filters: FindRoomsFilterDto): Promise<RoomDto[]> {
+    const where: FindOptionsWhere<Room> = {};
+
+    if (filters.type) {
+      where.type = filters.type;
+    }
+
+    if (typeof filters.available === 'boolean') {
+      where.isAvailable = filters.available;
+    }
+
     return this.roomsRepository.find({
+      where,
       order: { number: 'ASC' },
     });
   }

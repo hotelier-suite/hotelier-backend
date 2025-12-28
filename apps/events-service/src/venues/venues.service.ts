@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsSelect } from 'typeorm';
+import {
+  Repository,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Like,
+  MoreThanOrEqual,
+} from 'typeorm';
 import { Venue } from './entities';
 import {
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
+  FindVenuesFilterDto,
 } from '@app/contracts/events-service';
 
 @Injectable()
@@ -47,8 +54,23 @@ export class VenuesService {
     return loaded;
   }
 
-  findAll(): Promise<VenueDto[]> {
+  findAll(filters: FindVenuesFilterDto = {}): Promise<VenueDto[]> {
+    const where: FindOptionsWhere<Venue> = {};
+
+    if (filters.isAvailable !== undefined) {
+      where.available = filters.isAvailable;
+    }
+
+    if (filters.minCapacity !== undefined) {
+      where.capacity = MoreThanOrEqual(filters.minCapacity);
+    }
+
+    if (filters.name) {
+      where.name = Like(`%${filters.name}%`);
+    }
+
     return this.venueRepository.find({
+      where,
       select: this.venueReadSelect,
       order: { name: 'ASC' },
     });
@@ -99,14 +121,6 @@ export class VenuesService {
 
     await this.venueRepository.remove(venue);
     return venue;
-  }
-
-  findAvailable(): Promise<VenueDto[]> {
-    return this.venueRepository.find({
-      where: { available: true },
-      select: this.venueReadSelect,
-      order: { name: 'ASC' },
-    });
   }
 
   findOneEntity(id: number): Promise<Venue | null> {

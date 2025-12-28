@@ -6,6 +6,7 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
+  FindEventBookingsFilterDto,
 } from '@app/contracts/events-service';
 
 @Controller()
@@ -13,8 +14,10 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @MessagePattern(EVENT_BOOKINGS_PATTERNS.FIND_ALL)
-  findAll(): Promise<EventBookingDto[]> {
-    return this.bookingsService.findAll();
+  findAll(
+    @Payload() filters: FindEventBookingsFilterDto,
+  ): Promise<EventBookingDto[]> {
+    return this.bookingsService.findAll(filters);
   }
 
   @MessagePattern(EVENT_BOOKINGS_PATTERNS.FIND_ONE)
@@ -37,10 +40,5 @@ export class BookingsController {
   @MessagePattern(EVENT_BOOKINGS_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<EventBookingDto> {
     return this.bookingsService.remove(id);
-  }
-
-  @MessagePattern(EVENT_BOOKINGS_PATTERNS.FIND_UPCOMING)
-  findUpcoming(): Promise<EventBookingDto[]> {
-    return this.bookingsService.findUpcoming();
   }
 }

@@ -8,6 +8,7 @@ import {
   UserRolesPayloadDto,
   RoleResponseDto,
   PermissionResponseDto,
+  FindUsersFilterDto,
 } from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
@@ -18,10 +19,10 @@ export class UsersService {
     @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<UserResponseDto[]> {
-    return this.authClient.send<UserResponseDto[], Record<string, never>>(
+  findAll(filters: FindUsersFilterDto): Observable<UserResponseDto[]> {
+    return this.authClient.send<UserResponseDto[], FindUsersFilterDto>(
       USERS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 

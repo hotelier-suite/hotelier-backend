@@ -28,6 +28,7 @@ import {
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
   AnalyticsDataDto,
+  FindAnalyticsFilterDto,
 } from '@app/contracts/reports-service';
 
 @ApiTags('reports-analytics')
@@ -55,6 +56,23 @@ export class AnalyticsController {
     @Body() createData: CreateAnalyticsDataDto,
   ): Observable<AnalyticsDataDto> {
     return this.analyticsService.create(createData);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get All Analytics Data',
+    description:
+      'Retrieve all analytics data with optional filters for type and date range.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Analytics data retrieved successfully',
+    type: [AnalyticsDataDto],
+  })
+  findAll(
+    @Query() filters: FindAnalyticsFilterDto,
+  ): Observable<AnalyticsDataDto[]> {
+    return this.analyticsService.findAll(filters);
   }
 
   @Get(':id')

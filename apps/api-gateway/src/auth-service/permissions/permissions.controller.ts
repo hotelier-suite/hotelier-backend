@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -19,9 +20,9 @@ import { Observable } from 'rxjs';
 import { PermissionsService } from './permissions.service';
 import {
   CreatePermissionDto,
+  FindPermissionsFilterDto,
   PermissionResponseDto,
   UpdatePermissionDto,
-  PermissionsByResourceDto,
 } from '@app/contracts/auth-service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -36,30 +37,17 @@ export class PermissionsController {
   @ApiOperation({
     summary: 'Get All Permissions',
     description:
-      'Retrieve all system permissions available for role assignment.',
+      'Retrieve all system permissions available for role assignment. Supports optional filtering by resource and action.',
   })
   @ApiResponse({
     status: 200,
     description: 'Permissions retrieved successfully',
     type: [PermissionResponseDto],
   })
-  findAll(): Observable<PermissionResponseDto[]> {
-    return this.permissionsService.findAll();
-  }
-
-  @Get('by-resource')
-  @ApiOperation({
-    summary: 'Get Permissions by Resource',
-    description:
-      'Retrieve all permissions grouped by resource type for easier management and assignment.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permissions by resource retrieved successfully',
-    type: PermissionsByResourceDto,
-  })
-  findByResource(): Observable<Record<string, PermissionResponseDto[]>> {
-    return this.permissionsService.findByResource();
+  findAll(
+    @Query() filters: FindPermissionsFilterDto,
+  ): Observable<PermissionResponseDto[]> {
+    return this.permissionsService.findAll(filters);
   }
 
   @Post()

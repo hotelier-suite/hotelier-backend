@@ -9,6 +9,7 @@ import {
   GetAvailabilityDto,
   CheckoutReservationResponseDto,
   RoomDto,
+  FindReservationsFilterDto,
 } from '@app/contracts/booking-service';
 
 @Controller()
@@ -16,23 +17,15 @@ export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
   @MessagePattern(RESERVATIONS_PATTERNS.FIND_ALL)
-  findAll(): Promise<ReservationDto[]> {
-    return this.reservationsService.findAll();
+  findAll(
+    @Payload() filters: FindReservationsFilterDto,
+  ): Promise<ReservationDto[]> {
+    return this.reservationsService.findAll(filters);
   }
 
   @MessagePattern(RESERVATIONS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ReservationDto> {
     return this.reservationsService.findOne(id);
-  }
-
-  @MessagePattern(RESERVATIONS_PATTERNS.FIND_MINE)
-  findMine(@Payload() userId: number): Promise<ReservationDto[]> {
-    return this.reservationsService.findMine(userId);
-  }
-
-  @MessagePattern(RESERVATIONS_PATTERNS.FIND_CURRENT)
-  findCurrent(): Promise<ReservationDto[]> {
-    return this.reservationsService.findCurrent();
   }
 
   @MessagePattern(RESERVATIONS_PATTERNS.GET_AVAILABILITY)

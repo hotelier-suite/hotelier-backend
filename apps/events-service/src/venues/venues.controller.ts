@@ -6,6 +6,7 @@ import {
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
+  FindVenuesFilterDto,
 } from '@app/contracts/events-service';
 
 @Controller()
@@ -13,8 +14,8 @@ export class VenuesController {
   constructor(private readonly venuesService: VenuesService) {}
 
   @MessagePattern(VENUES_PATTERNS.FIND_ALL)
-  findAll(): Promise<VenueDto[]> {
-    return this.venuesService.findAll();
+  findAll(@Payload() filters: FindVenuesFilterDto): Promise<VenueDto[]> {
+    return this.venuesService.findAll(filters);
   }
 
   @MessagePattern(VENUES_PATTERNS.FIND_ONE)
@@ -37,10 +38,5 @@ export class VenuesController {
   @MessagePattern(VENUES_PATTERNS.DELETE)
   remove(@Payload() id: number): Promise<VenueDto> {
     return this.venuesService.remove(id);
-  }
-
-  @MessagePattern(VENUES_PATTERNS.GET_AVAILABLE)
-  findAvailable(): Promise<VenueDto[]> {
-    return this.venuesService.findAvailable();
   }
 }

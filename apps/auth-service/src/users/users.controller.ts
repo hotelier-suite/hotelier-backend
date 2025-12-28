@@ -6,6 +6,7 @@ import {
   UserResponseDto,
   RoleResponseDto,
   PermissionResponseDto,
+  FindUsersFilterDto,
 } from '@app/contracts/auth-service';
 import { User } from './entities';
 
@@ -14,8 +15,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @MessagePattern(USERS_PATTERNS.FIND_ALL)
-  findAll(): Promise<UserResponseDto[]> {
-    return this.usersService.findAll();
+  findAll(@Payload() filters: FindUsersFilterDto): Promise<UserResponseDto[]> {
+    return this.usersService.findAll(filters);
   }
 
   @MessagePattern(USERS_PATTERNS.FIND_ONE)

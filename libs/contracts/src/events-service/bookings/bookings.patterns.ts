@@ -4,5 +4,4 @@ export const EVENT_BOOKINGS_PATTERNS = {
   CREATE: 'events.bookings.create',
   UPDATE: 'events.bookings.update',
   DELETE: 'events.bookings.delete',
-  FIND_UPCOMING: 'events.bookings.findUpcoming',
 } as const;

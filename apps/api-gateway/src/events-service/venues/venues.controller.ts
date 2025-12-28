@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -21,6 +22,7 @@ import {
   VenueDto,
   CreateVenueDto,
   UpdateVenueDto,
+  FindVenuesFilterDto,
 } from '@app/contracts/events-service';
 
 @ApiTags('venues')
@@ -53,30 +55,15 @@ export class VenuesController {
   @Get()
   @ApiOperation({
     summary: 'Get All Venues',
-    description:
-      'Retrieve all venues with their event bookings, sorted by name.',
+    description: 'Retrieve all venues with optional filters, sorted by name.',
   })
   @ApiResponse({
     status: 200,
     description: 'Venues retrieved successfully',
     type: [VenueDto],
   })
-  findAll(): Observable<VenueDto[]> {
-    return this.venuesService.findAll();
-  }
-
-  @Get('available')
-  @ApiOperation({
-    summary: 'Get Available Venues',
-    description: 'Retrieve all currently available venues for booking.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Available venues retrieved successfully',
-    type: [VenueDto],
-  })
-  findAvailable(): Observable<VenueDto[]> {
-    return this.venuesService.findAvailable();
+  findAll(@Query() filters: FindVenuesFilterDto): Observable<VenueDto[]> {
+    return this.venuesService.findAll(filters);
   }
 
   @Get(':id')

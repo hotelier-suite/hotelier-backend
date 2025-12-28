@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import {
   CreatePermissionDto,
+  FindPermissionsFilterDto,
   PermissionResponseDto,
   UpdatePermissionDto,
 } from '@app/contracts/auth-service';
@@ -43,26 +44,25 @@ export class PermissionsService {
     }
   }
 
-  async findAll(): Promise<PermissionResponseDto[]> {
+  async findAll(
+    filters: FindPermissionsFilterDto,
+  ): Promise<PermissionResponseDto[]> {
+    const where: FindOptionsWhere<SystemPermission> = {};
+
+    if (filters.resource) {
+      where.resource = Like(`%${filters.resource}%`);
+    }
+
+    if (filters.action) {
+      where.action = Like(`%${filters.action}%`);
+    }
+
     const permissions = await this.permissionRepository.find({
+      where,
       order: { resource: 'ASC', action: 'ASC' },
     });
 
     return permissions;
-  }
-
-  async findByResource(): Promise<Record<string, PermissionResponseDto[]>> {
-    const permissions = await this.findAll();
-    const grouped: Record<string, PermissionResponseDto[]> = {};
-
-    for (const permission of permissions) {
-      if (!grouped[permission.resource]) {
-        grouped[permission.resource] = [];
-      }
-      grouped[permission.resource].push(permission);
-    }
-
-    return grouped;
   }
 
   async update(

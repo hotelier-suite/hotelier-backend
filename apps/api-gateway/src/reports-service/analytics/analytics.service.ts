@@ -9,6 +9,7 @@ import {
   CreateAnalyticsDataDto,
   UpdateAnalyticsDataDto,
   DashboardSummaryResponseDto,
+  FindAnalyticsFilterDto,
 } from '@app/contracts/reports-service';
 
 @Injectable()
@@ -25,10 +26,10 @@ export class AnalyticsService {
     );
   }
 
-  findAll(): Observable<AnalyticsDataDto[]> {
-    return this.reportsClient.send<AnalyticsDataDto[], Record<string, never>>(
+  findAll(filters: FindAnalyticsFilterDto): Observable<AnalyticsDataDto[]> {
+    return this.reportsClient.send<AnalyticsDataDto[], FindAnalyticsFilterDto>(
       ANALYTICS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 

@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, LessThan, MoreThan, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  Between,
+  FindOptionsWhere,
+  In,
+  LessThan,
+  LessThanOrEqual,
+  MoreThan,
+  MoreThanOrEqual,
+  Repository,
+} from 'typeorm';
 import {
   ReservationDto,
   CreateReservationDto,
@@ -11,6 +20,7 @@ import {
   ReservationStatus,
   BookingChannel,
   RoomDto,
+  FindReservationsFilterDto,
 } from '@app/contracts/booking-service';
 import { NotificationType } from '@app/contracts/notifications-service';
 import { Reservation } from './entities';
@@ -30,39 +40,41 @@ export class ReservationsService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
-  findAll(): Promise<ReservationDto[]> {
-    return this.reservationsRepository.find({
-      relations: { guest: true, room: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
+  findAll(filters: FindReservationsFilterDto): Promise<ReservationDto[]> {
+    const where: FindOptionsWhere<Reservation> = {};
 
-  async findMine(userId: number): Promise<ReservationDto[]> {
-    if (typeof userId !== 'number') {
-      throw new RpcException({
-        statusCode: 400,
-        message: 'Invalid userId',
-      });
+    if (filters.userId) {
+      where.userId = filters.userId;
     }
 
-    return this.reservationsRepository.find({
-      where: { userId },
-      relations: { guest: true, room: true },
-      order: { createdAt: 'DESC' },
-    });
-  }
+    if (filters.status) {
+      where.status = filters.status;
+    }
 
-  findCurrent(): Promise<ReservationDto[]> {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    if (filters.isCurrent) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      where.status = ReservationStatus.CHECKED_IN;
+      where.checkOutDate = MoreThanOrEqual(today);
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.checkInDate = Between(filters.startDate, filters.endDate);
+    } else if (filters.startDate) {
+      where.checkInDate = MoreThanOrEqual(filters.startDate);
+    } else if (filters.endDate) {
+      where.checkInDate = LessThanOrEqual(filters.endDate);
+    }
+
+    // Use different ordering for current reservations
+    const order = filters.isCurrent
+      ? { checkOutDate: 'ASC' as const }
+      : { createdAt: 'DESC' as const };
 
     return this.reservationsRepository.find({
-      where: {
-        status: ReservationStatus.CHECKED_IN,
-        checkOutDate: MoreThanOrEqual(today),
-      },
+      where,
       relations: { guest: true, room: true },
-      order: { checkOutDate: 'ASC' },
+      order,
     });
   }
 

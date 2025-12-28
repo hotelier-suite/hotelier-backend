@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
+import {
+  FindOptionsRelations,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Like,
+  Repository,
+} from 'typeorm';
 import {
   UserResponseDto,
   RoleResponseDto,
   PermissionResponseDto,
+  FindUsersFilterDto,
 } from '@app/contracts/auth-service';
 import { User } from './entities';
 import { Role } from '../roles';
@@ -94,8 +101,25 @@ export class UsersService {
     await this.userRepository.update(userId, { lastLogin: new Date() });
   }
 
-  findAll(): Promise<UserResponseDto[]> {
+  findAll(filters: FindUsersFilterDto): Promise<UserResponseDto[]> {
+    const where: FindOptionsWhere<User> = {};
+
+    if (filters.email) {
+      where.email = Like(`%${filters.email}%`);
+    }
+
+    if (filters.isActive !== undefined) {
+      where.isActive = filters.isActive;
+    }
+
+    if (filters.roleId) {
+      where.userRoles = {
+        roleId: filters.roleId,
+      };
+    }
+
     return this.userRepository.find({
+      where,
       select: this.userReadSelect,
       relations: this.userReadRelations,
       order: { createdAt: 'DESC' },

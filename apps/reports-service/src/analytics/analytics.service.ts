@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import {
+  Repository,
+  Between,
+  FindOptionsWhere,
+  MoreThanOrEqual,
+  LessThanOrEqual,
+} from 'typeorm';
 import { AnalyticsData } from './entities';
 import {
   AnalyticsMetric,
@@ -13,6 +19,7 @@ import {
   DistinctMetricResultDto,
   AverageMetricResultDto,
   TotalMetricResultDto,
+  FindAnalyticsFilterDto,
 } from '@app/contracts/reports-service';
 
 @Injectable()
@@ -29,8 +36,23 @@ export class AnalyticsService {
     ) as Promise<AnalyticsDataDto>;
   }
 
-  async findAll(): Promise<AnalyticsDataDto[]> {
+  async findAll(filters: FindAnalyticsFilterDto): Promise<AnalyticsDataDto[]> {
+    const where: FindOptionsWhere<AnalyticsData> = {};
+
+    if (filters.type) {
+      where.metric = filters.type;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.date = Between(filters.startDate, filters.endDate);
+    } else if (filters.startDate) {
+      where.date = MoreThanOrEqual(filters.startDate);
+    } else if (filters.endDate) {
+      where.date = LessThanOrEqual(filters.endDate);
+    }
+
     return this.analyticsRepository.find({
+      where,
       order: { date: 'DESC' },
     }) as Promise<AnalyticsDataDto[]>;
   }

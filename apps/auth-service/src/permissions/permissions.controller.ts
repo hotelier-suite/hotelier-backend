@@ -4,6 +4,7 @@ import { PermissionsService } from './permissions.service';
 import {
   PERMISSIONS_PATTERNS,
   CreatePermissionDto,
+  FindPermissionsFilterDto,
   PermissionResponseDto,
   UpdatePermissionDto,
 } from '@app/contracts/auth-service';
@@ -18,13 +19,10 @@ export class PermissionsController {
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.FIND_ALL)
-  findAll(): Promise<PermissionResponseDto[]> {
-    return this.permissionsService.findAll();
-  }
-
-  @MessagePattern(PERMISSIONS_PATTERNS.BY_RESOURCE)
-  findByResource(): Promise<Record<string, PermissionResponseDto[]>> {
-    return this.permissionsService.findByResource();
+  findAll(
+    @Payload() filters: FindPermissionsFilterDto,
+  ): Promise<PermissionResponseDto[]> {
+    return this.permissionsService.findAll(filters);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.UPDATE)

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -22,6 +23,7 @@ import {
   CreateRoomDto,
   UpdateRoomDto,
   RoomDto,
+  FindRoomsFilterDto,
 } from '@app/contracts/booking-service';
 import { AuditLog } from '../../audit-service';
 import { AuditAction, AuditResource } from '@app/contracts/audit-service';
@@ -66,15 +68,15 @@ export class RoomsController {
   @ApiOperation({
     summary: 'Get All Rooms',
     description:
-      'Retrieve all rooms in the hotel sorted by room number. Returns room details including type, status, floor, capacity, and current availability.',
+      'Retrieve all rooms in the hotel with optional filters. Filter by room type or availability status. Returns room details including type, capacity, and current availability.',
   })
   @ApiResponse({
     status: 200,
     description: 'Rooms retrieved successfully',
     type: [RoomDto],
   })
-  findAll(): Observable<RoomDto[]> {
-    return this.roomsService.findAll();
+  findAll(@Query() filters: FindRoomsFilterDto): Observable<RoomDto[]> {
+    return this.roomsService.findAll(filters);
   }
 
   @Get(':id')

@@ -8,6 +8,7 @@ import {
   CreateRoomDto,
   UpdateRoomDto,
   SetRoomAvailabilityDto,
+  FindRoomsFilterDto,
 } from '@app/contracts/booking-service';
 
 @Injectable()
@@ -17,10 +18,10 @@ export class RoomsService {
     private readonly bookingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<RoomDto[]> {
-    return this.bookingClient.send<RoomDto[], Record<string, never>>(
+  findAll(filters: FindRoomsFilterDto): Observable<RoomDto[]> {
+    return this.bookingClient.send<RoomDto[], FindRoomsFilterDto>(
       ROOMS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 

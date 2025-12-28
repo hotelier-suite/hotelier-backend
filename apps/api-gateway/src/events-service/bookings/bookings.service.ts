@@ -7,6 +7,7 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
+  FindEventBookingsFilterDto,
 } from '@app/contracts/events-service';
 
 @Injectable()
@@ -16,11 +17,11 @@ export class BookingsService {
     private readonly eventsClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<EventBookingDto[]> {
-    return this.eventsClient.send<EventBookingDto[], Record<string, never>>(
-      EVENT_BOOKINGS_PATTERNS.FIND_ALL,
-      {},
-    );
+  findAll(filters: FindEventBookingsFilterDto): Observable<EventBookingDto[]> {
+    return this.eventsClient.send<
+      EventBookingDto[],
+      FindEventBookingsFilterDto
+    >(EVENT_BOOKINGS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<EventBookingDto> {
@@ -48,13 +49,6 @@ export class BookingsService {
     return this.eventsClient.send<EventBookingDto, number>(
       EVENT_BOOKINGS_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  findUpcoming(): Observable<EventBookingDto[]> {
-    return this.eventsClient.send<EventBookingDto[], Record<string, never>>(
-      EVENT_BOOKINGS_PATTERNS.FIND_UPCOMING,
-      {},
     );
   }
 }

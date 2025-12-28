@@ -7,6 +7,7 @@ import {
   CreateRoomDto,
   UpdateRoomDto,
   SetRoomAvailabilityDto,
+  FindRoomsFilterDto,
 } from '@app/contracts/booking-service';
 
 @Controller()
@@ -14,8 +15,8 @@ export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @MessagePattern(ROOMS_PATTERNS.FIND_ALL)
-  findAll(): Promise<RoomDto[]> {
-    return this.roomsService.findAll();
+  findAll(@Payload() filters: FindRoomsFilterDto): Promise<RoomDto[]> {
+    return this.roomsService.findAll(filters);
   }
 
   @MessagePattern(ROOMS_PATTERNS.FIND_ONE)

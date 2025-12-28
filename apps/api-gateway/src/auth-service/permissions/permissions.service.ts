@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
 import {
   PERMISSIONS_PATTERNS,
+  FindPermissionsFilterDto,
   PermissionResponseDto,
   CreatePermissionDto,
   UpdatePermissionDto,
@@ -15,18 +16,13 @@ export class PermissionsService {
     @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<PermissionResponseDto[]> {
-    return this.authClient.send<PermissionResponseDto[], Record<string, never>>(
-      PERMISSIONS_PATTERNS.FIND_ALL,
-      {},
-    );
-  }
-
-  findByResource(): Observable<Record<string, PermissionResponseDto[]>> {
+  findAll(
+    filters: FindPermissionsFilterDto,
+  ): Observable<PermissionResponseDto[]> {
     return this.authClient.send<
-      Record<string, PermissionResponseDto[]>,
-      Record<string, never>
-    >(PERMISSIONS_PATTERNS.BY_RESOURCE, {});
+      PermissionResponseDto[],
+      FindPermissionsFilterDto
+    >(PERMISSIONS_PATTERNS.FIND_ALL, filters);
   }
 
   create(data: CreatePermissionDto): Observable<PermissionResponseDto> {

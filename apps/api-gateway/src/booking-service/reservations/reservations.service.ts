@@ -15,6 +15,7 @@ import {
   CheckoutReservationResponseDto,
   ReservationStatus,
   RoomDto,
+  FindReservationsFilterDto,
 } from '@app/contracts/booking-service';
 import {
   INVOICES_PATTERNS,
@@ -43,10 +44,10 @@ export class ReservationsService {
     private readonly eventsClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ReservationDto[]> {
-    return this.bookingClient.send<ReservationDto[], Record<string, never>>(
+  findAll(filters: FindReservationsFilterDto): Observable<ReservationDto[]> {
+    return this.bookingClient.send<ReservationDto[], FindReservationsFilterDto>(
       RESERVATIONS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
@@ -54,20 +55,6 @@ export class ReservationsService {
     return this.bookingClient.send<ReservationDto, number>(
       RESERVATIONS_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findMine(userId: number): Observable<ReservationDto[]> {
-    return this.bookingClient.send<ReservationDto[], number>(
-      RESERVATIONS_PATTERNS.FIND_MINE,
-      userId,
-    );
-  }
-
-  findCurrent(): Observable<ReservationDto[]> {
-    return this.bookingClient.send<ReservationDto[], Record<string, never>>(
-      RESERVATIONS_PATTERNS.FIND_CURRENT,
-      {},
     );
   }
 
@@ -107,7 +94,7 @@ export class ReservationsService {
   }
 
   async getReservationsWithBillingDetails(): Promise<any[]> {
-    const reservations = await lastValueFrom(this.findAll());
+    const reservations = await lastValueFrom(this.findAll({}));
 
     const relevant: ReservationDto[] = reservations.filter((r) =>
       [

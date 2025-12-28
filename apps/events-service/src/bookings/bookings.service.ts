@@ -4,8 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   Repository,
   MoreThanOrEqual,
+  LessThanOrEqual,
+  Between,
   FindOptionsSelect,
   FindOptionsRelations,
+  FindOptionsWhere,
 } from 'typeorm';
 import { EventBooking } from './entities';
 import { Venue } from '../venues';
@@ -13,6 +16,7 @@ import {
   EventBookingDto,
   CreateEventBookingDto,
   UpdateEventBookingDto,
+  FindEventBookingsFilterDto,
 } from '@app/contracts/events-service';
 
 @Injectable()
@@ -60,8 +64,36 @@ export class BookingsService {
     venue: true,
   };
 
-  findAll(): Promise<EventBookingDto[]> {
+  findAll(filters: FindEventBookingsFilterDto): Promise<EventBookingDto[]> {
+    const where: FindOptionsWhere<EventBooking> = {};
+
+    if (filters.isUpcoming) {
+      const now = new Date();
+      where.eventDate = MoreThanOrEqual(now);
+    }
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.guestId) {
+      where.guestId = filters.guestId;
+    }
+
+    if (filters.venueId) {
+      where.venueId = filters.venueId;
+    }
+
+    if (filters.startDate && filters.endDate) {
+      where.eventDate = Between(filters.startDate, filters.endDate);
+    } else if (filters.startDate) {
+      where.eventDate = MoreThanOrEqual(filters.startDate);
+    } else if (filters.endDate) {
+      where.eventDate = LessThanOrEqual(filters.endDate);
+    }
+
     return this.bookingRepository.find({
+      where,
       select: this.readSelect,
       relations: this.readRelations,
       order: { eventDate: 'ASC' },
@@ -185,18 +217,6 @@ export class BookingsService {
 
     await this.bookingRepository.remove(booking);
     return booking;
-  }
-
-  findUpcoming(): Promise<EventBookingDto[]> {
-    const now = new Date();
-    return this.bookingRepository.find({
-      where: {
-        eventDate: MoreThanOrEqual(now),
-      },
-      select: this.readSelect,
-      relations: this.readRelations,
-      order: { eventDate: 'ASC' },
-    });
   }
 
   private calculateBookingCost(
