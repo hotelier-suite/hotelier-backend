@@ -108,8 +108,7 @@ export class AuditLogsSeeder {
     ];
 
     for (const logData of auditLogs) {
-      const auditLog = this.auditLogRepository.create(logData);
-      await this.auditLogRepository.save(auditLog);
+      await this.auditLogRepository.save(logData);
     }
 
     console.log(`  ✅ Seeded ${auditLogs.length} audit logs`);

@@ -180,8 +180,7 @@ export class AttendanceSeeder {
       });
 
       if (!existingRecord) {
-        const attendance = this.attendanceRepository.create(recordData);
-        await this.attendanceRepository.save(attendance);
+        await this.attendanceRepository.save(recordData);
       }
     }
   }

@@ -153,8 +153,7 @@ export class EmployeeRequestsSeeder {
       });
 
       if (!existingRequest) {
-        const request = this.employeeRequestRepository.create(requestData);
-        await this.employeeRequestRepository.save(request);
+        await this.employeeRequestRepository.save(requestData);
       }
     }
   }

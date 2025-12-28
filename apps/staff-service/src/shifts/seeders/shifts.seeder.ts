@@ -151,8 +151,7 @@ export class ShiftsSeeder {
       });
 
       if (!existingShift) {
-        const shift = this.shiftRepository.create(shiftData);
-        await this.shiftRepository.save(shift);
+        await this.shiftRepository.save(shiftData);
       }
     }
   }

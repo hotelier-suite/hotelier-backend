@@ -349,8 +349,7 @@ export class RecreationalFacilitiesSeeder {
     ];
 
     for (const facilityData of facilities) {
-      const facility = this.facilityRepository.create(facilityData);
-      await this.facilityRepository.save(facility);
+      await this.facilityRepository.save(facilityData);
     }
 
     console.log(`✨ Created ${facilities.length} recreational facilities`);

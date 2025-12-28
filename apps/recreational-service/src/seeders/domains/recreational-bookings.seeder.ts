@@ -201,8 +201,7 @@ export class RecreationalBookingsSeeder {
     }
 
     for (const booking of bookings) {
-      const bookingEntity = this.bookingRepository.create(booking);
-      await this.bookingRepository.save(bookingEntity);
+      await this.bookingRepository.save(booking);
     }
 
     console.log(`✨ Created ${bookings.length} recreational bookings`);
