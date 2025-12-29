@@ -8,7 +8,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RoomType } from '..';
+import { RoomType } from '../enums';
 
 export class CreateRoomDto {
   @ApiProperty({

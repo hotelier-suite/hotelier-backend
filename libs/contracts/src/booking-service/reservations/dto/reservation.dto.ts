@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import type { GuestDto } from '../../guests';
 import type { RoomDto } from '../../rooms';
-import { BookingChannel, ReservationStatus } from '..';
+import { BookingChannel, ReservationStatus } from '../enums';
 
 export class ReservationDto {
   @ApiProperty({

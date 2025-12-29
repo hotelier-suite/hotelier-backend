@@ -11,7 +11,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { RoomType } from '..';
+import { RoomType } from '../enums';
 
 export class RoomDto {
   @ApiProperty({ description: 'Unique identifier for the room', example: 1 })

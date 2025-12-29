@@ -12,7 +12,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { BookingChannel } from '..';
+import { BookingChannel } from '../enums';
 
 export class CreateReservationDto {
   @ApiProperty({
