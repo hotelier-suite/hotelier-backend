@@ -8,7 +8,7 @@ import {
   Length,
   ValidateNested,
 } from 'class-validator';
-import { ReportType, ReportStatus } from '..';
+import { ReportType, ReportStatus } from '../enums';
 import { ReportParametersDto } from './report-parameters.dto';
 
 export class CreateReportDto {
