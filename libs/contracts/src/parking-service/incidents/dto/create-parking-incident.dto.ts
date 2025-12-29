@@ -8,7 +8,7 @@ import {
   Min,
 } from 'class-validator';
 import { TaskPriority } from '@app/contracts/common';
-import { IncidentType } from '..';
+import { IncidentType } from '../enums';
 
 export class CreateParkingIncidentDto {
   @ApiProperty({

@@ -165,7 +165,7 @@ export class Vehicle {
     type: () => ParkingSpace,
     required: false,
   })
-  @ManyToOne(() => ParkingSpace, (space) => space.vehicles, { nullable: true })
+  @ManyToOne('ParkingSpace', 'vehicles', { nullable: true })
   @JoinColumn({ name: 'assignedSpace', referencedColumnName: 'code' })
   space?: ParkingSpace;
 
@@ -174,7 +174,7 @@ export class Vehicle {
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => ParkingIncident, (incident) => incident.vehicle, {
+  @OneToMany('ParkingIncident', 'vehicle', {
     cascade: true,
   })
   incidents?: ParkingIncident[];

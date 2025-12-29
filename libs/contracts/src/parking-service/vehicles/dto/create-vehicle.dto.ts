@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { GuestType, VehicleType } from '..';
+import { GuestType, VehicleType } from '../enums';
 
 export class CreateVehicleDto {
   @ApiProperty({

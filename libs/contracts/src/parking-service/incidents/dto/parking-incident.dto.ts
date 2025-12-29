@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 import { TaskPriority } from '@app/contracts/common';
-import { IncidentStatus, IncidentType } from '..';
+import { IncidentStatus, IncidentType } from '../enums';
 import type { VehicleDto } from '../../vehicles';
 import type { ParkingSpaceDto } from '../../spaces';
 

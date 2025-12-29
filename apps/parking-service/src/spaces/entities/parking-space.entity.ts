@@ -115,7 +115,7 @@ export class ParkingSpace {
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.space, { cascade: true })
+  @OneToMany('Vehicle', 'space', { cascade: true })
   vehicles?: Vehicle[];
 
   @ApiProperty({
@@ -123,7 +123,7 @@ export class ParkingSpace {
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => ParkingIncident, (incident) => incident.space, {
+  @OneToMany('ParkingIncident', 'space', {
     cascade: true,
   })
   incidents?: ParkingIncident[];

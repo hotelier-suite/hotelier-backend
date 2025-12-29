@@ -9,7 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { SpaceStatus, SpaceType } from '..';
+import { SpaceStatus, SpaceType } from '../enums';
 import type { VehicleDto } from '../../vehicles';
 import type { ParkingIncidentDto } from '../../incidents';
 

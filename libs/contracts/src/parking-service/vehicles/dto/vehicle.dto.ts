@@ -8,7 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { GuestType, VehicleStatus, VehicleType } from '..';
+import { GuestType, VehicleStatus, VehicleType } from '../enums';
 import type { ParkingSpaceDto } from '../../spaces';
 import type { ParkingIncidentDto } from '../../incidents';
 

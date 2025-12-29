@@ -148,7 +148,7 @@ export class ParkingIncident {
     type: () => Vehicle,
     required: false,
   })
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.incidents, { nullable: true })
+  @ManyToOne('Vehicle', 'incidents', { nullable: true })
   @JoinColumn({ name: 'vehicleId' })
   vehicle?: Vehicle;
 
@@ -157,7 +157,7 @@ export class ParkingIncident {
     type: () => ParkingSpace,
     required: false,
   })
-  @ManyToOne(() => ParkingSpace, (space) => space.incidents, { nullable: true })
+  @ManyToOne('ParkingSpace', 'incidents', { nullable: true })
   @JoinColumn({ name: 'spaceId' })
   space?: ParkingSpace;
 }
