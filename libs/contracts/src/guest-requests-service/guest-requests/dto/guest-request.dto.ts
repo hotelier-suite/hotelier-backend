@@ -8,7 +8,11 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
+import {
+  RequestPriority,
+  GuestRequestStatus,
+  GuestRequestType,
+} from '../enums';
 
 export class GuestRequestDto {
   @ApiProperty({

@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { RequestPriority, GuestRequestStatus, GuestRequestType } from '..';
+import {
+  RequestPriority,
+  GuestRequestStatus,
+  GuestRequestType,
+} from '../enums';
 
 export class CreateGuestRequestDto {
   @ApiProperty({
