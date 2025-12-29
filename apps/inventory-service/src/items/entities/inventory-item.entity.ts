@@ -124,13 +124,13 @@ export class InventoryItem {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.inventoryItems, {
+  @ManyToOne('Supplier', 'inventoryItems', {
     nullable: true,
   })
   @JoinColumn({ name: 'supplierId' })
   supplierEntity?: Supplier;
 
-  @OneToMany(() => InventoryMovement, (movement) => movement.inventory, {
+  @OneToMany('InventoryMovement', 'inventory', {
     cascade: true,
   })
   movements: InventoryMovement[];

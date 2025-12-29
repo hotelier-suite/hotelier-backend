@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import type { InventoryItemDto } from '../../items';
-import { MovementType } from '..';
+import { MovementType } from '../enums';
 
 export class InventoryMovementDto {
   @ApiProperty({

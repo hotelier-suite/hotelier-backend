@@ -132,7 +132,7 @@ export class Supplier {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => InventoryItem, (inventory) => inventory.supplierEntity, {
+  @OneToMany('InventoryItem', 'supplierEntity', {
     cascade: true,
   })
   inventoryItems: InventoryItem[];

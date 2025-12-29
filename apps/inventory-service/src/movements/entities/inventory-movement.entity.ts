@@ -152,7 +152,7 @@ export class InventoryMovement {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => InventoryItem, (inventory) => inventory.movements, {
+  @ManyToOne('InventoryItem', 'movements', {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'inventoryId' })

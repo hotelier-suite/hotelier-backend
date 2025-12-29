@@ -10,7 +10,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { InventoryCategory } from '..';
+import { InventoryCategory } from '../enums';
 
 export class CreateInventoryItemDto {
   @ApiProperty({

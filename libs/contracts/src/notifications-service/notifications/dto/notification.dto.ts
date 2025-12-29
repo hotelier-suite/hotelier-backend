@@ -9,7 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { NotificationType } from '..';
+import { NotificationType } from '../enums';
 
 export class NotificationDto {
   @ApiProperty({

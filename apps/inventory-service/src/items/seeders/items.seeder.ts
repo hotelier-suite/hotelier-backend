@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InventoryItem } from '../entities';
-import { Supplier } from '../../suppliers';
 import {
   InventoryCategory,
-  InventoryStatus,
+  CreateInventoryItemDto,
 } from '@app/contracts/inventory-service';
 
 @Injectable()
@@ -13,14 +12,10 @@ export class ItemsSeeder {
   constructor(
     @InjectRepository(InventoryItem)
     private readonly inventoryRepository: Repository<InventoryItem>,
-    @InjectRepository(Supplier)
-    private readonly supplierRepository: Repository<Supplier>,
   ) {}
 
   async seed(): Promise<void> {
-    const items: Array<
-      Omit<InventoryItem, 'id' | 'createdAt' | 'updatedAt' | 'movements'>
-    > = [
+    const items: CreateInventoryItemDto[] = [
       {
         name: 'Sheets - White Cotton King',
         category: InventoryCategory.LINENS,
@@ -31,7 +26,6 @@ export class ItemsSeeder {
         unitCost: 35.0,
         supplier: 'Premium Linen Suppliers',
         location: 'Warehouse A - Section 1',
-        status: InventoryStatus.AVAILABLE,
       },
       {
         name: 'Comforters - Premium Down',
@@ -43,7 +37,6 @@ export class ItemsSeeder {
         unitCost: 85.0,
         supplier: 'Premium Linen Suppliers',
         location: 'Warehouse A - Section 3',
-        status: InventoryStatus.LOW_STOCK,
       },
       {
         name: 'Premium Shampoo 50ml',
@@ -55,7 +48,6 @@ export class ItemsSeeder {
         unitCost: 2.75,
         supplier: 'Hotel Amenities Inc.',
         location: 'Warehouse B - Shelf 1',
-        status: InventoryStatus.AVAILABLE,
       },
       {
         name: 'Body Lotion 30ml',
@@ -67,7 +59,6 @@ export class ItemsSeeder {
         unitCost: 3.25,
         supplier: 'Hotel Amenities Inc.',
         location: 'Warehouse B - Shelf 2',
-        status: InventoryStatus.LOW_STOCK,
       },
       {
         name: 'Industrial Multi-Purpose Cleaner',
@@ -79,7 +70,6 @@ export class ItemsSeeder {
         unitCost: 12.5,
         supplier: 'CleanPro Supplies',
         location: 'Warehouse C - Zone 1',
-        status: InventoryStatus.AVAILABLE,
       },
       {
         name: 'Universal TV Remote Control',
@@ -91,7 +81,6 @@ export class ItemsSeeder {
         unitCost: 18.5,
         supplier: 'Direct Electronics',
         location: 'Warehouse D - Rack 1',
-        status: InventoryStatus.AVAILABLE,
       },
     ];
 
@@ -101,14 +90,7 @@ export class ItemsSeeder {
       });
 
       if (!existing) {
-        const supplier = await this.supplierRepository.findOne({
-          where: { name: itemData.supplier },
-        });
-
-        await this.inventoryRepository.save({
-          ...itemData,
-          supplierId: supplier?.id,
-        });
+        await this.inventoryRepository.save(itemData);
       }
     }
   }
