@@ -9,7 +9,7 @@ import {
   FindRolesFilterDto,
 } from '@app/contracts/auth-service';
 import { Role, RolePermission } from './entities';
-import { UserRole } from '../users';
+import { UserRole } from '../users/entities';
 
 @Injectable()
 export class RolesService {

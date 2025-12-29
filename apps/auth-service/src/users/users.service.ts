@@ -14,9 +14,8 @@ import {
   PermissionResponseDto,
   FindUsersFilterDto,
 } from '@app/contracts/auth-service';
-import { User } from './entities';
+import { User, UserRole } from './entities';
 import { Role } from '../roles';
-import { UserRole } from './entities';
 import { AccessControlService } from '../access-control';
 
 @Injectable()

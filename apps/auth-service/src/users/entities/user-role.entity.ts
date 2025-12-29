@@ -7,8 +7,8 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Role } from '../../roles';
+import type { User } from './user.entity';
+import type { Role } from '../../roles';
 
 @Entity('user_roles')
 @Index(['userId', 'roleId'], { unique: true })
@@ -28,11 +28,11 @@ export class UserRole {
   @Column({ nullable: true })
   assignedBy?: string;
 
-  @ManyToOne(() => User, (user) => user.userRoles, { onDelete: 'CASCADE' })
+  @ManyToOne('User', 'userRoles', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Role, (role) => role.userRoles, { onDelete: 'CASCADE' })
+  @ManyToOne('Role', 'userRoles', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'roleId' })
   role: Role;
 }

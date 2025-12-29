@@ -5,7 +5,7 @@ import {
   PermissionResponseDto,
   RoleResponseDto,
 } from '@app/contracts/auth-service';
-import { User, UserRole } from '../users';
+import { User, UserRole } from '../users/entities';
 
 @Injectable()
 export class AccessControlService {
