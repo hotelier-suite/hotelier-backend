@@ -10,7 +10,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { CleaningStatus } from '..';
+import { CleaningStatus } from '../enums';
 import { TaskPriority } from '@app/contracts/common';
 
 export class CleaningTaskDto {

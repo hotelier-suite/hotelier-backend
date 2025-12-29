@@ -10,7 +10,10 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { HousekeepingMaintenanceType, HousekeepingMaintenanceStatus } from '..';
+import {
+  HousekeepingMaintenanceType,
+  HousekeepingMaintenanceStatus,
+} from '../enums';
 import { TaskPriority } from '@app/contracts/common';
 
 export class MaintenanceReportDto {

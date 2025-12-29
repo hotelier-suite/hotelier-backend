@@ -7,7 +7,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { HousekeepingMaintenanceType } from '..';
+import { HousekeepingMaintenanceType } from '../enums';
 import { TaskPriority } from '@app/contracts/common';
 
 export class CreateHousekeepingMaintenanceRequestDto {

@@ -11,7 +11,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { MaintenancePriority, MaintenanceType } from '..';
+import { MaintenancePriority, MaintenanceType } from '../enums';
 
 export class CreateGeneralMaintenanceRequestDto {
   @ApiProperty({

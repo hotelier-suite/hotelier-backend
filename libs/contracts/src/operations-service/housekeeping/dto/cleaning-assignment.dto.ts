@@ -11,7 +11,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { CleaningStatus } from '..';
+import { CleaningStatus } from '../enums';
 
 export class CleaningAssignmentDto {
   @ApiProperty({

@@ -12,7 +12,11 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { MaintenanceStatus, MaintenancePriority, MaintenanceType } from '..';
+import {
+  MaintenanceStatus,
+  MaintenancePriority,
+  MaintenanceType,
+} from '../enums';
 
 export class GeneralMaintenanceRequestDto {
   @ApiProperty({
