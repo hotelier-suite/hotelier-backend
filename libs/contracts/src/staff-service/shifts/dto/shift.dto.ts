@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import type { EmployeeDto } from '../../employees';
-import { ShiftStatus, ShiftType } from '..';
+import { ShiftStatus, ShiftType } from '../enums';
 
 export class ShiftDto {
   @ApiProperty({ description: 'Unique identifier for the shift', example: 1 })

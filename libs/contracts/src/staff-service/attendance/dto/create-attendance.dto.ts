@@ -10,7 +10,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { AttendanceStatus } from '..';
+import { AttendanceStatus } from '../enums';
 
 export class CreateAttendanceDto {
   @ApiProperty({

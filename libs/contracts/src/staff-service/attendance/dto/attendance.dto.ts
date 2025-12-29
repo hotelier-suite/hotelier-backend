@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import type { EmployeeDto } from '../../employees';
-import { AttendanceStatus } from '..';
+import { AttendanceStatus } from '../enums';
 
 export class AttendanceDto {
   @ApiProperty({

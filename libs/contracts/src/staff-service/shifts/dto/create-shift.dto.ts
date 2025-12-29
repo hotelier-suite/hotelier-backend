@@ -10,7 +10,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { ShiftStatus, ShiftType } from '..';
+import { ShiftStatus, ShiftType } from '../enums';
 
 export class CreateShiftDto {
   @ApiProperty({

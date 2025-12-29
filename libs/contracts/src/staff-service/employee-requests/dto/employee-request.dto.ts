@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import type { EmployeeDto } from '../../employees';
-import { EmployeeRequestStatus, EmployeeRequestType } from '..';
+import { EmployeeRequestStatus, EmployeeRequestType } from '../enums';
 
 export class EmployeeRequestDto {
   @ApiProperty({
