@@ -11,7 +11,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { EventStatus } from '..';
+import { EventStatus } from '../enums';
 
 export class CreateEventDto {
   @ApiProperty({
