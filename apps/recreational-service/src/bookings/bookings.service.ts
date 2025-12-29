@@ -234,7 +234,9 @@ export class BookingsService {
 
     const bookingEntity = this.recreationalBookingRepository.create(booking);
     bookingEntity.status = RecreationalBookingStatus.CANCELLED;
-    bookingEntity.staffNotes = reason ? `Cancelled: ${reason}` : 'Booking cancelled';
+    bookingEntity.staffNotes = reason
+      ? `Cancelled: ${reason}`
+      : 'Booking cancelled';
 
     const saved = await this.recreationalBookingRepository.save(bookingEntity);
 
