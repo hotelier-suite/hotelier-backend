@@ -12,7 +12,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { RoomServiceStatus } from '..';
+import { RoomServiceStatus } from '../enums';
 import { RoomServiceOrderItemDto } from './room-service-order-item.dto';
 
 export class RoomServiceOrderDto {
