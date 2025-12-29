@@ -149,7 +149,8 @@ export class BookingsService {
       });
     }
 
-    const saved = await this.recreationalBookingRepository.save(data);
+    const entity = this.recreationalBookingRepository.create(data);
+    const saved = await this.recreationalBookingRepository.save(entity);
 
     this.notificationsService
       .create({

@@ -109,7 +109,8 @@ export class InvoicesService {
   }
 
   async create(data: CreateInvoiceDto): Promise<InvoiceDto> {
-    return this.invoiceRepository.save(data);
+    const entity = this.invoiceRepository.create(data);
+    return this.invoiceRepository.save(entity);
   }
 
   async update(id: number, data: UpdateInvoiceDto): Promise<InvoiceDto> {
@@ -131,11 +132,12 @@ export class InvoicesService {
   ): Promise<InvoiceDto> {
     const invoice = await this.findOne(id);
 
-    await this.paymentRepository.save({
+    const paymentEntity = this.paymentRepository.create({
       amount: invoice.total,
       method: paymentMethod ?? PaymentMethod.CASH,
       invoiceId: invoice.id,
     });
+    await this.paymentRepository.save(paymentEntity);
 
     const entity = this.invoiceRepository.create(invoice);
     const merged = this.invoiceRepository.merge(entity, {

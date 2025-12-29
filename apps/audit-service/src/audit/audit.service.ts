@@ -34,7 +34,8 @@ export class AuditService {
   };
 
   create(data: CreateAuditLogDto): Promise<AuditLogDto> {
-    return this.auditLogRepository.save(data);
+    const entity = this.auditLogRepository.create(data);
+    return this.auditLogRepository.save(entity);
   }
 
   async findAll(

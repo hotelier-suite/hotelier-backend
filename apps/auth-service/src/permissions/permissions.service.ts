@@ -21,7 +21,8 @@ export class PermissionsService {
   ) {}
 
   create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
-    return this.permissionRepository.save(data);
+    const entity = this.permissionRepository.create(data);
+    return this.permissionRepository.save(entity);
   }
 
   async findAll(

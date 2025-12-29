@@ -221,13 +221,14 @@ export class ReservationsService {
       baseTotal = 0;
     }
 
-    const created = await this.reservationsRepository.save({
+    const entity = this.reservationsRepository.create({
       ...data,
       checkInDate,
       checkOutDate,
       nights,
       totalAmount: baseTotal,
     });
+    const created = await this.reservationsRepository.save(entity);
 
     this.notificationsService
       .create({

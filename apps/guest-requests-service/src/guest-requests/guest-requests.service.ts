@@ -52,7 +52,8 @@ export class GuestRequestsService {
   }
 
   create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
-    return this.guestRequestRepository.save(data);
+    const entity = this.guestRequestRepository.create(data);
+    return this.guestRequestRepository.save(entity);
   }
 
   async update(

@@ -79,7 +79,8 @@ export class SpacesService {
   }
 
   create(data: CreateParkingSpaceDto): Promise<ParkingSpaceDto> {
-    return this.parkingSpaceRepository.save(data);
+    const entity = this.parkingSpaceRepository.create(data);
+    return this.parkingSpaceRepository.save(entity);
   }
 
   async update(

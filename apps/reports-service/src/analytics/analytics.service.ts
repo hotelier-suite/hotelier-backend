@@ -30,7 +30,8 @@ export class AnalyticsService {
   ) {}
 
   create(data: CreateAnalyticsDataDto): Promise<AnalyticsDataDto> {
-    return this.analyticsRepository.save(data);
+    const entity = this.analyticsRepository.create(data);
+    return this.analyticsRepository.save(entity);
   }
 
   findAll(filters: FindAnalyticsFilterDto): Promise<AnalyticsDataDto[]> {
@@ -90,11 +91,12 @@ export class AnalyticsService {
     value: number,
     date?: Date,
   ): Promise<AnalyticsDataDto> {
-    return this.analyticsRepository.save({
+    const entity = this.analyticsRepository.create({
       metric,
       value,
       date: date || new Date(),
-    }) as Promise<AnalyticsDataDto>;
+    });
+    return this.analyticsRepository.save(entity);
   }
 
   findByType(

@@ -73,7 +73,8 @@ export class SuppliersService {
   }
 
   create(data: CreateSupplierDto): Promise<SupplierResponseDto> {
-    return this.supplierRepository.save(data);
+    const entity = this.supplierRepository.create(data);
+    return this.supplierRepository.save(entity);
   }
 
   async update(

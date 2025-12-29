@@ -61,7 +61,8 @@ export class RoomsService {
       });
     }
 
-    return this.roomsRepository.save(data);
+    const entity = this.roomsRepository.create(data);
+    return this.roomsRepository.save(entity);
   }
 
   async update(id: number, data: UpdateRoomDto): Promise<RoomDto> {

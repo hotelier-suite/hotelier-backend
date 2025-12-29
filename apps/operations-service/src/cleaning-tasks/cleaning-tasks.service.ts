@@ -34,7 +34,8 @@ export class CleaningTasksService {
   }
 
   create(data: CreateCleaningTaskDto): Promise<CleaningTaskDto> {
-    return this.cleaningTaskRepository.save(data);
+    const entity = this.cleaningTaskRepository.create(data);
+    return this.cleaningTaskRepository.save(entity);
   }
 
   async update(

@@ -86,11 +86,12 @@ export class UsersService {
     roleId: number,
     assignedBy = 'system',
   ): Promise<void> {
-    await this.userRoleRepository.save({
+    const entity = this.userRoleRepository.create({
       userId,
       roleId,
       assignedBy,
     });
+    await this.userRoleRepository.save(entity);
   }
 
   async clearRefreshToken(userId: number): Promise<void> {
@@ -144,7 +145,8 @@ export class UsersService {
   }
 
   async create(data: Partial<User>): Promise<UserResponseDto> {
-    const user = await this.userRepository.save(data);
+    const entity = this.userRepository.create(data);
+    const user = await this.userRepository.save(entity);
 
     const loaded = await this.userRepository.findOne({
       where: { id: user.id },
@@ -251,7 +253,8 @@ export class UsersService {
 
       if (uniqueRoleIds.length > 0) {
         const userRoles = uniqueRoleIds.map((roleId) => ({ userId, roleId }));
-        await userRoleRepository.save(userRoles);
+        const entities = userRoleRepository.create(userRoles);
+        await userRoleRepository.save(entities);
       }
     });
   }

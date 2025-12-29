@@ -87,7 +87,7 @@ export class EmployeeRequestsService {
       });
     }
 
-    return this.employeeRequestRepository.save({
+    const entity = this.employeeRequestRepository.create({
       employeeId: data.employeeId,
       type: data.type,
       reason: data.reason,
@@ -95,6 +95,7 @@ export class EmployeeRequestsService {
       endDate: data.endDate,
       days: data.days,
     });
+    return this.employeeRequestRepository.save(entity);
   }
 
   async update(

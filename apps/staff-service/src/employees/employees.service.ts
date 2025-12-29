@@ -32,7 +32,8 @@ export class EmployeesService {
       });
     }
 
-    return this.employeeRepository.save(data);
+    const entity = this.employeeRepository.create(data);
+    return this.employeeRepository.save(entity);
   }
 
   findAll(filters: FindEmployeesFilterDto): Promise<EmployeeDto[]> {

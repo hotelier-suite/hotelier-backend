@@ -16,7 +16,8 @@ export class NotificationsService {
   ) {}
 
   create(data: CreateNotificationDto): Promise<NotificationDto> {
-    return this.notificationsRepository.save(data);
+    const entity = this.notificationsRepository.create(data);
+    return this.notificationsRepository.save(entity);
   }
 
   async findForUser(

@@ -55,7 +55,8 @@ export class MenuItemsService {
   }
 
   async create(data: CreateMenuItemDto): Promise<MenuItemDto> {
-    return this.menuItemRepository.save(data);
+    const entity = this.menuItemRepository.create(data);
+    return this.menuItemRepository.save(entity);
   }
 
   async update(id: number, data: UpdateMenuItemDto): Promise<MenuItemDto> {

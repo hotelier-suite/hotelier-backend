@@ -55,6 +55,7 @@ export class PaymentsService {
   }
 
   create(data: CreatePaymentDto): Promise<PaymentDto> {
-    return this.paymentRepository.save(data);
+    const entity = this.paymentRepository.create(data);
+    return this.paymentRepository.save(entity);
   }
 }

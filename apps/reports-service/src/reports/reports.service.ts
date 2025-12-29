@@ -49,7 +49,8 @@ export class ReportsService {
   ) {}
 
   create(data: CreateReportDto): Promise<ReportDto> {
-    return this.reportRepository.save(data);
+    const entity = this.reportRepository.create(data);
+    return this.reportRepository.save(entity);
   }
 
   findAll(filters?: FindReportsFilterDto): Promise<ReportDto[]> {

@@ -44,7 +44,8 @@ export class ItemsService {
   }
 
   async create(data: CreateInventoryItemDto): Promise<InventoryItemDto> {
-    const created = await this.inventoryItemRepository.save(data);
+    const entity = this.inventoryItemRepository.create(data);
+    const created = await this.inventoryItemRepository.save(entity);
 
     this.notifyStockChange(null, created.status, created);
 

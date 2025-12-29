@@ -72,7 +72,8 @@ export class BeverageInventoryService {
   }
 
   async create(data: CreateBeverageItemDto): Promise<BeverageInventoryDto> {
-    return this.beverageRepository.save(data);
+    const entity = this.beverageRepository.create(data);
+    return this.beverageRepository.save(entity);
   }
 
   async update(

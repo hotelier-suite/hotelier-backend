@@ -24,7 +24,8 @@ export class RolesService {
 
   async create(data: CreateRoleDto): Promise<RoleResponseDto> {
     try {
-      const role = await this.roleRepository.save(data);
+      const entity = this.roleRepository.create(data);
+      const role = await this.roleRepository.save(entity);
 
       const loaded = await this.roleRepository.findOne({
         where: { id: role.id },
@@ -114,7 +115,8 @@ export class RolesService {
             roleId: id,
             permissionId,
           }));
-          await this.rolePermissionRepository.save(rolePermissions);
+          const entities = this.rolePermissionRepository.create(rolePermissions);
+          await this.rolePermissionRepository.save(entities);
         }
       }
 

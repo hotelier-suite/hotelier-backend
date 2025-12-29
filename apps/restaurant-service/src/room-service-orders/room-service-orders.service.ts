@@ -59,7 +59,8 @@ export class RoomServiceOrdersService {
   }
 
   async create(data: CreateRoomServiceOrderDto): Promise<RoomServiceOrderDto> {
-    return this.roomServiceOrderRepository.save(data);
+    const entity = this.roomServiceOrderRepository.create(data);
+    return this.roomServiceOrderRepository.save(entity);
   }
 
   async update(

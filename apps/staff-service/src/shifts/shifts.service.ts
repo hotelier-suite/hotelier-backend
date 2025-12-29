@@ -101,10 +101,11 @@ export class ShiftsService {
       data.endTime,
     );
 
-    const created = await this.shiftRepository.save({
+    const entity = this.shiftRepository.create({
       ...data,
       employee,
     });
+    const created = await this.shiftRepository.save(entity);
 
     this.notificationsService
       .create({

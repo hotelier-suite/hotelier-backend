@@ -135,11 +135,12 @@ export class BookingsService {
       data.endTime,
     );
 
-    return this.eventBookingRepository.save({
+    const entity = this.eventBookingRepository.create({
       ...data,
       venue,
       totalCost,
     });
+    return this.eventBookingRepository.save(entity);
   }
 
   async update(

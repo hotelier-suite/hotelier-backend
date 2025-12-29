@@ -46,12 +46,13 @@ export class ConfigurationService {
       return;
     }
 
-    await this.configurationRepository.save({
+    const entity = this.configurationRepository.create({
       category,
       key,
       value,
       description,
     });
+    await this.configurationRepository.save(entity);
   }
 
   async getHotelConfig(): Promise<HotelConfigDto> {

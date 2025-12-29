@@ -96,7 +96,8 @@ export class VehiclesService {
   }
 
   create(data: CreateVehicleDto): Promise<VehicleDto> {
-    return this.vehicleRepository.save(data);
+    const entity = this.vehicleRepository.create(data);
+    return this.vehicleRepository.save(entity);
   }
 
   async update(id: number, data: UpdateVehicleDto): Promise<VehicleDto> {

@@ -37,7 +37,8 @@ export class VenuesService {
   };
 
   create(data: CreateVenueDto): Promise<VenueDto> {
-    return this.venueRepository.save(data);
+    const entity = this.venueRepository.create(data);
+    return this.venueRepository.save(entity);
   }
 
   findAll(filters: FindVenuesFilterDto = {}): Promise<VenueDto[]> {

@@ -38,7 +38,8 @@ export class MaintenanceReportsService {
   }
 
   create(data: CreateMaintenanceReportDto): Promise<MaintenanceReportDto> {
-    return this.maintenanceReportRepository.save(data);
+    const entity = this.maintenanceReportRepository.create(data);
+    return this.maintenanceReportRepository.save(entity);
   }
 
   async update(

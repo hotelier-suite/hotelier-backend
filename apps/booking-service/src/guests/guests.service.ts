@@ -60,7 +60,8 @@ export class GuestsService {
       });
     }
 
-    return this.guestsRepository.save(data);
+    const entity = this.guestsRepository.create(data);
+    return this.guestsRepository.save(entity);
   }
 
   async update(id: number, data: UpdateGuestDto): Promise<GuestDto> {

@@ -59,7 +59,8 @@ export class IncidentsService {
   }
 
   create(data: CreateParkingIncidentDto): Promise<ParkingIncidentDto> {
-    return this.parkingIncidentRepository.save(data);
+    const entity = this.parkingIncidentRepository.create(data);
+    return this.parkingIncidentRepository.save(entity);
   }
 
   async update(

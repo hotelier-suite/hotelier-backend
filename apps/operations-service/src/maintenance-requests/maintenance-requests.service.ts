@@ -40,7 +40,8 @@ export class MaintenanceRequestsService {
   create(
     data: CreateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
-    return this.maintenanceRequestRepository.save(data);
+    const entity = this.maintenanceRequestRepository.create(data);
+    return this.maintenanceRequestRepository.save(entity);
   }
 
   async update(

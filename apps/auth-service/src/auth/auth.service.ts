@@ -40,12 +40,13 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.userRepository.save({
+    const entity = this.userRepository.create({
       email,
       password: hashedPassword,
       name,
       phone,
     });
+    const user = await this.userRepository.save(entity);
 
     const defaultRoleId = await this.usersService.getDefaultRole(roleId);
     await this.usersService.assignSingleRoleToUser(

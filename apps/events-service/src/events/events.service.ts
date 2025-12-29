@@ -58,7 +58,8 @@ export class EventsService {
   }
 
   create(data: CreateEventDto): Promise<EventDto> {
-    return this.eventRepository.save(data);
+    const entity = this.eventRepository.create(data);
+    return this.eventRepository.save(entity);
   }
 
   async update(id: number, data: UpdateEventDto): Promise<EventDto> {

@@ -55,13 +55,14 @@ export class MovementsService {
       });
     }
 
-    const savedMovement = await this.inventoryMovementRepository.save({
+    const entity = this.inventoryMovementRepository.create({
       ...data,
       previousStock,
       newStock,
       cost: data.cost ?? null,
       inventory: inventoryItem,
     });
+    const savedMovement = await this.inventoryMovementRepository.save(entity);
 
     const newStatus = this.calculateItemStatus(
       newStock,

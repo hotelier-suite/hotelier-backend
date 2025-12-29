@@ -39,10 +39,11 @@ export class AttendanceService {
       });
     }
 
-    return this.attendanceRepository.save({
+    const entity = this.attendanceRepository.create({
       ...data,
       employee,
     });
+    return this.attendanceRepository.save(entity);
   }
 
   findAll(filters?: FindAttendanceFilterDto): Promise<AttendanceDto[]> {

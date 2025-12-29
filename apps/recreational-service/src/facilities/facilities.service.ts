@@ -54,7 +54,8 @@ export class FacilitiesService {
   async create(
     data: CreateRecreationalFacilityDto,
   ): Promise<RecreationalFacilityDto> {
-    const facility = await this.facilityRepository.save(data);
+    const entity = this.facilityRepository.create(data);
+    const facility = await this.facilityRepository.save(entity);
 
     this.notificationsService
       .create({
