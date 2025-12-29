@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateRecreationalBookingDto } from './create-recreational-booking.dto';
 import { IsEnum, IsOptional } from 'class-validator';
-import { RecreationalBookingStatus } from '..';
+import { RecreationalBookingStatus } from '../enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateRecreationalBookingDto extends PartialType(

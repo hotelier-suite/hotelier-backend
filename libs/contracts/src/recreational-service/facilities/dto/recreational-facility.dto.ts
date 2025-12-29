@@ -14,7 +14,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { FacilityType, FacilityStatus } from '..';
+import { FacilityType, FacilityStatus } from '../enums';
 
 export class RecreationalFacilityDto {
   @ApiProperty({
