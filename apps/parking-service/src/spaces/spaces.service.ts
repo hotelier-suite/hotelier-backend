@@ -8,7 +8,6 @@ import {
   CreateParkingSpaceDto,
   UpdateParkingSpaceDto,
   FindSpacesFilterDto,
-  SpaceStatus,
 } from '@app/contracts/parking-service';
 
 @Injectable()
