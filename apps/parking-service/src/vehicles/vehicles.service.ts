@@ -100,18 +100,9 @@ export class VehiclesService {
   }
 
   async update(id: number, data: UpdateVehicleDto): Promise<VehicleDto> {
-    const existing = await this.vehicleRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Vehicle with id ${id} not found`,
-      });
-    }
-
-    const merged = this.vehicleRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.vehicleRepository.create(existing);
+    const merged = this.vehicleRepository.merge(entity, data);
     return this.vehicleRepository.save(merged);
   }
 
@@ -124,7 +115,7 @@ export class VehiclesService {
 
   async remove(id: number): Promise<VehicleDto> {
     const vehicle = await this.findOne(id);
-    await this.vehicleRepository.remove(vehicle);
-    return vehicle;
+    const entity = this.vehicleRepository.create(vehicle);
+    return this.vehicleRepository.remove(entity);
   }
 }

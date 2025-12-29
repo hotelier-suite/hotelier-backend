@@ -7,9 +7,7 @@ import {
   HousekeepingMaintenanceRequestDto,
   CreateHousekeepingMaintenanceRequestDto,
   UpdateHousekeepingMaintenanceRequestDto,
-  HousekeepingMaintenanceStatus,
 } from '@app/contracts/operations-service';
-import { TaskPriority } from '@app/contracts/common';
 
 @Injectable()
 export class MaintenanceRequestsService {
@@ -28,12 +26,14 @@ export class MaintenanceRequestsService {
     const request = await this.maintenanceRequestRepository.findOne({
       where: { id },
     });
+
     if (!request) {
       throw new RpcException({
         statusCode: 404,
         message: `Maintenance request with id ${id} not found`,
       });
     }
+
     return request;
   }
 
@@ -47,24 +47,15 @@ export class MaintenanceRequestsService {
     id: number,
     data: UpdateHousekeepingMaintenanceRequestDto,
   ): Promise<HousekeepingMaintenanceRequestDto> {
-    const existing = await this.maintenanceRequestRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Maintenance request with id ${id} not found`,
-      });
-    }
-
-    const merged = this.maintenanceRequestRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.maintenanceRequestRepository.create(existing);
+    const merged = this.maintenanceRequestRepository.merge(entity, data);
     return this.maintenanceRequestRepository.save(merged);
   }
 
   async remove(id: number): Promise<HousekeepingMaintenanceRequestDto> {
     const request = await this.findOne(id);
-    await this.maintenanceRequestRepository.remove(request);
-    return request;
+    const entity = this.maintenanceRequestRepository.create(request);
+    return this.maintenanceRequestRepository.remove(entity);
   }
 }

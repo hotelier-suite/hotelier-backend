@@ -149,14 +149,7 @@ export class RolesService {
   }
 
   async remove(id: number): Promise<RoleResponseDto> {
-    const role = await this.roleRepository.findOne({
-      where: { id },
-      relations: { permissions: { permission: true } },
-    });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
+    const role = await this.findOne(id);
 
     if (role.isSystem) {
       throw new RpcException({
@@ -176,8 +169,8 @@ export class RolesService {
       });
     }
 
-    await this.roleRepository.remove(role);
-    return role;
+    const entity = this.roleRepository.create(role);
+    return this.roleRepository.remove(entity);
   }
 
   async removePermissionsFromRole(

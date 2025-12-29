@@ -64,16 +64,7 @@ export class GuestsService {
   }
 
   async update(id: number, data: UpdateGuestDto): Promise<GuestDto> {
-    const existing = await this.guestsRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Guest with id ${id} not found`,
-      });
-    }
+    const existing = await this.findOne(id);
 
     if (data.email && data.email !== existing.email) {
       const duplicate = await this.guestsRepository.findOne({
@@ -88,23 +79,14 @@ export class GuestsService {
       }
     }
 
-    const merged = this.guestsRepository.merge(existing, data);
+    const entity = this.guestsRepository.create(existing);
+    const merged = this.guestsRepository.merge(entity, data);
     return this.guestsRepository.save(merged);
   }
 
   async remove(id: number): Promise<GuestDto> {
-    const guest = await this.guestsRepository.findOne({
-      where: { id },
-    });
-
-    if (!guest) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Guest with id ${id} not found`,
-      });
-    }
-
-    await this.guestsRepository.remove(guest);
-    return guest;
+    const guest = await this.findOne(id);
+    const entity = this.guestsRepository.create(guest);
+    return this.guestsRepository.remove(entity);
   }
 }

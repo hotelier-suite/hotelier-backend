@@ -48,16 +48,7 @@ export class MaintenanceService {
     id: number,
     data: UpdateGeneralMaintenanceRequestDto,
   ): Promise<GeneralMaintenanceRequestDto> {
-    const existing = await this.maintenanceRequestRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Maintenance request with id ${id} not found`,
-      });
-    }
+    const existing = await this.findOne(id);
 
     if (data.status === MaintenanceStatus.IN_PROGRESS && !existing.startedAt) {
       data.startedAt = new Date();
@@ -67,15 +58,14 @@ export class MaintenanceService {
       data.completedAt = new Date();
     }
 
-    const merged = this.maintenanceRequestRepository.merge(existing, data);
+    const entity = this.maintenanceRequestRepository.create(existing);
+    const merged = this.maintenanceRequestRepository.merge(entity, data);
     return this.maintenanceRequestRepository.save(merged);
   }
 
   async remove(id: number): Promise<GeneralMaintenanceRequestDto> {
     const request = await this.findOne(id);
-    await this.maintenanceRequestRepository.remove(
-      request as GeneralMaintenanceRequest,
-    );
-    return request;
+    const entity = this.maintenanceRequestRepository.create(request);
+    return this.maintenanceRequestRepository.remove(entity);
   }
 }

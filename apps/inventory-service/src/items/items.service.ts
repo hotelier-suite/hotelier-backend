@@ -28,6 +28,21 @@ export class ItemsService {
     });
   }
 
+  async findOne(id: number): Promise<InventoryItemDto> {
+    const item = await this.inventoryItemRepository.findOne({
+      where: { id },
+    });
+
+    if (!item) {
+      throw new RpcException({
+        statusCode: 404,
+        message: `Inventory item with id ${id} not found`,
+      });
+    }
+
+    return item;
+  }
+
   async create(data: CreateInventoryItemDto): Promise<InventoryItemDto> {
     const created = await this.inventoryItemRepository.save(data);
 
@@ -40,20 +55,10 @@ export class ItemsService {
     id: number,
     data: UpdateInventoryItemDto,
   ): Promise<InventoryItemDto> {
-    const existing = await this.inventoryItemRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Inventory item with id ${id} not found`,
-      });
-    }
-
+    const existing = await this.findOne(id);
     const previousStatus = existing.status;
-
-    const merged = this.inventoryItemRepository.merge(existing, data);
+    const entity = this.inventoryItemRepository.create(existing);
+    const merged = this.inventoryItemRepository.merge(entity, data);
     const updated = await this.inventoryItemRepository.save(merged);
 
     this.notifyStockChange(previousStatus, updated.status, updated);
@@ -62,19 +67,9 @@ export class ItemsService {
   }
 
   async remove(id: number): Promise<InventoryItemDto> {
-    const item = await this.inventoryItemRepository.findOne({
-      where: { id },
-    });
-
-    if (!item) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Inventory item with id ${id} not found`,
-      });
-    }
-
-    await this.inventoryItemRepository.remove(item);
-    return item;
+    const item = await this.findOne(id);
+    const entity = this.inventoryItemRepository.create(item);
+    return this.inventoryItemRepository.remove(entity);
   }
 
   private notifyStockChange(

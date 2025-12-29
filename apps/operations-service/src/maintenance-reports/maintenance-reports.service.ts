@@ -45,32 +45,15 @@ export class MaintenanceReportsService {
     id: number,
     data: UpdateMaintenanceReportDto,
   ): Promise<MaintenanceReportDto> {
-    const existing = await this.maintenanceReportRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Maintenance report with id ${id} not found`,
-      });
-    }
-
-    const merged = this.maintenanceReportRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.maintenanceReportRepository.create(existing);
+    const merged = this.maintenanceReportRepository.merge(entity, data);
     return this.maintenanceReportRepository.save(merged);
   }
 
   async remove(id: number): Promise<MaintenanceReportDto> {
-    const report = await this.maintenanceReportRepository.findOne({
-      where: { id },
-    });
-    if (!report) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Maintenance report with id ${id} not found`,
-      });
-    }
-    await this.maintenanceReportRepository.remove(report);
-    return report;
+    const report = await this.findOne(id);
+    const entity = this.maintenanceReportRepository.create(report);
+    return this.maintenanceReportRepository.remove(entity);
   }
 }

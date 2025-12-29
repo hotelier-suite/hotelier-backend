@@ -66,24 +66,15 @@ export class IncidentsService {
     id: number,
     data: UpdateParkingIncidentDto,
   ): Promise<ParkingIncidentDto> {
-    const existing = await this.parkingIncidentRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Incident with id ${id} not found`,
-      });
-    }
-
-    const merged = this.parkingIncidentRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.parkingIncidentRepository.create(existing);
+    const merged = this.parkingIncidentRepository.merge(entity, data);
     return this.parkingIncidentRepository.save(merged);
   }
 
   async remove(id: number): Promise<ParkingIncidentDto> {
     const incident = await this.findOne(id);
-    await this.parkingIncidentRepository.remove(incident);
-    return incident;
+    const entity = this.parkingIncidentRepository.create(incident);
+    return this.parkingIncidentRepository.remove(entity);
   }
 }

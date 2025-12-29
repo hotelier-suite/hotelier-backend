@@ -66,35 +66,15 @@ export class RoomServiceOrdersService {
     id: number,
     data: UpdateRoomServiceOrderDto,
   ): Promise<RoomServiceOrderDto> {
-    const existing = await this.roomServiceOrderRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Room service order with id ${id} not found`,
-      });
-    }
-
-    const merged = this.roomServiceOrderRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.roomServiceOrderRepository.create(existing);
+    const merged = this.roomServiceOrderRepository.merge(entity, data);
     return this.roomServiceOrderRepository.save(merged);
   }
 
   async remove(id: number): Promise<RoomServiceOrderDto> {
-    const order = await this.roomServiceOrderRepository.findOne({
-      where: { id },
-      select: this.roomServiceOrderSelect,
-    });
-
-    if (!order) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Room service order with id ${id} not found`,
-      });
-    }
-
-    await this.roomServiceOrderRepository.remove(order);
-    return order;
+    const order = await this.findOne(id);
+    const entity = this.roomServiceOrderRepository.create(order);
+    return this.roomServiceOrderRepository.remove(entity);
   }
 }

@@ -59,33 +59,15 @@ export class MenuItemsService {
   }
 
   async update(id: number, data: UpdateMenuItemDto): Promise<MenuItemDto> {
-    const existing = await this.menuItemRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Menu item with id ${id} not found`,
-      });
-    }
-
-    const merged = this.menuItemRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.menuItemRepository.create(existing);
+    const merged = this.menuItemRepository.merge(entity, data);
     return this.menuItemRepository.save(merged);
   }
 
   async remove(id: number): Promise<MenuItemDto> {
-    const item = await this.menuItemRepository.findOne({
-      where: { id },
-      select: this.menuItemSelect,
-    });
-
-    if (!item) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Menu item with id ${id} not found`,
-      });
-    }
-
-    await this.menuItemRepository.remove(item);
-    return item;
+    const item = await this.findOne(id);
+    const entity = this.menuItemRepository.create(item);
+    return this.menuItemRepository.remove(entity);
   }
 }

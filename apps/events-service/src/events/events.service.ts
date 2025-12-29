@@ -62,33 +62,15 @@ export class EventsService {
   }
 
   async update(id: number, data: UpdateEventDto): Promise<EventDto> {
-    const existing = await this.eventRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Event with id ${id} not found`,
-      });
-    }
-
-    const merged = this.eventRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.eventRepository.create(existing);
+    const merged = this.eventRepository.merge(entity, data);
     return this.eventRepository.save(merged);
   }
 
   async remove(id: number): Promise<EventDto> {
-    const event = await this.eventRepository.findOne({
-      where: { id },
-      select: this.eventSelect,
-    });
-
-    if (!event) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Event with id ${id} not found`,
-      });
-    }
-
-    await this.eventRepository.remove(event);
-    return event;
+    const event = await this.findOne(id);
+    const entity = this.eventRepository.create(event);
+    return this.eventRepository.remove(entity);
   }
 }

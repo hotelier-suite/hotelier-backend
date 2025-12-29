@@ -113,53 +113,23 @@ export class InvoicesService {
   }
 
   async update(id: number, data: UpdateInvoiceDto): Promise<InvoiceDto> {
-    const existing = await this.invoiceRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Invoice with id ${id} not found`,
-      });
-    }
-
-    const merged = this.invoiceRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.invoiceRepository.create(existing);
+    const merged = this.invoiceRepository.merge(entity, data);
     return this.invoiceRepository.save(merged);
   }
 
   async remove(id: number): Promise<InvoiceDto> {
-    const invoice = await this.invoiceRepository.findOne({
-      where: { id },
-      select: this.invoiceSelect,
-      relations: this.invoiceRelations,
-    });
-
-    if (!invoice) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Invoice with id ${id} not found`,
-      });
-    }
-
-    await this.invoiceRepository.remove(invoice);
-    return invoice;
+    const invoice = await this.findOne(id);
+    const entity = this.invoiceRepository.create(invoice);
+    return this.invoiceRepository.remove(entity);
   }
 
   async markAsPaid(
     id: number,
     paymentMethod?: PaymentMethod,
   ): Promise<InvoiceDto> {
-    const invoice = await this.invoiceRepository.findOne({
-      where: { id },
-      select: this.invoiceSelect,
-      relations: this.invoiceRelations,
-    });
-
-    if (!invoice) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Invoice with id ${id} not found`,
-      });
-    }
+    const invoice = await this.findOne(id);
 
     await this.paymentRepository.save({
       amount: invoice.total,
@@ -167,7 +137,8 @@ export class InvoicesService {
       invoiceId: invoice.id,
     });
 
-    const merged = this.invoiceRepository.merge(invoice, {
+    const entity = this.invoiceRepository.create(invoice);
+    const merged = this.invoiceRepository.merge(entity, {
       status: InvoiceStatus.PAID,
       paymentMethod:
         paymentMethod ?? invoice.paymentMethod ?? PaymentMethod.CASH,

@@ -58,35 +58,16 @@ export class EmployeesService {
   }
 
   async update(id: number, data: UpdateEmployeeDto): Promise<EmployeeDto> {
-    const existing = await this.employeeRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Employee with id ${id} not found`,
-      });
-    }
-
-    const merged = this.employeeRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.employeeRepository.create(existing);
+    const merged = this.employeeRepository.merge(entity, data);
     return this.employeeRepository.save(merged);
   }
 
   async remove(id: number): Promise<EmployeeDto> {
-    const employee = await this.employeeRepository.findOne({
-      where: { id },
-    });
-
-    if (!employee) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Employee with id ${id} not found`,
-      });
-    }
-
-    await this.employeeRepository.remove(employee);
-    return employee;
+    const employee = await this.findOne(id);
+    const entity = this.employeeRepository.create(employee);
+    return this.employeeRepository.remove(entity);
   }
 
   async getDepartmentStats(): Promise<DepartmentStatsDto[]> {

@@ -251,17 +251,7 @@ export class ReservationsService {
     id: number,
     data: UpdateReservationDto,
   ): Promise<ReservationDto> {
-    const existing = await this.reservationsRepository.findOne({
-      where: { id },
-      relations: this.reservationRelations,
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Reservation with id ${id} not found`,
-      });
-    }
+    const existing = await this.findOne(id);
 
     const checkInDate = data.checkInDate ?? existing.checkInDate;
     const checkOutDate = data.checkOutDate ?? existing.checkOutDate;
@@ -401,7 +391,8 @@ export class ReservationsService {
       }
     }
 
-    const merged = this.reservationsRepository.merge(existing, {
+    const entity = this.reservationsRepository.create(existing);
+    const merged = this.reservationsRepository.merge(entity, {
       ...data,
       checkInDate,
       checkOutDate,
@@ -417,23 +408,14 @@ export class ReservationsService {
   }
 
   async checkout(id: number): Promise<CheckoutReservationResponseDto> {
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id },
-      relations: this.reservationRelations,
-    });
-
-    if (!reservation) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Reservation with id ${id} not found`,
-      });
-    }
+    const reservation = await this.findOne(id);
 
     if (reservation.status === ReservationStatus.CHECKED_OUT) {
       return { reservation: await this.findOne(id) };
     }
 
-    const merged = this.reservationsRepository.merge(reservation, {
+    const entity = this.reservationsRepository.create(reservation);
+    const merged = this.reservationsRepository.merge(entity, {
       status: ReservationStatus.CHECKED_OUT,
     });
 
@@ -468,20 +450,9 @@ export class ReservationsService {
   }
 
   async remove(id: number): Promise<ReservationDto> {
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id },
-      relations: this.reservationRelations,
-    });
-
-    if (!reservation) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Reservation with id ${id} not found`,
-      });
-    }
-
-    await this.reservationsRepository.remove(reservation);
-    return reservation;
+    const reservation = await this.findOne(id);
+    const entity = this.reservationsRepository.create(reservation);
+    return this.reservationsRepository.remove(entity);
   }
 
   private calculateNights(checkInDate: Date, checkOutDate: Date): number {

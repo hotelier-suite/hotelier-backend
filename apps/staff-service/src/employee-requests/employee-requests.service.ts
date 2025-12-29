@@ -101,19 +101,9 @@ export class EmployeeRequestsService {
     id: number,
     data: UpdateEmployeeRequestDto,
   ): Promise<EmployeeRequestDto> {
-    const existing = await this.employeeRequestRepository.findOne({
-      where: { id },
-      relations: { employee: true },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Employee request with id ${id} not found`,
-      });
-    }
-
-    const merged = this.employeeRequestRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.employeeRequestRepository.create(existing);
+    const merged = this.employeeRequestRepository.merge(entity, data);
     return this.employeeRequestRepository.save(merged);
   }
 
@@ -132,9 +122,7 @@ export class EmployeeRequestsService {
 
   async remove(id: number): Promise<EmployeeRequestDto> {
     const request = await this.findOne(id);
-
-    await this.employeeRequestRepository.delete(id);
-
-    return request;
+    const entity = this.employeeRequestRepository.create(request);
+    return this.employeeRequestRepository.remove(entity);
   }
 }

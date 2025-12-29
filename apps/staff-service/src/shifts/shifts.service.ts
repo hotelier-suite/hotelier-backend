@@ -125,26 +125,16 @@ export class ShiftsService {
   }
 
   async update(id: number, data: UpdateShiftDto): Promise<ShiftDto> {
-    const existing = await this.shiftRepository.findOne({
-      where: { id },
-      relations: { employee: true },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Shift with id ${id} not found`,
-      });
-    }
-
-    const merged = this.shiftRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.shiftRepository.create(existing);
+    const merged = this.shiftRepository.merge(entity, data);
     return this.shiftRepository.save(merged);
   }
 
   async remove(id: number): Promise<ShiftDto> {
     const shift = await this.findOne(id);
-    await this.shiftRepository.delete(id);
-    return shift;
+    const entity = this.shiftRepository.create(shift);
+    return this.shiftRepository.remove(entity);
   }
 
   private async checkShiftConflicts(

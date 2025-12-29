@@ -257,21 +257,9 @@ export class UsersService {
   }
 
   async remove(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: this.userSelect,
-      relations: this.userRelations,
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.remove(user);
-    return user;
+    const user = await this.findOne(id);
+    const entity = this.userRepository.create(user);
+    return this.userRepository.remove(entity);
   }
 
   async removeRolesFromUser(userId: number, roleIds: number[]): Promise<void> {

@@ -146,17 +146,7 @@ export class BookingsService {
     id: number,
     data: UpdateEventBookingDto,
   ): Promise<EventBookingDto> {
-    const existing = await this.eventBookingRepository.findOne({
-      where: { id },
-      relations: this.eventBookingRelations,
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Event booking with id ${id} not found`,
-      });
-    }
+    const existing = await this.findOne(id);
 
     const startTime = data.startTime ?? existing.startTime;
     const endTime = data.endTime ?? existing.endTime;
@@ -179,7 +169,8 @@ export class BookingsService {
       endTime,
     );
 
-    const merged = this.eventBookingRepository.merge(existing, {
+    const entity = this.eventBookingRepository.create(existing);
+    const merged = this.eventBookingRepository.merge(entity, {
       ...data,
       venue,
       totalCost,
@@ -189,21 +180,9 @@ export class BookingsService {
   }
 
   async remove(id: number): Promise<EventBookingDto> {
-    const booking = await this.eventBookingRepository.findOne({
-      where: { id },
-      select: this.eventBookingSelect,
-      relations: this.eventBookingRelations,
-    });
-
-    if (!booking) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Event booking with id ${id} not found`,
-      });
-    }
-
-    await this.eventBookingRepository.remove(booking);
-    return booking;
+    const booking = await this.findOne(id);
+    const entity = this.eventBookingRepository.create(booking);
+    return this.eventBookingRepository.remove(entity);
   }
 
   private calculateBookingCost(

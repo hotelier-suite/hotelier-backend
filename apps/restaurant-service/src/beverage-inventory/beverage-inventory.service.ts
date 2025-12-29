@@ -79,33 +79,15 @@ export class BeverageInventoryService {
     id: number,
     data: UpdateBeverageItemDto,
   ): Promise<BeverageInventoryDto> {
-    const existing = await this.beverageRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Beverage item with id ${id} not found`,
-      });
-    }
-
-    const merged = this.beverageRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.beverageRepository.create(existing);
+    const merged = this.beverageRepository.merge(entity, data);
     return this.beverageRepository.save(merged);
   }
 
   async remove(id: number): Promise<BeverageInventoryDto> {
-    const beverage = await this.beverageRepository.findOne({
-      where: { id },
-      select: this.beverageInventorySelect,
-    });
-
-    if (!beverage) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Beverage item with id ${id} not found`,
-      });
-    }
-
-    await this.beverageRepository.remove(beverage);
-    return beverage;
+    const beverage = await this.findOne(id);
+    const entity = this.beverageRepository.create(beverage);
+    return this.beverageRepository.remove(entity);
   }
 }

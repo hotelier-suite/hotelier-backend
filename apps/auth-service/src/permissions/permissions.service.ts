@@ -45,36 +45,33 @@ export class PermissionsService {
     return permissions;
   }
 
+  async findOne(id: number): Promise<PermissionResponseDto> {
+    const permission = await this.permissionRepository.findOne({
+      where: { id },
+    });
+
+    if (!permission) {
+      throw new RpcException({
+        statusCode: 404,
+        message: 'Permission not found',
+      });
+    }
+
+    return permission;
+  }
+
   async update(
     id: number,
     data: UpdatePermissionDto,
   ): Promise<PermissionResponseDto> {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-    });
-
-    if (!permission) {
-      throw new RpcException({
-        statusCode: 404,
-        message: 'Permission not found',
-      });
-    }
-
-    const merged = this.permissionRepository.merge(permission, data);
+    const permission = await this.findOne(id);
+    const entity = this.permissionRepository.create(permission);
+    const merged = this.permissionRepository.merge(entity, data);
     return this.permissionRepository.save(merged);
   }
 
   async remove(id: number): Promise<PermissionResponseDto> {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-    });
-
-    if (!permission) {
-      throw new RpcException({
-        statusCode: 404,
-        message: 'Permission not found',
-      });
-    }
+    const permission = await this.findOne(id);
 
     const roleCount = await this.rolePermissionRepository.count({
       where: { permissionId: id },
@@ -87,7 +84,7 @@ export class PermissionsService {
       });
     }
 
-    await this.permissionRepository.remove(permission);
-    return permission;
+    const entity = this.permissionRepository.create(permission);
+    return this.permissionRepository.remove(entity);
   }
 }

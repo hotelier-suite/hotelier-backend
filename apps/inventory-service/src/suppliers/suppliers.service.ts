@@ -80,36 +80,16 @@ export class SuppliersService {
     id: number,
     data: UpdateSupplierDto,
   ): Promise<SupplierResponseDto> {
-    const existing = await this.supplierRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Supplier with id ${id} not found`,
-      });
-    }
-
-    const merged = this.supplierRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.supplierRepository.create(existing);
+    const merged = this.supplierRepository.merge(entity, data);
     return this.supplierRepository.save(merged);
   }
 
   async remove(id: number): Promise<SupplierResponseDto> {
-    const supplier = await this.supplierRepository.findOne({
-      where: { id },
-      select: this.supplierSelect,
-      relations: this.supplierRelations,
-    });
+    const supplier = await this.findOne(id);
 
-    if (!supplier) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Supplier with id ${id} not found`,
-      });
-    }
-
-    if (supplier.inventoryItems && supplier.inventoryItems.length > 0) {
+    if (supplier.totalItems && supplier.totalItems > 0) {
       throw new RpcException({
         statusCode: 400,
         message:
@@ -117,13 +97,7 @@ export class SuppliersService {
       });
     }
 
-    const { inventoryItems, ...rest } = supplier;
-    const response: SupplierResponseDto = {
-      ...rest,
-      totalItems: inventoryItems?.length ?? 0,
-    };
-
-    await this.supplierRepository.remove(supplier);
-    return response;
+    const entity = this.supplierRepository.create(supplier);
+    return this.supplierRepository.remove(entity);
   }
 }

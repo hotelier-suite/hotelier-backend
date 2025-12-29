@@ -172,17 +172,7 @@ export class BookingsService {
     id: number,
     data: UpdateRecreationalBookingDto,
   ): Promise<RecreationalBookingDto> {
-    const booking = await this.recreationalBookingRepository.findOne({
-      where: { id },
-      relations: ['facility'],
-    });
-
-    if (!booking) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational booking with ID ${id} not found`,
-      });
-    }
+    const booking = await this.findOne(id);
 
     if (data.bookingDate || data.startTime || data.endTime || data.facilityId) {
       const facilityId = data.facilityId || booking.facilityId;
@@ -217,7 +207,8 @@ export class BookingsService {
       );
     }
 
-    const merged = this.recreationalBookingRepository.merge(booking, {
+    const entity = this.recreationalBookingRepository.create(booking);
+    const merged = this.recreationalBookingRepository.merge(entity, {
       ...data,
       totalCost: 0,
     });
@@ -227,22 +218,12 @@ export class BookingsService {
 
   async remove(id: number): Promise<RecreationalBookingDto> {
     const booking = await this.findOne(id);
-    await this.recreationalBookingRepository.delete(id);
-    return booking;
+    const entity = this.recreationalBookingRepository.create(booking);
+    return this.recreationalBookingRepository.remove(entity);
   }
 
   async cancel(id: number, reason?: string): Promise<RecreationalBookingDto> {
-    const booking = await this.recreationalBookingRepository.findOne({
-      where: { id },
-      relations: ['facility'],
-    });
-
-    if (!booking) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational booking with ID ${id} not found`,
-      });
-    }
+    const booking = await this.findOne(id);
 
     if (booking.status === RecreationalBookingStatus.COMPLETED) {
       throw new RpcException({
@@ -251,16 +232,17 @@ export class BookingsService {
       });
     }
 
-    booking.status = RecreationalBookingStatus.CANCELLED;
-    booking.staffNotes = reason ? `Cancelled: ${reason}` : 'Booking cancelled';
+    const bookingEntity = this.recreationalBookingRepository.create(booking);
+    bookingEntity.status = RecreationalBookingStatus.CANCELLED;
+    bookingEntity.staffNotes = reason ? `Cancelled: ${reason}` : 'Booking cancelled';
 
-    const saved = await this.recreationalBookingRepository.save(booking);
+    const saved = await this.recreationalBookingRepository.save(bookingEntity);
 
     this.notificationsService
       .create({
         type: NotificationType.INFO,
         title: 'Recreational Booking Cancelled',
-        message: `Booking for ${booking.facility.name} on ${booking.bookingDate.toISOString().split('T')[0]} has been cancelled`,
+        message: `Booking for ${bookingEntity.facility.name} on ${bookingEntity.bookingDate.toISOString().split('T')[0]} has been cancelled`,
         refId: saved.id,
         refType: 'recreational_booking',
       })
@@ -274,17 +256,7 @@ export class BookingsService {
   }
 
   async checkIn(id: number): Promise<RecreationalBookingDto> {
-    const booking = await this.recreationalBookingRepository.findOne({
-      where: { id },
-      relations: ['facility'],
-    });
-
-    if (!booking) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational booking with ID ${id} not found`,
-      });
-    }
+    const booking = await this.findOne(id);
 
     if (booking.status !== RecreationalBookingStatus.CONFIRMED) {
       throw new RpcException({
@@ -293,24 +265,15 @@ export class BookingsService {
       });
     }
 
-    booking.status = RecreationalBookingStatus.CHECKED_IN;
-    booking.actualCheckIn = new Date();
+    const entity = this.recreationalBookingRepository.create(booking);
+    entity.status = RecreationalBookingStatus.CHECKED_IN;
+    entity.actualCheckIn = new Date();
 
-    return this.recreationalBookingRepository.save(booking);
+    return this.recreationalBookingRepository.save(entity);
   }
 
   async checkOut(id: number): Promise<RecreationalBookingDto> {
-    const booking = await this.recreationalBookingRepository.findOne({
-      where: { id },
-      relations: ['facility'],
-    });
-
-    if (!booking) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational booking with ID ${id} not found`,
-      });
-    }
+    const booking = await this.findOne(id);
 
     if (booking.status !== RecreationalBookingStatus.CHECKED_IN) {
       throw new RpcException({
@@ -319,10 +282,11 @@ export class BookingsService {
       });
     }
 
-    booking.status = RecreationalBookingStatus.COMPLETED;
-    booking.actualCheckOut = new Date();
+    const entity = this.recreationalBookingRepository.create(booking);
+    entity.status = RecreationalBookingStatus.COMPLETED;
+    entity.actualCheckOut = new Date();
 
-    return this.recreationalBookingRepository.save(booking);
+    return this.recreationalBookingRepository.save(entity);
   }
 
   async getStatistics(

@@ -65,16 +65,7 @@ export class RoomsService {
   }
 
   async update(id: number, data: UpdateRoomDto): Promise<RoomDto> {
-    const existing = await this.roomsRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Room with id ${id} not found`,
-      });
-    }
+    const existing = await this.findOne(id);
 
     if (data.number && data.number !== existing.number) {
       const duplicate = await this.roomsRepository.findOne({
@@ -89,30 +80,21 @@ export class RoomsService {
       }
     }
 
-    const merged = this.roomsRepository.merge(existing, data);
+    const entity = this.roomsRepository.create(existing);
+    const merged = this.roomsRepository.merge(entity, data);
     return this.roomsRepository.save(merged);
   }
 
   async remove(id: number): Promise<RoomDto> {
-    const room = await this.roomsRepository.findOne({
-      where: { id },
-    });
-
-    if (!room) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Room with id ${id} not found`,
-      });
-    }
-
-    await this.roomsRepository.remove(room);
-    return room;
+    const room = await this.findOne(id);
+    const entity = this.roomsRepository.create(room);
+    return this.roomsRepository.remove(entity);
   }
 
   async setAvailability(id: number, isAvailable: boolean): Promise<RoomDto> {
     const existing = await this.findOne(id);
-
-    const merged = this.roomsRepository.merge(existing, { isAvailable });
+    const entity = this.roomsRepository.create(existing);
+    const merged = this.roomsRepository.merge(entity, { isAvailable });
     return this.roomsRepository.save(merged);
   }
 }

@@ -52,23 +52,14 @@ export class WidgetsService {
     data: UpdateDashboardWidgetDto,
   ): Promise<DashboardWidgetDto> {
     const widget = await this.findOne(id);
-    Object.assign(widget, data);
-    return this.dashboardWidgetRepository.save(widget);
+    const entity = this.dashboardWidgetRepository.create(widget);
+    const merged = this.dashboardWidgetRepository.merge(entity, data);
+    return this.dashboardWidgetRepository.save(merged);
   }
 
   async remove(id: number): Promise<DashboardWidgetDto> {
-    const widget = await this.dashboardWidgetRepository.findOne({
-      where: { id },
-    });
-
-    if (!widget) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Widget with id ${id} not found`,
-      });
-    }
-
-    await this.dashboardWidgetRepository.delete(id);
-    return widget;
+    const widget = await this.findOne(id);
+    const entity = this.dashboardWidgetRepository.create(widget);
+    return this.dashboardWidgetRepository.remove(entity);
   }
 }

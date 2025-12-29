@@ -59,25 +59,16 @@ export class GuestRequestsService {
     id: number,
     data: UpdateGuestRequestDto,
   ): Promise<GuestRequestDto> {
-    const existing = await this.guestRequestRepository.findOne({
-      where: { id },
-    });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Guest request with id ${id} not found`,
-      });
-    }
-
-    const merged = this.guestRequestRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.guestRequestRepository.create(existing);
+    const merged = this.guestRequestRepository.merge(entity, data);
     return this.guestRequestRepository.save(merged);
   }
 
   async remove(id: number): Promise<GuestRequestDto> {
     const request = await this.findOne(id);
-    await this.guestRequestRepository.remove(request as GuestRequest);
-    return request;
+    const entity = this.guestRequestRepository.create(request);
+    return this.guestRequestRepository.remove(entity);
   }
 
   countByStatus(status: GuestRequestStatus): Promise<number> {

@@ -103,31 +103,14 @@ export class FacilitiesService {
     id: number,
     data: UpdateRecreationalFacilityDto,
   ): Promise<RecreationalFacilityDto> {
-    const existing = await this.facilityRepository.findOne({ where: { id } });
-
-    if (!existing) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational facility with ID ${id} not found`,
-      });
-    }
-
-    const merged = this.facilityRepository.merge(existing, data);
+    const existing = await this.findOne(id);
+    const entity = this.facilityRepository.create(existing);
+    const merged = this.facilityRepository.merge(entity, data);
     return this.facilityRepository.save(merged);
   }
 
   async remove(id: number): Promise<RecreationalFacilityDto> {
-    const facility = await this.facilityRepository.findOne({
-      where: { id },
-      select: this.facilitySelect,
-    });
-
-    if (!facility) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Recreational facility with ID ${id} not found`,
-      });
-    }
+    const facility = await this.findOne(id);
 
     const activeBookings = await this.recreationalBookingRepository.count({
       where: {
@@ -147,8 +130,8 @@ export class FacilitiesService {
       });
     }
 
-    await this.facilityRepository.remove(facility);
-    return { ...facility, id };
+    const entity = this.facilityRepository.create(facility);
+    return this.facilityRepository.remove(entity);
   }
 
   async getAvailability(

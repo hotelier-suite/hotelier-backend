@@ -74,16 +74,15 @@ export class AnalyticsService {
     data: UpdateAnalyticsDataDto,
   ): Promise<AnalyticsDataDto> {
     const existingData = await this.findOne(id);
-    const updatedData = { ...existingData, ...data };
-    return this.analyticsRepository.save(
-      updatedData as AnalyticsData,
-    ) as Promise<AnalyticsDataDto>;
+    const entity = this.analyticsRepository.create(existingData);
+    const merged = this.analyticsRepository.merge(entity, data);
+    return this.analyticsRepository.save(merged);
   }
 
   async remove(id: number): Promise<AnalyticsDataDto> {
     const analyticsData = await this.findOne(id);
-    await this.analyticsRepository.remove(analyticsData as AnalyticsData);
-    return analyticsData;
+    const entity = this.analyticsRepository.create(analyticsData);
+    return this.analyticsRepository.remove(entity);
   }
 
   recordMetric(

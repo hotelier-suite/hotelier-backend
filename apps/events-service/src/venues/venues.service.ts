@@ -79,34 +79,16 @@ export class VenuesService {
   }
 
   async update(id: number, data: UpdateVenueDto): Promise<VenueDto> {
-    const existingVenue = await this.venueRepository.findOne({ where: { id } });
-
-    if (!existingVenue) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Venue with id ${id} not found`,
-      });
-    }
-
-    const merged = this.venueRepository.merge(existingVenue, data);
+    const existingVenue = await this.findOne(id);
+    const entity = this.venueRepository.create(existingVenue);
+    const merged = this.venueRepository.merge(entity, data);
     return this.venueRepository.save(merged);
   }
 
   async remove(id: number): Promise<VenueDto> {
-    const venue = await this.venueRepository.findOne({
-      where: { id },
-      select: this.venueSelect,
-    });
-
-    if (!venue) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Venue with id ${id} not found`,
-      });
-    }
-
-    await this.venueRepository.remove(venue);
-    return venue;
+    const venue = await this.findOne(id);
+    const entity = this.venueRepository.create(venue);
+    return this.venueRepository.remove(entity);
   }
 
   findOneEntity(id: number): Promise<Venue | null> {
