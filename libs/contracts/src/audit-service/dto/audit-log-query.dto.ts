@@ -9,7 +9,7 @@ import {
   Max,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { AuditAction, AuditResource } from '..';
+import { AuditAction, AuditResource } from '../enums';
 
 export class AuditLogQueryDto {
   @ApiProperty({
