@@ -12,8 +12,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { LoyaltyLevel } from '../../users';
-import { UserRoleDto } from '../../users/dto/user-role.dto';
+import { LoyaltyLevel, UserRoleDto } from '../../users';
 
 export class ProfileResponseDto {
   @ApiProperty({

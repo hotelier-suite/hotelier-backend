@@ -12,7 +12,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { LoyaltyLevel } from '..';
+import { LoyaltyLevel } from '../enums';
 import { UserRoleAssignmentDto } from './user-role-assignment.dto';
 
 export class UserResponseDto {

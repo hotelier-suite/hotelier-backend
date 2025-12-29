@@ -9,7 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { LoyaltyLevel } from '..';
+import { LoyaltyLevel } from '../enums';
 
 export class CreateUserDto {
   @ApiProperty({
