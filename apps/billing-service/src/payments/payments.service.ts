@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsSelect } from 'typeorm';
 import { Payment } from './entities';
 import {
-  PaymentStatus,
   PaymentDto,
   CreatePaymentDto,
   FindPaymentsFilterDto,

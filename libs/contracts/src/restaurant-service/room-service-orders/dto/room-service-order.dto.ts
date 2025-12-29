@@ -5,7 +5,6 @@ import {
   IsDate,
   IsEnum,
   IsInt,
-  IsMilitaryTime,
   IsNumber,
   IsOptional,
   IsString,

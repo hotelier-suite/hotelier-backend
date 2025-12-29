@@ -12,7 +12,6 @@ import {
   AttendanceDto,
   CreateAttendanceDto,
   UpdateAttendanceDto,
-  AttendanceStatus,
   FindAttendanceFilterDto,
 } from '@app/contracts/staff-service';
 import { Attendance } from './entities';

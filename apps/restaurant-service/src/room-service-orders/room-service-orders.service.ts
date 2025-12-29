@@ -7,7 +7,6 @@ import {
   RoomServiceOrderDto,
   CreateRoomServiceOrderDto,
   UpdateRoomServiceOrderDto,
-  RoomServiceStatus,
 } from '@app/contracts/restaurant-service';
 
 @Injectable()

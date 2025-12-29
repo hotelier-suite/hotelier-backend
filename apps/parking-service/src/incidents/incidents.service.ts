@@ -7,7 +7,6 @@ import {
   ParkingIncidentDto,
   CreateParkingIncidentDto,
   UpdateParkingIncidentDto,
-  IncidentStatus,
   FindIncidentsFilterDto,
 } from '@app/contracts/parking-service';
 

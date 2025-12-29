@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './entities';
 import {
-  NotificationType,
   CreateNotificationDto,
   NotificationDto,
 } from '@app/contracts/notifications-service';

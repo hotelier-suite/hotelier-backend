@@ -7,9 +7,7 @@ import {
   MaintenanceReportDto,
   CreateMaintenanceReportDto,
   UpdateMaintenanceReportDto,
-  HousekeepingMaintenanceStatus,
 } from '@app/contracts/operations-service';
-import { TaskPriority } from '@app/contracts/common';
 
 @Injectable()
 export class MaintenanceReportsService {

@@ -7,7 +7,6 @@ import {
   CleaningAssignmentDto,
   CreateCleaningAssignmentDto,
   UpdateCleaningAssignmentDto,
-  CleaningStatus,
 } from '@app/contracts/operations-service';
 
 @Injectable()

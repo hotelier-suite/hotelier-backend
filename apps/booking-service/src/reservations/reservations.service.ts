@@ -19,7 +19,6 @@ import {
   GetAvailabilityDto,
   CheckoutReservationResponseDto,
   ReservationStatus,
-  BookingChannel,
   RoomDto,
   FindReservationsFilterDto,
 } from '@app/contracts/booking-service';

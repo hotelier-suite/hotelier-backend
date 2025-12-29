@@ -115,7 +115,8 @@ export class RolesService {
             roleId: id,
             permissionId,
           }));
-          const entities = this.rolePermissionRepository.create(rolePermissions);
+          const entities =
+            this.rolePermissionRepository.create(rolePermissions);
           await this.rolePermissionRepository.save(entities);
         }
       }

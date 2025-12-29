@@ -7,9 +7,7 @@ import {
   CleaningTaskDto,
   CreateCleaningTaskDto,
   UpdateCleaningTaskDto,
-  CleaningStatus,
 } from '@app/contracts/operations-service';
-import { TaskPriority } from '@app/contracts/common';
 
 @Injectable()
 export class CleaningTasksService {
