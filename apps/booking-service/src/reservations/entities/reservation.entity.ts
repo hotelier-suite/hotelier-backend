@@ -167,11 +167,11 @@ export class Reservation {
   @Column({ type: 'int', nullable: true })
   guestId?: number;
 
-  @ManyToOne(() => Room, { eager: true })
+  @ManyToOne('Room', { eager: true })
   @JoinColumn({ name: 'roomId' })
   room: Room;
 
-  @ManyToOne(() => Guest, (guest) => guest.reservations, { nullable: true })
+  @ManyToOne('Guest', { nullable: true })
   @JoinColumn({ name: 'guestId' })
   guest?: Guest;
 }

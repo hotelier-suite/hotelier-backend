@@ -92,6 +92,6 @@ export class Guest {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Reservation, (reservation) => reservation.guest)
+  @OneToMany('Reservation', 'guest')
   reservations: Reservation[];
 }
