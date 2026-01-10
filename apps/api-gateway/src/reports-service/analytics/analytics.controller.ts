@@ -1,15 +1,15 @@
 import {
   Controller,
   Get,
-  Query,
   Post,
+  Patch,
+  Delete,
   Body,
   Param,
   ParseIntPipe,
-  ParseDatePipe,
-  Patch,
-  Delete,
+  Query,
 } from '@nestjs/common';
+import { ParseDatePipe } from '../../common/pipes';
 import { AnalyticsService } from './analytics.service';
 import { AuditLog } from '../../audit-service';
 import { AuditResource } from '@app/contracts/audit-service';
@@ -194,8 +194,9 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getOccupancyData(
-    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
-    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
+    @Query('startDate', ParseDatePipe.create({ optional: true }))
+    startDate?: Date,
+    @Query('endDate', ParseDatePipe.create({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getOccupancyData(startDate, endDate);
   }
@@ -226,8 +227,9 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getRevenueData(
-    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
-    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
+    @Query('startDate', ParseDatePipe.create({ optional: true }))
+    startDate?: Date,
+    @Query('endDate', ParseDatePipe.create({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getRevenueData(startDate, endDate);
   }
@@ -272,8 +274,9 @@ export class AnalyticsController {
     type: [AnalyticsDataDto],
   })
   getSatisfactionData(
-    @Query('startDate', new ParseDatePipe({ optional: true })) startDate?: Date,
-    @Query('endDate', new ParseDatePipe({ optional: true })) endDate?: Date,
+    @Query('startDate', ParseDatePipe.create({ optional: true }))
+    startDate?: Date,
+    @Query('endDate', ParseDatePipe.create({ optional: true })) endDate?: Date,
   ): Observable<AnalyticsDataDto[]> {
     return this.analyticsService.getSatisfactionData(startDate, endDate);
   }

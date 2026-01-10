@@ -1,3 +1,4 @@
 export * from './decorators';
 export * from './interceptors';
 export * from './strategies';
+export * from './pipes';

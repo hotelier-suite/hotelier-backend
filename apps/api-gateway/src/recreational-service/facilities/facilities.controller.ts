@@ -9,8 +9,8 @@ import {
   Query,
   ParseIntPipe,
   ParseArrayPipe,
-  ParseDatePipe,
 } from '@nestjs/common';
+import { ParseDatePipe } from '../../common/pipes';
 import {
   ApiTags,
   ApiOperation,
@@ -209,7 +209,7 @@ export class FacilitiesController {
       new ParseArrayPipe({ items: Number, separator: ',', optional: true }),
     )
     facilityIds: number[],
-    @Query('date', ParseDatePipe) date: Date,
+    @Query('date', ParseDatePipe.create()) date: Date,
   ): Observable<FacilityAvailabilityDto[]> {
     return this.facilitiesService.getMultipleAvailability(facilityIds, date);
   }
@@ -244,7 +244,7 @@ export class FacilitiesController {
   })
   getAvailability(
     @Param('id', ParseIntPipe) id: number,
-    @Query('date', ParseDatePipe) date: Date,
+    @Query('date', ParseDatePipe.create()) date: Date,
   ): Observable<FacilityAvailabilityDto> {
     return this.facilitiesService.getAvailability(id, date);
   }

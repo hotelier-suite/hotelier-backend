@@ -20,6 +20,7 @@ import { RpcToHttpExceptionInterceptor } from './common';
 import { ConfigServiceModule } from './config-service';
 import { ParkingServiceModule } from './parking-service';
 import { GuestRequestsServiceModule } from './guest-requests-service';
+import { PipesModule } from './common/pipes';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { GuestRequestsServiceModule } from './guest-requests-service';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    PipesModule,
     AuthServiceModule,
     BookingServiceModule,
     DashboardServiceModule,

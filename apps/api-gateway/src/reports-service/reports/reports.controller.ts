@@ -9,8 +9,8 @@ import {
   ParseIntPipe,
   Query,
   StreamableFile,
-  ParseDatePipe,
 } from '@nestjs/common';
+import { ParseDatePipe } from '../../common/pipes';
 import {
   ApiTags,
   ApiOperation,
@@ -79,8 +79,8 @@ export class ReportsController {
     type: FinancialSummaryDto,
   })
   getFinancialSummary(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
   ): Observable<FinancialSummaryDto> {
     return this.reportsService.getFinancialSummary(startDate, endDate);
   }
@@ -244,8 +244,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateOccupancyReport(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateOccupancyReport(
@@ -281,8 +281,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateRevenueReport(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateRevenueReport(
@@ -319,8 +319,8 @@ export class ReportsController {
     type: ReportDto,
   })
   generateGuestSatisfactionReport(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
     @Query('generatedBy') generatedBy: string,
   ): Observable<ReportDto> {
     return this.reportsService.generateGuestSatisfactionReport(

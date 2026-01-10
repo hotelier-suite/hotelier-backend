@@ -5,12 +5,12 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  ParseDatePipe,
   Patch,
   Post,
   Query,
   Req,
 } from '@nestjs/common';
+import { ParseDatePipe } from '../../common/pipes';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -159,8 +159,8 @@ export class ReservationsController {
   })
   @ApiResponse({ status: 200, description: 'Available rooms', type: [RoomDto] })
   getAvailability(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
     @Query('type') type?: RoomType,
     @Query('guests', new ParseIntPipe({ optional: true })) guests?: number,
   ): Observable<RoomDto[]> {

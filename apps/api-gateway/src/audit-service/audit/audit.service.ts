@@ -13,7 +13,7 @@ import {
   AuditLogWithUserDto,
   PaginatedAuditLogDto,
 } from '@app/contracts/audit-service';
-import { AUTH_SERVICE_CLIENT } from '../../auth-service';
+import { AUTH_SERVICE_CLIENT } from '../../auth-service/constants';
 import { USERS_PATTERNS, UserResponseDto } from '@app/contracts/auth-service';
 
 @Injectable()

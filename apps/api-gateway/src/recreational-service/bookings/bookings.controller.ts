@@ -8,8 +8,8 @@ import {
   Delete,
   Query,
   ParseIntPipe,
-  ParseDatePipe,
 } from '@nestjs/common';
+import { ParseDatePipe } from '../../common/pipes';
 import {
   ApiTags,
   ApiOperation,
@@ -114,8 +114,8 @@ export class BookingsController {
     example: '2024-12-31',
   })
   getStatistics(
-    @Query('startDate', ParseDatePipe) startDate: Date,
-    @Query('endDate', ParseDatePipe) endDate: Date,
+    @Query('startDate', ParseDatePipe.create()) startDate: Date,
+    @Query('endDate', ParseDatePipe.create()) endDate: Date,
   ): Observable<BookingStatisticsDto> {
     return this.bookingsService.getStatistics(startDate, endDate);
   }
