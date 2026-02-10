@@ -1,3 +1,8 @@
+// Break circular dependency: event-booking.entity -> ../../venues barrel
+jest.mock('../venues', () => ({
+  Venue: class Venue {},
+}));
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { BookingsController } from './bookings.controller';
 import { BookingsService } from './bookings.service';
