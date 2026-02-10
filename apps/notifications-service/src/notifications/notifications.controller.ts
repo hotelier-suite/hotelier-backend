@@ -1,22 +1,24 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { NOTIFICATIONS_PATTERNS } from '@app/contracts/notifications-service/notifications/notifications.patterns';
 import { NotificationsService } from './notifications.service';
-import { CreateNotificationDto } from '@app/contracts/notifications-service/notifications/dto/create-notification.dto';
-import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
-import { ListNotificationsPayloadDto } from '@app/contracts/notifications-service/notifications/dto/list-notifications-payload.dto';
-import { MarkNotificationReadPayloadDto } from '@app/contracts/notifications-service/notifications/dto/mark-notification-read-payload.dto';
-import { MarkAllNotificationsReadPayloadDto } from '@app/contracts/notifications-service/notifications/dto/mark-all-notifications-read-payload.dto';
+import {
+  CreateNotificationDto,
+  NotificationDto,
+  ListNotificationsPayloadDto,
+  MarkNotificationReadPayloadDto,
+  MarkAllNotificationsReadPayloadDto,
+  NOTIFICATIONS_PATTERNS,
+} from '@app/contracts/notifications-service';
 
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @MessagePattern(NOTIFICATIONS_PATTERNS.LIST_FOR_USER)
-  listForUser(
+  findForUser(
     @Payload() payload: ListNotificationsPayloadDto,
   ): Promise<NotificationDto[]> {
-    return this.notificationsService.listForUser(
+    return this.notificationsService.findForUser(
       payload?.userId,
       payload?.includeRead ?? false,
     );

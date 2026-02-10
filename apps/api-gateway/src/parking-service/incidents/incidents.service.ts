@@ -2,14 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { PARKING_SERVICE_CLIENT } from '../constants';
-import { INCIDENTS_PATTERNS } from '@app/contracts/parking-service/incidents/incidents.patterns';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import {
+  CreateParkingIncidentDto,
+  INCIDENTS_PATTERNS,
+  ParkingIncidentDto,
+  UpdateParkingIncidentDto,
+  FindIncidentsFilterDto,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class IncidentsService {
@@ -18,37 +17,16 @@ export class IncidentsService {
     private readonly parkingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ParkingIncidentDto[]> {
-    return this.parkingClient.send<ParkingIncidentDto[], Record<string, never>>(
-      INCIDENTS_PATTERNS.GET_ALL,
-      {},
-    );
-  }
-
-  findByStatus(status: IncidentStatus): Observable<ParkingIncidentDto[]> {
-    return this.parkingClient.send<ParkingIncidentDto[], IncidentStatus>(
-      INCIDENTS_PATTERNS.GET_BY_STATUS,
-      status,
-    );
-  }
-
-  findByPriority(priority: TaskPriority): Observable<ParkingIncidentDto[]> {
-    return this.parkingClient.send<ParkingIncidentDto[], TaskPriority>(
-      INCIDENTS_PATTERNS.GET_BY_PRIORITY,
-      priority,
-    );
-  }
-
-  findByType(type: IncidentType): Observable<ParkingIncidentDto[]> {
-    return this.parkingClient.send<ParkingIncidentDto[], IncidentType>(
-      INCIDENTS_PATTERNS.GET_BY_TYPE,
-      type,
-    );
+  findAll(filters: FindIncidentsFilterDto): Observable<ParkingIncidentDto[]> {
+    return this.parkingClient.send<
+      ParkingIncidentDto[],
+      FindIncidentsFilterDto
+    >(INCIDENTS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<ParkingIncidentDto> {
     return this.parkingClient.send<ParkingIncidentDto, number>(
-      INCIDENTS_PATTERNS.GET_BY_ID,
+      INCIDENTS_PATTERNS.FIND_ONE,
       id,
     );
   }
@@ -68,16 +46,6 @@ export class IncidentsService {
       ParkingIncidentDto,
       { id: number; data: UpdateParkingIncidentDto }
     >(INCIDENTS_PATTERNS.UPDATE, { id, data });
-  }
-
-  resolve(
-    id: number,
-    data: ResolveIncidentRequestDto,
-  ): Observable<ParkingIncidentDto> {
-    return this.parkingClient.send<
-      ParkingIncidentDto,
-      { id: number; data: ResolveIncidentRequestDto }
-    >(INCIDENTS_PATTERNS.RESOLVE, { id, data });
   }
 
   remove(id: number): Observable<ParkingIncidentDto> {

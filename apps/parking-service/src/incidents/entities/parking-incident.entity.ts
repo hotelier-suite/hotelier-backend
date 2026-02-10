@@ -17,12 +17,10 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
+import { IncidentType, IncidentStatus } from '@app/contracts/parking-service';
+import { TaskPriority } from '@app/contracts/common';
+import { Vehicle } from '../../vehicles';
+import { ParkingSpace } from '../../spaces';
 
 @Entity('parking_incidents')
 export class ParkingIncident {
@@ -55,7 +53,6 @@ export class ParkingIncident {
 
   @ApiProperty({ description: 'Date and time when incident was reported' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   reportDate: Date;
 
@@ -113,7 +110,6 @@ export class ParkingIncident {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   resolvedAt?: Date;
 
@@ -125,7 +121,6 @@ export class ParkingIncident {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Foreign keys
   @ApiProperty({
     description: 'ID of the related vehicle',
     example: 1,
@@ -148,13 +143,12 @@ export class ParkingIncident {
   @Column({ nullable: true })
   spaceId?: number;
 
-  // Relations
   @ApiProperty({
     description: 'Related vehicle',
     type: () => Vehicle,
     required: false,
   })
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.incidents, { nullable: true })
+  @ManyToOne('Vehicle', 'incidents', { nullable: true })
   @JoinColumn({ name: 'vehicleId' })
   vehicle?: Vehicle;
 
@@ -163,7 +157,7 @@ export class ParkingIncident {
     type: () => ParkingSpace,
     required: false,
   })
-  @ManyToOne(() => ParkingSpace, (space) => space.incidents, { nullable: true })
+  @ManyToOne('ParkingSpace', 'incidents', { nullable: true })
   @JoinColumn({ name: 'spaceId' })
   space?: ParkingSpace;
 }

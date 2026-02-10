@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SeedersService } from './seeders.service';
-import { GuestRequestsSeedersModule } from '../guest-requests/seeders/seeders.module';
+import { GuestRequestsSeedersModule } from '../guest-requests';
 
 @Module({
   imports: [GuestRequestsSeedersModule],

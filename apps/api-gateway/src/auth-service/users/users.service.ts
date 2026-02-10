@@ -1,12 +1,15 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { USERS_PATTERNS } from '@app/contracts/auth-service/users/users.patterns';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { CreateUserDto } from '@app/contracts/auth-service/users/dto/create-user.dto';
-import { UpdateUserDto } from '@app/contracts/auth-service/users/dto/update-user.dto';
-import { UserRolesPayloadDto } from '@app/contracts/auth-service/users/dto/user-roles-payload.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
+import {
+  USERS_PATTERNS,
+  UserResponseDto,
+  CreateUserDto,
+  UpdateUserDto,
+  UserRolesPayloadDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+  FindUsersFilterDto,
+} from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
 
@@ -16,16 +19,16 @@ export class UsersService {
     @Inject(AUTH_SERVICE_CLIENT) private readonly authClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<UserResponseDto[]> {
-    return this.authClient.send<UserResponseDto[], Record<string, never>>(
+  findAll(filters: FindUsersFilterDto): Observable<UserResponseDto[]> {
+    return this.authClient.send<UserResponseDto[], FindUsersFilterDto>(
       USERS_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
   findOne(id: number): Observable<UserResponseDto> {
     return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.FIND_BY_ID,
+      USERS_PATTERNS.FIND_ONE,
       id,
     );
   }
@@ -48,27 +51,6 @@ export class UsersService {
     return this.authClient.send<UserResponseDto, number>(
       USERS_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  activate(id: number): Observable<UserResponseDto> {
-    return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.ACTIVATE,
-      id,
-    );
-  }
-
-  deactivate(id: number): Observable<UserResponseDto> {
-    return this.authClient.send<UserResponseDto, number>(
-      USERS_PATTERNS.DEACTIVATE,
-      id,
-    );
-  }
-
-  assignRolesToUser(userId: number, roleIds: number[]): Observable<void> {
-    return this.authClient.send<void, UserRolesPayloadDto>(
-      USERS_PATTERNS.ASSIGN_ROLES,
-      { userId, roleIds },
     );
   }
 

@@ -7,36 +7,60 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { IncidentType } from '../enums/incident-type.enum';
+import { TaskPriority } from '@app/contracts/common';
+import { IncidentType } from '../enums';
 
 export class CreateParkingIncidentDto {
-  @ApiProperty({ enum: IncidentType, example: IncidentType.VEHICLE_DAMAGE })
+  @ApiProperty({
+    description: 'Type of parking incident',
+    enum: IncidentType,
+    example: IncidentType.VEHICLE_DAMAGE,
+  })
   @IsEnum(IncidentType)
   type: IncidentType;
 
-  @ApiProperty()
+  @ApiProperty({
+    description:
+      'Detailed description of the parking incident (1-500 characters)',
+    example: 'Vehicle scratched while parking',
+  })
   @IsString()
   @Length(1, 500)
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description:
+      'Name of the person responsible for handling the incident (1-100 characters)',
+    example: 'John Smith',
+  })
   @IsString()
   @Length(1, 100)
   responsible: string;
 
-  @ApiProperty({ required: false, enum: TaskPriority })
+  @ApiProperty({
+    description: 'Priority level of the incident',
+    required: false,
+    enum: TaskPriority,
+  })
   @IsOptional()
   @IsEnum(TaskPriority)
   priority?: TaskPriority;
 
-  @ApiProperty({ required: false, example: 1 })
+  @ApiProperty({
+    description: 'ID of the vehicle involved in the incident',
+    required: false,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)
   vehicleId?: number;
 
-  @ApiProperty({ required: false, example: 1 })
+  @ApiProperty({
+    description: 'ID of the parking space where the incident occurred',
+    required: false,
+    example: 1,
+  })
   @IsOptional()
   @IsInt()
   @Min(1)

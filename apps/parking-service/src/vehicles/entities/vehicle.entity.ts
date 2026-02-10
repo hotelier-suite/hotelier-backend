@@ -18,12 +18,13 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { VehicleType } from '@app/contracts/parking-service/vehicles/enums/vehicle-type.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
-import { ParkingIncident } from '../../incidents/entities/parking-incident.entity';
+import {
+  VehicleType,
+  GuestType,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
+import { ParkingSpace } from '../../spaces';
+import { ParkingIncident } from '../../incidents';
 
 @Entity('vehicles')
 export class Vehicle {
@@ -114,7 +115,6 @@ export class Vehicle {
 
   @ApiProperty({ description: 'Vehicle entry timestamp' })
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   entryTime: Date;
 
@@ -124,7 +124,6 @@ export class Vehicle {
   })
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   exitTime?: Date;
 
@@ -161,13 +160,12 @@ export class Vehicle {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @ApiProperty({
     description: 'Assigned parking space',
     type: () => ParkingSpace,
     required: false,
   })
-  @ManyToOne(() => ParkingSpace, (space) => space.vehicles, { nullable: true })
+  @ManyToOne('ParkingSpace', 'vehicles', { nullable: true })
   @JoinColumn({ name: 'assignedSpace', referencedColumnName: 'code' })
   space?: ParkingSpace;
 
@@ -176,7 +174,7 @@ export class Vehicle {
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => ParkingIncident, (incident) => incident.vehicle, {
+  @OneToMany('ParkingIncident', 'vehicle', {
     cascade: true,
   })
   incidents?: ParkingIncident[];

@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from '../../roles/entities/role.entity';
-import { SystemPermission } from '../../permissions/entities/system-permission.entity';
-import { RolePermission } from '../../roles/entities/role-permission.entity';
+import { Role, RolePermission } from '../../roles';
+import { SystemPermission } from '../../permissions';
 
 @Injectable()
 export class RolesSeeder {
@@ -240,7 +239,6 @@ export class RolesSeeder {
         });
       }
 
-      // Assign permissions to role
       await this.assignPermissionsToRole(role, roleData.permissions);
     }
   }

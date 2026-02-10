@@ -16,7 +16,7 @@ import {
   Min,
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
-import { LoyaltyLevel } from '@app/contracts/auth-service/users/enums/loyalty-level.enum';
+import { LoyaltyLevel } from '@app/contracts/auth-service';
 import type { UserRole } from './user-role.entity';
 
 @Entity('users')
@@ -88,7 +88,6 @@ export class User {
   @Column({ nullable: true, select: false })
   refreshToken?: string;
 
-  // Relations
   @OneToMany('UserRole', 'user', { cascade: true })
   userRoles: UserRole[];
 }

@@ -1,41 +1,39 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { PERMISSIONS_PATTERNS } from '@app/contracts/auth-service/permissions/permissions.patterns';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
 import { PermissionsService } from './permissions.service';
+import {
+  PERMISSIONS_PATTERNS,
+  CreatePermissionDto,
+  FindPermissionsFilterDto,
+  PermissionResponseDto,
+  UpdatePermissionDto,
+} from '@app/contracts/auth-service';
 
 @Controller()
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @MessagePattern(PERMISSIONS_PATTERNS.CREATE)
-  createPermission(
-    @Payload() dto: CreatePermissionDto,
-  ): Promise<PermissionResponseDto> {
-    return this.permissionsService.createPermission(dto);
+  create(@Payload() dto: CreatePermissionDto): Promise<PermissionResponseDto> {
+    return this.permissionsService.create(dto);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.FIND_ALL)
-  findAllPermissions(): Promise<PermissionResponseDto[]> {
-    return this.permissionsService.findAllPermissions();
-  }
-
-  @MessagePattern(PERMISSIONS_PATTERNS.BY_RESOURCE)
-  getPermissionsByResource(): Promise<Record<string, PermissionResponseDto[]>> {
-    return this.permissionsService.getPermissionsByResource();
+  findAll(
+    @Payload() filters: FindPermissionsFilterDto,
+  ): Promise<PermissionResponseDto[]> {
+    return this.permissionsService.findAll(filters);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.UPDATE)
-  updatePermission(
+  update(
     @Payload() payload: { id: number; data: UpdatePermissionDto },
   ): Promise<PermissionResponseDto> {
-    return this.permissionsService.updatePermission(payload.id, payload.data);
+    return this.permissionsService.update(payload.id, payload.data);
   }
 
   @MessagePattern(PERMISSIONS_PATTERNS.DELETE)
-  deletePermission(@Payload() id: number): Promise<PermissionResponseDto> {
-    return this.permissionsService.deletePermission(id);
+  remove(@Payload() id: number): Promise<PermissionResponseDto> {
+    return this.permissionsService.remove(id);
   }
 }

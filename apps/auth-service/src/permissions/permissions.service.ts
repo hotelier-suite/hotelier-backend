@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
-import { SystemPermission } from './entities/system-permission.entity';
-import { RolePermission } from '../roles/entities/role-permission.entity';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import {
+  CreatePermissionDto,
+  FindPermissionsFilterDto,
+  PermissionResponseDto,
+  UpdatePermissionDto,
+} from '@app/contracts/auth-service';
+import { SystemPermission } from './entities';
+import { RolePermission } from '../roles';
 
 @Injectable()
 export class PermissionsService {
@@ -17,116 +20,59 @@ export class PermissionsService {
     private readonly rolePermissionRepository: Repository<RolePermission>,
   ) {}
 
-  async createPermission(
-    data: CreatePermissionDto,
-  ): Promise<PermissionResponseDto> {
-    try {
-      const permission = await this.permissionRepository.save(data);
-      return permission;
-    } catch (e: unknown) {
-      const err = e as { code?: unknown };
-      if (typeof err.code === 'string' && err.code === '23505') {
-        throw new RpcException({
-          statusCode: 409,
-          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        });
-      }
-
-      if (e instanceof RpcException) {
-        throw e;
-      }
-
-      throw new RpcException({
-        statusCode: 500,
-        message: 'Internal server error',
-      });
-    }
+  create(data: CreatePermissionDto): Promise<PermissionResponseDto> {
+    const entity = this.permissionRepository.create(data);
+    return this.permissionRepository.save(entity);
   }
 
-  async findAllPermissions(): Promise<PermissionResponseDto[]> {
+  async findAll(
+    filters: FindPermissionsFilterDto,
+  ): Promise<PermissionResponseDto[]> {
+    const where: FindOptionsWhere<SystemPermission> = {};
+
+    if (filters.resource) {
+      where.resource = Like(`%${filters.resource}%`);
+    }
+
+    if (filters.action) {
+      where.action = Like(`%${filters.action}%`);
+    }
+
     const permissions = await this.permissionRepository.find({
+      where,
       order: { resource: 'ASC', action: 'ASC' },
     });
 
     return permissions;
   }
 
-  async getPermissionsByResource(): Promise<
-    Record<string, PermissionResponseDto[]>
-  > {
-    const permissions = await this.findAllPermissions();
-    const grouped: Record<string, PermissionResponseDto[]> = {};
+  async findOne(id: number): Promise<PermissionResponseDto> {
+    const permission = await this.permissionRepository.findOne({
+      where: { id },
+    });
 
-    for (const permission of permissions) {
-      if (!grouped[permission.resource]) {
-        grouped[permission.resource] = [];
-      }
-      grouped[permission.resource].push(permission);
+    if (!permission) {
+      throw new RpcException({
+        statusCode: 404,
+        message: 'Permission not found',
+      });
     }
 
-    return grouped;
+    return permission;
   }
 
-  async updatePermission(
+  async update(
     id: number,
     data: UpdatePermissionDto,
   ): Promise<PermissionResponseDto> {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-    });
-
-    if (!permission) {
-      throw new RpcException({
-        statusCode: 404,
-        message: 'Permission not found',
-      });
-    }
-
-    try {
-      await this.permissionRepository.update(id, data);
-      const updated = await this.permissionRepository.findOne({
-        where: { id },
-      });
-
-      if (!updated) {
-        throw new RpcException({
-          statusCode: 404,
-          message: `Permission with id ${id} not found`,
-        });
-      }
-
-      return updated;
-    } catch (e: unknown) {
-      const err = e as { code?: unknown };
-      if (typeof err.code === 'string' && err.code === '23505') {
-        throw new RpcException({
-          statusCode: 409,
-          message: `Permission for resource '${data.resource}' and action '${data.action}' already exists`,
-        });
-      }
-
-      if (e instanceof RpcException) {
-        throw e;
-      }
-
-      throw new RpcException({
-        statusCode: 500,
-        message: 'Internal server error',
-      });
-    }
+    const permission = await this.findOne(id);
+    const entity = this.permissionRepository.create(permission);
+    const merged = this.permissionRepository.merge(entity, data);
+    return this.permissionRepository.save(merged);
   }
 
-  async deletePermission(id: number): Promise<PermissionResponseDto> {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-    });
-
-    if (!permission) {
-      throw new RpcException({
-        statusCode: 404,
-        message: 'Permission not found',
-      });
-    }
+  async remove(id: number): Promise<PermissionResponseDto> {
+    const permission = await this.findOne(id);
 
     const roleCount = await this.rolePermissionRepository.count({
       where: { permissionId: id },
@@ -139,7 +85,7 @@ export class PermissionsService {
       });
     }
 
-    await this.permissionRepository.remove(permission);
-    return permission;
+    const entity = this.permissionRepository.create(permission);
+    return this.permissionRepository.remove(entity);
   }
 }

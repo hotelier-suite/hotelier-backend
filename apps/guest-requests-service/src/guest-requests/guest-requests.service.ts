@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
-import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
-import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { GuestRequest } from './entities/guest-request.entity';
+import { Repository, FindOptionsWhere } from 'typeorm';
+import {
+  CreateGuestRequestDto,
+  GuestRequestDto,
+  UpdateGuestRequestDto,
+  GuestRequestStatus,
+  FindGuestRequestsFilterDto,
+} from '@app/contracts/guest-requests-service';
+import { GuestRequest } from './entities';
 
 @Injectable()
 export class GuestRequestsService {
@@ -16,9 +18,21 @@ export class GuestRequestsService {
     private readonly guestRequestRepository: Repository<GuestRequest>,
   ) {}
 
-  findAll(): Promise<GuestRequestDto[]> {
+  findAll(filters: FindGuestRequestsFilterDto): Promise<GuestRequestDto[]> {
+    const where: FindOptionsWhere<GuestRequest> = {};
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.priority) {
+      where.priority = filters.priority;
+    }
+
     return this.guestRequestRepository.find({
+      where,
       order: { createdAt: 'DESC' },
+      take: filters.limit,
     });
   }
 
@@ -37,63 +51,30 @@ export class GuestRequestsService {
     return request;
   }
 
-  findByStatus(status: RequestStatus): Promise<GuestRequestDto[]> {
-    return this.guestRequestRepository.find({
-      where: { status },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByPriority(priority: RequestPriority): Promise<GuestRequestDto[]> {
-    return this.guestRequestRepository.find({
-      where: { priority },
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  async create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
-    const created = await this.guestRequestRepository.save(data);
-
-    const loaded = await this.guestRequestRepository.findOne({
-      where: { id: created.id },
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load guest request with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateGuestRequestDto): Promise<GuestRequestDto> {
+    const entity = this.guestRequestRepository.create(data);
+    return this.guestRequestRepository.save(entity);
   }
 
   async update(
     id: number,
     data: UpdateGuestRequestDto,
   ): Promise<GuestRequestDto> {
-    await this.guestRequestRepository.update(id, data);
-    return this.findOne(id);
+    const existing = await this.findOne(id);
+    const entity = this.guestRequestRepository.create(existing);
+    const merged = this.guestRequestRepository.merge(entity, data);
+    return this.guestRequestRepository.save(merged);
   }
 
   async remove(id: number): Promise<GuestRequestDto> {
     const request = await this.findOne(id);
-    await this.guestRequestRepository.remove(request as GuestRequest);
-    return request;
+    const entity = this.guestRequestRepository.create(request);
+    return this.guestRequestRepository.remove(entity);
   }
 
-  countByStatus(status: RequestStatus): Promise<number> {
+  countByStatus(status: GuestRequestStatus): Promise<number> {
     return this.guestRequestRepository.count({
       where: { status },
-    });
-  }
-
-  findRecent(limit = 5): Promise<GuestRequestDto[]> {
-    const take = typeof limit === 'number' && limit > 0 ? limit : 5;
-
-    return this.guestRequestRepository.find({
-      order: { createdAt: 'DESC' },
-      take,
     });
   }
 }

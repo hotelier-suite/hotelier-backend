@@ -15,7 +15,7 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { ConfigCategory } from '../enums/config-category.enum';
+import { ConfigCategory } from '../enums';
 
 @Entity('configurations')
 export class Configuration {

@@ -1,0 +1,16 @@
+export const ANALYTICS_PATTERNS = {
+  CREATE: 'analytics.data.create',
+  FIND_ALL: 'analytics.data.findAll',
+  FIND_ONE: 'analytics.data.findOne',
+  UPDATE: 'analytics.data.update',
+  DELETE: 'analytics.data.delete',
+  GET_DASHBOARD_SUMMARY: 'analytics.dashboard.summary',
+  GET_OCCUPANCY_DATA: 'analytics.occupancy',
+  GET_REVENUE_DATA: 'analytics.revenue',
+  GET_GUEST_TYPE_DATA: 'analytics.guestTypes',
+  GET_SATISFACTION_DATA: 'analytics.satisfaction',
+  GET_METRIC_TOTALS: 'analytics.metrics.totals',
+  GET_METRIC_AVERAGES: 'analytics.metrics.averages',
+  GET_METRIC_TREND: 'analytics.metrics.trend',
+  RECORD_METRIC: 'analytics.metrics.record',
+} as const;

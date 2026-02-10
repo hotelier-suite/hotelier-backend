@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { RpcException, Transport } from '@nestjs/microservices';
 import { ValidationError } from 'class-validator';
 import { NotificationsServiceModule } from './notifications-service.module';
-import { SeedersService } from './seeders/seeders.service';
+import { SeedersService } from './seeders';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(NotificationsServiceModule, {

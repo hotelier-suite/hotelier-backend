@@ -1,9 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CONFIGURATION_PATTERNS } from '@app/contracts/config-service/configuration/configuration.patterns';
 import { ConfigurationService } from './configuration.service';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import {
+  CONFIGURATION_PATTERNS,
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 
 @Controller()
 export class ConfigurationController {

@@ -1,44 +1,26 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { INCIDENTS_PATTERNS } from '@app/contracts/parking-service/incidents/incidents.patterns';
 import { IncidentsService } from './incidents.service';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import {
+  INCIDENTS_PATTERNS,
+  ParkingIncidentDto,
+  CreateParkingIncidentDto,
+  UpdateParkingIncidentDto,
+  FindIncidentsFilterDto,
+} from '@app/contracts/parking-service';
 
 @Controller()
 export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_ALL)
-  findAll(): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findAll();
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_STATUS)
-  findByStatus(
-    @Payload() status: IncidentStatus,
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_ALL)
+  findAll(
+    @Payload() filters: FindIncidentsFilterDto,
   ): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByStatus(status);
+    return this.incidentsService.findAll(filters);
   }
 
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_PRIORITY)
-  findByPriority(
-    @Payload() priority: TaskPriority,
-  ): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByPriority(priority);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_TYPE)
-  findByType(@Payload() type: IncidentType): Promise<ParkingIncidentDto[]> {
-    return this.incidentsService.findByType(type);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.GET_BY_ID)
+  @MessagePattern(INCIDENTS_PATTERNS.FIND_ONE)
   findOne(@Payload() id: number): Promise<ParkingIncidentDto> {
     return this.incidentsService.findOne(id);
   }
@@ -55,13 +37,6 @@ export class IncidentsController {
     @Payload() payload: { id: number; data: UpdateParkingIncidentDto },
   ): Promise<ParkingIncidentDto> {
     return this.incidentsService.update(payload.id, payload.data);
-  }
-
-  @MessagePattern(INCIDENTS_PATTERNS.RESOLVE)
-  resolve(
-    @Payload() payload: { id: number; data: ResolveIncidentRequestDto },
-  ): Promise<ParkingIncidentDto> {
-    return this.incidentsService.resolve(payload.id, payload.data);
   }
 
   @MessagePattern(INCIDENTS_PATTERNS.DELETE)

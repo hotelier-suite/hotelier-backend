@@ -7,8 +7,8 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { Role } from './role.entity';
-import { SystemPermission } from '../../permissions/entities/system-permission.entity';
+import type { Role } from './role.entity';
+import type { SystemPermission } from '../../permissions';
 
 @Entity('role_permissions')
 @Index(['roleId', 'permissionId'], { unique: true })
@@ -25,14 +25,11 @@ export class RolePermission {
   @CreateDateColumn()
   createdAt: Date;
 
-  // Relations
-  @ManyToOne(() => Role, (role) => role.permissions, { onDelete: 'CASCADE' })
+  @ManyToOne('Role', 'permissions', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'roleId' })
   role: Role;
 
-  @ManyToOne(() => SystemPermission, (permission) => permission.roles, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne('SystemPermission', 'roles', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'permissionId' })
   permission: SystemPermission;
 }

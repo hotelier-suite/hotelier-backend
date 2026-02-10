@@ -16,10 +16,10 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
-import { SpaceStatus } from '@app/contracts/parking-service/spaces/enums/space-status.enum';
-import { Vehicle } from '../../vehicles/entities/vehicle.entity';
-import { ParkingIncident } from '../../incidents/entities/parking-incident.entity';
+import { SpaceType, SpaceStatus } from '@app/contracts/parking-service';
+import { DecimalTransformer } from '@app/contracts/common';
+import { Vehicle } from '../../vehicles';
+import { ParkingIncident } from '../../incidents';
 
 @Entity('parking_spaces')
 export class ParkingSpace {
@@ -89,10 +89,7 @@ export class ParkingSpace {
     precision: 8,
     scale: 2,
     default: 0,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number.parseFloat(value),
-    },
+    transformer: DecimalTransformer,
   })
   hourlyRate: number;
 
@@ -113,13 +110,12 @@ export class ParkingSpace {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @ApiProperty({
     description: 'Vehicles assigned to this space',
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.space, { cascade: true })
+  @OneToMany('Vehicle', 'space', { cascade: true })
   vehicles?: Vehicle[];
 
   @ApiProperty({
@@ -127,7 +123,7 @@ export class ParkingSpace {
     type: () => Array,
     required: false,
   })
-  @OneToMany(() => ParkingIncident, (incident) => incident.space, {
+  @OneToMany('ParkingIncident', 'space', {
     cascade: true,
   })
   incidents?: ParkingIncident[];

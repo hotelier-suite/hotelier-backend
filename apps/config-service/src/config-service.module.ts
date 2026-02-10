@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { ConfigurationModule } from './configuration/configuration.module';
-import { SeedersModule } from './seeders/seeders.module';
+import { DatabaseModule } from './database';
+import { ConfigurationModule } from './configuration';
+import { SeedersModule } from './seeders';
 
 @Module({
   imports: [

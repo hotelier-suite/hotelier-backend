@@ -1,0 +1,32 @@
+import { Global, Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { EVENTS_SERVICE_CLIENT } from './constants';
+import { EventsModule } from './events';
+import { BookingsModule } from './bookings';
+import { VenuesModule } from './venues';
+
+@Global()
+@Module({
+  imports: [
+    ClientsModule.register([
+      {
+        name: EVENTS_SERVICE_CLIENT,
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+            process.env.RABBITMQ_URL ?? 'amqp://guest:guest@localhost:5672',
+          ],
+          queue: 'events_queue',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
+    EventsModule,
+    BookingsModule,
+    VenuesModule,
+  ],
+  exports: [ClientsModule, EventsModule, BookingsModule, VenuesModule],
+})
+export class EventsServiceModule {}

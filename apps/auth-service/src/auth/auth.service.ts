@@ -3,16 +3,17 @@ import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from '@app/contracts/auth-service/auth/dto/register.dto';
-import { AuthResponseDto } from '@app/contracts/auth-service/auth/dto/auth-response.dto';
-import { LoginDto } from '@app/contracts/auth-service/auth/dto/login.dto';
-import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
-import { LogoutResponseDto } from '@app/contracts/auth-service/auth/dto/logout-response.dto';
-import { ProfileResponseDto } from '@app/contracts/auth-service/auth/dto/profile-response.dto';
-import { User } from '../users/entities/user.entity';
-import { TokensService } from '../tokens/tokens.service';
-import { UsersService } from '../users/users.service';
-import { AccessControlService } from '../access-control/access-control.service';
+import {
+  RegisterDto,
+  AuthResponseDto,
+  LoginDto,
+  LogoutResponseDto,
+  ProfileResponseDto,
+  TokenResponseDto,
+} from '@app/contracts/auth-service';
+import { User, UsersService } from '../users';
+import { TokensService } from '../tokens';
+import { AccessControlService } from '../access-control';
 
 @Injectable()
 export class AuthService {
@@ -39,15 +40,14 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user with default 'guest' role if no role specified
-    const user = await this.userRepository.save({
+    const entity = this.userRepository.create({
       email,
       password: hashedPassword,
       name,
       phone,
     });
+    const user = await this.userRepository.save(entity);
 
-    // Assign role to user
     const defaultRoleId = await this.usersService.getDefaultRole(roleId);
     await this.usersService.assignSingleRoleToUser(
       user.id,
@@ -55,7 +55,6 @@ export class AuthService {
       'system',
     );
 
-    // Reload user with relations
     const userWithRoles = await this.accessControlService.getUserWithRoles(
       user.id,
     );
@@ -69,7 +68,6 @@ export class AuthService {
     const tokens = await this.tokensService.getTokens(user.id, user.email);
     await this.tokensService.updateRefreshToken(user.id, tokens.refreshToken);
 
-    // Extract roles in the expected format
     const roles = userWithRoles.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,
@@ -119,15 +117,12 @@ export class AuthService {
     const tokens = await this.tokensService.getTokens(user.id, user.email);
     await this.tokensService.updateRefreshToken(user.id, tokens.refreshToken);
 
-    // Update last login
     await this.usersService.updateLastLogin(user.id);
 
-    // Get flattened permissions
     const permissions = await this.accessControlService.getUserPermissions(
       user.id,
     );
 
-    // Extract roles in the expected format
     const roles = user.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,
@@ -179,19 +174,20 @@ export class AuthService {
     return tokens;
   }
 
-  async validateUser(userId: number): Promise<ProfileResponseDto | null> {
+  async getProfile(userId: number): Promise<ProfileResponseDto> {
     const user = await this.accessControlService.getUserWithRoles(userId);
 
     if (!user || !user.isActive) {
-      return null;
+      throw new RpcException({
+        statusCode: 404,
+        message: 'User not found or inactive',
+      });
     }
 
-    // Get flattened permissions
     const permissions = await this.accessControlService.getUserPermissions(
       user.id,
     );
 
-    // Extract roles in the expected format
     const roles = user.userRoles.map((userRole) => ({
       id: userRole.role.id,
       name: userRole.role.name,

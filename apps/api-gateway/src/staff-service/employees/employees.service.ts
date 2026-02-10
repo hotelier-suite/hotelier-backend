@@ -1,0 +1,62 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import {
+  EMPLOYEES_PATTERNS,
+  EmployeeDto,
+  CreateEmployeeDto,
+  UpdateEmployeeDto,
+  DepartmentStatsDto,
+  FindEmployeesFilterDto,
+} from '@app/contracts/staff-service';
+import { STAFF_SERVICE_CLIENT } from '../constants';
+
+@Injectable()
+export class EmployeesService {
+  constructor(
+    @Inject(STAFF_SERVICE_CLIENT)
+    private readonly staffClient: ClientProxy,
+  ) {}
+
+  findAll(filters: FindEmployeesFilterDto): Observable<EmployeeDto[]> {
+    return this.staffClient.send<EmployeeDto[], FindEmployeesFilterDto>(
+      EMPLOYEES_PATTERNS.FIND_ALL,
+      filters,
+    );
+  }
+
+  getDepartmentStats(): Observable<DepartmentStatsDto[]> {
+    return this.staffClient.send<DepartmentStatsDto[], Record<string, never>>(
+      EMPLOYEES_PATTERNS.GET_DEPARTMENT_STATS,
+      {},
+    );
+  }
+
+  findOne(id: number): Observable<EmployeeDto> {
+    return this.staffClient.send<EmployeeDto, number>(
+      EMPLOYEES_PATTERNS.FIND_ONE,
+      id,
+    );
+  }
+
+  create(data: CreateEmployeeDto): Observable<EmployeeDto> {
+    return this.staffClient.send<EmployeeDto, CreateEmployeeDto>(
+      EMPLOYEES_PATTERNS.CREATE,
+      data,
+    );
+  }
+
+  update(id: number, data: UpdateEmployeeDto): Observable<EmployeeDto> {
+    return this.staffClient.send<
+      EmployeeDto,
+      { id: number; data: UpdateEmployeeDto }
+    >(EMPLOYEES_PATTERNS.UPDATE, { id, data });
+  }
+
+  remove(id: number): Observable<EmployeeDto> {
+    return this.staffClient.send<EmployeeDto, number>(
+      EMPLOYEES_PATTERNS.DELETE,
+      id,
+    );
+  }
+}

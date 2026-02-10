@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Configuration } from '../configuration/entities/configuration.entity';
-import { ConfigCategory } from '../configuration/enums/config-category.enum';
+import { Configuration, ConfigCategory } from '../configuration';
 
 @Injectable()
 export class SeedersService {
   constructor(
     @InjectRepository(Configuration)
-    private readonly configRepository: Repository<Configuration>,
+    private readonly configurationRepository: Repository<Configuration>,
   ) {}
 
   private async setIfMissing(
@@ -19,12 +18,12 @@ export class SeedersService {
     isEditable = true,
     isSecure = false,
   ) {
-    const existing = await this.configRepository.findOne({
+    const existing = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
     if (!existing) {
-      await this.configRepository.save({
+      await this.configurationRepository.save({
         category,
         key,
         value,
@@ -36,7 +35,6 @@ export class SeedersService {
   }
 
   async seed(): Promise<void> {
-    // Hotel defaults
     await this.setIfMissing(
       ConfigCategory.HOTEL,
       'PROPERTY_NAME',
@@ -86,7 +84,6 @@ export class SeedersService {
       'Default timezone',
     );
 
-    // System defaults
     await this.setIfMissing(
       ConfigCategory.SYSTEM,
       'SYSTEM_NAME',
@@ -137,7 +134,6 @@ export class SeedersService {
       'Allowed file types',
     );
 
-    // Integrations defaults (disabled by default)
     await this.setIfMissing(
       ConfigCategory.INTEGRATION,
       'STRIPE.ENABLED',

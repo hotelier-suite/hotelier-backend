@@ -1,13 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { GUEST_REQUESTS_PATTERNS } from '@app/contracts/guest-requests-service/guest-requests/guest-requests.patterns';
-import { CreateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/create-guest-request.dto';
-import { GuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/guest-request.dto';
-import { UpdateGuestRequestDto } from '@app/contracts/guest-requests-service/guest-requests/dto/update-guest-request.dto';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
+import {
+  GUEST_REQUESTS_PATTERNS,
+  CreateGuestRequestDto,
+  GuestRequestDto,
+  UpdateGuestRequestDto,
+  GuestRequestStatus,
+  FindGuestRequestsFilterDto,
+} from '@app/contracts/guest-requests-service';
 import { GUEST_REQUESTS_SERVICE_CLIENT } from '../constants';
 
 @Injectable()
@@ -24,45 +25,17 @@ export class GuestRequestsService {
     >(GUEST_REQUESTS_PATTERNS.CREATE, data);
   }
 
-  findAll(): Observable<GuestRequestDto[]> {
+  findAll(filters: FindGuestRequestsFilterDto): Observable<GuestRequestDto[]> {
     return this.guestRequestsClient.send<
       GuestRequestDto[],
-      Record<string, never>
-    >(GUEST_REQUESTS_PATTERNS.FIND_ALL, {});
+      FindGuestRequestsFilterDto
+    >(GUEST_REQUESTS_PATTERNS.FIND_ALL, filters);
   }
 
   findOne(id: number): Observable<GuestRequestDto> {
     return this.guestRequestsClient.send<GuestRequestDto, number>(
-      GUEST_REQUESTS_PATTERNS.FIND_BY_ID,
+      GUEST_REQUESTS_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByStatus(status: RequestStatus): Observable<GuestRequestDto[]> {
-    return this.guestRequestsClient.send<GuestRequestDto[], RequestStatus>(
-      GUEST_REQUESTS_PATTERNS.FIND_BY_STATUS,
-      status,
-    );
-  }
-
-  getRequestsByPriority(
-    priority: RequestPriority,
-  ): Observable<GuestRequestDto[]> {
-    return this.guestRequestsClient.send<GuestRequestDto[], RequestPriority>(
-      GUEST_REQUESTS_PATTERNS.FIND_BY_PRIORITY,
-      priority,
-    );
-  }
-
-  getPendingRequests(): Observable<GuestRequestDto[]> {
-    return this.findByStatus(RequestStatus.PENDING).pipe(
-      map((requests) =>
-        requests.sort((a, b) => {
-          const aTime = new Date(a.createdAt).getTime();
-          const bTime = new Date(b.createdAt).getTime();
-          return aTime - bTime;
-        }),
-      ),
     );
   }
 
@@ -80,13 +53,9 @@ export class GuestRequestsService {
     );
   }
 
-  delete(id: number): Observable<GuestRequestDto> {
-    return this.remove(id);
-  }
-
   markAsCompleted(id: number): Observable<GuestRequestDto> {
     return this.update(id, {
-      status: RequestStatus.COMPLETED,
+      status: GuestRequestStatus.COMPLETED,
       completedAt: new Date(),
     });
   }
@@ -94,21 +63,14 @@ export class GuestRequestsService {
   assignTo(id: number, assignedTo: string): Observable<GuestRequestDto> {
     return this.update(id, {
       assignedTo,
-      status: RequestStatus.IN_PROGRESS,
+      status: GuestRequestStatus.IN_PROGRESS,
     });
   }
 
-  countByStatus(status: RequestStatus): Observable<number> {
-    return this.guestRequestsClient.send<number, RequestStatus>(
+  countByStatus(status: GuestRequestStatus): Observable<number> {
+    return this.guestRequestsClient.send<number, GuestRequestStatus>(
       GUEST_REQUESTS_PATTERNS.COUNT_BY_STATUS,
       status,
-    );
-  }
-
-  findRecent(limit = 5): Observable<GuestRequestDto[]> {
-    return this.guestRequestsClient.send<GuestRequestDto[], number>(
-      GUEST_REQUESTS_PATTERNS.FIND_RECENT,
-      limit,
     );
   }
 }

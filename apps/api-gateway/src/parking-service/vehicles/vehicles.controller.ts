@@ -5,27 +5,27 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { VehiclesService } from './vehicles.service';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
+import {
+  CreateVehicleDto,
+  FindVehiclesFilterDto,
+  UpdateVehicleDto,
+  VehicleDto,
+} from '@app/contracts/parking-service';
 
 @ApiTags('parking')
 @Controller('parking/vehicles')
@@ -34,87 +34,128 @@ export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get All Vehicles' })
+  @ApiOperation({
+    summary: 'Get All Vehicles',
+    description:
+      'Retrieve all registered vehicles in the parking system with their current status and assigned space information. Optionally filter by status, guest type, or license plate.',
+  })
   @ApiResponse({ status: 200, type: [VehicleDto] })
-  getAllVehicles(): Observable<VehicleDto[]> {
-    return this.vehiclesService.findAll();
-  }
-
-  @Get('by-status')
-  @ApiOperation({ summary: 'Get Vehicles by Status' })
-  @ApiQuery({ name: 'status', enum: VehicleStatus })
-  @ApiResponse({ status: 200, type: [VehicleDto] })
-  getVehiclesByStatus(
-    @Query('status') status: VehicleStatus,
-  ): Observable<VehicleDto[]> {
-    return this.vehiclesService.findByStatus(status);
-  }
-
-  @Get('by-guest-type')
-  @ApiOperation({ summary: 'Get Vehicles by Guest Type' })
-  @ApiQuery({ name: 'guestType', enum: GuestType })
-  @ApiResponse({ status: 200, type: [VehicleDto] })
-  getVehiclesByGuestType(
-    @Query('guestType') guestType: GuestType,
-  ): Observable<VehicleDto[]> {
-    return this.vehiclesService.findByGuestType(guestType);
+  findAll(@Query() filters: FindVehiclesFilterDto): Observable<VehicleDto[]> {
+    return this.vehiclesService.findAll(filters);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get Vehicle by ID' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Get Vehicle by ID',
+    description:
+      'Retrieve a specific vehicle by its unique identifier, including its current status and assigned parking space.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the vehicle',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: VehicleDto })
-  getVehicleById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<VehicleDto> {
+  @ApiResponse({
+    status: 404,
+    description: 'Vehicle not found',
+  })
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<VehicleDto> {
     return this.vehiclesService.findOne(id);
   }
 
-  @Get('license/:licensePlate')
-  @ApiOperation({ summary: 'Get Vehicle by License Plate' })
-  @ApiParam({ name: 'licensePlate', type: String })
-  @ApiResponse({ status: 200, type: VehicleDto })
-  getVehicleByLicensePlate(
-    @Param('licensePlate') licensePlate: string,
-  ): Observable<VehicleDto> {
-    return this.vehiclesService.findByLicensePlate(licensePlate);
-  }
-
   @Post()
-  @ApiOperation({ summary: 'Create Vehicle' })
-  @ApiBody({ type: CreateVehicleDto })
+  @ApiOperation({
+    summary: 'Create Vehicle',
+    description:
+      'Register a new vehicle in the parking system. The vehicle will be assigned a parking space if available.',
+  })
+  @ApiBody({
+    type: CreateVehicleDto,
+    description:
+      'Vehicle registration data including license plate, owner information, and guest type',
+  })
   @ApiResponse({ status: 201, type: VehicleDto })
-  createVehicle(@Body() body: CreateVehicleDto): Observable<VehicleDto> {
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  create(@Body() body: CreateVehicleDto): Observable<VehicleDto> {
     return this.vehiclesService.create(body);
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update Vehicle' })
-  @ApiParam({ name: 'id', type: Number })
-  @ApiBody({ type: UpdateVehicleDto })
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Update Vehicle',
+    description:
+      'Update an existing vehicle record with new information such as owner details or assigned parking space.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the vehicle to update',
+    example: 1,
+  })
+  @ApiBody({
+    type: UpdateVehicleDto,
+    description: 'Updated vehicle data',
+  })
   @ApiResponse({ status: 200, type: VehicleDto })
-  updateVehicle(
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Vehicle not found',
+  })
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateVehicleDto,
   ): Observable<VehicleDto> {
     return this.vehiclesService.update(id, body);
   }
 
-  @Put(':id/checkout')
-  @ApiOperation({ summary: 'Check Out Vehicle' })
-  @ApiParam({ name: 'id', type: Number })
+  @Patch(':id/checkout')
+  @ApiOperation({
+    summary: 'Check Out Vehicle',
+    description:
+      'Mark a vehicle as checked out from the parking facility. This frees up the assigned parking space.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the vehicle to check out',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: VehicleDto })
-  checkOutVehicle(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<VehicleDto> {
+  @ApiResponse({
+    status: 404,
+    description: 'Vehicle not found',
+  })
+  checkOut(@Param('id', ParseIntPipe) id: number): Observable<VehicleDto> {
     return this.vehiclesService.checkOut(id);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete Vehicle' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Delete Vehicle',
+    description:
+      'Remove a vehicle record from the parking system. This should only be used for erroneous entries.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the vehicle to delete',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: VehicleDto })
-  deleteVehicle(@Param('id', ParseIntPipe) id: number): Observable<VehicleDto> {
+  @ApiResponse({
+    status: 404,
+    description: 'Vehicle not found',
+  })
+  remove(@Param('id', ParseIntPipe) id: number): Observable<VehicleDto> {
     return this.vehiclesService.remove(id);
   }
 }

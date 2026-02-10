@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   HttpCode,
@@ -9,18 +10,19 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { RegisterDto } from '@app/contracts/auth-service/auth/dto/register.dto';
-import { LoginDto } from '@app/contracts/auth-service/auth/dto/login.dto';
-import { AuthResponseDto } from '@app/contracts/auth-service/auth/dto/auth-response.dto';
-import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
-import { LogoutResponseDto } from '@app/contracts/auth-service/auth/dto/logout-response.dto';
-import { ProfileResponseDto } from '@app/contracts/auth-service/auth/dto/profile-response.dto';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import type { JwtUser } from '@app/contracts/auth-service/tokens/interfaces/jwt-user.interface';
-import type { JwtRefreshUser } from '@app/contracts/auth-service/tokens/interfaces/jwt-refresh-user.interface';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditAction } from '../../audit/enums/audit-action.enum';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import {
+  RegisterDto,
+  LoginDto,
+  AuthResponseDto,
+  LogoutResponseDto,
+  ProfileResponseDto,
+  TokenResponseDto,
+  JwtUser,
+  JwtRefreshUser,
+} from '@app/contracts/auth-service';
+import { CurrentUser } from '../../common';
+import { AuditLog } from '../../audit-service';
+import { AuditAction, AuditResource } from '@app/contracts/audit-service';
 import { AuthService } from './auth.service';
 
 @ApiTags('auth')
@@ -131,7 +133,7 @@ export class AuthController {
     return this.authService.refreshTokens(sub, refreshToken ?? '');
   }
 
-  @Post('me')
+  @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
     summary: 'Get User Profile',
@@ -147,9 +149,7 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized - Invalid or missing token',
   })
-  getProfile(
-    @CurrentUser() user: JwtUser,
-  ): Observable<ProfileResponseDto | null> {
-    return this.authService.validateUser(user.id);
+  getProfile(@CurrentUser() user: JwtUser): Observable<ProfileResponseDto> {
+    return this.authService.getProfile(user.id);
   }
 }

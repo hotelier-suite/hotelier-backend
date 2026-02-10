@@ -2,11 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { PARKING_SERVICE_CLIENT } from '../constants';
-import { SPACES_PATTERNS } from '@app/contracts/parking-service/spaces/spaces.patterns';
-import { ParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/parking-space.dto';
-import { CreateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/create-parking-space.dto';
-import { UpdateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/update-parking-space.dto';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
+import {
+  CreateParkingSpaceDto,
+  ParkingSpaceDto,
+  SPACES_PATTERNS,
+  UpdateParkingSpaceDto,
+  FindSpacesFilterDto,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class SpacesService {
@@ -15,45 +17,17 @@ export class SpacesService {
     private readonly parkingClient: ClientProxy,
   ) {}
 
-  findAll(): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
-      SPACES_PATTERNS.GET_ALL,
-      {},
-    );
-  }
-
-  findAvailable(): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], Record<string, never>>(
-      SPACES_PATTERNS.GET_AVAILABLE,
-      {},
-    );
-  }
-
-  findByType(type: SpaceType): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], SpaceType>(
-      SPACES_PATTERNS.GET_BY_TYPE,
-      type,
-    );
-  }
-
-  findByZone(zone: string): Observable<ParkingSpaceDto[]> {
-    return this.parkingClient.send<ParkingSpaceDto[], string>(
-      SPACES_PATTERNS.GET_BY_ZONE,
-      zone,
+  findAll(filters: FindSpacesFilterDto): Observable<ParkingSpaceDto[]> {
+    return this.parkingClient.send<ParkingSpaceDto[], FindSpacesFilterDto>(
+      SPACES_PATTERNS.FIND_ALL,
+      filters,
     );
   }
 
   findOne(id: number): Observable<ParkingSpaceDto> {
     return this.parkingClient.send<ParkingSpaceDto, number>(
-      SPACES_PATTERNS.GET_BY_ID,
+      SPACES_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByCode(code: string): Observable<ParkingSpaceDto> {
-    return this.parkingClient.send<ParkingSpaceDto, string>(
-      SPACES_PATTERNS.GET_BY_CODE,
-      code,
     );
   }
 

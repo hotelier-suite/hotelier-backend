@@ -4,13 +4,15 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsEmail,
   IsEnum,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
-import { LoyaltyLevel } from '../enums/loyalty-level.enum';
+import { LoyaltyLevel } from '../enums';
 import { UserRoleAssignmentDto } from './user-role-assignment.dto';
 
 export class UserResponseDto {
@@ -18,14 +20,15 @@ export class UserResponseDto {
     description: 'User unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({
     description: 'User email address',
     example: 'admin@hotelier.com',
   })
-  @IsString()
+  @IsEmail()
   email!: string;
 
   @ApiProperty({
@@ -49,7 +52,8 @@ export class UserResponseDto {
     example: 1250,
     minimum: 0,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(0)
   loyaltyPoints!: number;
 
   @ApiProperty({
@@ -72,7 +76,9 @@ export class UserResponseDto {
   @ApiProperty({
     description: 'User registration date',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   registrationDate!: Date;
 
@@ -80,22 +86,28 @@ export class UserResponseDto {
     description: 'Last visit timestamp',
     example: '2024-01-15T10:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   lastVisit?: Date;
 
   @ApiProperty({
     description: 'Account creation timestamp',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt!: Date;
 
   @ApiProperty({
     description: 'Last account update timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt!: Date;
 
@@ -103,8 +115,10 @@ export class UserResponseDto {
     description: 'First visit timestamp',
     example: '2024-01-02T09:15:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   firstVisit?: Date;
 
@@ -119,8 +133,10 @@ export class UserResponseDto {
     description: 'Last login timestamp',
     example: '2024-01-15T10:30:00.000Z',
     required: false,
+    format: 'date-time',
   })
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   lastLogin?: Date;
 

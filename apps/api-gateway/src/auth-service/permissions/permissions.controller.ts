@@ -2,11 +2,12 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Delete,
   Body,
   Param,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,62 +18,47 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { PermissionsService } from './permissions.service';
-import { CreatePermissionDto } from '@app/contracts/auth-service/permissions/dto/create-permission.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { UpdatePermissionDto } from '@app/contracts/auth-service/permissions/dto/update-permission.dto';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import {
+  CreatePermissionDto,
+  FindPermissionsFilterDto,
+  PermissionResponseDto,
+  UpdatePermissionDto,
+} from '@app/contracts/auth-service';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 
-@ApiTags('roles')
-@Controller('roles')
+@ApiTags('permissions')
+@Controller('roles/permissions')
 @AuditLog({ resource: AuditResource.PERMISSION })
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  // System Permissions Management - Must come before :id route
-  @Get('permissions')
+  @Get()
   @ApiOperation({
     summary: 'Get All Permissions',
-    description: 'Retrieve all system permissions.',
+    description:
+      'Retrieve all system permissions available for role assignment. Supports optional filtering by resource and action.',
   })
   @ApiResponse({
     status: 200,
     description: 'Permissions retrieved successfully',
     type: [PermissionResponseDto],
   })
-  getAllPermissions(): Observable<PermissionResponseDto[]> {
-    return this.permissionsService.findAll();
+  findAll(
+    @Query() filters: FindPermissionsFilterDto,
+  ): Observable<PermissionResponseDto[]> {
+    return this.permissionsService.findAll(filters);
   }
 
-  @Get('permissions/by-resource')
-  @ApiOperation({
-    summary: 'Get Permissions by Resource',
-    description: 'Retrieve permissions grouped by resource type.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Permissions by resource retrieved successfully',
-    schema: {
-      type: 'object',
-      additionalProperties: {
-        type: 'array',
-        items: { $ref: '#/components/schemas/PermissionResponseDto' },
-      },
-    },
-  })
-  getPermissionsByResource(): Observable<
-    Record<string, PermissionResponseDto[]>
-  > {
-    return this.permissionsService.findByResource();
-  }
-
-  @Post('/permissions')
+  @Post()
   @ApiOperation({
     summary: 'Create Permission',
-    description: 'Create a new system permission.',
+    description:
+      'Create a new system permission that can be assigned to roles.',
   })
   @ApiBody({
-    description: 'Permission creation data',
+    description:
+      'Permission creation data including name, resource, and action',
     type: CreatePermissionDto,
   })
   @ApiResponse({
@@ -80,25 +66,32 @@ export class PermissionsController {
     description: 'Permission created successfully',
     type: PermissionResponseDto,
   })
-  createPermission(
+  @ApiResponse({
+    status: 400,
+    description:
+      'Invalid request data - validation failed or duplicate permission',
+  })
+  create(
     @Body() createPermissionDto: CreatePermissionDto,
   ): Observable<PermissionResponseDto> {
     return this.permissionsService.create(createPermissionDto);
   }
 
-  @Put('/permissions/:id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Update Permission',
-    description: 'Update an existing system permission.',
+    description:
+      'Update an existing system permission. Changes will affect all roles with this permission.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Permission ID',
+    description: 'Unique identifier of the permission to update',
     type: 'number',
     example: 1,
   })
   @ApiBody({
-    description: 'Permission update data',
+    description:
+      'Permission update data - only include fields that need to be changed',
     type: UpdatePermissionDto,
   })
   @ApiResponse({
@@ -107,24 +100,29 @@ export class PermissionsController {
     type: PermissionResponseDto,
   })
   @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Permission not found',
   })
-  updatePermission(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePermissionDto: UpdatePermissionDto,
   ): Observable<PermissionResponseDto> {
     return this.permissionsService.update(id, updatePermissionDto);
   }
 
-  @Delete('/permissions/:id')
+  @Delete(':id')
   @ApiOperation({
     summary: 'Delete Permission',
-    description: 'Delete a system permission.',
+    description:
+      'Permanently delete a system permission. This will remove the permission from all roles.',
   })
   @ApiParam({
     name: 'id',
-    description: 'Permission ID',
+    description: 'Unique identifier of the permission to delete',
     type: 'number',
     example: 1,
   })
@@ -137,7 +135,7 @@ export class PermissionsController {
     status: 404,
     description: 'Permission not found',
   })
-  deletePermission(
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<PermissionResponseDto> {
     return this.permissionsService.remove(id);

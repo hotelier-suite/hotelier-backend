@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GuestRequestsSeeder } from './guest-requests.seeder';
-import { GuestRequest } from '../entities/guest-request.entity';
+import { GuestRequest } from '../entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([GuestRequest])],

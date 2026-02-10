@@ -5,26 +5,27 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { SpacesService } from './spaces.service';
-import { ParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/parking-space.dto';
-import { CreateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/create-parking-space.dto';
-import { UpdateParkingSpaceDto } from '@app/contracts/parking-service/spaces/dto/update-parking-space.dto';
-import { SpaceType } from '@app/contracts/parking-service/spaces/enums/space-type.enum';
+import {
+  CreateParkingSpaceDto,
+  FindSpacesFilterDto,
+  ParkingSpaceDto,
+  UpdateParkingSpaceDto,
+} from '@app/contracts/parking-service';
 
 @ApiTags('parking')
 @Controller('parking/spaces')
@@ -33,71 +34,84 @@ export class SpacesController {
   constructor(private readonly spacesService: SpacesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get All Parking Spaces' })
+  @ApiOperation({
+    summary: 'Get All Parking Spaces',
+    description:
+      'Retrieve all parking spaces in the facility with their current availability status and assigned vehicle information. Optionally filter by status, type, zone, or code.',
+  })
   @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  getAllSpaces(): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findAll();
-  }
-
-  @Get('available')
-  @ApiOperation({ summary: 'Get Available Spaces' })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  getAvailableSpaces(): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findAvailable();
-  }
-
-  @Get('by-type')
-  @ApiOperation({ summary: 'Get Spaces by Type' })
-  @ApiQuery({ name: 'type', enum: SpaceType })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  getSpacesByType(
-    @Query('type') type: SpaceType,
+  findAll(
+    @Query() filters: FindSpacesFilterDto,
   ): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findByType(type);
-  }
-
-  @Get('by-zone')
-  @ApiOperation({ summary: 'Get Spaces by Zone' })
-  @ApiQuery({ name: 'zone', type: String })
-  @ApiResponse({ status: 200, type: [ParkingSpaceDto] })
-  getSpacesByZone(@Query('zone') zone: string): Observable<ParkingSpaceDto[]> {
-    return this.spacesService.findByZone(zone);
+    return this.spacesService.findAll(filters);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get Parking Space by ID' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Get Parking Space by ID',
+    description:
+      'Retrieve a specific parking space by its unique identifier, including its current status and assigned vehicle.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the parking space',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: ParkingSpaceDto })
-  getSpaceById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<ParkingSpaceDto> {
+  @ApiResponse({
+    status: 404,
+    description: 'Parking space not found',
+  })
+  findOne(@Param('id', ParseIntPipe) id: number): Observable<ParkingSpaceDto> {
     return this.spacesService.findOne(id);
   }
 
-  @Get('code/:code')
-  @ApiOperation({ summary: 'Get Parking Space by Code' })
-  @ApiParam({ name: 'code', type: String })
-  @ApiResponse({ status: 200, type: ParkingSpaceDto })
-  getSpaceByCode(@Param('code') code: string): Observable<ParkingSpaceDto> {
-    return this.spacesService.findByCode(code);
-  }
-
   @Post()
-  @ApiOperation({ summary: 'Create Parking Space' })
-  @ApiBody({ type: CreateParkingSpaceDto })
+  @ApiOperation({
+    summary: 'Create Parking Space',
+    description:
+      'Create a new parking space in the facility with the specified type, zone, and code.',
+  })
+  @ApiBody({
+    type: CreateParkingSpaceDto,
+    description: 'Parking space data including code, type, and zone assignment',
+  })
   @ApiResponse({ status: 201, type: ParkingSpaceDto })
-  createSpace(
-    @Body() body: CreateParkingSpaceDto,
-  ): Observable<ParkingSpaceDto> {
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  create(@Body() body: CreateParkingSpaceDto): Observable<ParkingSpaceDto> {
     return this.spacesService.create(body);
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update Parking Space' })
-  @ApiParam({ name: 'id', type: Number })
-  @ApiBody({ type: UpdateParkingSpaceDto })
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Update Parking Space',
+    description:
+      'Update an existing parking space with new information such as type, zone, or availability status.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the parking space to update',
+    example: 1,
+  })
+  @ApiBody({
+    type: UpdateParkingSpaceDto,
+    description: 'Updated parking space data',
+  })
   @ApiResponse({ status: 200, type: ParkingSpaceDto })
-  updateSpace(
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Parking space not found',
+  })
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateParkingSpaceDto,
   ): Observable<ParkingSpaceDto> {
@@ -105,12 +119,23 @@ export class SpacesController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete Parking Space' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Delete Parking Space',
+    description:
+      'Remove a parking space from the facility. This should only be used when a space is permanently decommissioned.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the parking space to delete',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: ParkingSpaceDto })
-  deleteSpace(
-    @Param('id', ParseIntPipe) id: number,
-  ): Observable<ParkingSpaceDto> {
+  @ApiResponse({
+    status: 404,
+    description: 'Parking space not found',
+  })
+  remove(@Param('id', ParseIntPipe) id: number): Observable<ParkingSpaceDto> {
     return this.spacesService.remove(id);
   }
 }

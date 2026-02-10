@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from '../../users/entities/user.entity';
-import { Role } from '../../roles/entities/role.entity';
-import { UserRole } from '../../users/entities/user-role.entity';
-import { LoyaltyLevel } from '@app/contracts/auth-service/users/enums/loyalty-level.enum';
+import { User, UserRole } from '../../users';
+import { Role } from '../../roles';
+import { LoyaltyLevel } from '@app/contracts/auth-service';
 
 @Injectable()
 export class UsersSeeder {
@@ -116,10 +115,8 @@ export class UsersSeeder {
         registrationDate: new Date(),
       });
 
-      // Assign roles to user
       await this.assignRolesToUser(user, userData.roles);
     } else {
-      // Update existing user with new password
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
       await this.userRepository.update(existingUser.id, {

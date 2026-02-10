@@ -1,0 +1,143 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { REPORTS_SERVICE_CLIENT } from '../constants';
+import {
+  REPORTS_PATTERNS,
+  ReportDto,
+  CreateReportDto,
+  UpdateReportDto,
+  FinancialSummaryDto,
+  ReportOccupancyDataDto,
+  MonthlyRevenueDto,
+  FinancialReportPdfDto,
+  FindReportsFilterDto,
+} from '@app/contracts/reports-service';
+
+@Injectable()
+export class ReportsService {
+  constructor(
+    @Inject(REPORTS_SERVICE_CLIENT)
+    private readonly reportsClient: ClientProxy,
+  ) {}
+
+  findAll(filters: FindReportsFilterDto): Observable<ReportDto[]> {
+    return this.reportsClient.send<ReportDto[], FindReportsFilterDto>(
+      REPORTS_PATTERNS.FIND_ALL,
+      filters,
+    );
+  }
+
+  findOne(id: number): Observable<ReportDto> {
+    return this.reportsClient.send<ReportDto, number>(
+      REPORTS_PATTERNS.FIND_ONE,
+      id,
+    );
+  }
+
+  create(data: CreateReportDto): Observable<ReportDto> {
+    return this.reportsClient.send<ReportDto, CreateReportDto>(
+      REPORTS_PATTERNS.CREATE,
+      data,
+    );
+  }
+
+  update(id: number, data: UpdateReportDto): Observable<ReportDto> {
+    return this.reportsClient.send<
+      ReportDto,
+      { id: number; data: UpdateReportDto }
+    >(REPORTS_PATTERNS.UPDATE, { id, data });
+  }
+
+  remove(id: number): Observable<ReportDto> {
+    return this.reportsClient.send<ReportDto, number>(
+      REPORTS_PATTERNS.DELETE,
+      id,
+    );
+  }
+
+  generateOccupancyReport(
+    startDate: Date,
+    endDate: Date,
+    generatedBy: string,
+  ): Observable<ReportDto> {
+    return this.reportsClient.send<
+      ReportDto,
+      { startDate: Date; endDate: Date; generatedBy: string }
+    >(REPORTS_PATTERNS.GENERATE_OCCUPANCY, {
+      startDate,
+      endDate,
+      generatedBy,
+    });
+  }
+
+  generateRevenueReport(
+    startDate: Date,
+    endDate: Date,
+    generatedBy: string,
+  ): Observable<ReportDto> {
+    return this.reportsClient.send<
+      ReportDto,
+      { startDate: Date; endDate: Date; generatedBy: string }
+    >(REPORTS_PATTERNS.GENERATE_REVENUE, {
+      startDate,
+      endDate,
+      generatedBy,
+    });
+  }
+
+  generateGuestSatisfactionReport(
+    startDate: Date,
+    endDate: Date,
+    generatedBy: string,
+  ): Observable<ReportDto> {
+    return this.reportsClient.send<
+      ReportDto,
+      { startDate: Date; endDate: Date; generatedBy: string }
+    >(REPORTS_PATTERNS.GENERATE_GUEST_SATISFACTION, {
+      startDate,
+      endDate,
+      generatedBy,
+    });
+  }
+
+  getFinancialSummary(
+    startDate: Date,
+    endDate: Date,
+  ): Observable<FinancialSummaryDto> {
+    return this.reportsClient.send<
+      FinancialSummaryDto,
+      { startDate: Date; endDate: Date }
+    >(REPORTS_PATTERNS.GET_FINANCIAL_SUMMARY, {
+      startDate,
+      endDate,
+    });
+  }
+
+  getOccupancyByMonthYear(
+    year: number,
+    month?: number,
+  ): Observable<ReportOccupancyDataDto[]> {
+    return this.reportsClient.send<
+      ReportOccupancyDataDto[],
+      { year: number; month?: number }
+    >(REPORTS_PATTERNS.GET_OCCUPANCY_BY_MONTH_YEAR, { year, month });
+  }
+
+  getMonthlyRevenueComparison(year: number): Observable<MonthlyRevenueDto[]> {
+    return this.reportsClient.send<MonthlyRevenueDto[], { year: number }>(
+      REPORTS_PATTERNS.GET_MONTHLY_REVENUE_COMPARISON,
+      { year },
+    );
+  }
+
+  generateFinancialReportPdf(
+    year: number,
+    month?: number,
+  ): Observable<FinancialReportPdfDto> {
+    return this.reportsClient.send<
+      FinancialReportPdfDto,
+      { year: number; month?: number }
+    >(REPORTS_PATTERNS.GENERATE_FINANCIAL_REPORT_PDF, { year, month });
+  }
+}

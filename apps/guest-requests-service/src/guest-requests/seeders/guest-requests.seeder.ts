@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GuestRequest } from '../entities/guest-request.entity';
-import { RequestType } from '@app/contracts/guest-requests-service/guest-requests/enums/request-type.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
+import { GuestRequest } from '../entities';
+import {
+  GuestRequestType,
+  GuestRequestStatus,
+  RequestPriority,
+} from '@app/contracts/guest-requests-service';
 
 @Injectable()
 export class GuestRequestsSeeder {
@@ -18,10 +20,10 @@ export class GuestRequestsSeeder {
       {
         room: '301',
         guestName: 'Sarah Johnson',
-        type: RequestType.TOWELS,
+        type: GuestRequestType.TOWELS,
         description:
           'Please provide extra bath towels and pool towels for family of 4',
-        status: RequestStatus.COMPLETED,
+        status: GuestRequestStatus.COMPLETED,
         priority: RequestPriority.LOW,
         time: new Date('2024-12-08 14:30:00'),
         completedAt: new Date('2024-12-08 15:15:00'),
@@ -31,10 +33,10 @@ export class GuestRequestsSeeder {
       {
         room: '507',
         guestName: 'Michael Chen',
-        type: RequestType.ROOM_SERVICE,
+        type: GuestRequestType.ROOM_SERVICE,
         description:
           'Order dinner for 2: Grilled salmon, Caesar salad and a bottle of Chardonnay',
-        status: RequestStatus.IN_PROGRESS,
+        status: GuestRequestStatus.IN_PROGRESS,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 18:45:00'),
         assignedTo: 'Restaurant Staff',
@@ -43,10 +45,10 @@ export class GuestRequestsSeeder {
       {
         room: '203',
         guestName: 'Emily Johnson',
-        type: RequestType.MAINTENANCE,
+        type: GuestRequestType.MAINTENANCE,
         description:
           'Air conditioning not working properly, room temperature too hot',
-        status: RequestStatus.PENDING,
+        status: GuestRequestStatus.PENDING,
         priority: RequestPriority.HIGH,
         time: new Date('2024-12-08 19:20:00'),
         assignedTo: 'Maintenance Team',
@@ -55,10 +57,10 @@ export class GuestRequestsSeeder {
       {
         room: '1205',
         guestName: 'Robert Wilson',
-        type: RequestType.HOUSEKEEPING,
+        type: GuestRequestType.HOUSEKEEPING,
         description:
           'Request early housekeeping service at 8 AM for business meeting preparation',
-        status: RequestStatus.PENDING,
+        status: GuestRequestStatus.PENDING,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 20:15:00'),
         assignedTo: 'Housekeeping Supervisor',
@@ -67,10 +69,10 @@ export class GuestRequestsSeeder {
       {
         room: '802',
         guestName: 'Lisa Thompson',
-        type: RequestType.CONCIERGE,
+        type: GuestRequestType.CONCIERGE,
         description:
           'Need assistance booking tickets for local theater show and restaurant recommendations',
-        status: RequestStatus.COMPLETED,
+        status: GuestRequestStatus.COMPLETED,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 16:00:00'),
         completedAt: new Date('2024-12-08 17:30:00'),
@@ -81,10 +83,10 @@ export class GuestRequestsSeeder {
       {
         room: '404',
         guestName: 'David Kim',
-        type: RequestType.TECHNICAL_SUPPORT,
+        type: GuestRequestType.TECHNICAL_SUPPORT,
         description:
           'Wi-Fi connection issues, cannot connect laptop for video conference',
-        status: RequestStatus.COMPLETED,
+        status: GuestRequestStatus.COMPLETED,
         priority: RequestPriority.URGENT,
         time: new Date('2024-12-08 10:30:00'),
         completedAt: new Date('2024-12-08 11:00:00'),
@@ -94,9 +96,9 @@ export class GuestRequestsSeeder {
       {
         room: '609',
         guestName: 'Amanda Davis',
-        type: RequestType.OTHER,
+        type: GuestRequestType.OTHER,
         description: 'Request for crib and baby items for 18-month-old child',
-        status: RequestStatus.COMPLETED,
+        status: GuestRequestStatus.COMPLETED,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 13:45:00'),
         completedAt: new Date('2024-12-08 14:30:00'),
@@ -107,10 +109,10 @@ export class GuestRequestsSeeder {
       {
         room: '1101',
         guestName: 'Thomas Anderson',
-        type: RequestType.CONCIERGE,
+        type: GuestRequestType.CONCIERGE,
         description:
           'Airport transportation service needed for early flight at 6 AM',
-        status: RequestStatus.PENDING,
+        status: GuestRequestStatus.PENDING,
         priority: RequestPriority.HIGH,
         time: new Date('2024-12-08 21:00:00'),
         assignedTo: 'Transportation Coordinator',
@@ -119,10 +121,10 @@ export class GuestRequestsSeeder {
       {
         room: '715',
         guestName: 'Jennifer Smith',
-        type: RequestType.HOUSEKEEPING,
+        type: GuestRequestType.HOUSEKEEPING,
         description:
           'Allergic to feather pillows, need hypoallergenic bedding alternatives',
-        status: RequestStatus.COMPLETED,
+        status: GuestRequestStatus.COMPLETED,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 12:15:00'),
         completedAt: new Date('2024-12-08 13:00:00'),
@@ -133,9 +135,9 @@ export class GuestRequestsSeeder {
       {
         room: '318',
         guestName: 'Christopher Lee',
-        type: RequestType.MAINTENANCE,
+        type: GuestRequestType.MAINTENANCE,
         description: 'Bathroom shower has low water pressure',
-        status: RequestStatus.IN_PROGRESS,
+        status: GuestRequestStatus.IN_PROGRESS,
         priority: RequestPriority.MEDIUM,
         time: new Date('2024-12-08 17:45:00'),
         assignedTo: 'Plumbing Specialist',

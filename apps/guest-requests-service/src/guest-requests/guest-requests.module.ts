@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GuestRequest } from './entities/guest-request.entity';
+import { GuestRequest } from './entities';
 import { GuestRequestsController } from './guest-requests.controller';
 import { GuestRequestsService } from './guest-requests.service';
 

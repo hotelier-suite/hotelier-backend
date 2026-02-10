@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsMilitaryTime,
+  IsUrl,
+} from 'class-validator';
 
 export class UpdateHotelConfigDto {
   @ApiProperty({
@@ -53,25 +59,27 @@ export class UpdateHotelConfigDto {
     required: false,
   })
   @IsOptional()
-  @IsString()
+  @IsUrl()
   website?: string;
 
   @ApiProperty({
     description: 'Standard check-in time',
     example: '15:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
-  @IsString()
+  @IsMilitaryTime()
   checkInTime?: string;
 
   @ApiProperty({
     description: 'Standard check-out time',
     example: '11:00',
     required: false,
+    format: 'time',
   })
   @IsOptional()
-  @IsString()
+  @IsMilitaryTime()
   checkOutTime?: string;
 
   @ApiProperty({

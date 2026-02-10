@@ -1,14 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
-import { UserResponseDto } from '@app/contracts/auth-service/users/dto/user-response.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { PermissionResponseDto } from '@app/contracts/auth-service/permissions/dto/permission-response.dto';
-import { User } from './entities/user.entity';
-import { Role } from '../roles/entities/role.entity';
-import { UserRole } from '../users/entities/user-role.entity';
-import { AccessControlService } from '../access-control/access-control.service';
+import {
+  FindOptionsRelations,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Like,
+  Repository,
+} from 'typeorm';
+import {
+  UserResponseDto,
+  RoleResponseDto,
+  PermissionResponseDto,
+  FindUsersFilterDto,
+} from '@app/contracts/auth-service';
+import { User, UserRole } from './entities';
+import { Role } from '../roles';
+import { AccessControlService } from '../access-control';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +30,7 @@ export class UsersService {
     private readonly accessControlService: AccessControlService,
   ) {}
 
-  private readonly userReadSelect: FindOptionsSelect<User> = {
+  private readonly userSelect: FindOptionsSelect<User> = {
     id: true,
     email: true,
     name: true,
@@ -47,7 +55,7 @@ export class UsersService {
     },
   };
 
-  private readonly userReadRelations: FindOptionsRelations<User> = {
+  private readonly userRelations: FindOptionsRelations<User> = {
     userRoles: {
       role: true,
     },
@@ -77,11 +85,12 @@ export class UsersService {
     roleId: number,
     assignedBy = 'system',
   ): Promise<void> {
-    await this.userRoleRepository.save({
+    const entity = this.userRoleRepository.create({
       userId,
       roleId,
       assignedBy,
     });
+    await this.userRoleRepository.save(entity);
   }
 
   async clearRefreshToken(userId: number): Promise<void> {
@@ -92,19 +101,36 @@ export class UsersService {
     await this.userRepository.update(userId, { lastLogin: new Date() });
   }
 
-  findAllUsers(): Promise<UserResponseDto[]> {
+  findAll(filters: FindUsersFilterDto): Promise<UserResponseDto[]> {
+    const where: FindOptionsWhere<User> = {};
+
+    if (filters.email) {
+      where.email = Like(`%${filters.email}%`);
+    }
+
+    if (filters.isActive !== undefined) {
+      where.isActive = filters.isActive;
+    }
+
+    if (filters.roleId) {
+      where.userRoles = {
+        roleId: filters.roleId,
+      };
+    }
+
     return this.userRepository.find({
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      where,
+      select: this.userSelect,
+      relations: this.userRelations,
       order: { createdAt: 'DESC' },
     });
   }
 
-  async findUserById(id: number): Promise<UserResponseDto> {
+  async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!user) {
@@ -117,13 +143,14 @@ export class UsersService {
     return user;
   }
 
-  async createUser(data: Partial<User>): Promise<UserResponseDto> {
-    const user = await this.userRepository.save(data);
+  async create(data: Partial<User>): Promise<UserResponseDto> {
+    const entity = this.userRepository.create(data);
+    const user = await this.userRepository.save(entity);
 
     const loaded = await this.userRepository.findOne({
       where: { id: user.id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!loaded) {
@@ -136,7 +163,10 @@ export class UsersService {
     return loaded;
   }
 
-  async updateUser(id: number, data: Partial<User>): Promise<UserResponseDto> {
+  async update(
+    id: number,
+    data: Partial<User> & { roleIds?: number[] },
+  ): Promise<UserResponseDto> {
     const existing = await this.userRepository.findOne({
       where: { id },
       relations: { userRoles: { role: true } },
@@ -149,12 +179,23 @@ export class UsersService {
       });
     }
 
-    await this.userRepository.update(id, data);
+    // Extract roleIds from data and handle separately
+    const { roleIds, ...userData } = data;
+
+    // Update user data if there are any fields to update
+    if (Object.keys(userData).length > 0) {
+      await this.userRepository.update(id, userData);
+    }
+
+    // Handle role assignment if roleIds is provided
+    if (roleIds !== undefined) {
+      await this.assignRolesToUser(id, roleIds);
+    }
 
     const updated = await this.userRepository.findOne({
       where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
+      select: this.userSelect,
+      relations: this.userRelations,
     });
 
     if (!updated) {
@@ -167,99 +208,10 @@ export class UsersService {
     return updated;
   }
 
-  async deleteUser(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.remove(user);
-    return user;
-  }
-
-  async activateUser(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: { userRoles: { role: true } },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.update(id, { isActive: true });
-
-    const updated = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    return updated;
-  }
-
-  async deactivateUser(id: number): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: { userRoles: { role: true } },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    await this.userRepository.update(id, { isActive: false });
-
-    const updated = await this.userRepository.findOne({
-      where: { id },
-      select: this.userReadSelect,
-      relations: this.userReadRelations,
-    });
-
-    if (!updated) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `User with id ${id} not found`,
-      });
-    }
-
-    return updated;
-  }
-
-  async assignRolesToUser(userId: number, roleIds: number[]): Promise<void> {
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-      select: { id: true },
-    });
-
-    if (!user) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `User with id ${userId} not found`,
-      });
-    }
-
+  private async assignRolesToUser(
+    userId: number,
+    roleIds: number[],
+  ): Promise<void> {
     const incomingRoleIds = Array.isArray(roleIds) ? roleIds : [];
 
     const validRoleIds = incomingRoleIds.filter(
@@ -300,9 +252,16 @@ export class UsersService {
 
       if (uniqueRoleIds.length > 0) {
         const userRoles = uniqueRoleIds.map((roleId) => ({ userId, roleId }));
-        await userRoleRepository.save(userRoles);
+        const entities = userRoleRepository.create(userRoles);
+        await userRoleRepository.save(entities);
       }
     });
+  }
+
+  async remove(id: number): Promise<UserResponseDto> {
+    const user = await this.findOne(id);
+    const entity = this.userRepository.create(user);
+    return this.userRepository.remove(entity);
   }
 
   async removeRolesFromUser(userId: number, roleIds: number[]): Promise<void> {
@@ -314,13 +273,11 @@ export class UsersService {
     }
   }
 
-  async getUserRoles(userId: number): Promise<RoleResponseDto[]> {
+  getUserRoles(userId: number): Promise<RoleResponseDto[]> {
     return this.accessControlService.getUserRoles(userId);
   }
 
-  async getUserPermissionsList(
-    userId: number,
-  ): Promise<PermissionResponseDto[]> {
+  getUserPermissionsList(userId: number): Promise<PermissionResponseDto[]> {
     return this.accessControlService.getUserPermissionsList(userId);
   }
 }

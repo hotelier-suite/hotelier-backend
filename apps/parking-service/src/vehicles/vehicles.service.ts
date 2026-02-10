@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm';
-import { Vehicle } from './entities/vehicle.entity';
-import { VehicleDto } from '@app/contracts/parking-service/vehicles/dto/vehicle.dto';
-import { CreateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/create-vehicle.dto';
-import { UpdateVehicleDto } from '@app/contracts/parking-service/vehicles/dto/update-vehicle.dto';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
+import { Vehicle } from './entities';
+import {
+  VehicleDto,
+  CreateVehicleDto,
+  UpdateVehicleDto,
+  VehicleStatus,
+  FindVehiclesFilterDto,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class VehiclesService {
@@ -16,7 +18,7 @@ export class VehiclesService {
     private readonly vehicleRepository: Repository<Vehicle>,
   ) {}
 
-  private readonly vehicleReadSelect: FindOptionsSelect<Vehicle> = {
+  private readonly vehicleSelect: FindOptionsSelect<Vehicle> = {
     id: true,
     licensePlate: true,
     brand: true,
@@ -62,15 +64,16 @@ export class VehiclesService {
     },
   };
 
-  private readonly vehicleReadRelations: FindOptionsRelations<Vehicle> = {
+  private readonly vehicleRelations: FindOptionsRelations<Vehicle> = {
     space: true,
     incidents: true,
   };
 
-  findAll(): Promise<VehicleDto[]> {
+  findAll(filters: FindVehiclesFilterDto): Promise<VehicleDto[]> {
     return this.vehicleRepository.find({
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
+      where: filters,
+      select: this.vehicleSelect,
+      relations: this.vehicleRelations,
       order: { createdAt: 'DESC' },
     });
   }
@@ -78,8 +81,8 @@ export class VehiclesService {
   async findOne(id: number): Promise<VehicleDto> {
     const vehicle = await this.vehicleRepository.findOne({
       where: { id },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
+      select: this.vehicleSelect,
+      relations: this.vehicleRelations,
     });
 
     if (!vehicle) {
@@ -92,67 +95,16 @@ export class VehiclesService {
     return vehicle;
   }
 
-  async findByLicensePlate(licensePlate: string): Promise<VehicleDto> {
-    const vehicle = await this.vehicleRepository.findOne({
-      where: { licensePlate },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-    });
-
-    if (!vehicle) {
-      throw new RpcException({
-        statusCode: 404,
-        message: `Vehicle with license plate ${licensePlate} not found`,
-      });
-    }
-
-    return vehicle;
-  }
-
-  findByStatus(status: VehicleStatus): Promise<VehicleDto[]> {
-    return this.vehicleRepository.find({
-      where: { status },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  findByGuestType(guestType: GuestType): Promise<VehicleDto[]> {
-    return this.vehicleRepository.find({
-      where: { guestType },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-      order: { createdAt: 'DESC' },
-    });
-  }
-
-  async create(data: CreateVehicleDto): Promise<VehicleDto> {
-    const created = await this.vehicleRepository.save({
-      ...data,
-      status: VehicleStatus.PARKED,
-    });
-
-    const loaded = await this.vehicleRepository.findOne({
-      where: { id: created.id },
-      select: this.vehicleReadSelect,
-      relations: this.vehicleReadRelations,
-    });
-
-    if (!loaded) {
-      throw new RpcException({
-        statusCode: 500,
-        message: `Failed to load vehicle with id ${created.id} after creation`,
-      });
-    }
-
-    return loaded;
+  create(data: CreateVehicleDto): Promise<VehicleDto> {
+    const entity = this.vehicleRepository.create(data);
+    return this.vehicleRepository.save(entity);
   }
 
   async update(id: number, data: UpdateVehicleDto): Promise<VehicleDto> {
-    await this.vehicleRepository.update(id, data);
-
-    return this.findOne(id);
+    const existing = await this.findOne(id);
+    const entity = this.vehicleRepository.create(existing);
+    const merged = this.vehicleRepository.merge(entity, data);
+    return this.vehicleRepository.save(merged);
   }
 
   checkOut(id: number): Promise<VehicleDto> {
@@ -164,7 +116,7 @@ export class VehiclesService {
 
   async remove(id: number): Promise<VehicleDto> {
     const vehicle = await this.findOne(id);
-    await this.vehicleRepository.remove(vehicle);
-    return vehicle;
+    const entity = this.vehicleRepository.create(vehicle);
+    return this.vehicleRepository.remove(entity);
   }
 }

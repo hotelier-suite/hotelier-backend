@@ -1,19 +1,21 @@
-import { Controller, Get, Put, Body } from '@nestjs/common';
+import { Controller, Get, Patch, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
+import {
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 import { Observable } from 'rxjs';
 import { ConfigurationService } from './configuration.service';
 
 @ApiTags('configuration')
-@Controller('configuration')
+@Controller('configuration/hotel')
 @AuditLog({ resource: AuditResource.CONFIGURATION })
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
-  @Get('hotel')
+  @Get()
   @ApiOperation({
     summary: 'Get Hotel Configuration',
     description: 'Retrieve hotel-specific configuration settings.',
@@ -27,7 +29,7 @@ export class ConfigurationController {
     return this.configurationService.getHotelConfig();
   }
 
-  @Put('hotel')
+  @Patch()
   @ApiOperation({
     summary: 'Update Hotel Configuration',
     description: 'Update hotel-specific configuration settings.',

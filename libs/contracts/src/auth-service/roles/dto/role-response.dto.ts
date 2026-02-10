@@ -4,9 +4,10 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
-  IsNumber,
+  IsInt,
   IsOptional,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { RolePermissionResponseDto } from './role-permission-response.dto';
@@ -16,7 +17,8 @@ export class RoleResponseDto {
     description: 'Role unique identifier',
     example: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   id!: number;
 
   @ApiProperty({
@@ -45,14 +47,18 @@ export class RoleResponseDto {
   @ApiProperty({
     description: 'Role creation timestamp',
     example: '2024-01-01T00:00:00.000Z',
+    format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   createdAt!: Date;
 
   @ApiProperty({
     description: 'Role last update timestamp',
     example: '2024-01-15T10:30:00.000Z',
+    format: 'date-time',
   })
+  @Type(() => Date)
   @IsDate()
   updatedAt!: Date;
 

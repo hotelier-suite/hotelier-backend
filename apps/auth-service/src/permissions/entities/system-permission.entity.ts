@@ -8,7 +8,7 @@ import {
   Index,
 } from 'typeorm';
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
-import type { RolePermission } from '../../roles/entities/role-permission.entity';
+import type { RolePermission } from '../../roles';
 
 @Entity('system_permissions')
 @Index(['resource', 'action'], { unique: true })
@@ -39,7 +39,6 @@ export class SystemPermission {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Relations
   @OneToMany('RolePermission', 'permission', { cascade: true })
   roles: RolePermission[];
 }

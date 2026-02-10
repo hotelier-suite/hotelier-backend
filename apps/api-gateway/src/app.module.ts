@@ -3,33 +3,24 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthServiceModule } from './auth-service/auth-service.module';
-import { DatabaseModule } from './database/database.module';
-import { ReservationsModule } from './reservations/reservations.module';
-import { RoomsModule } from './rooms/rooms.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { EmployeesModule } from './employees/employees.module';
-import { VenuesModule } from './venues/venues.module';
-import { EventsModule } from './events/events.module';
-import { RecreationalModule } from './recreational/recreational.module';
-import { RestaurantModule } from './restaurant/restaurant.module';
-import { InventoryModule } from './inventory/inventory.module';
-import { BillingModule } from './billing/billing.module';
-import { HousekeepingModule } from './housekeeping/housekeeping.module';
-import { ReportsModule } from './reports/reports.module';
-import { ShiftsModule } from './shifts/shifts.module';
-import { AttendanceModule } from './attendance/attendance.module';
-import { EmployeeRequestsModule } from './employee-requests/employee-requests.module';
-import { ReportsAnalyticsModule } from './reports-analytics/reports-analytics.module';
-import { MaintenanceModule } from './maintenance/maintenance.module';
-import { NotificationsServiceModule } from './notifications-service/notifications-service.module';
-import { GuestsModule } from './guests/guests.module';
-import { AuditModule } from './audit/audit.module';
-import { AuditLogInterceptor } from './audit/interceptors/audit-log.interceptor';
-import { RpcToHttpExceptionInterceptor } from './common/interceptors/rpc-to-http-exception.interceptor';
-import { ConfigServiceModule } from './config-service/config-service.module';
-import { ParkingServiceModule } from './parking-service/parking-service.module';
-import { GuestRequestsServiceModule } from './guest-requests-service/guest-requests-service.module';
+import { AuthServiceModule } from './auth-service';
+import { BookingServiceModule } from './booking-service';
+import { DashboardServiceModule } from './dashboard-service';
+import { EventsServiceModule } from './events-service';
+import { RecreationalServiceModule } from './recreational-service';
+import { RestaurantServiceModule } from './restaurant-service';
+import { InventoryServiceModule } from './inventory-service';
+import { StaffServiceModule } from './staff-service';
+import { BillingServiceModule } from './billing-service';
+import { OperationsServiceModule } from './operations-service';
+import { ReportsServiceModule } from './reports-service';
+import { NotificationsServiceModule } from './notifications-service';
+import { AuditServiceModule, AuditLogInterceptor } from './audit-service';
+import { RpcToHttpExceptionInterceptor } from './common';
+import { ConfigServiceModule } from './config-service';
+import { ParkingServiceModule } from './parking-service';
+import { GuestRequestsServiceModule } from './guest-requests-service';
+import { PipesModule } from './common/pipes';
 
 @Module({
   imports: [
@@ -37,28 +28,20 @@ import { GuestRequestsServiceModule } from './guest-requests-service/guest-reque
       isGlobal: true,
       envFilePath: '.env',
     }),
+    PipesModule,
     AuthServiceModule,
-    DatabaseModule,
-    ReservationsModule,
-    RoomsModule,
-    DashboardModule,
-    EmployeesModule,
-    VenuesModule,
-    EventsModule,
-    RecreationalModule,
-    RestaurantModule,
-    InventoryModule,
-    BillingModule,
-    HousekeepingModule,
-    ReportsModule,
-    ShiftsModule,
-    AttendanceModule,
-    EmployeeRequestsModule,
-    ReportsAnalyticsModule,
-    MaintenanceModule,
+    BookingServiceModule,
+    DashboardServiceModule,
+    EventsServiceModule,
+    RecreationalServiceModule,
+    RestaurantServiceModule,
+    InventoryServiceModule,
+    StaffServiceModule,
+    BillingServiceModule,
+    OperationsServiceModule,
+    ReportsServiceModule,
     NotificationsServiceModule,
-    GuestsModule,
-    AuditModule,
+    AuditServiceModule,
     ConfigServiceModule,
     ParkingServiceModule,
     GuestRequestsServiceModule,

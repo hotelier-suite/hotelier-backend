@@ -1,23 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Configuration } from './entities/configuration.entity';
-import { ConfigCategory } from './enums/config-category.enum';
-import { HotelConfigDto } from '@app/contracts/config-service/configuration/dto/hotel-config.dto';
-import { UpdateHotelConfigDto } from '@app/contracts/config-service/configuration/dto/update-hotel-config.dto';
+import { Configuration } from './entities';
+import { ConfigCategory } from './enums';
+import {
+  HotelConfigDto,
+  UpdateHotelConfigDto,
+} from '@app/contracts/config-service';
 
 @Injectable()
 export class ConfigurationService {
   constructor(
     @InjectRepository(Configuration)
-    private readonly configRepository: Repository<Configuration>,
+    private readonly configurationRepository: Repository<Configuration>,
   ) {}
 
   private async getValue(
     category: ConfigCategory,
     key: string,
   ): Promise<string | null> {
-    const record = await this.configRepository.findOne({
+    const record = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
@@ -30,24 +32,27 @@ export class ConfigurationService {
     value: string,
     description = '',
   ): Promise<void> {
-    const existing = await this.configRepository.findOne({
+    const existing = await this.configurationRepository.findOne({
       where: { category, key },
     });
 
     if (existing) {
       if (existing.value !== value || existing.description !== description) {
-        await this.configRepository.update(existing.id, { value, description });
+        await this.configurationRepository.update(existing.id, {
+          value,
+          description,
+        });
       }
       return;
     }
 
-    await this.configRepository.save({
+    const entity = this.configurationRepository.create({
       category,
       key,
       value,
       description,
-      isEditable: true,
     });
+    await this.configurationRepository.save(entity);
   }
 
   async getHotelConfig(): Promise<HotelConfigDto> {

@@ -1,62 +1,151 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GuestType } from '../enums/guest-type.enum';
-import { VehicleStatus } from '../enums/vehicle-status.enum';
-import { VehicleType } from '../enums/vehicle-type.enum';
-import type { ParkingSpaceDto } from '../../spaces/dto/parking-space.dto';
-import type { ParkingIncidentDto } from '../../incidents/dto/parking-incident.dto';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
+import { GuestType, VehicleStatus, VehicleType } from '../enums';
+import type { ParkingSpaceDto } from '../../spaces';
+import type { ParkingIncidentDto } from '../../incidents';
 
 export class VehicleDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ description: 'Unique identifier for the vehicle', example: 1 })
+  @IsInt()
+  @Min(1)
   id: number;
 
-  @ApiProperty({ example: 'ABC-123' })
+  @ApiProperty({
+    description: 'License plate number of the vehicle',
+    example: 'ABC-123',
+  })
+  @IsString()
   licensePlate: string;
 
-  @ApiProperty({ example: 'Toyota' })
+  @ApiProperty({
+    description: 'Brand or manufacturer of the vehicle',
+    example: 'Toyota',
+  })
+  @IsString()
   brand: string;
 
-  @ApiProperty({ example: 'Camry' })
+  @ApiProperty({ description: 'Model name of the vehicle', example: 'Camry' })
+  @IsString()
   model: string;
 
-  @ApiProperty({ example: 'Blue' })
+  @ApiProperty({ description: 'Color of the vehicle', example: 'Blue' })
+  @IsString()
   color: string;
 
-  @ApiProperty({ enum: VehicleType, example: VehicleType.CAR })
+  @ApiProperty({
+    description: 'Type of vehicle',
+    enum: VehicleType,
+    example: VehicleType.CAR,
+  })
+  @IsEnum(VehicleType)
   type: VehicleType;
 
-  @ApiProperty({ example: 'John Smith' })
+  @ApiProperty({
+    description: 'Name of the vehicle owner',
+    example: 'John Smith',
+  })
+  @IsString()
   owner: string;
 
-  @ApiProperty({ required: false, example: '201' })
+  @ApiProperty({
+    description: 'Room number associated with the vehicle owner',
+    required: false,
+    example: '201',
+  })
+  @IsOptional()
+  @IsString()
   room?: string;
 
-  @ApiProperty({ enum: GuestType, example: GuestType.GUEST })
+  @ApiProperty({
+    description: 'Type of guest associated with the vehicle',
+    enum: GuestType,
+    example: GuestType.GUEST,
+  })
+  @IsEnum(GuestType)
   guestType: GuestType;
 
-  @ApiProperty({ required: false, example: 'G-002' })
+  @ApiProperty({
+    description: 'Code of the parking space assigned to this vehicle',
+    required: false,
+    example: 'G-002',
+  })
+  @IsOptional()
+  @IsString()
   assignedSpace?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the vehicle entered the parking facility',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   entryTime: Date;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({
+    description: 'Timestamp when the vehicle exited the parking facility',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   exitTime?: Date;
 
-  @ApiProperty({ enum: VehicleStatus, example: VehicleStatus.PARKED })
+  @ApiProperty({
+    description: 'Current status of the vehicle in the parking system',
+    enum: VehicleStatus,
+    example: VehicleStatus.PARKED,
+  })
+  @IsEnum(VehicleStatus)
   status: VehicleStatus;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Additional notes or comments about the vehicle',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
   notes?: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the vehicle record was created',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the vehicle record was last updated',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   updatedAt: Date;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Parking space details where the vehicle is parked',
+    required: false,
+  })
+  @IsOptional()
   space?: ParkingSpaceDto;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'List of incidents associated with this vehicle',
+    required: false,
+  })
+  @IsOptional()
   incidents?: ParkingIncidentDto[];
 }

@@ -1,11 +1,8 @@
 export const GUEST_REQUESTS_PATTERNS = {
   FIND_ALL: 'guestRequests.guestRequests.findAll',
-  FIND_BY_ID: 'guestRequests.guestRequests.findById',
-  FIND_BY_STATUS: 'guestRequests.guestRequests.findByStatus',
-  FIND_BY_PRIORITY: 'guestRequests.guestRequests.findByPriority',
+  FIND_ONE: 'guestRequests.guestRequests.findOne',
   CREATE: 'guestRequests.guestRequests.create',
   UPDATE: 'guestRequests.guestRequests.update',
   DELETE: 'guestRequests.guestRequests.delete',
   COUNT_BY_STATUS: 'guestRequests.guestRequests.countByStatus',
-  FIND_RECENT: 'guestRequests.guestRequests.findRecent',
 } as const;

@@ -1,4 +1,4 @@
-export enum RequestType {
+export enum GuestRequestType {
   TOWELS = 'TOWELS',
   ROOM_SERVICE = 'ROOM_SERVICE',
   MAINTENANCE = 'MAINTENANCE',

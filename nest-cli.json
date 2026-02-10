@@ -72,6 +72,105 @@
       "compilerOptions": {
         "tsConfigPath": "apps/guest-requests-service/tsconfig.app.json"
       }
+    },
+    "booking-service": {
+      "type": "application",
+      "root": "apps/booking-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/booking-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/booking-service/tsconfig.app.json"
+      }
+    },
+    "inventory-service": {
+      "type": "application",
+      "root": "apps/inventory-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/inventory-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/inventory-service/tsconfig.app.json"
+      }
+    },
+    "staff-service": {
+      "type": "application",
+      "root": "apps/staff-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/staff-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/staff-service/tsconfig.app.json"
+      }
+    },
+    "operations-service": {
+      "type": "application",
+      "root": "apps/operations-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/operations-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/operations-service/tsconfig.app.json"
+      }
+    },
+    "events-service": {
+      "type": "application",
+      "root": "apps/events-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/events-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/events-service/tsconfig.app.json"
+      }
+    },
+    "restaurant-service": {
+      "type": "application",
+      "root": "apps/restaurant-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/restaurant-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/restaurant-service/tsconfig.app.json"
+      }
+    },
+    "recreational-service": {
+      "type": "application",
+      "root": "apps/recreational-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/recreational-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/recreational-service/tsconfig.app.json"
+      }
+    },
+    "billing-service": {
+      "type": "application",
+      "root": "apps/billing-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/billing-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/billing-service/tsconfig.app.json"
+      }
+    },
+    "reports-service": {
+      "type": "application",
+      "root": "apps/reports-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/reports-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reports-service/tsconfig.app.json"
+      }
+    },
+    "audit-service": {
+      "type": "application",
+      "root": "apps/audit-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/audit-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/audit-service/tsconfig.app.json"
+      }
+    },
+    "dashboard-service": {
+      "type": "application",
+      "root": "apps/dashboard-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/dashboard-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/dashboard-service/tsconfig.app.json"
+      }
     }
   }
 }

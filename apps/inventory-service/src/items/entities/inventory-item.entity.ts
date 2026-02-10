@@ -1,0 +1,149 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsDate,
+  Min,
+  Length,
+} from 'class-validator';
+import {
+  InventoryCategory,
+  InventoryStatus,
+} from '@app/contracts/inventory-service';
+import { DecimalTransformer } from '@app/contracts/common';
+import { Supplier } from '../../suppliers';
+import { InventoryMovement } from '../../movements';
+
+@Entity('inventory')
+export class InventoryItem {
+  @ApiProperty({ example: 1 })
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ApiProperty({ example: 'Bed Sheets - White Cotton' })
+  @IsString()
+  @Length(1, 100)
+  @Column()
+  name: string;
+
+  @ApiProperty({ enum: InventoryCategory, example: InventoryCategory.LINENS })
+  @IsEnum(InventoryCategory)
+  @Column({
+    type: 'enum',
+    enum: InventoryCategory,
+  })
+  category: InventoryCategory;
+
+  @ApiProperty({ example: 100, minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  @Column()
+  currentStock: number;
+
+  @ApiProperty({ example: 20, minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  @Column()
+  minimumStock: number;
+
+  @ApiProperty({ example: 200, minimum: 1 })
+  @IsNumber()
+  @Min(1)
+  @Column()
+  maximumStock: number;
+
+  @ApiProperty({ example: 'pieces' })
+  @IsString()
+  @Length(1, 20)
+  @Column()
+  unit: string;
+
+  @ApiProperty({ example: 25.5, minimum: 0 })
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: DecimalTransformer,
+  })
+  unitCost: number;
+
+  @ApiProperty({ example: 'Linen Supply Co' })
+  @IsString()
+  @Length(1, 100)
+  @Column()
+  supplier: string;
+
+  @ApiProperty({ required: false, example: 1 })
+  @IsOptional()
+  @IsNumber()
+  @Column({ nullable: true })
+  supplierId?: number;
+
+  @ApiProperty({ example: 'Storage Room A' })
+  @IsString()
+  @Length(1, 100)
+  @Column()
+  location: string;
+
+  @ApiProperty({ required: false, type: String, example: '2024-01-15' })
+  @IsOptional()
+  @IsDate()
+  @Column({ type: 'date', nullable: true })
+  lastPurchaseDate?: Date;
+
+  @ApiProperty({ enum: InventoryStatus, example: InventoryStatus.AVAILABLE })
+  @IsOptional()
+  @IsEnum(InventoryStatus)
+  @Column({
+    type: 'enum',
+    enum: InventoryStatus,
+    default: InventoryStatus.AVAILABLE,
+  })
+  status: InventoryStatus;
+
+  @ApiProperty({ type: String })
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ApiProperty({ type: String })
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @ManyToOne('Supplier', 'inventoryItems', {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'supplierId' })
+  supplierEntity?: Supplier;
+
+  @OneToMany('InventoryMovement', 'inventory', {
+    cascade: true,
+  })
+  movements: InventoryMovement[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  calculateStatus(): void {
+    if (this.currentStock === 0) {
+      this.status = InventoryStatus.OUT_OF_STOCK;
+    } else if (this.currentStock <= this.minimumStock) {
+      this.status = InventoryStatus.LOW_STOCK;
+    } else {
+      this.status = InventoryStatus.AVAILABLE;
+    }
+  }
+}

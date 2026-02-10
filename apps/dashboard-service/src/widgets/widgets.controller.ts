@@ -1,0 +1,46 @@
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { WidgetsService } from './widgets.service';
+import {
+  WIDGETS_PATTERNS,
+  CreateDashboardWidgetDto,
+  UpdateDashboardWidgetDto,
+  DashboardWidgetDto,
+  FindWidgetsFilterDto,
+} from '@app/contracts/dashboard-service';
+
+@Controller()
+export class WidgetsController {
+  constructor(private readonly widgetsService: WidgetsService) {}
+
+  @MessagePattern(WIDGETS_PATTERNS.CREATE)
+  create(
+    @Payload() data: CreateDashboardWidgetDto,
+  ): Promise<DashboardWidgetDto> {
+    return this.widgetsService.create(data);
+  }
+
+  @MessagePattern(WIDGETS_PATTERNS.FIND_ALL)
+  findAll(
+    @Payload() filters: FindWidgetsFilterDto,
+  ): Promise<DashboardWidgetDto[]> {
+    return this.widgetsService.findAll(filters);
+  }
+
+  @MessagePattern(WIDGETS_PATTERNS.FIND_ONE)
+  findOne(@Payload() id: number): Promise<DashboardWidgetDto> {
+    return this.widgetsService.findOne(id);
+  }
+
+  @MessagePattern(WIDGETS_PATTERNS.UPDATE)
+  update(
+    @Payload() payload: { id: number; data: UpdateDashboardWidgetDto },
+  ): Promise<DashboardWidgetDto> {
+    return this.widgetsService.update(payload.id, payload.data);
+  }
+
+  @MessagePattern(WIDGETS_PATTERNS.DELETE)
+  remove(@Payload() id: number): Promise<DashboardWidgetDto> {
+    return this.widgetsService.remove(id);
+  }
+}

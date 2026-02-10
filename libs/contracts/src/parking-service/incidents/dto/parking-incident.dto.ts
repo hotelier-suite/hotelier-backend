@@ -1,53 +1,140 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
-import { IncidentStatus } from '../enums/incident-status.enum';
-import { IncidentType } from '../enums/incident-type.enum';
-import type { VehicleDto } from '../../vehicles/dto/vehicle.dto';
-import type { ParkingSpaceDto } from '../../spaces/dto/parking-space.dto';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
+import { TaskPriority } from '@app/contracts/common';
+import { IncidentStatus, IncidentType } from '../enums';
+import type { VehicleDto } from '../../vehicles';
+import type { ParkingSpaceDto } from '../../spaces';
 
 export class ParkingIncidentDto {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({
+    description: 'Unique identifier for the parking incident',
+    example: 1,
+  })
+  @IsInt()
+  @Min(1)
   id: number;
 
-  @ApiProperty({ enum: IncidentType, example: IncidentType.VEHICLE_DAMAGE })
+  @ApiProperty({
+    description: 'Type of parking incident',
+    enum: IncidentType,
+    example: IncidentType.VEHICLE_DAMAGE,
+  })
+  @IsEnum(IncidentType)
   type: IncidentType;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Detailed description of the parking incident',
+    example: 'Vehicle scratched while parking',
+  })
+  @IsString()
   description: string;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the incident was reported',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   reportDate: Date;
 
-  @ApiProperty({ enum: IncidentStatus, example: IncidentStatus.PENDING })
+  @ApiProperty({
+    description: 'Current status of the incident',
+    enum: IncidentStatus,
+    example: IncidentStatus.PENDING,
+  })
+  @IsEnum(IncidentStatus)
   status: IncidentStatus;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Name of the person responsible for handling the incident',
+    example: 'John Smith',
+  })
+  @IsString()
   responsible: string;
 
-  @ApiProperty({ enum: TaskPriority, example: TaskPriority.NORMAL })
+  @ApiProperty({
+    description: 'Priority level of the incident',
+    enum: TaskPriority,
+    example: TaskPriority.NORMAL,
+  })
+  @IsEnum(TaskPriority)
   priority: TaskPriority;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Description of how the incident was resolved',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
   resolution?: string;
 
-  @ApiProperty({ required: false, type: String })
+  @ApiProperty({
+    description: 'Timestamp when the incident was resolved',
+    required: false,
+    type: String,
+    format: 'date-time',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
   resolvedAt?: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the incident record was created',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   createdAt: Date;
 
-  @ApiProperty({ type: String })
+  @ApiProperty({
+    description: 'Timestamp when the incident record was last updated',
+    type: String,
+    format: 'date-time',
+  })
+  @Type(() => Date)
+  @IsDate()
   updatedAt: Date;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'ID of the vehicle involved in the incident',
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
   vehicleId?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'ID of the parking space where the incident occurred',
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
   spaceId?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Vehicle details involved in the incident',
+    required: false,
+  })
+  @IsOptional()
   vehicle?: VehicleDto;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    description: 'Parking space details where the incident occurred',
+    required: false,
+  })
+  @IsOptional()
   space?: ParkingSpaceDto;
 }

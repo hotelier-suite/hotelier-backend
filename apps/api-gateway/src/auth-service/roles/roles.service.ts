@@ -1,10 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { ROLES_PATTERNS } from '@app/contracts/auth-service/roles/roles.patterns';
-import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
-import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
-import { RolePermissionsPayloadDto } from '@app/contracts/auth-service/roles/dto/role-permissions-payload.dto';
+import {
+  ROLES_PATTERNS,
+  CreateRoleDto,
+  UpdateRoleDto,
+  RoleResponseDto,
+  RolePermissionsPayloadDto,
+  FindRolesFilterDto,
+} from '@app/contracts/auth-service';
 import { Observable } from 'rxjs';
 import { AUTH_SERVICE_CLIENT } from '../constants';
 
@@ -21,24 +24,17 @@ export class RolesService {
     );
   }
 
-  findAll(): Observable<RoleResponseDto[]> {
-    return this.authClient.send<RoleResponseDto[], Record<string, never>>(
+  findAll(filters: FindRolesFilterDto): Observable<RoleResponseDto[]> {
+    return this.authClient.send<RoleResponseDto[], FindRolesFilterDto>(
       ROLES_PATTERNS.FIND_ALL,
-      {},
+      filters,
     );
   }
 
   findOne(id: number): Observable<RoleResponseDto> {
     return this.authClient.send<RoleResponseDto, number>(
-      ROLES_PATTERNS.FIND_BY_ID,
+      ROLES_PATTERNS.FIND_ONE,
       id,
-    );
-  }
-
-  findByName(name: string): Observable<RoleResponseDto> {
-    return this.authClient.send<RoleResponseDto, string>(
-      ROLES_PATTERNS.FIND_BY_NAME,
-      name,
     );
   }
 
@@ -53,13 +49,6 @@ export class RolesService {
     return this.authClient.send<RoleResponseDto, number>(
       ROLES_PATTERNS.DELETE,
       id,
-    );
-  }
-
-  assignPermissions(roleId: number, permissionIds: number[]): Observable<void> {
-    return this.authClient.send<void, RolePermissionsPayloadDto>(
-      ROLES_PATTERNS.ASSIGN_PERMISSIONS,
-      { roleId, permissionIds },
     );
   }
 

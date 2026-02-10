@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PermissionsSeeder } from './domains/permissions.seeder';
-import { RolesSeeder } from './domains/roles.seeder';
-import { UsersSeeder } from './domains/users.seeder';
+import { PermissionsSeeder, RolesSeeder, UsersSeeder } from './domains';
 
 @Injectable()
 export class SeedersService {
@@ -14,7 +12,6 @@ export class SeedersService {
   async seed() {
     console.log('🌱 Starting Auth module seeding...');
 
-    // Order matters: permissions first, then roles, then users
     await this.permissionsSeeder.seed();
     console.log('✅ Permissions seeded');
 

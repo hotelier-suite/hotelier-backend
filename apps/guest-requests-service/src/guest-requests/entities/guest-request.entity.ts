@@ -14,10 +14,11 @@ import {
   Length,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { RequestType } from '@app/contracts/guest-requests-service/guest-requests/enums/request-type.enum';
-import { RequestStatus } from '@app/contracts/guest-requests-service/guest-requests/enums/request-status.enum';
-import { RequestPriority } from '@app/contracts/guest-requests-service/guest-requests/enums/request-priority.enum';
+import {
+  GuestRequestType,
+  GuestRequestStatus,
+  RequestPriority,
+} from '@app/contracts/guest-requests-service';
 
 @Entity('guest_requests')
 export class GuestRequest {
@@ -36,12 +37,12 @@ export class GuestRequest {
   @Column()
   guestName: string;
 
-  @IsEnum(RequestType)
+  @IsEnum(GuestRequestType)
   @Column({
     type: 'enum',
-    enum: RequestType,
+    enum: GuestRequestType,
   })
-  type: RequestType;
+  type: GuestRequestType;
 
   @IsString()
   @Length(1, 1000)
@@ -49,13 +50,13 @@ export class GuestRequest {
   description: string;
 
   @IsOptional()
-  @IsEnum(RequestStatus)
+  @IsEnum(GuestRequestStatus)
   @Column({
     type: 'enum',
-    enum: RequestStatus,
-    default: RequestStatus.PENDING,
+    enum: GuestRequestStatus,
+    default: GuestRequestStatus.PENDING,
   })
-  status?: RequestStatus;
+  status?: GuestRequestStatus;
 
   @IsOptional()
   @IsEnum(RequestPriority)
@@ -68,13 +69,11 @@ export class GuestRequest {
 
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   time?: Date;
 
   @IsOptional()
   @IsDate()
-  @Type(() => Date)
   @Column({ type: 'timestamp', nullable: true })
   completedAt?: Date;
 

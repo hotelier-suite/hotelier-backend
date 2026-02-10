@@ -1,13 +1,15 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AUTH_PATTERNS } from '@app/contracts/auth-service/auth/auth.patterns';
 import { AuthService } from './auth.service';
-import { RegisterDto } from '@app/contracts/auth-service/auth/dto/register.dto';
-import { LoginDto } from '@app/contracts/auth-service/auth/dto/login.dto';
-import { AuthResponseDto } from '@app/contracts/auth-service/auth/dto/auth-response.dto';
-import { LogoutResponseDto } from '@app/contracts/auth-service/auth/dto/logout-response.dto';
-import { TokenResponseDto } from '@app/contracts/auth-service/tokens/dto/token-response.dto';
-import { ProfileResponseDto } from '@app/contracts/auth-service/auth/dto/profile-response.dto';
+import {
+  AUTH_PATTERNS,
+  RegisterDto,
+  LoginDto,
+  AuthResponseDto,
+  LogoutResponseDto,
+  ProfileResponseDto,
+  TokenResponseDto,
+} from '@app/contracts/auth-service';
 
 @Controller()
 export class AuthController {
@@ -36,7 +38,7 @@ export class AuthController {
   }
 
   @MessagePattern(AUTH_PATTERNS.GET_PROFILE)
-  getProfile(@Payload() userId: number): Promise<ProfileResponseDto | null> {
-    return this.authService.validateUser(userId);
+  getProfile(@Payload() userId: number): Promise<ProfileResponseDto> {
+    return this.authService.getProfile(userId);
   }
 }

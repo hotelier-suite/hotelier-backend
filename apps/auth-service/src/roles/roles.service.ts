@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateRoleDto } from '@app/contracts/auth-service/roles/dto/create-role.dto';
-import { UpdateRoleDto } from '@app/contracts/auth-service/roles/dto/update-role.dto';
-import { RoleResponseDto } from '@app/contracts/auth-service/roles/dto/role-response.dto';
-import { Role } from './entities/role.entity';
-import { RolePermission } from './entities/role-permission.entity';
-import { UserRole } from '../users/entities/user-role.entity';
+import { ILike, Repository, FindOptionsWhere } from 'typeorm';
+import {
+  CreateRoleDto,
+  UpdateRoleDto,
+  RoleResponseDto,
+  FindRolesFilterDto,
+} from '@app/contracts/auth-service';
+import { Role, RolePermission } from './entities';
+import { UserRole } from '../users/entities';
 
 @Injectable()
 export class RolesService {
@@ -20,9 +22,10 @@ export class RolesService {
     private readonly userRoleRepository: Repository<UserRole>,
   ) {}
 
-  async createRole(data: CreateRoleDto): Promise<RoleResponseDto> {
+  async create(data: CreateRoleDto): Promise<RoleResponseDto> {
     try {
-      const role = await this.roleRepository.save(data);
+      const entity = this.roleRepository.create(data);
+      const role = await this.roleRepository.save(entity);
 
       const loaded = await this.roleRepository.findOne({
         where: { id: role.id },
@@ -57,16 +60,21 @@ export class RolesService {
     }
   }
 
-  async findAllRoles(): Promise<RoleResponseDto[]> {
-    const roles = await this.roleRepository.find({
+  findAll(filters: FindRolesFilterDto): Promise<RoleResponseDto[]> {
+    const where: FindOptionsWhere<Role> = {};
+
+    if (filters.name) {
+      where.name = ILike(`%${filters.name}%`);
+    }
+
+    return this.roleRepository.find({
+      where,
       relations: { permissions: { permission: true } },
       order: { name: 'ASC' },
     });
-
-    return roles;
   }
 
-  async findRoleById(id: number): Promise<RoleResponseDto> {
+  async findOne(id: number): Promise<RoleResponseDto> {
     const role = await this.roleRepository.findOne({
       where: { id },
       relations: { permissions: { permission: true } },
@@ -79,20 +87,7 @@ export class RolesService {
     return role;
   }
 
-  async findRoleByName(name: string): Promise<RoleResponseDto> {
-    const role = await this.roleRepository.findOne({
-      where: { name },
-      relations: { permissions: { permission: true } },
-    });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
-
-    return role;
-  }
-
-  async updateRole(id: number, data: UpdateRoleDto): Promise<RoleResponseDto> {
+  async update(id: number, data: UpdateRoleDto): Promise<RoleResponseDto> {
     const existing = await this.roleRepository.findOne({
       where: { id },
       relations: { permissions: { permission: true } },
@@ -103,7 +98,29 @@ export class RolesService {
     }
 
     try {
-      await this.roleRepository.update(id, data);
+      // Update basic role fields (name, description)
+      const { permissionIds, ...roleData } = data;
+      if (Object.keys(roleData).length > 0) {
+        await this.roleRepository.update(id, roleData);
+      }
+
+      // Handle permission assignment if permissionIds is provided
+      if (permissionIds !== undefined) {
+        // Delete existing permissions
+        await this.rolePermissionRepository.delete({ roleId: id });
+
+        // Add new permissions
+        if (permissionIds.length > 0) {
+          const rolePermissions = permissionIds.map((permissionId) => ({
+            roleId: id,
+            permissionId,
+          }));
+          const entities =
+            this.rolePermissionRepository.create(rolePermissions);
+          await this.rolePermissionRepository.save(entities);
+        }
+      }
+
       const updated = await this.roleRepository.findOne({
         where: { id },
         relations: { permissions: { permission: true } },
@@ -134,15 +151,8 @@ export class RolesService {
     }
   }
 
-  async deleteRole(id: number): Promise<RoleResponseDto> {
-    const role = await this.roleRepository.findOne({
-      where: { id },
-      relations: { permissions: { permission: true } },
-    });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
+  async remove(id: number): Promise<RoleResponseDto> {
+    const role = await this.findOne(id);
 
     if (role.isSystem) {
       throw new RpcException({
@@ -162,29 +172,8 @@ export class RolesService {
       });
     }
 
-    await this.roleRepository.remove(role);
-    return role;
-  }
-
-  async assignPermissionsToRole(
-    roleId: number,
-    permissionIds: number[],
-  ): Promise<void> {
-    const role = await this.roleRepository.findOne({ where: { id: roleId } });
-
-    if (!role) {
-      throw new RpcException({ statusCode: 404, message: 'Role not found' });
-    }
-
-    await this.rolePermissionRepository.delete({ roleId });
-
-    if (permissionIds.length > 0) {
-      const rolePermissions = permissionIds.map((permissionId) => ({
-        roleId,
-        permissionId,
-      }));
-      await this.rolePermissionRepository.save(rolePermissions);
-    }
+    const entity = this.roleRepository.create(role);
+    return this.roleRepository.remove(entity);
   }
 
   async removePermissionsFromRole(

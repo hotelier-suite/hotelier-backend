@@ -5,29 +5,27 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOperation,
   ApiParam,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { AuditLog } from '../../audit/decorators/audit-log.decorator';
-import { AuditResource } from '../../audit/enums/audit-resource.enum';
+import { AuditLog } from '../../audit-service';
+import { AuditResource } from '@app/contracts/audit-service';
 import { IncidentsService } from './incidents.service';
-import { ParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/parking-incident.dto';
-import { CreateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/create-parking-incident.dto';
-import { UpdateParkingIncidentDto } from '@app/contracts/parking-service/incidents/dto/update-parking-incident.dto';
-import { ResolveIncidentRequestDto } from '@app/contracts/parking-service/incidents/dto/resolve-incident-request.dto';
-import { IncidentStatus } from '@app/contracts/parking-service/incidents/enums/incident-status.enum';
-import { IncidentType } from '@app/contracts/parking-service/incidents/enums/incident-type.enum';
-import { TaskPriority } from '@app/contracts/common/enums/task-priority.enum';
+import {
+  CreateParkingIncidentDto,
+  FindIncidentsFilterDto,
+  ParkingIncidentDto,
+  UpdateParkingIncidentDto,
+} from '@app/contracts/parking-service';
 
 @ApiTags('parking')
 @Controller('parking/incidents')
@@ -36,91 +34,113 @@ export class IncidentsController {
   constructor(private readonly incidentsService: IncidentsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get All Incidents' })
+  @ApiOperation({
+    summary: 'Get All Incidents',
+    description:
+      'Retrieve all parking incidents reported in the facility, with optional filters for status, priority, and type.',
+  })
   @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  getAllIncidents(): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findAll();
-  }
-
-  @Get('by-status')
-  @ApiOperation({ summary: 'Get Incidents by Status' })
-  @ApiQuery({ name: 'status', enum: IncidentStatus })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  getIncidentsByStatus(
-    @Query('status') status: IncidentStatus,
+  findAll(
+    @Query() filters: FindIncidentsFilterDto,
   ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByStatus(status);
-  }
-
-  @Get('by-priority')
-  @ApiOperation({ summary: 'Get Incidents by Priority' })
-  @ApiQuery({ name: 'priority', enum: TaskPriority })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  getIncidentsByPriority(
-    @Query('priority') priority: TaskPriority,
-  ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByPriority(priority);
-  }
-
-  @Get('by-type')
-  @ApiOperation({ summary: 'Get Incidents by Type' })
-  @ApiQuery({ name: 'type', enum: IncidentType })
-  @ApiResponse({ status: 200, type: [ParkingIncidentDto] })
-  getIncidentsByType(
-    @Query('type') type: IncidentType,
-  ): Observable<ParkingIncidentDto[]> {
-    return this.incidentsService.findByType(type);
+    return this.incidentsService.findAll(filters);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get Incident by ID' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Get Incident by ID',
+    description:
+      'Retrieve a specific parking incident by its unique identifier, including full details and resolution history.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the parking incident',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: ParkingIncidentDto })
-  getIncidentById(
+  @ApiResponse({
+    status: 404,
+    description: 'Incident not found',
+  })
+  findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<ParkingIncidentDto> {
     return this.incidentsService.findOne(id);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create Incident' })
-  @ApiBody({ type: CreateParkingIncidentDto })
+  @ApiOperation({
+    summary: 'Create Incident',
+    description:
+      'Report a new parking incident in the facility. The incident will be assigned a priority and tracked until resolution.',
+  })
+  @ApiBody({
+    type: CreateParkingIncidentDto,
+    description:
+      'Incident details including type, description, location, and priority',
+  })
   @ApiResponse({ status: 201, type: ParkingIncidentDto })
-  createIncident(
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  create(
     @Body() body: CreateParkingIncidentDto,
   ): Observable<ParkingIncidentDto> {
     return this.incidentsService.create(body);
   }
 
-  @Put(':id')
-  @ApiOperation({ summary: 'Update Incident' })
-  @ApiParam({ name: 'id', type: Number })
-  @ApiBody({ type: UpdateParkingIncidentDto })
+  @Patch(':id')
+  @ApiOperation({
+    summary: 'Update Incident',
+    description:
+      'Update an existing parking incident with new information such as status, priority, or additional details.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the incident to update',
+    example: 1,
+  })
+  @ApiBody({
+    type: UpdateParkingIncidentDto,
+    description: 'Updated incident data',
+  })
   @ApiResponse({ status: 200, type: ParkingIncidentDto })
-  updateIncident(
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request data - validation failed',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Incident not found',
+  })
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateParkingIncidentDto,
   ): Observable<ParkingIncidentDto> {
     return this.incidentsService.update(id, body);
   }
 
-  @Put(':id/resolve')
-  @ApiOperation({ summary: 'Resolve Incident' })
-  @ApiParam({ name: 'id', type: Number })
-  @ApiBody({ type: ResolveIncidentRequestDto })
-  @ApiResponse({ status: 200, type: ParkingIncidentDto })
-  resolveIncident(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: ResolveIncidentRequestDto,
-  ): Observable<ParkingIncidentDto> {
-    return this.incidentsService.resolve(id, body);
-  }
-
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete Incident' })
-  @ApiParam({ name: 'id', type: Number })
+  @ApiOperation({
+    summary: 'Delete Incident',
+    description:
+      'Remove a parking incident record from the system. This should only be used for erroneous entries.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'Unique identifier of the incident to delete',
+    example: 1,
+  })
   @ApiResponse({ status: 200, type: ParkingIncidentDto })
-  deleteIncident(
+  @ApiResponse({
+    status: 404,
+    description: 'Incident not found',
+  })
+  remove(
     @Param('id', ParseIntPipe) id: number,
   ): Observable<ParkingIncidentDto> {
     return this.incidentsService.remove(id);

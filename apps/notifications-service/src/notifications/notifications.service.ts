@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Notification } from './entities/notification.entity';
-import { NotificationType } from '@app/contracts/notifications-service/notifications/enums/notification-type.enum';
-import { CreateNotificationDto } from '@app/contracts/notifications-service/notifications/dto/create-notification.dto';
-import { NotificationDto } from '@app/contracts/notifications-service/notifications/dto/notification.dto';
+import { Notification } from './entities';
+import {
+  CreateNotificationDto,
+  NotificationDto,
+} from '@app/contracts/notifications-service';
 
 @Injectable()
 export class NotificationsService {
@@ -13,20 +14,12 @@ export class NotificationsService {
     private readonly notificationsRepository: Repository<Notification>,
   ) {}
 
-  async create(data: CreateNotificationDto): Promise<NotificationDto> {
-    const notification = this.notificationsRepository.create({
-      type: data.type ?? NotificationType.INFO,
-      title: data.title,
-      message: data.message,
-      refId: data.refId,
-      refType: data.refType,
-      userId: typeof data.userId === 'undefined' ? null : data.userId,
-    });
-
-    return this.notificationsRepository.save(notification);
+  create(data: CreateNotificationDto): Promise<NotificationDto> {
+    const entity = this.notificationsRepository.create(data);
+    return this.notificationsRepository.save(entity);
   }
 
-  async listForUser(
+  async findForUser(
     userId?: number | null,
     includeRead = false,
   ): Promise<NotificationDto[]> {

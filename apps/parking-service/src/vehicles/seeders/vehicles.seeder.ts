@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Vehicle } from '../entities/vehicle.entity';
-import { ParkingSpace } from '../../spaces/entities/parking-space.entity';
-import { VehicleType } from '@app/contracts/parking-service/vehicles/enums/vehicle-type.enum';
-import { GuestType } from '@app/contracts/parking-service/vehicles/enums/guest-type.enum';
-import { VehicleStatus } from '@app/contracts/parking-service/vehicles/enums/vehicle-status.enum';
+import { Vehicle } from '../entities';
+import { ParkingSpace } from '../../spaces';
+import {
+  VehicleType,
+  GuestType,
+  VehicleStatus,
+} from '@app/contracts/parking-service';
 
 @Injectable()
 export class VehiclesSeeder {

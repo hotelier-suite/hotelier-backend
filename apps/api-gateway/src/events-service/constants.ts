@@ -1,0 +1,1 @@
+export const EVENTS_SERVICE_CLIENT = Symbol('EVENTS_SERVICE_CLIENT');
