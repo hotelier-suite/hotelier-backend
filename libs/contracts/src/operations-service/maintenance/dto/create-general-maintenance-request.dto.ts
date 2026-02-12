@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsInt,
   IsNumber,
-  IsDateString,
+  IsDate,
   IsMilitaryTime,
   Length,
   Min,
@@ -75,7 +75,7 @@ export class CreateGeneralMaintenanceRequestDto {
   })
   @IsOptional()
   @Type(() => Date)
-  @IsDateString()
+  @IsDate()
   scheduledDate?: Date;
 
   @ApiProperty({

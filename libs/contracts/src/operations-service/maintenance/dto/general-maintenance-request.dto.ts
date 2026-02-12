@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDate,
-  IsDateString,
   IsEnum,
   IsInt,
   IsMilitaryTime,
@@ -97,7 +96,8 @@ export class GeneralMaintenanceRequestDto {
     format: 'date',
   })
   @IsOptional()
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   scheduledDate?: Date;
 
   @ApiProperty({
