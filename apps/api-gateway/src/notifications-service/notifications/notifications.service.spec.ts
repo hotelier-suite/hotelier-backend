@@ -53,7 +53,7 @@ describe('NotificationsService (gateway)', () => {
   it('should stream returns observable', (done) => {
     const notification = { id: 1, title: 'Test', userId: 1 };
     mockClient.send.mockReturnValueOnce(of(notification));
-    
+
     // Subscribe to stream first
     const streamSub = service.stream().subscribe((event: MessageEvent) => {
       expect(event.data).toEqual(notification);
@@ -68,14 +68,17 @@ describe('NotificationsService (gateway)', () => {
   it('should streamForUser filters by userId', (done) => {
     const notification = { id: 1, title: 'Test', userId: 123 };
     mockClient.send.mockReturnValueOnce(of(notification));
-    
+
     // Subscribe to stream for specific user
-    const streamSub = service.streamForUser(123).subscribe((event: MessageEvent) => {
-      expect(event.data).toEqual(notification);
-      expect((event.data as any).userId).toBe(123);
-      streamSub.unsubscribe();
-      done();
-    });
+    const streamSub = service
+      .streamForUser(123)
+      .subscribe((event: MessageEvent) => {
+        expect(event.data).toEqual(notification);
+        const data = event.data as { userId?: number };
+        expect(data.userId).toBe(123);
+        streamSub.unsubscribe();
+        done();
+      });
 
     // Create notification which should trigger the stream
     service.create({} as never).subscribe();
@@ -84,16 +87,19 @@ describe('NotificationsService (gateway)', () => {
   it('should streamForUser filter out notifications for other users', (done) => {
     const notification1 = { id: 1, title: 'Test', userId: 999 };
     const notification2 = { id: 2, title: 'Test2', userId: 123 };
-    
+
     let receivedCount = 0;
-    const streamSub = service.streamForUser(123).subscribe((event: MessageEvent) => {
-      receivedCount++;
-      expect((event.data as any).userId).toBe(123);
-      if (receivedCount === 1) {
-        streamSub.unsubscribe();
-        done();
-      }
-    });
+    const streamSub = service
+      .streamForUser(123)
+      .subscribe((event: MessageEvent) => {
+        receivedCount++;
+        const data = event.data as { userId?: number };
+        expect(data.userId).toBe(123);
+        if (receivedCount === 1) {
+          streamSub.unsubscribe();
+          done();
+        }
+      });
 
     // Create notification for different user (should be filtered out)
     mockClient.send.mockReturnValueOnce(of(notification1));
@@ -109,12 +115,15 @@ describe('NotificationsService (gateway)', () => {
   it('should streamForUser allow notifications with null userId', (done) => {
     const notification = { id: 1, title: 'System', userId: null };
     mockClient.send.mockReturnValueOnce(of(notification));
-    
-    const streamSub = service.streamForUser(123).subscribe((event: MessageEvent) => {
-      expect((event.data as any).userId).toBeNull();
-      streamSub.unsubscribe();
-      done();
-    });
+
+    const streamSub = service
+      .streamForUser(123)
+      .subscribe((event: MessageEvent) => {
+        const data = event.data as { userId?: number | null };
+        expect(data.userId).toBeNull();
+        streamSub.unsubscribe();
+        done();
+      });
 
     service.create({} as never).subscribe();
   });
@@ -122,16 +131,18 @@ describe('NotificationsService (gateway)', () => {
   it('should streamForUser filter out invalid event data', (done) => {
     const invalidNotification = 'not an object';
     const validNotification = { id: 2, title: 'Valid', userId: 123 };
-    
+
     let receivedCount = 0;
-    const streamSub = service.streamForUser(123).subscribe((event: MessageEvent) => {
-      receivedCount++;
-      expect(typeof event.data).toBe('object');
-      if (receivedCount === 1) {
-        streamSub.unsubscribe();
-        done();
-      }
-    });
+    const streamSub = service
+      .streamForUser(123)
+      .subscribe((event: MessageEvent) => {
+        receivedCount++;
+        expect(typeof event.data).toBe('object');
+        if (receivedCount === 1) {
+          streamSub.unsubscribe();
+          done();
+        }
+      });
 
     // Create invalid notification (should be filtered out)
     mockClient.send.mockReturnValueOnce(of(invalidNotification));

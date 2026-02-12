@@ -26,7 +26,7 @@ describe('AppModule', () => {
     expect(service).toBeDefined();
   });
 
-  it('should compile successfully', async () => {
+  it('should compile successfully', () => {
     expect(module).toBeInstanceOf(TestingModule);
   });
 });

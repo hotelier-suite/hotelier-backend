@@ -3,6 +3,8 @@ import type { JwtUser, JwtRefreshUser } from '@app/contracts/auth-service';
 
 describe('CurrentUserId Decorator', () => {
   let mockExecutionContext: ExecutionContext;
+  let mockGetRequest: jest.Mock;
+  let mockSwitchToHttp: jest.Mock;
   let decoratorFunction: (data: unknown, ctx: ExecutionContext) => number;
 
   beforeEach(() => {
@@ -24,11 +26,12 @@ describe('CurrentUserId Decorator', () => {
       return id;
     };
 
-    const mockGetRequest = jest.fn();
+    mockGetRequest = jest.fn();
+    mockSwitchToHttp = jest.fn().mockReturnValue({
+      getRequest: mockGetRequest,
+    });
     mockExecutionContext = {
-      switchToHttp: jest.fn().mockReturnValue({
-        getRequest: mockGetRequest,
-      }),
+      switchToHttp: mockSwitchToHttp,
     } as unknown as ExecutionContext;
   });
 
@@ -38,11 +41,11 @@ describe('CurrentUserId Decorator', () => {
       email: 'test@example.com',
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({ user });
 
     const result = decoratorFunction(undefined, mockExecutionContext);
     expect(result).toBe(123);
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should extract user id from JwtRefreshUser using sub', () => {
@@ -51,15 +54,14 @@ describe('CurrentUserId Decorator', () => {
       email: 'refresh@example.com',
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({ user });
 
     const result = decoratorFunction(undefined, mockExecutionContext);
     expect(result).toBe(456);
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should throw UnauthorizedException when user is not in request', () => {
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({});
 
     expect(() => decoratorFunction(undefined, mockExecutionContext)).toThrow(
@@ -68,6 +70,7 @@ describe('CurrentUserId Decorator', () => {
     expect(() => decoratorFunction(undefined, mockExecutionContext)).toThrow(
       'User not found in request',
     );
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should throw UnauthorizedException when id is not a number', () => {
@@ -75,12 +78,12 @@ describe('CurrentUserId Decorator', () => {
       id: 'not-a-number',
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: unknown }>;
     mockGetRequest.mockReturnValue({ user });
 
     expect(() => decoratorFunction(undefined, mockExecutionContext)).toThrow(
       UnauthorizedException,
     );
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should throw UnauthorizedException when id is not finite', () => {
@@ -88,11 +91,11 @@ describe('CurrentUserId Decorator', () => {
       id: Infinity,
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: unknown }>;
     mockGetRequest.mockReturnValue({ user });
 
     expect(() => decoratorFunction(undefined, mockExecutionContext)).toThrow(
       UnauthorizedException,
     );
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 });

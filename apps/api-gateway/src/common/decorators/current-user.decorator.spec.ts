@@ -3,22 +3,31 @@ import type { JwtUser, JwtRefreshUser } from '@app/contracts/auth-service';
 
 describe('CurrentUser Decorator', () => {
   let mockExecutionContext: ExecutionContext;
-  let decoratorFunction: (data: unknown, ctx: ExecutionContext) => JwtUser | JwtRefreshUser | undefined;
+  let mockGetRequest: jest.Mock;
+  let mockSwitchToHttp: jest.Mock;
+  let decoratorFunction: (
+    data: unknown,
+    ctx: ExecutionContext,
+  ) => JwtUser | JwtRefreshUser | undefined;
 
   beforeEach(() => {
     // Re-create the decorator logic for testing
-    decoratorFunction = (_data: unknown, ctx: ExecutionContext): JwtUser | JwtRefreshUser | undefined => {
+    decoratorFunction = (
+      _data: unknown,
+      ctx: ExecutionContext,
+    ): JwtUser | JwtRefreshUser | undefined => {
       const request = ctx
         .switchToHttp()
         .getRequest<{ user?: JwtUser | JwtRefreshUser }>();
-      return (request.user ?? undefined) as JwtUser | JwtRefreshUser | undefined;
+      return request.user ?? undefined;
     };
 
-    const mockGetRequest = jest.fn();
+    mockGetRequest = jest.fn();
+    mockSwitchToHttp = jest.fn().mockReturnValue({
+      getRequest: mockGetRequest,
+    });
     mockExecutionContext = {
-      switchToHttp: jest.fn().mockReturnValue({
-        getRequest: mockGetRequest,
-      }),
+      switchToHttp: mockSwitchToHttp,
     } as unknown as ExecutionContext;
   });
 
@@ -28,11 +37,11 @@ describe('CurrentUser Decorator', () => {
       email: 'test@example.com',
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({ user });
 
     const result = decoratorFunction(undefined, mockExecutionContext);
     expect(result).toEqual(user);
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should extract JwtRefreshUser from request', () => {
@@ -41,18 +50,18 @@ describe('CurrentUser Decorator', () => {
       email: 'refresh@example.com',
     };
 
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({ user });
 
     const result = decoratorFunction(undefined, mockExecutionContext);
     expect(result).toEqual(user);
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 
   it('should return undefined when user is not in request', () => {
-    const mockGetRequest = mockExecutionContext.switchToHttp().getRequest as jest.MockedFunction<() => { user?: JwtUser | JwtRefreshUser }>;
     mockGetRequest.mockReturnValue({});
 
     const result = decoratorFunction(undefined, mockExecutionContext);
     expect(result).toBeUndefined();
+    expect(mockGetRequest).toHaveBeenCalled();
   });
 });
