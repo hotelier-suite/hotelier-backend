@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   BeforeInsert,
 } from 'typeorm';
-import type { InsertEvent } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 import {
   RoomServiceStatus,
@@ -66,12 +65,9 @@ export class RoomServiceOrder {
   updatedAt: Date;
 
   @BeforeInsert()
-  async generateOrderNumber(
-    event: InsertEvent<RoomServiceOrder>,
-  ): Promise<void> {
+  generateOrderNumber(): void {
     if (!this.orderNumber) {
-      const count = await event.manager.count(RoomServiceOrder);
-      this.orderNumber = `RS${String(count + 1).padStart(3, '0')}`;
+      this.orderNumber = `RS${Date.now().toString(36).toUpperCase()}`;
     }
   }
 }

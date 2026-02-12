@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   BeforeInsert,
 } from 'typeorm';
-import type { InsertEvent } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 
 @Entity('menu_items')
@@ -52,10 +51,9 @@ export class MenuItem {
   updatedAt: Date;
 
   @BeforeInsert()
-  async generateItemCode(event: InsertEvent<MenuItem>): Promise<void> {
+  generateItemCode(): void {
     if (!this.itemCode) {
-      const count = await event.manager.count(MenuItem);
-      this.itemCode = `MENU${String(count + 1).padStart(3, '0')}`;
+      this.itemCode = `MENU${Date.now().toString(36).toUpperCase()}`;
     }
   }
 }

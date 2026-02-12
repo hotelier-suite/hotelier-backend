@@ -245,7 +245,7 @@ export class BookingsService {
       .create({
         type: NotificationType.INFO,
         title: 'Recreational Booking Cancelled',
-        message: `Booking for ${bookingEntity.facility.name} on ${bookingEntity.bookingDate.toISOString().split('T')[0]} has been cancelled`,
+        message: `Booking for ${bookingEntity.facility.name} on ${bookingEntity.bookingDate instanceof Date ? bookingEntity.bookingDate.toISOString().split('T')[0] : String(bookingEntity.bookingDate)} has been cancelled`,
         refId: saved.id,
         refType: 'recreational_booking',
       })

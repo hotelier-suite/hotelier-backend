@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 import { EventStatus } from '@app/contracts/events-service';
-import { Venue } from '../../venues';
+import { Venue } from '../../venues/entities';
 
 @Entity('event_bookings')
 export class EventBooking {

@@ -7,7 +7,6 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
-import type { InsertEvent } from 'typeorm';
 import { DecimalTransformer } from '@app/contracts/common';
 import { BeverageStatus } from '@app/contracts/restaurant-service';
 
@@ -61,10 +60,9 @@ export class BeverageInventory {
   updatedAt: Date;
 
   @BeforeInsert()
-  async generateItemCode(event: InsertEvent<BeverageInventory>): Promise<void> {
+  generateItemCode(): void {
     if (!this.itemCode) {
-      const count = await event.manager.count(BeverageInventory);
-      this.itemCode = `BEV${String(count + 1).padStart(3, '0')}`;
+      this.itemCode = `BEV${Date.now().toString(36).toUpperCase()}`;
     }
   }
 
