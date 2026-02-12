@@ -89,9 +89,34 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*.module.ts",
+      "!**/main.ts",
+      "!**/index.ts",
+      "!**/*.interface.ts",
+      "!**/*.dto.ts",
+      "!**/*.entity.ts",
+      "!**/*-integration-spec.ts",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/coverage/**",
+      "!**/test/**"
     ],
     "coverageDirectory": "./coverage",
+    "coverageReporters": [
+      "html",
+      "text",
+      "lcov",
+      "json"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/apps/",
@@ -100,6 +125,8 @@
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@app/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1"
-    }
+    },
+    "maxWorkers": "50%",
+    "testTimeout": 10000
   }
 }
